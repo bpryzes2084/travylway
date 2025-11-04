@@ -1,248 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Travylway — Global Airport Transfers</title>
-  <meta name="theme-color" content="#000000" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23000'/%3E%3Ctext x='50%' y='56%' font-size='38' text-anchor='middle' fill='%23D4AF37' font-family='Segoe UI, Roboto, Arial, sans-serif'%3ET%3C/text%3E%3C/svg%3E">
-  <style>
-    :root{
-      --bg:#000000; --fg:#ffffff; --muted:#A9B0BA;
-      --card:#0b0b0b; --stroke:#1e1e1e;
-      --gold:#D4AF37; --gold-600:#B08D2B; --gold-300:#E6C56E;
-      --accent:var(--gold);
-    }
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    h1,h2,h3{margin:0}
-    .wrap{max-width:1100px;margin:0 auto;padding:16px}
-    .muted{color:var(--muted)}
+  // --- Flight Attendants mock cards (centered) ---
+  const faOffers = [
+    { title:"Express DEN Pickup", window:"Today · 4:30–6:30 PM", note:"C Concourse, Door 407", badge:"DEN" },
+    { title:"Early AM Crew Ride", window:"Tomorrow · 4:45 AM",   note:"Union Station → DEN",  badge:"DEN" }
+  ];
+  const faEl = document.getElementById('fa-list');
+  faEl.innerHTML = faOffers.map(o => `
+    <article class="card" aria-label="Flight attendant offer">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3>${o.title}</h3>
+        <span class="badge">${o.badge}</span>
+      </div>
+      <p>${o.window}</p>
+      <small class="muted">${o.note}</small>
+    </article>
+  `).join('');
 
-    /* Top announcement */
-    .topbar{
-      position:sticky; top:0; z-index:1000;
-      width:100%; background:linear-gradient(180deg,#0a0a0a,#000);
-      border-bottom:1px solid var(--gold-600); color:var(--fg)
-    }
-    .topbar .inner{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .topbar .msg{display:flex;gap:10px;align-items:center;font-weight:600}
-    .topbar .dot{width:10px;height:10px;border-radius:50%;background:var(--gold)}
-    .btn,.btn-ghost{
-      display:inline-block;padding:8px 14px;border-radius:12px;font-weight:700;text-decoration:none
-    }
-    .btn{
-      background:linear-gradient(180deg,var(--gold-300),var(--gold));color:#1a1a1a;border:1px solid var(--gold-300)
-    }
-    .btn:hover{background:linear-gradient(180deg,var(--gold),var(--gold-600))}
-    .btn-ghost{background:transparent;color:var(--fg);border:1px solid var(--gold)}
-    .btn-ghost:hover{background:rgba(212,175,55,.08)}
+  // --- Continent placeholders ---
+  const regions = {
+    "na-list": [
+      {iata:"DEN",name:"Denver Intl",city:"Denver, USA",note:"Active hub",badge:"NA"},
+      {iata:"JFK",name:"JFK Intl",city:"New York, USA",note:"Crew pricing",badge:"NA"},
+      {iata:"YYZ",name:"Toronto Pearson",city:"Toronto, CAN",note:"Coming soon",badge:"NA"}
+    ],
+    "sa-list": [
+      {iata:"GRU",name:"São Paulo–Guarulhos",city:"São Paulo, BRA",note:"Pilot program",badge:"SA"},
+      {iata:"EZE",name:"Ministro Pistarini",city:"Buenos Aires, ARG",note:"In development",badge:"SA"}
+    ],
+    "eu-list": [
+      {iata:"LHR",name:"Heathrow",city:"London, UK",note:"Crew rides Q1",badge:"EU"},
+      {iata:"CDG",name:"Charles de Gaulle",city:"Paris, FR",note:"Scoping",badge:"EU"},
+      {iata:"AMS",name:"Schiphol",city:"Amsterdam, NL",note:"Interest list",badge:"EU"}
+    ],
+    "af-list": [
+      {iata:"JNB",name:"O. R. Tambo",city:"Johannesburg, ZA",note:"Exploring",badge:"AF"},
+      {iata:"CAI",name:"Cairo Intl",city:"Cairo, EG",note:"Exploring",badge:"AF"}
+    ],
+    "as-list": [
+      {iata:"HND",name:"Haneda",city:"Tokyo, JP",note:"Future hub",badge:"AS"},
+      {iata:"SIN",name:"Changi",city:"Singapore, SG",note:"Future hub",badge:"AS"}
+    ],
+    "oc-list": [
+      {iata:"SYD",name:"Sydney",city:"Sydney, AU",note:"Future hub",badge:"OC"},
+      {iata:"AKL",name:"Auckland",city:"Auckland, NZ",note:"Future hub",badge:"OC"}
+    ]
+  };
 
-    /* Header / nav */
-    header{background:linear-gradient(180deg,#050505,#000);border-bottom:1px solid var(--stroke)}
-    .header-row{display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap}
-    nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-    nav a{color:var(--muted);text-decoration:none}
-    nav a:hover{color:var(--gold)}
-    .btn-header{padding:8px 12px} /* compact header button */
-
-    /* Blocks/grid */
-    .site-grid{display:grid;gap:20px;grid-template-columns:1fr}
-    @media (min-width:980px){.site-grid{grid-template-columns:1fr 1fr}}
-    .block{
-      background:var(--card);border:1px solid var(--stroke);border-radius:16px;
-      padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)
-    }
-    .block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .block-head h2{font-size:1.1rem;position:relative;padding-bottom:6px}
-    .block-head h2::after{content:"";position:absolute;left:0;bottom:0;width:56px;height:2px;background:var(--gold)}
-    .block-link{color:var(--gold);text-decoration:none;font-weight:600}
-    .block-link:hover{text-decoration:underline}
-
-    /* Cards & table */
-    .cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-    .cards.center{justify-items:center}           /* center cards in FA block */
-    .card{border:1px solid var(--stroke);border-radius:12px;padding:12px;max-width:360px}
-    .badge{display:inline-block;padding:2px 10px;border-radius:999px;background:#111;color:var(--gold);border:1px solid var(--gold-600);font-size:.8rem}
-    .table{width:100%;border-collapse:collapse}
-    .table th,.table td{border-bottom:1px solid var(--stroke);padding:10px 8px;text-align:left}
-    .table th{color:var(--gold);border-bottom:1px solid var(--gold-600)}
-
-    /* Footer */
-    footer{margin-top:40px;padding:16px;text-align:center;color:var(--muted);border-top:1px solid var(--stroke)}
-
-    /* A11y */
-    :focus-visible{outline:2px solid var(--gold-300);outline-offset:2px;border-radius:8px}
-    ::selection{background:rgba(212,175,55,.35);color:#000}
-  </style>
-</head>
-<body>
-  <!-- Top announcement -->
-  <div class="topbar" role="region" aria-label="Site announcement">
-    <div class="wrap inner">
-      <div class="msg">
-        <span class="dot" aria-hidden="true"></span>
-        <div>
-          <div style="font-size:0.95rem"><span style="color:var(--gold)">Creating the new travylway.com</span> — rebuild in progress.</div>
-          <div class="muted" style="font-size:0.9rem">Temporary site is live while we roll out regions, driver portal, and flight tracking.</div>
+  function render(id, data){
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = data.map(a => `
+      <article class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3>${a.name}</h3><span class="badge">${a.badge}</span>
         </div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book a Ride</a>
-        <a class="btn-ghost" href="/" rel="noopener">Current Build</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Header -->
-  <header>
-    <div class="wrap header-row">
-      <h1 style="font-size:1.5rem;color:var(--gold);margin-right:auto">Travylway</h1>
-
-      <nav>
-        <a href="/">Home</a>
-        <a href="/book/">Book</a>
-        <a href="/drivers/">Drivers</a>
-        <a href="/about/">About</a>
-      </nav>
-
-      <!-- Header CTA -->
-      <a class="btn btn-header" href="https://travylway.setmore.com" target="_blank" rel="noopener" aria-label="Book a ride">
-        Book a Ride
-      </a>
-    </div>
-  </header>
-
-  <!-- Main -->
-  <main class="wrap site-grid">
-    <!-- NEW: Flight Attendants block (top, centered, full width) -->
-    <section class="block" style="grid-column:1/-1;text-align:center">
-      <header class="block-head" style="justify-content:center">
-        <h2>Flight Attendants</h2>
-        <!-- optional right-side link removed to keep center true -->
-      </header>
-
-      <p class="muted" style="margin:0 0 12px">Crew-first perks and priority pickups. DEN first — expanding soon.</p>
-      <div id="fa-list" class="cards center" aria-live="polite"></div>
-
-      <div style="margin-top:12px">
-        <a class="btn" href="/flight-attendants/" rel="noopener">View Portal</a>
-        <a class="btn-ghost" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book Crew Ride</a>
-      </div>
-    </section>
-
-    <!-- Hero -->
-    <section class="block" style="grid-column:1/-1;text-align:center">
-      <h2 style="font-size:1.4rem;color:var(--gold)">Airport Transfers. Worldwide.</h2>
-      <p class="muted">Point-A to point-B. Transparent pricing. Secure rides. Expanding globally.</p>
-      <a class="btn" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book a Ride</a>
-    </section>
-
-    <!-- Continents -->
-    <section class="block">
-      <header class="block-head"><h2>North America</h2><a class="block-link" href="/regions/north-america/">View all</a></header>
-      <div id="na-list" class="cards"></div>
-    </section>
-
-    <section class="block">
-      <header class="block-head"><h2>South America</h2><a class="block-link" href="/regions/south-america/">View all</a></header>
-      <div id="sa-list" class="cards"></div>
-    </section>
-
-    <section class="block">
-      <header class="block-head"><h2>Europe</h2><a class="block-link" href="/regions/europe/">View all</a></header>
-      <div id="eu-list" class="cards"></div>
-    </section>
-
-    <section class="block">
-      <header class="block-head"><h2>Africa</h2><a class="block-link" href="/regions/africa/">View all</a></header>
-      <div id="af-list" class="cards"></div>
-    </section>
-
-    <section class="block">
-      <header class="block-head"><h2>Asia</h2><a class="block-link" href="/regions/asia/">View all</a></header>
-      <div id="as-list" class="cards"></div>
-    </section>
-
-    <section class="block">
-      <header class="block-head"><h2>Australia &amp; Oceania</h2><a class="block-link" href="/regions/oceania/">View all</a></header>
-      <div id="oc-list" class="cards"></div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <small>© <span id="year"></span> Travylway · Powered by GitHub Pages · Global rides made simple</small>
-  </footer>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // --- Flight Attendants mock cards (centered) ---
-    const faOffers = [
-      { title:"Express DEN Pickup", window:"Today · 4:30–6:30 PM", note:"C Concourse, Door 407", badge:"DEN" },
-      { title:"Early AM Crew Ride", window:"Tomorrow · 4:45 AM",   note:"Union Station → DEN",  badge:"DEN" },
-      { title:"Return from Red-Eye", window:"Fri · 11:10 PM",      note:"DEN → Cherry Creek",   badge:"DEN" }
-    ];
-    const faEl = document.getElementById('fa-list');
-    faEl.innerHTML = faOffers.map(o => `
-      <article class="card" aria-label="Flight attendant offer">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <h3>${o.title}</h3>
-          <span class="badge">${o.badge}</span>
-        </div>
-        <p>${o.window}</p>
-        <small class="muted">${o.note}</small>
+        <p>${a.city}</p>
+        <small class="muted">${a.iata} · ${a.note}</small>
       </article>
     `).join('');
+  }
 
-    // --- Continent placeholders ---
-    const regions = {
-      "na-list": [
-        {iata:"DEN",name:"Denver Intl",city:"Denver, USA",note:"Active hub",badge:"NA"},
-        {iata:"JFK",name:"JFK Intl",city:"New York, USA",note:"Crew pricing",badge:"NA"},
-        {iata:"YYZ",name:"Toronto Pearson",city:"Toronto, CAN",note:"Coming soon",badge:"NA"}
-      ],
-      "sa-list": [
-        {iata:"GRU",name:"São Paulo–Guarulhos",city:"São Paulo, BRA",note:"Pilot program",badge:"SA"},
-        {iata:"EZE",name:"Ministro Pistarini",city:"Buenos Aires, ARG",note:"In development",badge:"SA"}
-      ],
-      "eu-list": [
-        {iata:"LHR",name:"Heathrow",city:"London, UK",note:"Crew rides Q1",badge:"EU"},
-        {iata:"CDG",name:"Charles de Gaulle",city:"Paris, FR",note:"Scoping",badge:"EU"},
-        {iata:"AMS",name:"Schiphol",city:"Amsterdam, NL",note:"Interest list",badge:"EU"}
-      ],
-      "af-list": [
-        {iata:"JNB",name:"O. R. Tambo",city:"Johannesburg, ZA",note:"Exploring",badge:"AF"},
-        {iata:"CAI",name:"Cairo Intl",city:"Cairo, EG",note:"Exploring",badge:"AF"}
-      ],
-      "as-list": [
-        {iata:"HND",name:"Haneda",city:"Tokyo, JP",note:"Future hub",badge:"AS"},
-        {iata:"SIN",name:"Changi",city:"Singapore, SG",note:"Future hub",badge:"AS"}
-      ],
-      "oc-list": [
-        {iata:"SYD",name:"Sydney",city:"Sydney, AU",note:"Future hub",badge:"OC"},
-        {iata:"AKL",name:"Auckland",city:"Auckland, NZ",note:"Future hub",badge:"OC"}
-      ]
-    };
+  Object.entries(regions).forEach(([id, arr]) => render(id, arr));
+</script>
 
-    function render(id, data){
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.innerHTML = data.map(a => `
-        <article class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <h3>${a.name}</h3><span class="badge">${a.badge}</span>
-          </div>
-          <p>${a.city}</p>
-          <small class="muted">${a.iata} · ${a.note}</small>
-        </article>
-      `).join('');
-    }
-
-    Object.entries(regions).forEach(([id, arr]) => render(id, arr));
-  </script>
-</body>
-</html>
 
