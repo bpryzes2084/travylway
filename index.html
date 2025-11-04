@@ -62,7 +62,8 @@
 
     /* Cards & table */
     .cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-    .card{border:1px solid var(--stroke);border-radius:12px;padding:12px}
+    .cards.center{justify-items:center}           /* center cards in FA block */
+    .card{border:1px solid var(--stroke);border-radius:12px;padding:12px;max-width:360px}
     .badge{display:inline-block;padding:2px 10px;border-radius:999px;background:#111;color:var(--gold);border:1px solid var(--gold-600);font-size:.8rem}
     .table{width:100%;border-collapse:collapse}
     .table th,.table td{border-bottom:1px solid var(--stroke);padding:10px 8px;text-align:left}
@@ -106,7 +107,7 @@
         <a href="/about/">About</a>
       </nav>
 
-      <!-- New header CTA -->
+      <!-- Header CTA -->
       <a class="btn btn-header" href="https://travylway.setmore.com" target="_blank" rel="noopener" aria-label="Book a ride">
         Book a Ride
       </a>
@@ -115,6 +116,22 @@
 
   <!-- Main -->
   <main class="wrap site-grid">
+    <!-- NEW: Flight Attendants block (top, centered, full width) -->
+    <section class="block" style="grid-column:1/-1;text-align:center">
+      <header class="block-head" style="justify-content:center">
+        <h2>Flight Attendants</h2>
+        <!-- optional right-side link removed to keep center true -->
+      </header>
+
+      <p class="muted" style="margin:0 0 12px">Crew-first perks and priority pickups. DEN first — expanding soon.</p>
+      <div id="fa-list" class="cards center" aria-live="polite"></div>
+
+      <div style="margin-top:12px">
+        <a class="btn" href="/flight-attendants/" rel="noopener">View Portal</a>
+        <a class="btn-ghost" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book Crew Ride</a>
+      </div>
+    </section>
+
     <!-- Hero -->
     <section class="block" style="grid-column:1/-1;text-align:center">
       <h2 style="font-size:1.4rem;color:var(--gold)">Airport Transfers. Worldwide.</h2>
@@ -162,7 +179,25 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Placeholder data (swap to live JSON/API when ready)
+    // --- Flight Attendants mock cards (centered) ---
+    const faOffers = [
+      { title:"Express DEN Pickup", window:"Today · 4:30–6:30 PM", note:"C Concourse, Door 407", badge:"DEN" },
+      { title:"Early AM Crew Ride", window:"Tomorrow · 4:45 AM",   note:"Union Station → DEN",  badge:"DEN" },
+      { title:"Return from Red-Eye", window:"Fri · 11:10 PM",      note:"DEN → Cherry Creek",   badge:"DEN" }
+    ];
+    const faEl = document.getElementById('fa-list');
+    faEl.innerHTML = faOffers.map(o => `
+      <article class="card" aria-label="Flight attendant offer">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>${o.title}</h3>
+          <span class="badge">${o.badge}</span>
+        </div>
+        <p>${o.window}</p>
+        <small class="muted">${o.note}</small>
+      </article>
+    `).join('');
+
+    // --- Continent placeholders ---
     const regions = {
       "na-list": [
         {iata:"DEN",name:"Denver Intl",city:"Denver, USA",note:"Active hub",badge:"NA"},
@@ -210,3 +245,4 @@
   </script>
 </body>
 </html>
+
