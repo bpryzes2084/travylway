@@ -1,311 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Travylway — Airport Rides Made Simple</title>
-  <meta name="theme-color" content="#000000" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23000'/%3E%3Ctext x='50%' y='56%' font-size='38' text-anchor='middle' fill='%23D4AF37' font-family='Segoe UI, Roboto, Arial, sans-serif'%3ET%3C/text%3E%3C/svg%3E">
-
-  <style>
-    :root{
-      --bg:#000000; --fg:#ffffff; --muted:#A9B0BA;
-      --card:#0b0b0b; --stroke:#1e1e1e;
-      --gold:#D4AF37; --gold-600:#B08D2B; --gold-300:#E6C56E;
-      --accent:var(--gold);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    h1,h2,h3{margin:0}
-    .wrap{max-width:1100px;margin:0 auto;padding:16px}
-    .muted{color:var(--muted)}
-
-    /* Top announcement */
-    .topbar{
-      position:sticky; top:0; z-index:1000;
-      width:100%; background:linear-gradient(180deg,#0a0a0a,#000);
-      border-bottom:1px solid var(--gold-600); color:var(--fg)
-    }
-    .topbar .inner{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .topbar .msg{display:flex;gap:10px;align-items:center;font-weight:600}
-    .topbar .dot{width:10px;height:10px;border-radius:50%;background:var(--gold)}
-    .btn,.btn-ghost{
-      display:inline-block;padding:8px 14px;border-radius:12px;font-weight:700;text-decoration:none
-    }
-    .btn{
-      background:linear-gradient(180deg,var(--gold-300),var(--gold));color:#1a1a1a;border:1px solid var(--gold-300)
-    }
-    .btn:hover{background:linear-gradient(180deg,var(--gold),var(--gold-600))}
-    .btn-ghost{background:transparent;color:var(--fg);border:1px solid var(--gold)}
-    .btn-ghost:hover{background:rgba(212,175,55,.08)}
-
-    /* Header / nav */
-    header{background:linear-gradient(180deg,#050505,#000);border-bottom:1px solid var(--stroke)}
-    .header-row{display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap}
-    nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-    nav a{color:var(--muted);text-decoration:none}
-    nav a:hover{color:var(--gold)}
-    .btn-header{padding:8px 12px}
-    /* Nav icon styling */
-    nav .nav-icon{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:32px; height:32px; border-radius:8px;
-      color:var(--gold); border:1px solid var(--gold); text-decoration:none;
-    }
-    nav .nav-icon:hover{ background:rgba(212,175,55,.08); }
-
-    /* Blocks/grid */
-    .block{
-      background:var(--card);border:1px solid var(--stroke);border-radius:16px;
-      padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)
-    }
-    .block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .block-head h2{font-size:1.1rem;position:relative;padding-bottom:6px}
-    .block-head h2::after{content:"";position:absolute;left:0;bottom:0;width:56px;height:2px;background:var(--gold)}
-    .block-link{color:var(--gold);text-decoration:none;font-weight:600}
-    .block-link:hover{text-decoration:underline}
-
-    /* Two-column layout with right sidebar */
-    .page-grid{display:grid;gap:20px;grid-template-columns:1fr}
-    @media (min-width:1100px){.page-grid{grid-template-columns:minmax(0,1fr) 320px}}
-    .main-column{display:grid;gap:20px;grid-template-columns:1fr}
-    .sidebar{display:flex;flex-direction:column;gap:20px}
-    @media (min-width:1100px){ .sidebar{ position:sticky; top:84px; } }
-
-    /* Brand + tagline (no animation) */
-    .brand-word{
-      display:flex; justify-content:center; gap:6px; flex-wrap:wrap;
-      width:100%; margin:0 auto 8px; text-align:center;
-      font-weight:900; font-size:2rem; letter-spacing:.06em;
-    }
-    .brand-word .chip{
-      display:inline-flex; align-items:center; justify-content:center;
-      background:var(--gold); color:#000; padding:4px 8px; border-radius:8px;
-      box-shadow:0 0 10px rgba(212,175,55,0.3);
-    }
-    .tagline{
-      color:#fff; text-align:center; font-size:1.2rem; font-weight:600; margin:4px 0 16px;
-    }
-
-    /* Lists & small text */
-    .list-clean{list-style:none;margin:0;padding:0}
-    .list-clean li{margin:0 0 8px}
-    .list-clean a{
-      display:block;padding:10px 12px;border:1px solid var(--stroke);border-radius:10px;
-      text-decoration:none;color:var(--fg);background:var(--card)
-    }
-    .list-clean a:hover{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.15) inset}
-    .small-muted{color:var(--muted);font-size:.9rem}
-
-    /* Tables for driver/ pickups */
-    .table{width:100%;border-collapse:collapse}
-    .table th,.table td{border-bottom:1px solid var(--stroke);padding:10px 8px;text-align:left}
-    .table th{color:var(--gold);border-bottom:1px solid var(--gold-600)}
-
-    /* Weather helpers (if using iframe script) */
-    #weather .weather-embed { display:flex; justify-content:center; }
-    #weather .weather-embed iframe { width:100%; max-width:720px; min-height:260px; border:0; border-radius:12px; }
-    #weather .weather-embed > * { max-width: 720px; width:100%; }
-
-    /* Footer */
-    footer{margin-top:40px;padding:16px;text-align:center;color:var(--muted);border-top:1px solid var(--stroke)}
-
-    /* A11y */
-    :focus-visible{outline:2px solid var(--gold-300);outline-offset:2px;border-radius:8px}
-    ::selection{background:rgba(212,175,55,.35);color:#000}
-  </style>
-</head>
-<body>
-  <!-- Announcement -->
-  <div class="topbar" role="region" aria-label="Site announcement">
-    <div class="wrap inner">
-      <div class="msg">
-        <span class="dot" aria-hidden="true"></span>
-        <div>
-          <div style="font-size:0.95rem"><span style="color:var(--gold)">Creating the new travylway.com</span> — rebuild in progress.</div>
-          <div class="muted" style="font-size:0.9rem">Temporary site is live while we roll out regions, driver portal, and flight tracking.</div>
-        </div>
+<main class="wrap">
+  <div class="main-column" style="display:grid;gap:20px">
+    <!-- Brand + tagline -->
+    <div>
+      <div class="brand-word" aria-label="Travylway">
+        <span class="chip">T</span><span class="chip">r</span><span class="chip">a</span>
+        <span class="chip">v</span><span class="chip">y</span><span class="chip">l</span>
+        <span class="chip">w</span><span class="chip">a</span><span class="chip">y</span>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book a Ride</a>
-        <a class="btn-ghost" href="/" rel="noopener">Current Build</a>
-      </div>
+      <p class="tagline">Airport Rides Made Simple</p>
     </div>
+
+    <!-- Flight Tracking (replaces weather) -->
+    <section class="block" id="flight-tracking" style="text-align:center">
+      <header class="block-head" style="justify-content:center">
+        <h2>Flight Tracking</h2>
+      </header>
+      <div class="flight-embed"><!-- your flight tracking widget here --></div>
+    </section>
+
+    <!-- Flight Attendants -->
+    <section class="block" style="text-align:center">
+      <header class="block-head" style="justify-content:center"><h2>Domestic Flight Attendant Booking Portal</h2></header>
+      <p class="muted" style="margin:0 0 12px">Priority airport pickups for U.S.-based crew. DEN first — expanding to more airports.</p>
+      <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="btn" href="/flight-attendants/" rel="noopener">View Portal</a>
+        <a class="btn-ghost" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book Crew Ride</a>
+      </div>
+    </section>
+
+    <!-- Driver Online -->
+    <section class="block">
+      <header class="block-head"><h2>Driver Online</h2></header>
+      <table class="table" aria-label="Drivers currently online">
+        <thead><tr><th>Name</th><th>City</th><th>Status</th></tr></thead>
+        <tbody id="tbl-online"><tr><td>—</td><td>—</td><td class="muted">No drivers online yet</td></tr></tbody>
+      </table>
+    </section>
+
+    <!-- Available Pickups -->
+    <section class="block">
+      <header class="block-head"><h2>Available Pickups</h2></header>
+      <table class="table" aria-label="Available pickup requests">
+        <thead><tr><th>Airport</th><th>Window</th><th>Notes</th></tr></thead>
+        <tbody id="tbl-available"><tr><td>DEN</td><td>—</td><td class="muted">Add your first slot</td></tr></tbody>
+      </table>
+    </section>
+
+    <!-- Future Pickups -->
+    <section class="block">
+      <header class="block-head"><h2>Future Pickups</h2></header>
+      <table class="table" aria-label="Scheduled future pickups">
+        <thead><tr><th>Airport</th><th>Date</th><th>Window</th></tr></thead>
+        <tbody id="tbl-future"><tr><td>DEN</td><td>—</td><td class="muted">Coming soon</td></tr></tbody>
+      </table>
+    </section>
+
+    <!-- ⬇️ MOVED HERE: Domestic Portals -->
+    <section class="block">
+      <header class="block-head" style="justify-content:space-between">
+        <h2>Domestic Portals</h2>
+      </header>
+      <ul class="list-clean">
+        <li><a href="/airports/abq/">Albuquerque International Sunport <span class="small-muted">· ABQ</span></a></li>
+        <li><a href="/airports/den/">Denver International Airport <span class="small-muted">· DEN</span></a></li>
+        <li><a href="/airports/iad/">Washington Dulles International Airport <span class="small-muted">· IAD</span></a></li>
+        <li><a href="/airports/jfk/">John F. Kennedy International Airport <span class="small-muted">· JFK</span></a></li>
+        <li><a href="/airports/lga/">LaGuardia Airport <span class="small-muted">· LGA</span></a></li>
+        <li><a href="/airports/ewr/">Newark Liberty International Airport <span class="small-muted">· EWR</span></a></li>
+        <li><a href="/airports/dca/">Ronald Reagan Washington National Airport <span class="small-muted">· DCA</span></a></li>
+      </ul>
+    </section>
+
+    <!-- ⬇️ MOVED HERE: International Portals -->
+    <section class="block">
+      <header class="block-head" style="justify-content:space-between">
+        <h2>International Portals</h2>
+      </header>
+      <ul class="list-clean">
+        <li><a href="/airports/lhr/">Heathrow (LHR) <span class="small-muted">· Coming soon</span></a></li>
+        <li><a href="/airports/cdg/">Charles de Gaulle (CDG) <span class="small-muted">· Coming soon</span></a></li>
+        <li><a href="/airports/syd/">Sydney (SYD) <span class="small-muted">· Coming soon</span></a></li>
+      </ul>
+    </section>
+
+    <!-- General Inquiries (WhatsApp only) -->
+    <section class="block" id="general-inquiries">
+      <header class="block-head" style="justify-content:space-between">
+        <h2>General Inquiries</h2>
+      </header>
+      <p class="muted" style="margin:0 0 12px">Questions about rides, pricing, or availability? We’ve got you.</p>
+      <div style="display:flex;justify-content:center;margin-top:12px">
+        <a
+          class="btn"
+          href="https://wa.me/YOUR_NUMBER?text=Hi%20Travylway%20%E2%80%94%20I%20have%20a%20general%20question."
+          target="_blank" rel="noopener" aria-label="Chat on WhatsApp">WhatsApp</a>
+      </div>
+      <small class="muted" style="display:block;text-align:center;margin-top:10px">Typical reply: under an hour during business hours.</small>
+    </section>
   </div>
-
-  <!-- Header -->
-  <header>
-    <div class="wrap header-row">
-      <h1 style="font-size:1.5rem;color:var(--gold);margin-right:auto">Let us do the Driving </h1>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/drivers/">Drivers</a>
-        <a href="/reviews/">Reviews</a>
-        <a href="/shopping/">Shopping</a>
-        <!-- Select Items icon -->
-        <a href="/select/" class="nav-icon" aria-label="Select Items">
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-            <path fill="currentColor"
-              d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2
-                 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"/>
-          </svg>
-        </a>
-      </nav>
-      <!-- Keep CTA; say the word if you want it removed -->
-      <a class="btn btn-header" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book a Ride</a>
-    </div>
-  </header>
-
-  <!-- Main: two columns -->
-  <main class="wrap page-grid">
-    <!-- LEFT column -->
-    <div class="main-column">
-      <!-- Brand + tagline -->
-      <div style="grid-column:1/-1">
-        <div class="brand-word" aria-label="Travylway">
-          <span class="chip">T</span><span class="chip">r</span><span class="chip">a</span>
-          <span class="chip">v</span><span class="chip">y</span><span class="chip">l</span>
-          <span class="chip">w</span><span class="chip">a</span><span class="chip">y</span>
-        </div>
-        <p class="tagline">Airport Rides Made Simple</p>
-      </div>
-
-<!-- General Inquiries (MAIN COLUMN) -->
-<section class="block" id="general-inquiries">
-  <header class="block-head" style="justify-content:space-between">
-    <h2>General Inquiries</h2>
-  </header>
-
-  <p class="muted" style="margin:0 0 12px">
-    Questions about rides, pricing, or availability? We’ve got you.
-  </p>
-
-  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-    <!-- WhatsApp -->
-    <a
-      class="btn"
-      href="https://wa.me/17204748851?text=Hi%20Travylway%20%E2%80%94%20I%20have%20a%20general%20question."
-      target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
-      WhatsApp
-    </a>
-   
-
-  <small class="muted" style="display:block;text-align:center;margin-top:10px">
-    Typical reply: under 24 hours during business hours.
-  </small>
-</section>
-
-
-
-
-      
-     <!-- Flight Tracking (full width, centered) -->
-<section class="block" id="flight-tracking" style="grid-column:1/-1;text-align:center">
-  <header class="block-head" style="justify-content:center">
-    <h2>Flight Tracking</h2>
-  </header>
-
-  <div class="flight-embed">
-    <!-- PASTE YOUR FLIGHT TRACKING WIDGET HERE -->
-    <!-- Example: <iframe src="..." loading="lazy"></iframe> -->
-  </div>
-</section>
-
-
-      <!-- Flight Attendants -->
-      <section class="block" style="grid-column:1/-1;text-align:center">
-        <header class="block-head" style="justify-content:center"><h2>Domestic Flight Attendant Booking Portal</h2></header>
-        <p class="muted" style="margin:0 0 12px">Priority airport pickups for U.S.-based crew. DEN first — expanding to more airports.</p>
-        <div style="margin-top:12px">
-          <a class="btn" href="/flight-attendants/" rel="noopener">View Portal</a>
-          <a class="btn-ghost" href="https://travylway.setmore.com" target="_blank" rel="noopener">Book Crew Ride</a>
-        </div>
-      </section>
-
-      <!-- NEW: Driver Online -->
-      <section class="block">
-        <header class="block-head"><h2>Driver Online</h2></header>
-        <table class="table" aria-label="Drivers currently online">
-          <thead>
-            <tr><th>Name</th><th>City</th><th>Status</th></tr>
-          </thead>
-          <tbody id="tbl-online">
-            <tr><td>—</td><td>—</td><td class="muted">No drivers online yet</td></tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- NEW: Available Pickups -->
-      <section class="block">
-        <header class="block-head"><h2>Available Pickups</h2></header>
-        <table class="table" aria-label="Available pickup requests">
-          <thead>
-            <tr><th>Airport</th><th>Window</th><th>Notes</th></tr>
-          </thead>
-          <tbody id="tbl-available">
-            <tr><td>DEN</td><td>—</td><td class="muted">Add your first slot</td></tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- NEW: Future Pickups -->
-      <section class="block">
-        <header class="block-head"><h2>Future Pickups</h2></header>
-        <table class="table" aria-label="Scheduled future pickups">
-          <thead>
-            <tr><th>Airport</th><th>Date</th><th>Window</th></tr>
-          </thead>
-          <tbody id="tbl-future">
-            <tr><td>DEN</td><td>—</td><td class="muted">Coming soon</td></tr>
-          </tbody>
-        </table>
-      </section>
-    </div>
-
-    <!-- RIGHT column: sidebar -->
-    <aside class="sidebar" aria-label="Airport Booking Portals">
-      <!-- Domestic portals -->
-      <section class="block">
-        <header class="block-head" style="justify-content:space-between">
-          <h2>Domestic Portals</h2>
-        </header>
-        <ul class="list-clean">
-          <!-- Alphabetized by airport name -->
-          <li><a href="/airports/abq/">Albuquerque International Sunport <span class="small-muted">· ABQ</span></a></li>
-          <li><a href="/airports/den/">Denver International Airport <span class="small-muted">· DEN</span></a></li>
-          <li><a href="/airports/iad/">Washington Dulles International Airport <span class="small-muted">· IAD</span></a></li>
-          <li><a href="/airports/jfk/">John F. Kennedy International Airport <span class="small-muted">· JFK</span></a></li>
-          <li><a href="/airports/lga/">LaGuardia Airport <span class="small-muted">· LGA</span></a></li>
-          <li><a href="/airports/ewr/">Newark Liberty International Airport <span class="small-muted">· EWR</span></a></li>
-          <li><a href="/airports/dca/">Ronald Reagan Washington National Airport <span class="small-muted">· DCA</span></a></li>
-        </ul>
-      </section>
-
-      <!-- International portals (placeholder) -->
-      <section class="block">
-        <header class="block-head" style="justify-content:space-between">
-          <h2>International Portals</h2>
-        </header>
-        <ul class="list-clean">
-          <li><a href="/airports/lhr/">Heathrow (LHR) <span class="small-muted">· Coming soon</span></a></li>
-          <li><a href="/airports/cdg/">Charles de Gaulle (CDG) <span class="small-muted">· Coming soon</span></a></li>
-          <li><a href="/airports/syd/">Sydney (SYD) <span class="small-muted">· Coming soon</span></a></li>
-        </ul>
-      </section>
-    </aside>
-  </main>
-
-  <footer>
-    <small>© <span id="year"></span> Travylway · Global rides made simple</small>
-  </footer>
-
-  <script>
-    const yr=document.getElementById('year'); if(yr) yr.textContent=new Date().getFullYear();
-    // When you’re ready, replace placeholders by fetching live data and filling:
-    // document.getElementById('tbl-online').innerHTML = ...
-    // document.getElementById('tbl-available').innerHTML = ...
-    // document.getElementById('tbl-future').innerHTML = ...
-  </script>
-</body>
-</html>
+</main>
 
