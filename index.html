@@ -150,55 +150,62 @@
           </a>
         </div>
 
-<!-- Driver Support (WhatsApp) -->
-<section class="block wa-panel" id="driver-whatsapp" style="--panel-h: 420px;">
-  <div class="wa-wrap">
+<!-- Support Chat (Tawk.to) — separate box -->
+<section class="block panel tawk-panel" id="support-chat">
+  <div class="panel-wrap">
     <header class="block-head" style="justify-content:space-between">
-      <h2>Driver Support (WhatsApp)</h2>
+      <h2>Support Chat</h2>
     </header>
 
-    <div class="wa-body">
-      <!-- Left: CTA + quick links -->
+    <div class="panel-body">
+      <iframe
+        src="YOUR_TAWK_CHAT_URL"
+        title="Tawk.to Support Chat"
+        loading="lazy"
+        allow="clipboard-write"
+      ></iframe>
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-top:12px">
+      <small class="muted">Live support via Tawk.to — desktop & mobile.</small>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Driver Questions (WhatsApp) — separate box -->
+<section class="block panel wa-panel" id="driver-whatsapp">
+  <div class="panel-wrap">
+    <header class="block-head" style="justify-content:space-between">
+      <h2>Driver Questions (WhatsApp)</h2>
+    </header>
+
+    <div class="panel-body wa-body">
+      <!-- Left: CTA + quick presets -->
       <div>
         <p class="muted" style="margin-top:0">
           Need onboarding help, payout details, or scheduling info? Message dispatch on WhatsApp.
         </p>
 
         <div class="wa-cta" style="margin-top:8px">
-          <!-- Main WhatsApp button -->
           <a
             class="btn"
             href="https://wa.me/17204748851?text=Hi%20Travylway%20Dispatch%20%E2%80%94%20Driver%20question:"
             target="_blank" rel="noopener"
           >Start WhatsApp Chat</a>
 
-          <!-- Optional presets -->
-          <a
-            class="btn-ghost"
-            href="https://wa.me/YOUR_NUMBER?text=Driver%20Onboarding%20Question"
-            target="_blank" rel="noopener"
-          >Onboarding</a>
-
-          <a
-            class="btn-ghost"
-            href="https://wa.me/17204748851?text=Payout%20and%20Rates%20Question"
-            target="_blank" rel="noopener"
-          >Payout & Rates</a>
-
-          <a
-            class="btn-ghost"
-            href="https://wa.me/YOUR_NUMBER?text=Schedule%20Availability%20Question"
-            target="_blank" rel="noopener"
-          >Scheduling</a>
+          <a class="btn-ghost" href="https://wa.me/YOUR_NUMBER?text=Driver%20Onboarding%20Question" target="_blank" rel="noopener">Onboarding</a>
+          <a class="btn-ghost" href="https://wa.me/YOUR_NUMBER?text=Payout%20and%20Rates%20Question" target="_blank" rel="noopener">Payout & Rates</a>
+          <a class="btn-ghost" href="https://wa.me/YOUR_NUMBER?text=Schedule%20Availability%20Question" target="_blank" rel="noopener">Scheduling</a>
         </div>
 
-        <p class="hint">Response window: typically under 24 hours during business hours.</p>
+        <p class="hint">Response window: Typically under 24 hour during business hours.</p>
       </div>
 
-      <!-- Right: QR code (scan to chat) -->
+      <!-- Right: QR code -->
       <div>
         <div class="qr">
-          <!-- Generates a QR that opens your WhatsApp chat. Replace YOUR_NUMBER. -->
           <img
             src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fwa.me%2FYOUR_NUMBER"
             alt="Scan to chat on WhatsApp"
@@ -210,7 +217,6 @@
       </div>
     </div>
 
-    <!-- Footer strip inside panel -->
     <div style="display:flex;justify-content:center;margin-top:12px">
       <small class="muted">Use the presets for faster routing, or write a message from scratch.</small>
     </div>
@@ -220,9 +226,9 @@
 
 
 
+
+
         
-        <small class="muted" id="chat-status" style="display:block;margin-top:10px">No widget. Opens in a new tab.</small>
-      </section>
 
       <!-- Flight Tracking -->
       <section class="block" id="flight-tracking" style="text-align:center">
