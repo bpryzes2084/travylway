@@ -135,73 +135,69 @@
 
               
      
-      <!-- Crew Booking (DEN-only) -->
-      <section class="block" id="crew-book" style="text-align:center">
-        <header class="block-head" style="justify-content:center"><h2>Crew Booking (DEN only)</h2></header>
-        <p class="muted" style="margin:0 0 10px">Flight attendants & pilots • Airport-only rides</p>
+      <!-- Elizabeth (Compact Booking Box) -->
+<section class="block elizabeth-box" id="elizabeth">
+  <header class="block-head" style="justify-content:space-between">
+    <h2>Elizabeth</h2>
+  </header>
 
-        <form id="trav-form" onsubmit="return false;"
-              aria-label="Crew booking form"
-              style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:840px;margin:0 auto">
-          <div style="grid-column:1/-1">
-            <label for="access" style="display:block;font-size:12px;color:#bbb">Crew Access Code</label>
-            <input id="access" type="password" inputmode="text" autocomplete="off" placeholder="Enter crew code" required
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
+  <p class="muted" style="margin:0 0 8px">
+    Book with Elizabeth via our secure portal.
+  </p>
 
-          <div>
-            <label for="pickup" style="display:block;font-size:12px;color:#bbb">Pickup address</label>
-            <input id="pickup" type="text" placeholder="Start typing…" required
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
-          <div>
-            <label for="dropoff" style="display:block;font-size:12px;color:#bbb">Dropoff</label>
-            <input id="dropoff" type="text"
-                   value="Denver International Airport (DEN), 8500 Peña Blvd, Denver, CO"
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
+  <div class="elizabeth-actions">
+    <a
+      class="btn elizabeth-btn"
+      href="https://travylway.setmore.com/services/af6905d2-ef93-465d-bb59-1336ae0a0b2f"
+      target="_blank" rel="noopener"
+      aria-label="Book with Elizabeth on Setmore"
+    >Book Now</a>
 
-          <div>
-            <label for="date" style="display:block;font-size:12px;color:#bbb">Pickup date</label>
-            <input id="date" type="date" required
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
-          <div>
-            <label for="time" style="display:block;font-size:12px;color:#bbb">Pickup time</label>
-            <input id="time" type="time" required
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
+    <!-- Optional QR (auto-hides on small screens) -->
+    <div class="qr">
+      <img
+        src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https%3A%2F%2Ftravylway.setmore.com%2Fservices%2Faf6905d2-ef93-465d-bb59-1336ae0a0b2f"
+        alt="Scan to book with Elizabeth"
+        width="100" height="100" loading="lazy"
+      />
+    </div>
+  </div>
+</section>
 
-          <div>
-            <label for="airline" style="display:block;font-size:12px;color:#bbb">Airline</label>
-            <input id="airline" type="text" placeholder="e.g., United"
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
-          <div>
-            <label for="flight" style="display:block;font-size:12px;color:#bbb">Flight #</label>
-            <input id="flight" type="text" placeholder="e.g., UA123"
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
+<style>
+  /* Compact tweaks: ~50% size vs prior */
+  .elizabeth-box{ padding:12px; }
+  .elizabeth-box .block-head h2{ font-size:1rem; padding-bottom:4px; }
+  .elizabeth-box .block-head h2::after{ width:42px; height:2px; }
 
-          <div style="grid-column:1/-1">
-            <label for="notes" style="display:block;font-size:12px;color:#bbb">Notes</label>
-            <input id="notes" type="text" placeholder="Gate, bags, terminal, etc."
-                   style="width:100%;padding:10px;border:1px solid var(--stroke);border-radius:10px;background:#0b0b0b;color:#fff" />
-          </div>
+  .elizabeth-actions{
+    display:flex; align-items:center; justify-content:center;
+    gap:10px; flex-wrap:wrap; margin-top:6px;
+  }
 
-          <div style="grid-column:1/-1;display:flex;gap:8px;align-items:center;justify-content:center">
-            <button id="calc" type="button" class="btn-ghost">Estimate Distance</button>
-            <div id="est" style="color:#fff;font-weight:700" aria-live="polite"></div>
-            <div id="err" style="color:#f66;margin-left:8px" aria-live="assertive"></div>
-          </div>
+  .elizabeth-btn{
+    padding:8px 12px; border-radius:10px; font-weight:800;
+    min-width:160px; text-align:center;
+  }
 
-          <div style="grid-column:1/-1;display:flex;gap:8px;justify-content:center">
-            <button id="send" type="button" class="btn">Request Pickup</button>
-            <span id="ok" style="color:#0f0;font-weight:700" aria-live="polite"></span>
-          </div>
-        </form>
-        <small class="muted" style="display:block;margin-top:8px">Price confirmed via text. DEN-only during rebuild.</small>
-      </section>
+  .qr{
+    border:1px solid var(--stroke, #1e1e1e); border-radius:10px;
+    padding:6px; background:var(--card, #0b0b0b);
+  }
+
+  /* Mobile-first: full-width CTA, hide QR on tight screens */
+  @media (max-width:520px){
+    .elizabeth-btn{ width:100%; min-width:unset; }
+    .qr{ display:none; }
+  }
+
+  /* Small tablets: show QR but keep things tight */
+  @media (min-width:521px) and (max-width:860px){
+    .elizabeth-btn{ min-width:180px; }
+    .qr img{ width:96px; height:96px; }
+  }
+</style>
+
 
      
       
