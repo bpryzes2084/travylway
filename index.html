@@ -135,68 +135,45 @@
 
               
      
-      <!-- Elizabeth (Compact Booking Box) -->
-<section class="block elizabeth-box" id="elizabeth">
+  <!-- Denver Area -->
+<section class="block" id="denver-area">
   <header class="block-head" style="justify-content:space-between">
-    <h2>Elizabeth</h2>
+    <h2>Denver Area</h2>
   </header>
 
-  <p class="muted" style="margin:0 0 8px">
-    Book ride from Elizabeth, Colorado to Denver International Airport.
-  </p>
+  <div class="metro-grid">
+    <!-- E-470 Corridor -->
+    <article class="metro-card" id="box-e470">
+      <h3>E-470 Corridor</h3>
+      <p class="muted">Fast access along E-470: DIA, Aurora, Centennial, Parker, Lone Tree.</p>
+      <div class="actions">
+        <a class="btn" href="/denver/e470/" aria-label="View E-470 Corridor portal">View Portal</a>
+        <a class="btn-ghost" href="https://travylway.setmore.com" target="_blank" rel="noopener" aria-label="Book E-470 Corridor ride">Book</a>
+      </div>
+    </article>
 
-  <div class="elizabeth-actions">
-    <a
-      class="btn elizabeth-btn"
-      href="https://travylway.setmore.com/services/af6905d2-ef93-465d-bb59-1336ae0a0b2f"
-      target="_blank" rel="noopener"
-      aria-label="Book ride from Elizabeth, Colorado to Denver International Airport"
-    >Book Now</a>
+    <!-- Denver Metro -->
+    <article class="metro-card" id="box-denver-metro">
+      <h3>Denver Metro</h3>
+      <p class="muted">Downtown, Capitol Hill, Cherry Creek, Highlands, Tech Center, more.</p>
+      <div class="actions">
+        <a class="btn" href="/denver/metro/" aria-label="View Denver Metro portal">View Portal</a>
+        <a class="btn-ghost" href="https://travylway.setmore.com" target="_blank" rel="noopener" aria-label="Book Denver Metro ride">Book</a>
+      </div>
+    </article>
 
-    <!-- Optional QR (auto-hides on small screens) -->
-    <div class="qr">
-      <img
-        src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https%3A%2F%2Ftravylway.setmore.com%2Fservices%2Faf6905d2-ef93-465d-bb59-1336ae0a0b2f"
-        alt="Scan to book with Elizabeth"
-        width="100" height="100" loading="lazy"
-      />
-    </div>
+    <!-- Flight Attendants - Denver -->
+    <article class="metro-card" id="box-fa-denver">
+      <h3>Flight Attendants — Denver</h3>
+      <p class="muted">Crew-only pickups to/from DEN. ID required. Priority scheduling windows.</p>
+      <div class="actions">
+        <a class="btn" href="/flight-attendants/den/" aria-label="View Denver flight attendant portal">View Portal</a>
+        <a class="btn-ghost" href="https://travylway.setmore.com/services/af6905d2-ef93-465d-bb59-1336ae0a0b2f" target="_blank" rel="noopener" aria-label="Book crew ride">Book Crew Ride</a>
+      </div>
+    </article>
   </div>
 </section>
 
-<style>
-  /* Compact tweaks: ~50% size vs prior */
-  .elizabeth-box{ padding:12px; }
-  .elizabeth-box .block-head h2{ font-size:1rem; padding-bottom:4px; }
-  .elizabeth-box .block-head h2::after{ width:42px; height:2px; }
-
-  .elizabeth-actions{
-    display:flex; align-items:center; justify-content:center;
-    gap:10px; flex-wrap:wrap; margin-top:6px;
-  }
-
-  .elizabeth-btn{
-    padding:8px 12px; border-radius:10px; font-weight:800;
-    min-width:160px; text-align:center;
-  }
-
-  .qr{
-    border:1px solid var(--stroke, #1e1e1e); border-radius:10px;
-    padding:6px; background:var(--card, #0b0b0b);
-  }
-
-  /* Mobile-first: full-width CTA, hide QR on tight screens */
-  @media (max-width:520px){
-    .elizabeth-btn{ width:100%; min-width:unset; }
-    .qr{ display:none; }
-  }
-
-  /* Small tablets: show QR but keep things tight */
-  @media (min-width:521px) and (max-width:860px){
-    .elizabeth-btn{ min-width:180px; }
-    .qr img{ width:96px; height:96px; }
-  }
-</style>
 
 
      
