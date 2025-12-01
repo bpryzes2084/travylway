@@ -1,4 +1,71 @@
-Scheduled Airport Rides for Airline Crews
+<!-- Travylway banner: paste this where you want the banner -->
+<section class="travylway-banner" aria-label="Travylway banner — Scheduled Airport Rides for Airline Crews">
+  <div class="tw-inner">
+    <!-- SVG globe + orbiting planes -->
+    <div class="tw-visual" aria-hidden="true">
+      <svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" role="img">
+        <defs>
+          <radialGradient id="sea" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#79b7ff"/>
+            <stop offset="100%" stop-color="#0b6cf0"/>
+          </radialGradient>
+          <linearGradient id="glass" x1="0" x2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.25"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- globe -->
+        <g transform="translate(120,100)">
+          <circle r="60" fill="url(#sea)"/>
+          <circle r="60" fill="url(#glass)" opacity="0.18" />
+          <g transform="translate(-12,-8) scale(0.9)" fill="#cfe8b6">
+            <path d="M-28 -5 C -14 -18, 6 -18, 22 -6 C 30 0, 34 14, 10 20 C -8 22, -22 8, -28 -5 Z"/>
+            <path d="M28 8 C 44 -4, 56 -4, 70 8 C 73 14, 58 26, 44 28 C 26 30, 20 18, 28 8 Z"/>
+          </g>
+          <ellipse rx="75" ry="28" fill="#000" opacity="0.06" transform="translate(0,78)"/>
+        </g>
+
+        <!-- orbit with planes -->
+        <g transform="translate(120,100)">
+          <ellipse rx="115" ry="34" fill="none" stroke="#e7eefc" stroke-width="3" opacity="0.85"/>
+          <!-- 5 planes spaced around -->
+          <g transform="rotate(0) translate(115,0)">
+            <path d="M-8 -4 L 6 0 L -8 4 L -6 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.45"/>
+          </g>
+          <g transform="rotate(72) translate(115,0)">
+            <path d="M-8 -4 L 6 0 L -8 4 L -6 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.45"/>
+          </g>
+          <g transform="rotate(144) translate(115,0)">
+            <path d="M-8 -4 L 6 0 L -8 4 L -6 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.45"/>
+          </g>
+          <g transform="rotate(216) translate(115,0)">
+            <path d="M-8 -4 L 6 0 L -8 4 L -6 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.45"/>
+          </g>
+          <g transform="rotate(288) translate(115,0)">
+            <path d="M-8 -4 L 6 0 L -8 4 L -6 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.45"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- text block -->
+    <div class="tw-copy">
+      <h1>Scheduled Airport Rides for Airline Crews</h1>
+      <p class="domain">travylway.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- Styles: paste into your page's <style> block or main stylesheet -->
+<style>
+  :root{
+    --tw-bg: linear-gradient(135deg,#f4f8ff 0%, #ffffff 100%);
+    --accent: #0b6cf0;
+    --text: #0b1220;
+    --muted: #55606c;
+    --banner-pad: 28px;
+
 
 
 
