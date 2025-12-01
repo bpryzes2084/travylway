@@ -24,7 +24,183 @@
     nav a{font-weight:600;color:#334155;padding:6px 10px;border-radius:6px}
     /* Hero */
     .hero-wrap{max-width:var(--maxw);margin:28px auto;padding:22px;display:flex;gap:22px;align-items:center;justify-content:center}
-    .hero-card{background:var(--panel);border
+    .hero-card{background:var(--panel);border-radius:14px;padding:22px;box-shadow:0 18px 40px rgba(11,17,32,0.06);display:flex;gap:20px;align-items:center;width:100%}
+    .hero-visual{flex:0 0 300px;display:flex;align-items:center;justify-content:center}
+    .hero-visual svg{width:100%;max-width:300px;height:auto;display:block}
+    .hero-copy{flex:1 1 420px}
+    h1{margin:0 0 8px;font-size:clamp(20px,3.6vw,34px);line-height:1.03}
+    p.lead{margin:0 0 16px;color:var(--muted);font-size:15px}
+    .ctas{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{background:var(--accent);color:white;padding:10px 16px;border-radius:8px;font-weight:700;border:0;cursor:pointer}
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(11,108,240,0.12)}
+    /* Services */
+    .services{max-width:var(--maxw);margin:26px auto;padding:0 var(--pad);display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .service{background:#fff;border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(11,17,32,0.04);text-align:center}
+    .service h3{margin:8px 0 6px;font-size:16px}
+    .service p{margin:0;color:var(--muted);font-size:14px}
+    /* Contact area */
+    .contact-panel{max-width:var(--maxw);margin:18px auto;padding:18px;border-radius:10px;background:#f8fbff;border:1px solid #eef6ff;display:flex;gap:18px;align-items:center;justify-content:space-between}
+    .contact-panel .left{flex:1}
+    .contact-panel .right{flex:0 0 240px;text-align:right}
+    .phone{font-weight:800;font-size:18px;color:#0b1220}
+    footer{max-width:var(--maxw);margin:26px auto;padding:18px var(--pad);color:var(--muted);font-size:13px}
+    .small{font-size:13px;color:var(--muted);margin-top:8px}
+    /* Responsive */
+    @media (max-width:900px){
+      .services{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:720px){
+      nav{justify-content:flex-start;overflow:auto}
+      .hero-wrap{padding:12px}
+      .hero-card{flex-direction:column;align-items:center;text-align:center}
+      .hero-visual{max-width:220px}
+      .hero-copy{width:100%}
+      .services{grid-template-columns:1fr}
+      .contact-panel{flex-direction:column;align-items:flex-start}
+      .contact-panel .right{text-align:left}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">Travylway</div>
+      <div class="contact">Dedicated to airline crews — <strong class="phone">Call: (855) 000-0000</strong></div>
+    </div>
+    <nav aria-label="Main navigation">
+      <a href="#services">Services</a>
+      <a href="#book">Book a Ride</a>
+      <a href="#membership">Membership</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <main>
+    <section class="hero-wrap" aria-label="Hero — Travylway scheduled rides for airline crews">
+      <div class="hero-card">
+        <div class="hero-visual" aria-hidden="true">
+          <!-- Simplified globe + planes inline SVG (no external assets) -->
+          <svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <radialGradient id="sea" cx="40%" cy="35%">
+                <stop offset="0%" stop-color="#79b7ff"/>
+                <stop offset="100%" stop-color="#0b6cf0"/>
+              </radialGradient>
+            </defs>
+            <g transform="translate(360,210)">
+              <circle r="120" fill="url(#sea)"></circle>
+              <g fill="#cfe8b6" transform="translate(-40,-20) scale(0.9)">
+                <path d="M-60 -10 C -30 -30, 0 -30, 20 -10 C 35 0, 40 30, 10 40 C -20 45, -40 20, -60 -10 Z"/>
+                <path d="M40 10 C 70 -10, 90 -10, 110 10 C 115 20, 95 40, 70 45 C 40 50, 30 30, 40 10 Z"/>
+              </g>
+              <g transform="translate(0,0)">
+                <ellipse rx="230" ry="70" fill="none" stroke="#e6eefc" stroke-width="6" opacity="0.65" />
+              </g>
+              <!-- planes -->
+              <g transform="translate(0,0)" >
+                <g transform="rotate(0) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
+                <g transform="rotate(72) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
+                <g transform="rotate(144) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
+                <g transform="rotate(216) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
+                <g transform="rotate(288) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="hero-copy">
+          <h1>Scheduled Airport Rides for Airline Crews</h1>
+          <p class="lead">Reliable, crew-focused transportation to and from major airports — on-time pickups, vetted drivers, and flexible scheduling to match your roster.</p>
+
+          <div class="ctas">
+            <a class="btn" href="#book">Book a Ride</a>
+            <a class="btn secondary" href="#membership">Join Crew Membership</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="services" aria-label="Travylway services">
+      <div class="service">
+        <h3>Airport Transfers</h3>
+        <p>Point-to-point rides to/from major airports with flight tracking and pickup timing matched to your schedule.</p>
+      </div>
+      <div class="service">
+        <h3>Scheduled Runs</h3>
+        <p>Block rides for multiple crew members or recurring runs — perfect for crew bases and crashpads.</p>
+      </div>
+      <div class="service">
+        <h3>Driver Vetting</h3>
+        <p>Background-checked drivers with a crew-friendly service standard and transparent pricing.</p>
+      </div>
+    </section>
+
+    <!-- Quick contact / booking panel -->
+    <section id="book" class="contact-panel" aria-label="Book a ride">
+      <div class="left">
+        <div style="font-weight:700;font-size:15px">Ready to book?</div>
+        <div class="small">Call our crew line or request a pickup online — available 7 days a week.</div>
+      </div>
+      <div class="right">
+        <div class="phone">(855) 000-0000</div>
+        <div style="margin-top:8px"><a href="#contact" class="btn secondary" style="padding:8px 12px">Contact / Request</a></div>
+      </div>
+    </section>
+
+    <!-- About / membership -->
+    <section id="membership" style="max-width:var(--maxw);margin:22px auto;padding:0 var(--pad)">
+      <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04)">
+        <h2 style="margin:0 0 8px">Crew Membership — Benefits</h2>
+        <p class="small" style="margin:0;color:var(--muted)">Priority booking windows, reduced fares for repeat runs, and member-only pickup lanes. Ideal for frequent crew travelers and airline staff.</p>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" style="max-width:var(--maxw);margin:18px auto;padding:0 var(--pad)">
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <div style="flex:1;min-width:220px">
+          <h3 style="margin-top:0">About Travylway</h3>
+          <p class="small" style="color:var(--muted)">Travylway is focused on providing dependable airport transportation built around airline rosters. We prioritize punctuality, crew safety, and clear pricing.</p>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <h3 style="margin-top:0">Coverage</h3>
+          <p class="small" style="color:var(--muted)">Operating near major US hubs and expanding to additional airports. If you need service in a new city, contact us to request availability.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" style="max-width:var(--maxw);margin:18px auto;padding:0 var(--pad)">
+      <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04)">
+        <h3 style="margin-top:0">Contact</h3>
+        <p class="small" style="color:var(--muted)">Email: <a href="mailto:info@travylway.com">info@travylway.com</a> — Phone: <strong>(855) 000-0000</strong></p>
+        <p class="small" style="color:var(--muted)">Address (HQ): 4157 Mountain Rd #219, Pasadena, MD 21122</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div style="max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;flex-direction:column;gap:8px">
+      <div>© <span id="yr"></span> Travylway · Scheduled airport transportation for airline crews</div>
+      <div class="small">Proudly serving crew members nationwide — for reliable pickup and dropoff to major airports.</div>
+    </div>
+  </footer>
+
+  <script>
+    // small JS: set year and smooth scroll for internal links
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',(e)=>{
+        const t = document.querySelector(a.getAttribute('href'));
+        if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+    });
+  </script>
+</body>
+</html>
 
 
 
