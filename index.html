@@ -257,27 +257,7 @@
       <a href="#book">Book a Ride</a>
     </nav>
   </header>
-    <!-- Reviews -->
-    <section id="reviews" style="max-width:var(--maxw);margin:22px auto;padding:0 var(--pad)">
-      <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04); text-align:center;">
-        <h3 style="margin-top:0">Reviews</h3>
-        <p class="small" style="color:var(--muted);margin-bottom:12px;">
-          Flight attendants and crew, share your experience with Travylway.
-        </p>
-
-        <iframe
-          src="https://script.google.com/macros/s/AKfycbyYK57lhCLPzqxkiv5g2_eaXlvOkcNssh3_4Uqj2dCU-KzHopZ1q75fgpm5U_4Fb_Nx/exec"
-          style="width:100%;max-width:900px;height:520px;border:1px solid #eef2fb;border-radius:10px;"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-
-        <p class="small" style="color:var(--muted);margin-top:10px;">
-          Reviews help us keep this service dialed in for airline crews only.
-        </p>
-      </div>
-    </section>
-
+   
   <!-- Hero -->
   <main>
     <section class="hero-wrap" aria-label="Hero — Travylway scheduled rides for airline crews">
@@ -433,4 +413,46 @@
 </body>
 </html>
 
+    <!-- Reviews -->
+<section id="reviews" style="max-width:var(--maxw);margin:22px auto;padding:0 var(--pad)">
+  <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04); text-align:center;">
+    <h3 style="margin-top:0">Reviews</h3>
+    <p class="small" style="color:var(--muted);margin-bottom:12px;">
+      Flight attendants and crew, share your experience with Travylway.
+    </p>
+
+    <!-- Leave a Review button (opens your form in a new tab or embed later) -->
+    <div style="margin-bottom:14px;">
+      <a
+        href="FORM_URL_GOES_HERE"
+        target="_blank"
+        rel="noopener"
+        style="
+          display:inline-block;
+          padding:8px 14px;
+          border-radius:8px;
+          background:#0b6cf0;
+          color:#fff;
+          font-weight:700;
+          font-size:14px;
+          text-decoration:none;
+        "
+      >
+        Leave a Review
+      </a>
+    </div>
+
+    <!-- Existing GAS display for approved reviews -->
+    <iframe
+      src="https://script.google.com/macros/s/AKfycbyYK57lhCLPzqxkiv5g2_eaXlvOkcNssh3_4Uqj2dCU-KzHopZ1q75fgpm5U_4Fb_Nx/exec"
+      style="width:100%;max-width:900px;height:520px;border:1px solid #eef2fb;border-radius:10px;"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+
+    <p class="small" style="color:var(--muted);margin-top:10px;">
+      Reviews are published after manual moderation to keep it crew-only and on-point.
+    </p>
+  </div>
+</section>
 
