@@ -15,41 +15,187 @@
       --pad: 18px;
       --btn-radius: 8px;
     }
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0b1220;background:var(--bg);}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+      color:#0b1220;
+      background:var(--bg);
+    }
     a{color:var(--accent);text-decoration:none}
-    header{background:linear-gradient(180deg,#f6f8ff 0%, #ffffff 100%);border-bottom:1px solid #eef2fb}
-    .topbar{display:flex;justify-content:space-between;align-items:center;max-width:var(--maxw);margin:0 auto;padding:10px var(--pad);}
+    header{
+      background:linear-gradient(180deg,#f6f8ff 0%, #ffffff 100%);
+      border-bottom:1px solid #eef2fb
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:10px var(--pad);
+    }
     .brand{font-weight:800;letter-spacing:0.4px;font-size:20px}
     .contact{font-size:14px;color:var(--muted)}
-    nav{max-width:var(--maxw);margin:0 auto;padding:12px var(--pad);display:flex;gap:18px;align-items:center;justify-content:flex-end}
-    nav a{font-weight:600;color:#334155;padding:6px 10px;border-radius:6px}
+    nav{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:12px var(--pad);
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:flex-end
+    }
+    nav a{
+      font-weight:600;
+      color:#334155;
+      padding:6px 10px;
+      border-radius:6px
+    }
+
     /* Hero */
-    .hero-wrap{max-width:var(--maxw);margin:28px auto;padding:22px;display:flex;gap:22px;align-items:center;justify-content:center}
-    .hero-card{background:var(--panel);border-radius:14px;padding:22px;box-shadow:0 18px 40px rgba(11,17,32,0.06);display:flex;gap:20px;align-items:center;width:100%}
-    .hero-visual{flex:0 0 300px;display:flex;align-items:center;justify-content:center}
-    .hero-visual svg{width:100%;max-width:300px;height:auto;display:block}
+    .hero-wrap{
+      max-width:var(--maxw);
+      margin:28px auto;
+      padding:22px;
+      display:flex;
+      gap:22px;
+      align-items:center;
+      justify-content:center
+    }
+    .hero-card{
+      background:var(--panel);
+      border-radius:14px;
+      padding:22px;
+      box-shadow:0 18px 40px rgba(11,17,32,0.06);
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      align-items:flex-start;
+      width:100%;
+    }
     .hero-copy{flex:1 1 420px}
-    h1{margin:0 0 8px;font-size:clamp(20px,3.6vw,34px);line-height:1.03}
-    p.lead{margin:0 0 16px;color:var(--muted);font-size:15px}
-    .ctas{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{background:var(--accent);color:white;padding:10px 16px;border-radius:var(--btn-radius);font-weight:700;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
-    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(11,108,240,0.12)}
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(20px,3.6vw,34px);
+      line-height:1.03
+    }
+    p.lead{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:15px
+    }
+    .ctas{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap
+    }
+    .btn{
+      background:var(--accent);
+      color:white;
+      padding:10px 16px;
+      border-radius:var(--btn-radius);
+      font-weight:700;
+      border:0;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px
+    }
+    .btn.secondary{
+      background:transparent;
+      color:var(--accent);
+      border:1px solid rgba(11,108,240,0.12)
+    }
+
     /* Services */
-    .services{max-width:var(--maxw);margin:26px auto;padding:0 var(--pad);display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .service{background:#fff;border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(11,17,32,0.04);text-align:center}
-    .service h3{margin:8px 0 6px;font-size:16px}
-    .service p{margin:0;color:var(--muted);font-size:14px}
+    .services{
+      max-width:var(--maxw);
+      margin:26px auto;
+      padding:0 var(--pad);
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px
+    }
+    .service{
+      background:#fff;
+      border-radius:10px;
+      padding:16px;
+      box-shadow:0 6px 18px rgba(11,17,32,0.04);
+      text-align:center
+    }
+    .service h3{
+      margin:8px 0 6px;
+      font-size:16px
+    }
+    .service p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px
+    }
+
     /* Contact area */
-    .contact-panel{max-width:var(--maxw);margin:18px auto;padding:18px;border-radius:10px;background:#f8fbff;border:1px solid #eef6ff;display:flex;gap:18px;align-items:center;justify-content:space-between}
+    .contact-panel{
+      max-width:var(--maxw);
+      margin:18px auto;
+      padding:18px;
+      border-radius:10px;
+      background:#f8fbff;
+      border:1px solid #eef6ff;
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:space-between
+    }
     .contact-panel .left{flex:1}
-    .contact-panel .right{flex:0 0 360px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+    .contact-panel .right{
+      flex:0 0 360px;
+      text-align:right;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:8px
+    }
     .phone{font-weight:800;font-size:18px;color:#0b1220}
-    .whatsapp-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#25D366;color:white;font-weight:700;text-decoration:none}
+    .whatsapp-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:10px;
+      background:#25D366;
+      color:white;
+      font-weight:700;
+      text-decoration:none
+    }
     .whatsapp-btn svg{height:18px;width:18px;display:block}
-    .tawk-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#0b6cf0;color:white;font-weight:700;text-decoration:none;border:0;cursor:pointer}
+    .tawk-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:10px;
+      background:#0b6cf0;
+      color:white;
+      font-weight:700;
+      text-decoration:none;
+      border:0;
+      cursor:pointer
+    }
     .tawk-btn svg{height:18px;width:18px;display:block}
-    footer{max-width:var(--maxw);margin:26px auto;padding:18px var(--pad);color:var(--muted);font-size:13px}
-    .small{font-size:13px;color:var(--muted);margin-top:8px}
+    footer{
+      max-width:var(--maxw);
+      margin:26px auto;
+      padding:18px var(--pad);
+      color:var(--muted);
+      font-size:13px
+    }
+    .small{
+      font-size:13px;
+      color:var(--muted);
+      margin-top:8px
+    }
+
     /* Responsive */
     @media (max-width:900px){
       .services{grid-template-columns:repeat(2,1fr)}
@@ -57,12 +203,20 @@
     @media (max-width:720px){
       nav{justify-content:flex-start;overflow:auto}
       .hero-wrap{padding:12px}
-      .hero-card{flex-direction:column;align-items:center;text-align:center}
-      .hero-visual{max-width:220px}
+      .hero-card{
+        align-items:flex-start;
+        text-align:left
+      }
       .hero-copy{width:100%}
       .services{grid-template-columns:1fr}
-      .contact-panel{flex-direction:column;align-items:flex-start}
-      .contact-panel .right{text-align:left;align-items:flex-start}
+      .contact-panel{
+        flex-direction:column;
+        align-items:flex-start
+      }
+      .contact-panel .right{
+        text-align:left;
+        align-items:flex-start
+      }
       .contact-panel .right > *{width:100%}
     }
   </style>
@@ -71,50 +225,27 @@
   <header>
     <div class="topbar">
       <div class="brand">Travylway</div>
-      <div class="contact">Dedicated to airline crews & current customers — <strong class="phone"> Text or call: (720) 474-8851</strong></div>
+      <div class="contact">
+        Dedicated to airline crews & current customers —
+        <strong class="phone"> Text or call: (720) 474-8851</strong>
+      </div>
     </div>
     <nav aria-label="Main navigation">
       <a href="#services">Services</a>
       <a href="#book">Book a Ride</a>
-          </nav>
+    </nav>
   </header>
 
   <!-- Hero -->
   <main>
     <section class="hero-wrap" aria-label="Hero — Travylway scheduled rides for airline crews">
       <div class="hero-card">
-        <div class="hero-visual" aria-hidden="true">
-          <svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <defs>
-              <radialGradient id="sea" cx="40%" cy="35%">
-                <stop offset="0%" stop-color="#79b7ff"/>
-                <stop offset="100%" stop-color="#0b6cf0"/>
-              </radialGradient>
-            </defs>
-            <g transform="translate(360,210)">
-              <circle r="120" fill="url(#sea)"></circle>
-              <g fill="#cfe8b6" transform="translate(-40,-20) scale(0.9)">
-                <path d="M-60 -10 C -30 -30, 0 -30, 20 -10 C 35 0, 40 30, 10 40 C -20 45, -40 20, -60 -10 Z"/>
-                <path d="M40 10 C 70 -10, 90 -10, 110 10 C 115 20, 95 40, 70 45 C 40 50, 30 30, 40 10 Z"/>
-              </g>
-              <g transform="translate(0,0)">
-                <ellipse rx="230" ry="70" fill="none" stroke="#e6eefc" stroke-width="6" opacity="0.65" />
-              </g>
-              <!-- planes -->
-              <g transform="translate(0,0)" >
-                <g transform="rotate(0) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
-                <g transform="rotate(72) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
-                <g transform="rotate(144) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
-                <g transform="rotate(216) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
-                <g transform="rotate(288) translate(230,0) scale(0.6)"><path d="M-18 -6 L 6 0 L -18 6 L -14 0 Z" fill="#fff" stroke="#0b1220" stroke-width="0.6"/></g>
-              </g>
-            </g>
-          </svg>
-        </div>
-
         <div class="hero-copy">
           <h1>Scheduled Airport Rides for Airline Crews</h1>
-          <p class="lead">Reliable, crew-focused transportation to and from major airports — on-time pickups, vetted drivers, and flexible scheduling to match your roster.</p>
+          <p class="lead">
+            Reliable, crew-focused transportation to and from major airports — on-time pickups,
+            vetted drivers, and flexible scheduling to match your roster.
+          </p>
 
           <div class="ctas">
             <a class="btn" href="#book">Book a Ride</a>
@@ -150,10 +281,11 @@
         <div class="phone">(720) 474-8851</div>
 
         <!-- WhatsApp button -->
-        <a class="whatsapp-btn" href="https://wa.me/17204748851?text=Hello%20Travylway%20team" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M20.5 3.5L3.5 20.5" stroke="none"/>
-            <path d="M20.5 3.5C18.6 1.6 15.9 0.6 13 0.9 7.9 1.5 3.8 5.9 3.2 11c-0.2 1.9 0.1 3.8 1.1 5.4L0.5 23.5l7.3-3.9c1.4 0.7 3 1.1 4.6 1.2 5.1 0.4 9.7-2.5 11-7.3 0.6-2.1 0.4-4.5-0.6-6.5z" fill="#ffffff" opacity="0.01"/>
+        <a class="whatsapp-btn"
+           href="https://wa.me/17204748851?text=Hello%20Travylway%20team"
+           target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+          <svg viewBox="0 0 24 24" fill="none"
+               xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M12.04 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" fill="#25D366"/>
             <path d="M17.5 14.5c-0.4-0.2-2.3-1.1-2.7-1.2-0.4-0.2-0.7-0.2-1 0.2-0.3 0.4-1.2 1.2-1.5 1.4-0.3 0.2-0.6 0.1-1-0.1-0.9-0.4-1.8-1.6-2.3-2.5-0.2-0.4 0-0.7 0.1-0.9 0.1-0.2 0.2-0.3 0.4-0.5 0.1-0.1 0.2-0.3 0.3-0.5 0.1-0.2 0-0.4-0.1-0.5-0.4-0.8-0.9-1.5-1.3-2.2-0.3-0.5 0-0.8 0.2-1 0.3-0.2 0.6-0.2 1-0.2 0.4 0 0.8 0.1 1.2 0.3 0.6 0.3 1.2 0.8 1.8 1 0.6 0.2 1.2 0.1 1.6-0.1 0.4-0.3 0.7-0.6 1-1 0.2-0.3 0.4-0.6 0.6-0.9 0.2-0.4 0.5-0.9 0.8-1.3 0.1-0.1 0.3-0.2 0.5-0.3s0.5 0 0.8 0.2c0.4 0.2 0.8 0.5 1.1 0.9 0.3 0.4 0.6 0.9 0.8 1.4 0.3 0.8 0.5 1.6 0.4 2.4-0.1 0.8-0.6 1.6-1.4 2.1-0.5 0.3-1 0.6-1.6 0.8-0.4 0.1-0.9 0.2-1.3 0z" fill="#fff"/>
           </svg>
@@ -162,21 +294,29 @@
 
         <!-- Tawk.to chat button (opens widget or fallback link) -->
         <button class="tawk-btn" type="button" onclick="openTawk()" aria-label="Open live chat">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"
+               xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="#fff"/>
           </svg>
           Live Chat
         </button>
 
-        <div style="margin-top:6px"><a href="#contact" class="btn secondary" style="padding:8px 12px">Contact / Request</a></div>
+        <div style="margin-top:6px">
+          <a href="#contact" class="btn secondary" style="padding:8px 12px">
+            Contact / Request
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- About / membership -->
+    <!-- Membership -->
     <section id="membership" style="max-width:var(--maxw);margin:22px auto;padding:0 var(--pad)">
       <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04)">
         <h2 style="margin:0 0 8px">Crew Membership — Benefits</h2>
-        <p class="small" style="margin:0;color:var(--muted)">Priority booking windows, reduced fares for repeat runs, and member-only pickup lanes. Ideal for frequent crew travelers and airline staff.</p>
+        <p class="small" style="margin:0;color:var(--muted)">
+          Priority booking windows, reduced fares for repeat runs, and member-only pickup lanes.
+          Ideal for frequent crew travelers and airline staff.
+        </p>
       </div>
     </section>
 
@@ -185,11 +325,17 @@
       <div style="display:flex;gap:18px;flex-wrap:wrap">
         <div style="flex:1;min-width:220px">
           <h3 style="margin-top:0">About Travylway</h3>
-          <p class="small" style="color:var(--muted)">Travylway is focused on providing dependable airport transportation built around airline rosters. We prioritize punctuality, crew safety, and clear pricing.</p>
+          <p class="small" style="color:var(--muted)">
+            Travylway is focused on providing dependable airport transportation built around airline rosters.
+            We prioritize punctuality, crew safety, and clear pricing.
+          </p>
         </div>
         <div style="flex:1;min-width:220px">
           <h3 style="margin-top:0">Coverage</h3>
-          <p class="small" style="color:var(--muted)">Operating near major US hubs and expanding to additional airports. If you need service in a new city, contact us to request availability.</p>
+          <p class="small" style="color:var(--muted)">
+            Operating near major US hubs and expanding to additional airports.
+            If you need service in a new city, contact us to request availability.
+          </p>
         </div>
       </div>
     </section>
@@ -198,8 +344,13 @@
     <section id="contact" style="max-width:var(--maxw);margin:18px auto;padding:0 var(--pad)">
       <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04)">
         <h3 style="margin-top:0">Contact</h3>
-        <p class="small" style="color:var(--muted)">Email: <a href="mailto:info@travylway.com">info@travylway.com</a> — Phone: <strong>(720) 474-8851</strong></p>
-        <p class="small" style="color:var(--muted)">Need faster help? Use the Live Chat button above or WhatsApp us.</p>
+        <p class="small" style="color:var(--muted)">
+          Email: <a href="mailto:info@travylway.com">info@travylway.com</a> —
+          Phone: <strong>(720) 474-8851</strong>
+        </p>
+        <p class="small" style="color:var(--muted)">
+          Need faster help? Use the Live Chat button above or WhatsApp us.
+        </p>
       </div>
     </section>
   </main>
@@ -212,7 +363,7 @@
   </footer>
 
   <script>
-    // small JS: set year and smooth scroll for internal links
+    // year + smooth scroll
     document.getElementById('yr').textContent = new Date().getFullYear();
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click',(e)=>{
@@ -221,12 +372,12 @@
       });
     });
 
-    // Open Tawk widget (or fallback to tawk.to chat URL)
+    // Open Tawk widget (or fallback)
     function openTawk(){
       var tawkLink = 'https://tawk.to/chat/6901a27ca00437194fc22c92/1j8n65dmu';
       try {
         if(window.Tawk_API && typeof window.Tawk_API.maximize === 'function'){
-          window.Tawk_API.maximize(); // open widget
+          window.Tawk_API.maximize();
         } else if(window.Tawk_API && typeof window.Tawk_API.toggle === 'function'){
           window.Tawk_API.toggle();
         } else {
@@ -238,236 +389,18 @@
     }
   </script>
 
-  <!-- Tawk.to embed script (will load the chat widget) -->
+  <!-- Tawk.to embed script -->
   <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6901a27ca00437194fc22c92/1j8n65dmu';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-  })();
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/6901a27ca00437194fc22c92/1j8n65dmu';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
   </script>
 </body>
 </html>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travylway Footer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-        }
-
-        .footer {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #ffffff;
-            padding: 60px 20px 20px;
-            margin-top: 50px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-top {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-section h3 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #fff;
-            font-weight: 600;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-section h3::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50px;
-            height: 3px;
-            background: #4fc3f7;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: #e3f2fd;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-block;
-            font-size: 15px;
-        }
-
-        .footer-links a:hover {
-            color: #4fc3f7;
-            transform: translateX(5px);
-        }
-
-        .footer-about {
-            line-height: 1.8;
-            color: #e3f2fd;
-        }
-
-        .footer-about p {
-            margin-bottom: 15px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: #4fc3f7;
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 30px;
-            text-align: center;
-            color: #b3d9ff;
-            font-size: 14px;
-        }
-
-        .footer-bottom p {
-            margin-bottom: 10px;
-        }
-
-        .contact-info {
-            color: #e3f2fd;
-            line-height: 1.8;
-        }
-
-        .contact-info p {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .contact-info a {
-            color: #4fc3f7;
-            text-decoration: none;
-        }
-
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .footer {
-                padding: 40px 15px 15px;
-            }
-
-            .footer-top {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .footer-section h3 {
-                font-size: 18px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-top">
-                <div class="footer-section">
-                    <h3>About Travylway</h3>
-                    <div class="footer-about">
-                        <p>Your trusted travel companion for unforgettable journeys around the world. We make travel planning simple and exciting.</p>
-                        <div class="social-links">
-                            <a href="#" aria-label="Facebook">f</a>
-                            <a href="#" aria-label="Twitter">𝕏</a>
-                            <a href="#" aria-label="Instagram">📷</a>
-                            <a href="#" aria-label="LinkedIn">in</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="/contact">Contact</a></li>
-                        <li><a href="/faq">FAQ's</a></li>
-                        <li><a href="/destinations">Destinations</a></li>
-                        <li><a href="/blog">Travel Blog</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Policies</h3>
-                    <ul class="footer-links">
-                        <li><a href="/terms-of-service">Terms of Service</a></li>
-                        <li><a href="/privacy-policy">Privacy Policy</a></li>
-                        <li><a href="/cancellation-policy">Cancellation Policy</a></li>
-                        <li><a href="/refund-policy">Refund Policy</a></li>
-                        <li><a href="/cookie-policy">Cookie Policy</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <div class="contact-info">
-                        <p>📧 <a href="mailto:info@travylway.com">info@travylway.com</a></p>
-                        <p>🕒 Mon - Fri: 4:00 AM - 9:00 PM</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2025 Travylway.com - All Rights Reserved</p>
-                <p>Crafted with ❤️ for travelers worldwide</p>
-            </div>
-        </div>
-    </footer>
-
-</body>
-</html>
