@@ -331,6 +331,319 @@
       </div>
     </section>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods</title>
+    <style>
+        .payment-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .payment-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .payment-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .payment-row {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: stretch;
+            margin-bottom: 2rem;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+        }
+
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .payment-card:hover::before {
+            left: 100%;
+        }
+
+        .payment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .payment-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .payment-card:hover .payment-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .venmo-icon {
+            background: linear-gradient(135deg, #3D95CE, #008CFF);
+            color: white;
+        }
+
+        .cashapp-icon {
+            background: linear-gradient(135deg, #00D632, #00C853);
+            color: white;
+        }
+
+        .square-icon {
+            background: linear-gradient(135deg, #3E4348, #000000);
+            color: white;
+        }
+
+        .paypal-icon {
+            background: linear-gradient(135deg, #00457C, #0070BA);
+            color: white;
+        }
+
+        .payment-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .payment-card p {
+            color: #666;
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            min-height: 60px;
+        }
+
+        .payment-button {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+        }
+
+        .venmo-button {
+            background: linear-gradient(135deg, #3D95CE, #008CFF);
+        }
+
+        .venmo-button:hover {
+            background: linear-gradient(135deg, #008CFF, #0070E0);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 140, 255, 0.4);
+        }
+
+        .cashapp-button {
+            background: linear-gradient(135deg, #00D632, #00C853);
+        }
+
+        .cashapp-button:hover {
+            background: linear-gradient(135deg, #00C853, #00B248);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 214, 50, 0.4);
+        }
+
+        .square-button {
+            background: linear-gradient(135deg, #3E4348, #000000);
+        }
+
+        .square-button:hover {
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .paypal-button {
+            background: linear-gradient(135deg, #00457C, #0070BA);
+        }
+
+        .paypal-button:hover {
+            background: linear-gradient(135deg, #0070BA, #0088CC);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 112, 186, 0.4);
+        }
+
+        .payment-note {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .payment-note p {
+            color: #333;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .payment-note strong {
+            color: #667eea;
+        }
+
+        @media (max-width: 1024px) {
+            .payment-row {
+                flex-wrap: wrap;
+            }
+            
+            .payment-card {
+                min-width: 180px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .payment-section {
+                padding: 1.5rem;
+                margin: 1.5rem;
+            }
+
+            .payment-header h2 {
+                font-size: 2rem;
+            }
+
+            .payment-row {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .payment-card {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        /* Icons using Unicode/Emoji */
+        .icon-venmo::before {
+            content: "💳";
+        }
+
+        .icon-cashapp::before {
+            content: "💵";
+        }
+
+        .icon-square::before {
+            content: "□";
+            font-weight: bold;
+            font-size: 2.5rem;
+        }
+
+        .icon-paypal::before {
+            content: "💰";
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-section">
+        <div class="payment-header">
+            <h2>Flexible Payment Options</h2>
+            <p>Choose your preferred payment method for easy and secure transactions</p>
+        </div>
+
+        <div class="payment-row">
+            <!-- Venmo Card -->
+            <div class="payment-card">
+                <div class="payment-icon venmo-icon">
+                    <span class="icon-venmo"></span>
+                </div>
+                <h3>Venmo</h3>
+                <p>Fast and easy payments directly to our Venmo account.</p>
+                <a href="YOUR_VENMO_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button venmo-button">Pay with Venmo</a>
+            </div>
+
+            <!-- Cash App Card -->
+            <div class="payment-card">
+                <div class="payment-icon cashapp-icon">
+                    <span class="icon-cashapp"></span>
+                </div>
+                <h3>Cash App</h3>
+                <p>Send payments instantly using Cash App.</p>
+                <a href="YOUR_CASHAPP_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button cashapp-button">Pay with Cash App</a>
+            </div>
+
+            <!-- Square Card -->
+            <div class="payment-card">
+                <div class="payment-icon square-icon">
+                    <span class="icon-square"></span>
+                </div>
+                <h3>Square</h3>
+                <p>Secure card payments through Square.</p>
+                <a href="YOUR_SQUARE_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button square-button">Pay with Square</a>
+            </div>
+
+            <!-- PayPal Card -->
+            <div class="payment-card">
+                <div class="payment-icon paypal-icon">
+                    <span class="icon-paypal"></span>
+                </div>
+                <h3>PayPal</h3>
+                <p>Trusted worldwide payment solution.</p>
+                <a href="YOUR_PAYPAL_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button paypal-button">Pay with PayPal</a>
+            </div>
+        </div>
+
+        <div class="payment-note">
+            <p><strong>Secure Payments:</strong> All payment methods are secure and encrypted. Choose the option that works best for you.</p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+      
     <!-- About -->
     <section id="about" style="max-width:var(--maxw);margin:18px auto;padding:0 var(--pad)">
       <div style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;">
