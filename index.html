@@ -291,7 +291,7 @@
     <section id="book" class="contact-panel" aria-label="Book a ride">
       <div class="left">
         <div style="font-weight:700;font-size:15px">Ready to book?</div>
-        <div class="small">Call our crew line or request a pickup online — available 7 days a week.</div>
+        <div class="small">Request pickup to/from airport via WhatsApp — available 7 days a week.</div>
       </div>
       
         <a class="whatsapp-btn"
@@ -313,23 +313,275 @@
           Live Chat
         </button>
 
-        
-    <!-- Denver Metro -->
-    <section id="membership" style="max-width:var(--maxw);margin:22px auto;padding:0 var(--pad)">
-      <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04)">
-        <h2 style="margin:0 0 8px">Denver Based Flight Attendants</h2>
-        Providing transporation to the following addresses to/from Denver International Airport:
-        21248 E 61st Drive  Aurora, CO 80019, 
-        10058 Granby St, Commerce City, CO 80022, 
-        11446 Helena St, Commerce City, CO 80022, 
-        12975 E 107th Pl, Commerce City, CO 80022, 
-        4909  Green Valley Ranch Blvd Denver, CO 80249, 
-        18109 E 51st Pl, Denver, CO 80249, 
-        20040 Mitchell Cir Denver, CO 80249
-        <p class="small" style="margin:0;color:var(--muted)">        
-        </p>
-      </div>
-    </section>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denver Metro Service Areas</title>
+    <style>
+        .denver-metro-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .metro-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .metro-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .metro-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .metro-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metro-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: block;
+        }
+
+        .metro-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .metro-card:hover::before {
+            left: 100%;
+        }
+
+        .metro-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .metro-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .metro-card:hover .metro-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .metro-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #333;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .metro-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .metro-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 1200px) {
+            .metro-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .metro-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .denver-metro-section {
+                padding: 1.5rem;
+                margin: 1.5rem;
+            }
+
+            .metro-header h2 {
+                font-size: 2rem;
+            }
+
+            .metro-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Icon */
+        .icon-location::before {
+            content: "📍";
+        }
+    </style>
+</head>
+<body>
+    <div class="denver-metro-section">
+        <div class="metro-header">
+            <h2>Denver Metro Service Areas</h2>
+            <p>Premium airport transportation throughout the Denver metropolitan area</p>
+        </div>
+
+        <div class="metro-grid">
+            <!-- Row 1 -->
+            <a href="YOUR_ARVADA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Arvada - Leyden Rock</h3>
+                <p>Northwest Denver Metro</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="YOUR_AURORA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Aurora - West</h3>
+                <p>East Denver Metro</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="YOUR_BOULDER_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Boulder</h3>
+                <p>University City</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="YOUR_COMMERCE_CITY_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Commerce City East</h3>
+                <p>Northeast Metro</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <!-- Row 2 -->
+            <a href="YOUR_DENVER_EAST_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Denver East</h3>
+                <p>Central Denver</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="YOUR_DENVER_SOUTH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Denver South</h3>
+                <p>South Metro Area</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="YOUR_ELIZABETH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Elizabeth</h3>
+                <p>Southeast Corridor</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="YOUR_ENGLEWOOD_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Englewood - East</h3>
+                <p>South Central Metro</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <!-- Row 3 -->
+            <a href="https://bit.ly/4qfKOP0" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Gaylord Hotel</h3>
+                <p>Convention Center Area</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="https://bit.ly/4qe3xu5" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Green Valley Ranch</h3>
+                <p>Northeast Denver</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <a href="YOUR_PAINTED_PRAIRIE_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                <div class="metro-icon">
+                    <span class="icon-location"></span>
+                </div>
+                <h3>Painted Prairie</h3>
+                <p>East Metro Community</p>
+                <span class="metro-badge">Book Now</span>
+            </a>
+
+            <!-- Empty slot to complete grid (optional - remove if not needed) -->
+            <div style="grid-column: span 1;"></div>
+        </div>
+    </div>
+</body>
+</html>
+    
 
 <!DOCTYPE html>
 <html lang="en">
