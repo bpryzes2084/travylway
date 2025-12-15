@@ -1,328 +1,144 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Travylway — Scheduled Airport Rides for Airline Crews</title>
-  <meta name="description" content="Travylway: scheduled airport transportation tailored for airline crews — reliable, secure, on-time." />
-  <style>
-    :root{
-      --bg: #ffffff;
-      --panel: #fbfdff;
-      --accent: #0b6cf0;
-      --muted: #55606c;
-      --maxw: 1100px;
-      --pad: 18px;
-      --btn-radius: 8px;
-    }
-    html,body{
-      height:100%;
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
-      color:#0b1220;
-      background:var(--bg);
-    }
-    body{
-      text-align:center;
-    }
-    a{color:var(--accent);text-decoration:none}
-
-    header{
-      background:linear-gradient(180deg,#f6f8ff 0%, #ffffff 100%);
-      border-bottom:1px solid #eef2fb;
-    }
-    .topbar{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:8px;
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:10px var(--pad);
-      text-align:center;
-    }
-    .brand{
-      font-weight:800;
-      letter-spacing:0.4px;
-      font-size:20px;
-    }
-    .contact{
-      font-size:14px;
-      color:var(--muted);
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-    nav{
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:12px var(--pad);
-      display:flex;
-      gap:18px;
-      align-items:center;
-      justify-content:center;
-    }
-    nav a{
-      font-weight:600;
-      color:#334155;
-      padding:6px 10px;
-      border-radius:6px;
-    }
-
-    /* Hero */
-    .hero-wrap{
-      max-width:var(--maxw);
-      margin:28px auto;
-      padding:22px;
-      display:flex;
-      justify-content:center;
-    }
-    .hero-card{
-      background:var(--panel);
-      border-radius:14px;
-      padding:22px;
-      box-shadow:0 18px 40px rgba(11,17,32,0.06);
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-      align-items:center;
-      width:100%;
-      text-align:center;
-    }
-    .hero-copy{flex:1 1 420px}
-    h1{
-      margin:0 0 8px;
-      font-size:clamp(20px,3.6vw,34px);
-      line-height:1.03;
-    }
-    p.lead{
-      margin:0 0 16px;
-      color:var(--muted);
-      font-size:15px;
-    }
-    .ctas{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-    .btn{
-      background:var(--accent);
-      color:white;
-      padding:10px 16px;
-      border-radius:var(--btn-radius);
-      font-weight:700;
-      border:0;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .btn.secondary{
-      background:transparent;
-      color:var(--accent);
-      border:1px solid rgba(11,108,240,0.12);
-    }
-
-    /* Services */
-    .services{
-      max-width:var(--maxw);
-      margin:26px auto;
-      padding:0 var(--pad);
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:14px;
-    }
-    .service{
-      background:#fff;
-      border-radius:10px;
-      padding:16px;
-      box-shadow:0 6px 18px rgba(11,17,32,0.04);
-      text-align:center;
-    }
-    .service h3{
-      margin:8px 0 6px;
-      font-size:16px;
-    }
-    .service p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    /* Contact area */
-    .contact-panel{
-      max-width:var(--maxw);
-      margin:18px auto;
-      padding:18px;
-      border-radius:10px;
-      background:#f8fbff;
-      border:1px solid #eef6ff;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      align-items:center;
-      text-align:center;
-    }
-    .contact-panel .left{flex:1}
-    .contact-panel .right{
-      flex:0 0 auto;
-      text-align:center;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:8px;
-    }
-    .phone{
-      font-weight:800;
-      font-size:18px;
-      color:#0b1220;
-    }
-    .whatsapp-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:10px;
-      background:#25D366;
-      color:white;
-      font-weight:700;
-      text-decoration:none;
-      font-size:13px;
-    }
-    .whatsapp-btn svg{height:16px;width:16px;display:block}
-    .tawk-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
-      border-radius:10px;
-      background:#0b6cf0;
-      color:white;
-      font-weight:700;
-      text-decoration:none;
-      border:0;
-      cursor:pointer;
-    }
-    .tawk-btn svg{height:18px;width:18px;display:block}
-
-    footer{
-      max-width:var(--maxw);
-      margin:26px auto;
-      padding:18px var(--pad);
-      color:var(--muted);
-      font-size:13px;
-      text-align:center;
-    }
-    .small{
-      font-size:13px;
-      color:var(--muted);
-      margin-top:8px;
-    }
-
-    /* Responsive */
-    @media (max-width:900px){
-      .services{grid-template-columns:repeat(2,1fr);}
-    }
-    @media (max-width:720px){
-      nav{justify-content:center;overflow:auto;}
-      .hero-wrap{padding:12px;}
-      .services{grid-template-columns:1fr;}
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="topbar">
-      <div class="brand">Travylway</div>
-      <div class="contact">
-        <span>Dedicated to airline crews &amp; current customers —</span>
-        <a class="whatsapp-btn"
-           href="https://wa.me/17204748851?text=Hello%20Travylway%20team"
-           target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-          <svg viewBox="0 0 24 24" fill="none"
-               xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12.04 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" fill="#25D366"/>
-            <path d="M17.5 14.5c-0.4-0.2-2.3-1.1-2.7-1.2-0.4-0.2-0.7-0.2-1 0.2-0.3 0.4-1.2 1.2-1.5 1.4-0.3 0.2-0.6 0.1-1-0.1-0.9-0.4-1.8-1.6-2.3-2.5-0.2-0.4 0-0.7 0.1-0.9 0.1-0.2 0.2-0.3 0.4-0.5 0.1-0.1 0.2-0.3 0.3-0.5 0.1-0.2 0-0.4-0.1-0.5-0.4-0.8-0.9-1.5-1.3-2.2-0.3-0.5 0-0.8 0.2-1 0.3-0.2 0.6-0.2 1-0.2 0.4 0 0.8 0.1 1.2 0.3 0.6 0.3 1.2 0.8 1.8 1 0.6 0.2 1.2 0.1 1.6-0.1 0.4-0.3 0.7-0.6 1-1 0.2-0.3 0.4-0.6 0.6-0.9 0.2-0.4 0.5-0.9 0.8-1.3 0.1-0.1 0.3-0.2 0.5-0.3s0.5 0 0.8 0.2c0.4 0.2 0.8 0.5 1.1 0.9 0.3 0.4 0.6 0.9 0.8 1.4 0.3 0.8 0.5 1.6 0.4 2.4-0.1 0.8-0.6 1.6-1.4 2.1-0.5 0.3-1 0.6-1.6 0.8-0.4 0.1-0.9 0.2-1.3 0z" fill="#fff"/>
-          </svg>
-          WhatsApp
-        </a>
-      </div>
-    </div>
-    <nav aria-label="Main navigation">
-      <a href="#services">Services</a>
-      <a href="#book">Book a Ride</a>
-    </nav>
-  </header>
-   
-  <!-- Hero -->
-  <main>
-    <section class="hero-wrap" aria-label="Hero — Travylway scheduled rides for airline crews">
-      <div class="hero-card">
-        <div class="hero-copy">
-          <h1>Scheduled Airport Rides for Airline Crews</h1>
-          <p class="lead">
-            Reliable, crew-focused transportation to and from major airports — on-time pickups,
-            flexible scheduling.
-          </p>
-
-          
-
-    <!-- Services -->
-    <section id="services" class="services" aria-label="Travylway services">
-      <div class="service">
-        <h3>Flight Tracker</h3>
-        <p>Flights to/from Major Airports & Worldwide.</p>
-      </div>
-      <div class="service">
-        <h3>Scheduled Pickups</h3>
-        <p>Book rides for multiple crew members or recurring runs — perfect for hotels and crashpads.</p>
-      </div>
-      <div class="service">
-        <h3>Drivers Online</h3>
-        <p>INFORMATION COMING SOON</p>
-      </div>
-    </section>
-
-    <!-- Quick contact / booking panel -->
-    <section id="book" class="contact-panel" aria-label="Book a ride">
-      <div class="left">
-        <div style="font-weight:700;font-size:15px">Ready to book?</div>
-        <div class="small">Request pickup to/from airport via WhatsApp — available 7 days a week.</div>
-      </div>
-      
-        <a class="whatsapp-btn"
-           href="https://wa.me/17204748851?text=Hello%20Travylway%20team"
-           target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-          <svg viewBox="0 0 24 24" fill="none"
-               xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12.04 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" fill="#25D366"/>
-            <path d="M17.5 14.5c-0.4-0.2-2.3-1.1-2.7-1.2-0.4-0.2-0.7-0.2-1 0.2-0.3 0.4-1.2 1.2-1.5 1.4-0.3 0.2-0.6 0.1-1-0.1-0.9-0.4-1.8-1.6-2.3-2.5-0.2-0.4 0-0.7 0.1-0.9 0.1-0.2 0.2-0.3 0.4-0.5 0.1-0.1 0.2-0.3 0.3-0.5 0.1-0.2 0-0.4-0.1-0.5-0.4-0.8-0.9-1.5-1.3-2.2-0.3-0.5 0-0.8 0.2-1 0.3-0.2 0.6-0.2 1-0.2 0.4 0 0.8 0.1 1.2 0.3 0.6 0.3 1.2 0.8 1.8 1 0.6 0.2 1.2 0.1 1.6-0.1 0.4-0.3 0.7-0.6 1-1 0.2-0.3 0.4-0.6 0.6-0.9 0.2-0.4 0.5-0.9 0.8-1.3 0.1-0.1 0.3-0.2 0.5-0.3s0.5 0 0.8 0.2c0.4 0.2 0.8 0.5 1.1 0.9 0.3 0.4 0.6 0.9 0.8 1.4 0.3 0.8 0.5 1.6 0.4 2.4-0.1 0.8-0.6 1.6-1.4 2.1-0.5 0.3-1 0.6-1.6 0.8-0.4 0.1-0.9 0.2-1.3 0z" fill="#fff"/>
-          </svg>
-          WhatsApp
-        </a>
-
-        <button class="tawk-btn" type="button" onclick="openTawk()" aria-label="Open live chat">
-          <svg viewBox="0 0 24 24" fill="none"
-               xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="#fff"/>
-          </svg>
-          Live Chat
-        </button>
-
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Denver Metro Service Areas</title>
+    <meta name="description" content="Premium airport transportation services to and from airports throughout the United States and international destinations. Reliable, comfortable, professional.">
+    <title>Travylway - Premium Airport Transportation Services</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.1)" points="0,1000 1000,0 1000,1000"/></svg>');
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Denver Metro Service Areas Section */
         .denver-metro-section {
             max-width: 1400px;
-            margin: 3rem auto;
+            margin: 4rem auto;
             padding: 2rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 20px;
@@ -431,168 +247,10 @@
             letter-spacing: 0.5px;
         }
 
-        @media (max-width: 1200px) {
-            .metro-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 900px) {
-            .metro-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .denver-metro-section {
-                padding: 1.5rem;
-                margin: 1.5rem;
-            }
-
-            .metro-header h2 {
-                font-size: 2rem;
-            }
-
-            .metro-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-
-        /* Icon */
-        .icon-location::before {
-            content: "📍";
-        }
-    </style>
-</head>
-<body>
-    <div class="denver-metro-section">
-        <div class="metro-header">
-            <h2>Denver Metro Service Areas</h2>
-            <p>Premium airport transportation throughout the Denver metropolitan area</p>
-        </div>
-
-        <div class="metro-grid">
-            <!-- Row 1 -->
-            <a href="YOUR_ARVADA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Arvada - Leyden Rock</h3>
-                <p>Northwest Denver Metro</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="YOUR_AURORA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Aurora - West</h3>
-                <p>East Denver Metro</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="YOUR_BOULDER_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Boulder</h3>
-                <p>University City</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="YOUR_COMMERCE_CITY_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Commerce City East</h3>
-                <p>Northeast Metro</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <!-- Row 2 -->
-            <a href="YOUR_DENVER_EAST_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Denver East</h3>
-                <p>Central Denver</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="YOUR_DENVER_SOUTH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Denver South</h3>
-                <p>South Metro Area</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="YOUR_ELIZABETH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Elizabeth</h3>
-                <p>Southeast Corridor</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="YOUR_ENGLEWOOD_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Englewood - East</h3>
-                <p>South Central Metro</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <!-- Row 3 -->
-            <a href="https://bit.ly/4qfKOP0" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Gaylord Hotel</h3>
-                <p>Convention Center Area</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="https://bit.ly/4qe3xu5" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Green Valley Ranch</h3>
-                <p>Northeast Denver</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <a href="YOUR_PAINTED_PRAIRIE_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                <div class="metro-icon">
-                    <span class="icon-location"></span>
-                </div>
-                <h3>Painted Prairie</h3>
-                <p>East Metro Community</p>
-                <span class="metro-badge">Book Now</span>
-            </a>
-
-            <!-- Empty slot to complete grid (optional - remove if not needed) -->
-            <div style="grid-column: span 1;"></div>
-        </div>
-    </div>
-</body>
-</html>
-    
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Methods</title>
-    <style>
+        /* Payment Section */
         .payment-section {
             max-width: 1400px;
-            margin: 3rem auto;
+            margin: 4rem auto;
             padding: 2rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 20px;
@@ -702,12 +360,24 @@
             font-weight: bold;
         }
 
-        .payment-card p {
+        .payment-card > p {
             color: #666;
             margin-bottom: 1.2rem;
             line-height: 1.5;
             font-size: 0.9rem;
             min-height: 60px;
+        }
+
+        .payment-username {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            margin: 0.5rem 0 1rem 0;
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            display: inline-block;
         }
 
         .payment-button {
@@ -780,7 +450,53 @@
             color: #667eea;
         }
 
-        @media (max-width: 1024px) {
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .metro-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
             .payment-row {
                 flex-wrap: wrap;
             }
@@ -790,14 +506,25 @@
             }
         }
 
+        @media (max-width: 900px) {
+            .metro-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
-            .payment-section {
-                padding: 1.5rem;
-                margin: 1.5rem;
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
             }
 
-            .payment-header h2 {
-                font-size: 2rem;
+            .metro-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .payment-row {
@@ -809,173 +536,275 @@
                 max-width: 100%;
                 width: 100%;
             }
+
+            .denver-metro-section,
+            .payment-section {
+                padding: 1.5rem;
+                margin: 1.5rem;
+            }
+
+            .metro-header h2,
+            .payment-header h2 {
+                font-size: 2rem;
+            }
         }
 
-        /* Icons using Unicode/Emoji */
-        .icon-venmo::before {
-            content: "💳";
-        }
-
-        .icon-cashapp::before {
-            content: "💵";
-        }
-
-        .icon-square::before {
-            content: "□";
-            font-weight: bold;
-            font-size: 2.5rem;
-        }
-
-        .icon-paypal::before {
-            content: "💰";
-        }
+        /* Icons */
+        .icon-location::before { content: "📍"; }
+        .icon-venmo::before { content: "💳"; }
+        .icon-cashapp::before { content: "💵"; }
+        .icon-square::before { content: "□"; font-weight: bold; font-size: 2.5rem; }
+        .icon-paypal::before { content: "💰"; }
     </style>
 </head>
 <body>
-    <div class="payment-section">
-        <div class="payment-header">
-            <h2>Flexible Payment Options</h2>
-            <p>Choose your preferred payment method for easy and secure transactions</p>
-        </div>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">Travylway</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#service-areas">Service Areas</a></li>
+                <li><a href="#payment">Payment</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <div class="payment-row">
-            <!-- Venmo Card -->
-            <div class="payment-card">
-                <div class="payment-icon venmo-icon">
-                    <span class="icon-venmo"></span>
-                </div>
-                <h3>Venmo</h3>
-                <p>Open your Venmo app and send to:</p>
-                <div class="payment-username">@benterpryzes</div>
-                <small style="color: #999;">or scan QR code in Venmo app</small>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Premium Airport Transportation</h1>
+            <p>Reliable, comfortable, and professional transportation to and from airports worldwide</p>
+            <a href="#service-areas" class="cta-button">View Service Areas</a>
+        </div>
+    </section>
+
+    <!-- Denver Metro Service Areas -->
+    <section class="container" id="service-areas">
+        <div class="denver-metro-section">
+            <div class="metro-header">
+                <h2>Denver Metro Service Areas</h2>
+                <p>Premium airport transportation throughout the Denver metropolitan area</p>
             </div>
 
-            <!-- Cash App Card -->
-            <div class="payment-card">
-                <div class="payment-icon cashapp-icon">
-                    <span class="icon-cashapp"></span>
-                </div>
-                <h3>Cash App</h3>
-                <p>Open your Cash App and send to:</p>
-                <div class="payment-username">$benterpryzes</div>
-                <small style="color: #999;">or scan QR code in Cash App</small>
-            </div>
-
-            <!-- Square Card -->
-            <div class="payment-card">
-                <div class="payment-icon square-icon">
-                    <span class="icon-square"></span>
-                </div>
-                <h3>Square</h3>
-                <p>Secure card payments through Square.</p>
-                <a href="https://square.link/u/222MoIY9" target="_blank" rel="noopener noreferrer" class="payment-button square-button">Pay with Square</a>
-            </div>
-
-            <!-- PayPal Card -->
-            <div class="payment-card">
-                <div class="payment-icon paypal-icon">
-                    <span class="icon-paypal"></span>
-                </div>
-                <h3>PayPal</h3>
-                <p>Trusted worldwide payment solution.</p>
-                <a href="https://www.paypal.com/ncp/payment/A28K7JNZWVMJN" target="_blank" rel="noopener noreferrer" class="payment-button paypal-button">Pay with PayPal</a>
-            </div>
-        </div>
-
-        <div class="payment-note">
-            <p><strong>Secure Payments:</strong> All payment methods are secure and encrypted. Choose the option that works best for you.</p>
-        </div>
-    </div>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-      
-    <!-- About -->
-    <section id="about" style="max-width:var(--maxw);margin:18px auto;padding:0 var(--pad)">
-      <div style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;">
-        <div style="flex:1;min-width:220px;max-width:480px;margin:0 auto;">
-          <h3 style="margin-top:0">About Travylway</h3>
-          <p class="small" style="color:var(--muted)">
-            Travylway is focused on providing dependable airport transportation built for airline crews.
-            We prioritize punctuality, crew safety, and clear pricing.
-          </p>
-        </div>
-        <div style="flex:1;min-width:220px;max-width:480px;margin:0 auto;">
-          <h3 style="margin-top:0">Future Coverage</h3>
-          <p class="small" style="color:var(--muted)">
-            Coming soon to major US hubs and will be expanding to worldwide airports.
+            <div class="metro-grid">
+                <!-- Arvada -->
+                <a href="YOUR_ARVADA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
                     </div>
-      </div>
+                    <h3>Arvada - Leyden Rock</h3>
+                    <p>Northwest Denver Metro</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Aurora -->
+                <a href="YOUR_AURORA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Aurora - West</h3>
+                    <p>East Denver Metro</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Boulder -->
+                <a href="YOUR_BOULDER_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Boulder</h3>
+                    <p>University City</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Commerce City -->
+                <a href="YOUR_COMMERCE_CITY_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Commerce City East</h3>
+                    <p>Northeast Metro</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Denver East -->
+                <a href="YOUR_DENVER_EAST_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Denver East</h3>
+                    <p>Central Denver</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Denver South -->
+                <a href="YOUR_DENVER_SOUTH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Denver South</h3>
+                    <p>South Metro Area</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Elizabeth -->
+                <a href="YOUR_ELIZABETH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Elizabeth</h3>
+                    <p>Southeast Corridor</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Englewood -->
+                <a href="YOUR_ENGLEWOOD_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Englewood - East</h3>
+                    <p>South Central Metro</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Gaylord Hotel -->
+                <a href="YOUR_GAYLORD_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Gaylord Hotel</h3>
+                    <p>Convention Center Area</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Green Valley Ranch -->
+                <a href="YOUR_GREEN_VALLEY_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Green Valley Ranch</h3>
+                    <p>Northeast Denver</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- Painted Prairie -->
+                <a href="YOUR_PAINTED_PRAIRIE_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>Painted Prairie</h3>
+                    <p>East Metro Community</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+
+                <!-- E-470 Corridor -->
+                <a href="YOUR_E470_CORRIDOR_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
+                    <div class="metro-icon">
+                        <span class="icon-location"></span>
+                    </div>
+                    <h3>E-470 Corridor</h3>
+                    <p>Express Toll Route Area</p>
+                    <span class="metro-badge">Book Now</span>
+                </a>
+            </div>
+        </div>
     </section>
 
-    <!-- Contact -->
-    <section id="contact" style="max-width:var(--maxw);margin:18px auto;padding:0 var(--pad)">
-      <div style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 26px rgba(11,17,32,0.04)">
-        <h3 style="margin-top:0">Contact</h3>
-        <p class="small" style="color:var(--muted)">
-          Email: <a href="mailto:info@travylway.com">info@travylway.com</a> —
-                  </p>
-        <p class="small" style="color:var(--muted)">
-          Need faster help? Use the Live Chat button above or WhatsApp.
-        </p>
-      </div>
+    <!-- Payment Methods -->
+    <section class="container" id="payment">
+        <div class="payment-section">
+            <div class="payment-header">
+                <h2>Flexible Payment Options</h2>
+                <p>Choose your preferred payment method for easy and secure transactions</p>
+            </div>
+
+            <div class="payment-row">
+                <!-- Venmo -->
+                <div class="payment-card">
+                    <div class="payment-icon venmo-icon">
+                        <span class="icon-venmo"></span>
+                    </div>
+                    <h3>Venmo</h3>
+                    <p>Scan QR code or search username:</p>
+                    <a href="YOUR_VENMO_QR_IMAGE_URL" target="_blank" rel="noopener noreferrer">
+                        <img src="YOUR_VENMO_QR_IMAGE_URL" alt="Venmo QR Code" style="width: 120px; height: 120px; margin: 0.5rem auto; display: block; border-radius: 10px; cursor: pointer; border: 2px solid #3D95CE;">
+                    </a>
+                    <div class="payment-username">@YourVenmoUsername</div>
+                    <small style="color: #999;">Tap QR code to enlarge</small>
+                </div>
+
+                <!-- Cash App -->
+                <div class="payment-card">
+                    <div class="payment-icon cashapp-icon">
+                        <span class="icon-cashapp"></span>
+                    </div>
+                    <h3>Cash App</h3>
+                    <p>Scan QR code or search cashtag:</p>
+                    <a href="YOUR_CASHAPP_QR_IMAGE_URL" target="_blank" rel="noopener noreferrer">
+                        <img src="YOUR_CASHAPP_QR_IMAGE_URL" alt="Cash App QR Code" style="width: 120px; height: 120px; margin: 0.5rem auto; display: block; border-radius: 10px; cursor: pointer; border: 2px solid #00D632;">
+                    </a>
+                    <div class="payment-username">$YourCashtag</div>
+                    <small style="color: #999;">Tap QR code to enlarge</small>
+                </div>
+
+                <!-- Square -->
+                <div class="payment-card">
+                    <div class="payment-icon square-icon">
+                        <span class="icon-square"></span>
+                    </div>
+                    <h3>Square</h3>
+                    <p>Secure card payments through Square.</p>
+                    <a href="YOUR_SQUARE_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button square-button">Pay with Square</a>
+                </div>
+
+                <!-- PayPal -->
+                <div class="payment-card">
+                    <div class="payment-icon paypal-icon">
+                        <span class="icon-paypal"></span>
+                    </div>
+                    <h3>PayPal</h3>
+                    <p>Trusted worldwide payment solution.</p>
+                    <a href="YOUR_PAYPAL_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button paypal-button">Pay with PayPal</a>
+                </div>
+            </div>
+
+            <div class="payment-note">
+                <p><strong>Secure Payments:</strong> All payment methods are secure and encrypted. Choose the option that works best for you.</p>
+            </div>
+        </div>
     </section>
-  </main>
 
-  <footer>
-    <div style="max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;flex-direction:column;gap:8px">
-      <div>© <span id="yr"></span> Travylway · Scheduled airport transportation for airline crews</div>
-      <div class="small">Proudly serving crew members nationwide — for reliable pickup and dropoff to major airports.</div>
-    </div>
-  </footer>
-
-  <script>
-    // year + smooth scroll
-    document.getElementById('yr').textContent = new Date().getFullYear();
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click',(e)=>{
-        const t = document.querySelector(a.getAttribute('href'));
-        if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
-      });
-    });
-
-    // Open Tawk widget (or fallback)
-    function openTawk(){
-      var tawkLink = 'https://tawk.to/chat/6901a27ca00437194fc22c92/1j8n65dmu';
-      try {
-        if(window.Tawk_API && typeof window.Tawk_API.maximize === 'function'){
-          window.Tawk_API.maximize();
-        } else if(window.Tawk_API && typeof window.Tawk_API.toggle === 'function'){
-          window.Tawk_API.toggle();
-        } else {
-          window.open(tawkLink, '_blank', 'noopener');
-        }
-      } catch (e){
-        window.open(tawkLink, '_blank', 'noopener');
-      }
-    }
-  </script>
-
-  <!-- Tawk.to embed script -->
-  <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/6901a27ca00437194fc22c92/1j8n65dmu';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-    })();
-  </script>
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Travylway</h4>
+                <p>Premium airport transportation services</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#service-areas">Service Areas</a>
+                <a href="#payment">Payment Options</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: info@travylway.com</p>
+                <p>Phone: (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h4>Service Areas</h4>
+                <p>Denver Metro Area</p>
+                <p>DIA Airport</p>
+                <p>All 12 Service Zones</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 Travylway. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
 
