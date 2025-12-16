@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Premium airport transportation services to and from airports throughout the United States and international destinations. Reliable, comfortable, professional.">
-    <title>Travylway - Premium Airport Transportation Services</title>
+    <meta name="description" content="Premium airport transportation services throughout Denver Metro area and beyond.">
+    <title>Travylway - Premium Airport Transportation</title>
     <style>
         * {
             margin: 0;
@@ -13,13 +13,12 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             line-height: 1.6;
             color: #333;
             background: #f5f5f5;
         }
 
-        /* Header & Navigation */
         header {
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -40,10 +39,7 @@
         .logo {
             font-size: 2rem;
             font-weight: bold;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #667eea;
             text-decoration: none;
         }
 
@@ -57,185 +53,117 @@
             text-decoration: none;
             color: #333;
             font-weight: 500;
-            transition: color 0.3s ease;
         }
 
         .nav-links a:hover {
             color: #667eea;
         }
 
-        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-align: center;
             padding: 6rem 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.1)" points="0,1000 1000,0 1000,1000"/></svg>');
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 2rem;
-            opacity: 0.9;
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            background: #ff6b6b;
             color: white;
             padding: 1rem 2.5rem;
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: #ee5a24;
         }
 
-        /* Container */
-        .container {
+        .section {
             max-width: 1400px;
-            margin: 0 auto;
+            margin: 4rem auto;
             padding: 0 2rem;
         }
 
-        /* Denver Metro Service Areas Section */
-        .denver-metro-section {
-            max-width: 1400px;
-            margin: 4rem auto;
-            padding: 2rem;
+        .section-box {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 3rem;
         }
 
-        .metro-header {
+        .section-header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
         }
 
-        .metro-header h2 {
+        .section-header h2 {
             color: white;
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .metro-header p {
+        .section-header p {
             color: rgba(255, 255, 255, 0.9);
             font-size: 1.1rem;
         }
 
-        .metro-grid {
+        .grid-4 {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
-            margin-bottom: 1.5rem;
         }
 
-        .metro-card {
+        .card {
             background: white;
             border-radius: 15px;
             padding: 2rem 1.5rem;
             text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             text-decoration: none;
             display: block;
+            transition: transform 0.3s ease;
         }
 
-        .metro-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .metro-card:hover::before {
-            left: 100%;
-        }
-
-        .metro-card:hover {
+        .card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
 
-        .metro-icon {
+        .card-icon {
             width: 70px;
             height: 70px;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             font-size: 2.5rem;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            transition: all 0.3s ease;
         }
 
-        .metro-card:hover .metro-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .metro-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
             color: #333;
-            font-weight: bold;
-            line-height: 1.3;
         }
 
-        .metro-card p {
+        .card p {
             color: #666;
             font-size: 0.9rem;
             margin-bottom: 1rem;
         }
 
-        .metro-badge {
+        .badge {
             display: inline-block;
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -243,43 +171,13 @@
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        /* Payment Section */
-        .payment-section {
-            max-width: 1400px;
-            margin: 4rem auto;
-            padding: 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .payment-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .payment-header h2 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .payment-header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-        }
-
-        .payment-row {
+        .payment-grid {
             display: flex;
             gap: 1.5rem;
             justify-content: center;
-            align-items: stretch;
-            margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
         .payment-card {
@@ -287,34 +185,10 @@
             border-radius: 15px;
             padding: 2rem 1.5rem;
             text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             flex: 1;
             min-width: 200px;
             max-width: 280px;
-        }
-
-        .payment-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .payment-card:hover::before {
-            left: 100%;
-        }
-
-        .payment-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
 
         .payment-icon {
@@ -326,58 +200,28 @@
             justify-content: center;
             border-radius: 50%;
             font-size: 2rem;
-            transition: all 0.3s ease;
         }
 
-        .payment-card:hover .payment-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .venmo-icon {
-            background: linear-gradient(135deg, #3D95CE, #008CFF);
-            color: white;
-        }
-
-        .cashapp-icon {
-            background: linear-gradient(135deg, #00D632, #00C853);
-            color: white;
-        }
-
-        .square-icon {
-            background: linear-gradient(135deg, #3E4348, #000000);
-            color: white;
-        }
-
-        .paypal-icon {
-            background: linear-gradient(135deg, #00457C, #0070BA);
-            color: white;
-        }
+        .venmo-bg { background: linear-gradient(135deg, #3D95CE, #008CFF); }
+        .cashapp-bg { background: linear-gradient(135deg, #00D632, #00C853); }
+        .square-bg { background: linear-gradient(135deg, #3E4348, #000000); }
+        .paypal-bg { background: linear-gradient(135deg, #00457C, #0070BA); }
 
         .payment-card h3 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-bottom: 0.5rem;
             color: #333;
-            font-weight: bold;
-        }
-
-        .payment-card > p {
-            color: #666;
-            margin-bottom: 1.2rem;
-            line-height: 1.5;
-            font-size: 0.9rem;
-            min-height: 60px;
         }
 
         .payment-username {
             background: rgba(102, 126, 234, 0.1);
             padding: 0.5rem 1rem;
             border-radius: 10px;
-            margin: 0.5rem 0 1rem 0;
+            margin: 1rem 0;
             font-family: monospace;
             font-size: 1.1rem;
             font-weight: bold;
             color: #333;
-            display: inline-block;
         }
 
         .payment-button {
@@ -387,70 +231,22 @@
             text-decoration: none;
             font-weight: bold;
             color: white;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.85rem;
+            margin-top: 1rem;
         }
 
-        .venmo-button {
-            background: linear-gradient(135deg, #3D95CE, #008CFF);
-        }
+        .venmo-btn { background: linear-gradient(135deg, #3D95CE, #008CFF); }
+        .cashapp-btn { background: linear-gradient(135deg, #00D632, #00C853); }
+        .square-btn { background: linear-gradient(135deg, #3E4348, #000000); }
+        .paypal-btn { background: linear-gradient(135deg, #00457C, #0070BA); }
 
-        .venmo-button:hover {
-            background: linear-gradient(135deg, #008CFF, #0070E0);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 140, 255, 0.4);
-        }
-
-        .cashapp-button {
-            background: linear-gradient(135deg, #00D632, #00C853);
-        }
-
-        .cashapp-button:hover {
-            background: linear-gradient(135deg, #00C853, #00B248);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 214, 50, 0.4);
-        }
-
-        .square-button {
-            background: linear-gradient(135deg, #3E4348, #000000);
-        }
-
-        .square-button:hover {
-            background: linear-gradient(135deg, #000000, #1a1a1a);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-
-        .paypal-button {
-            background: linear-gradient(135deg, #00457C, #0070BA);
-        }
-
-        .paypal-button:hover {
-            background: linear-gradient(135deg, #0070BA, #0088CC);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 112, 186, 0.4);
-        }
-
-        .payment-note {
+        .note-box {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             padding: 1.5rem;
             text-align: center;
+            margin-top: 2rem;
         }
 
-        .payment-note p {
-            color: #333;
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        .payment-note strong {
-            color: #667eea;
-        }
-
-        /* Footer */
         footer {
             background: #2c3e50;
             color: white;
@@ -459,13 +255,12 @@
             margin-top: 4rem;
         }
 
-        .footer-content {
+        .footer-grid {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 0 auto 2rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            margin-bottom: 2rem;
         }
 
         .footer-section h4 {
@@ -478,89 +273,51 @@
             text-decoration: none;
             display: block;
             margin-bottom: 0.5rem;
-            transition: color 0.3s ease;
         }
 
         .footer-section a:hover {
             color: #667eea;
         }
 
-        .copyright {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 2rem;
-            margin-top: 2rem;
-        }
-
-        /* Responsive */
         @media (max-width: 1200px) {
-            .metro-grid {
+            .grid-4 {
                 grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .payment-row {
-                flex-wrap: wrap;
-            }
-            
-            .payment-card {
-                min-width: 180px;
             }
         }
 
         @media (max-width: 900px) {
-            .metro-grid {
+            .grid-4 {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
             .nav-links {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.5rem;
             }
 
-            .metro-grid {
+            .grid-4 {
                 grid-template-columns: 1fr;
-                gap: 1rem;
             }
 
-            .payment-row {
-                flex-direction: column;
-                align-items: center;
+            .section-box {
+                padding: 2rem;
             }
 
-            .payment-card {
-                max-width: 100%;
-                width: 100%;
-            }
-
-            .denver-metro-section,
-            .payment-section {
-                padding: 1.5rem;
-                margin: 1.5rem;
-            }
-
-            .metro-header h2,
-            .payment-header h2 {
+            .section-header h2 {
                 font-size: 2rem;
             }
         }
-
-        /* Icons */
-        .icon-location::before { content: "📍"; }
-        .icon-venmo::before { content: "💳"; }
-        .icon-cashapp::before { content: "💵"; }
-        .icon-square::before { content: "□"; font-weight: bold; font-size: 2.5rem; }
-        .icon-paypal::before { content: "💰"; }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
-        <nav class="container">
+        <nav>
             <a href="#" class="logo">Travylway</a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
@@ -571,206 +328,152 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Premium Airport Transportation</h1>
-            <p>Reliable, comfortable, and professional transportation to and from airports worldwide</p>
-            <a href="#service-areas" class="cta-button">View Service Areas</a>
-        </div>
+        <h1>Premium Airport Transportation</h1>
+        <p>Reliable, comfortable, and professional transportation to and from airports</p>
+        <a href="#service-areas" class="cta-button">View Service Areas</a>
     </section>
 
-    <!-- Denver Metro Service Areas -->
-    <section class="container" id="service-areas">
-        <div class="denver-metro-section">
-            <div class="metro-header">
+    <div class="section" id="service-areas">
+        <div class="section-box">
+            <div class="section-header">
                 <h2>Denver Metro Service Areas</h2>
                 <p>Premium airport transportation throughout the Denver metropolitan area</p>
             </div>
 
-            <div class="metro-grid">
-                <!-- Arvada -->
-                <a href="YOUR_ARVADA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+            <div class="grid-4">
+                <a href="YOUR_ARVADA_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Arvada - Leyden Rock</h3>
                     <p>Northwest Denver Metro</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Aurora -->
-                <a href="YOUR_AURORA_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_AURORA_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Aurora - West</h3>
                     <p>East Denver Metro</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Boulder -->
-                <a href="YOUR_BOULDER_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_BOULDER_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Boulder</h3>
                     <p>University City</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Commerce City -->
-                <a href="YOUR_COMMERCE_CITY_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_COMMERCE_CITY_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Commerce City East</h3>
                     <p>Northeast Metro</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Denver East -->
-                <a href="YOUR_DENVER_EAST_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_DENVER_EAST_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Denver East</h3>
                     <p>Central Denver</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Denver South -->
-                <a href="YOUR_DENVER_SOUTH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_DENVER_SOUTH_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Denver South</h3>
                     <p>South Metro Area</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Elizabeth -->
-                <a href="YOUR_ELIZABETH_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_ELIZABETH_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Elizabeth</h3>
                     <p>Southeast Corridor</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Englewood -->
-                <a href="YOUR_ENGLEWOOD_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_ENGLEWOOD_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Englewood - East</h3>
                     <p>South Central Metro</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Gaylord Hotel -->
-                <a href="YOUR_GAYLORD_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_GAYLORD_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Gaylord Hotel</h3>
                     <p>Convention Center Area</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Green Valley Ranch -->
-                <a href="YOUR_GREEN_VALLEY_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_GREEN_VALLEY_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Green Valley Ranch</h3>
                     <p>Northeast Denver</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- Painted Prairie -->
-                <a href="YOUR_PAINTED_PRAIRIE_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_PAINTED_PRAIRIE_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>Painted Prairie</h3>
                     <p>East Metro Community</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
 
-                <!-- E-470 Corridor -->
-                <a href="YOUR_E470_CORRIDOR_URL" class="metro-card" target="_blank" rel="noopener noreferrer">
-                    <div class="metro-icon">
-                        <span class="icon-location"></span>
-                    </div>
+                <a href="YOUR_E470_CORRIDOR_URL" class="card" target="_blank">
+                    <div class="card-icon">✈️</div>
                     <h3>E-470 Corridor</h3>
                     <p>Express Toll Route Area</p>
-                    <span class="metro-badge">Book Now</span>
+                    <span class="badge">Book Now</span>
                 </a>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Payment Methods -->
-    <section class="container" id="payment">
-        <div class="payment-section">
-            <div class="payment-header">
+    <div class="section" id="payment">
+        <div class="section-box">
+            <div class="section-header">
                 <h2>Flexible Payment Options</h2>
                 <p>Choose your preferred payment method for easy and secure transactions</p>
             </div>
 
-            <div class="payment-row">
-                <!-- Venmo -->
+            <div class="payment-grid">
                 <div class="payment-card">
-                    <div class="payment-icon venmo-icon">
-                        <span class="icon-venmo"></span>
-                    </div>
+                    <div class="payment-icon venmo-bg">💳</div>
                     <h3>Venmo</h3>
                     <p>Open your Venmo app and send to:</p>
                     <div class="payment-username">@YourVenmoUsername</div>
                 </div>
 
-                <!-- Cash App -->
                 <div class="payment-card">
-                    <div class="payment-icon cashapp-icon">
-                        <span class="icon-cashapp"></span>
-                    </div>
+                    <div class="payment-icon cashapp-bg">💵</div>
                     <h3>Cash App</h3>
                     <p>Open your Cash App and send to:</p>
                     <div class="payment-username">$YourCashtag</div>
                 </div>
 
-                <!-- Square -->
                 <div class="payment-card">
-                    <div class="payment-icon square-icon">
-                        <span class="icon-square"></span>
-                    </div>
+                    <div class="payment-icon square-bg">⬛</div>
                     <h3>Square</h3>
                     <p>Secure card payments through Square.</p>
-                    <a href="YOUR_SQUARE_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button square-button">Pay with Square</a>
+                    <a href="YOUR_SQUARE_LINK_HERE" target="_blank" class="payment-button square-btn">Pay with Square</a>
                 </div>
 
-                <!-- PayPal -->
                 <div class="payment-card">
-                    <div class="payment-icon paypal-icon">
-                        <span class="icon-paypal"></span>
-                    </div>
+                    <div class="payment-icon paypal-bg">💰</div>
                     <h3>PayPal</h3>
                     <p>Trusted worldwide payment solution.</p>
-                    <a href="YOUR_PAYPAL_LINK_HERE" target="_blank" rel="noopener noreferrer" class="payment-button paypal-button">Pay with PayPal</a>
+                    <a href="YOUR_PAYPAL_LINK_HERE" target="_blank" class="payment-button paypal-btn">Pay with PayPal</a>
                 </div>
             </div>
 
-            <div class="payment-note">
-                <p><strong>Secure Payments:</strong> All payment methods are secure and encrypted. Choose the option that works best for you.</p>
+            <div class="note-box">
+                <p><strong style="color: #667eea;">Secure Payments:</strong> All payment methods are secure and encrypted.</p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
     <footer id="contact">
-        <div class="footer-content">
+        <div class="footer-grid">
             <div class="footer-section">
                 <h4>Travylway</h4>
                 <p>Premium airport transportation services</p>
@@ -793,152 +496,7 @@
                 <p>All 12 Service Zones</p>
             </div>
         </div>
-        <div class="copyright">
-            <p>&copy; 2024 Travylway. All rights reserved.</p>
-        </div>
+        <p style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 2rem;">&copy; 2024 Travylway. All rights reserved.</p>
     </footer>
 </body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Attendant Payment Disclaimer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 700px;
-            width: 100%;
-            overflow: hidden;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .card-header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .card-header .subtitle {
-            font-size: 14px;
-            opacity: 0.95;
-            font-weight: 500;
-        }
-        
-        .card-content {
-            padding: 30px;
-        }
-        
-        .section {
-            margin-bottom: 28px;
-        }
-        
-        .section:last-child {
-            margin-bottom: 0;
-        }
-        
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .icon {
-            font-size: 20px;
-        }
-        
-        .section-content {
-            color: #4a5568;
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        
-        .alert-box {
-            background: #fff5f5;
-            border-left: 4px solid #fc8181;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-box p {
-            color: #742a2a;
-            font-weight: 600;
-            line-height: 1.6;
-        }
-        
-        .info-box {
-            background: #ebf8ff;
-            border-left: 4px solid #4299e1;
-            padding: 16px;
-            border-radius: 8px;
-            margin-top: 12px;
-        }
-        
-        .info-box p {
-            color: #2c5282;
-            line-height: 1.6;
-        }
-        
-        .remember-box {
-            background: #f0fff4;
-            border: 2px solid #68d391;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        
-        .remember-box p {
-            color: #22543d;
-            font-weight: 600;
-            line-height: 1.8;
-        }
-        
-        .footer {
-            background: #f7fafc;
-            padding: 20px 30px;
-            text-align: center;
-            color: #718096;
-            font-size: 14px;
-            font-style: italic;
-            border-top: 1px solid #e2e8f0;
-        }
-        
-        strong {
-            color: #2d3748;
-            font-weight: 700;
-        }
-    </style>
-</head>
-<body>
-    
+</html>  
