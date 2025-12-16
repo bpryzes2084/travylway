@@ -327,7 +327,276 @@
             </ul>
         </nav>
     </header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver & Dispatch Management</title>
+    <style>
+        .dispatch-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
 
+        .dispatch-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .dispatch-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .dispatch-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .dispatch-row {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .dispatch-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            min-width: 220px;
+            max-width: 300px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dispatch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .dispatch-card:hover::before {
+            left: 100%;
+        }
+
+        .dispatch-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .dispatch-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dispatch-card:hover .dispatch-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .drivers-icon {
+            background: linear-gradient(135deg, #00D632, #00C853);
+            color: white;
+        }
+
+        .requests-icon {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+            color: white;
+        }
+
+        .claimed-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .tracking-icon {
+            background: linear-gradient(135deg, #3D95CE, #008CFF);
+            color: white;
+        }
+
+        .dispatch-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .dispatch-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .dispatch-badge {
+            display: inline-block;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .drivers-badge {
+            background: linear-gradient(135deg, #00D632, #00C853);
+        }
+
+        .requests-badge {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+        }
+
+        .claimed-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .tracking-badge {
+            background: linear-gradient(135deg, #3D95CE, #008CFF);
+        }
+
+        .dispatch-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1200px) {
+            .dispatch-row {
+                flex-wrap: wrap;
+            }
+            
+            .dispatch-card {
+                min-width: 200px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .dispatch-row {
+                flex-wrap: wrap;
+            }
+
+            .dispatch-card {
+                min-width: calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dispatch-section {
+                padding: 1.5rem;
+                margin: 1.5rem;
+            }
+
+            .dispatch-header h2 {
+                font-size: 2rem;
+            }
+
+            .dispatch-row {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .dispatch-card {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        /* Icons */
+        .icon-drivers::before {
+            content: "👤";
+        }
+
+        .icon-requests::before {
+            content: "📋";
+        }
+
+        .icon-claimed::before {
+            content: "✓";
+            font-weight: bold;
+        }
+
+        .icon-tracking::before {
+            content: "✈️";
+        }
+    </style>
+</head>
+<body>
+    <div class="dispatch-section">
+        <div class="dispatch-header">
+            <h2>Driver & Dispatch Management</h2>
+            <p>Real-time tracking and management for your transportation operations</p>
+        </div>
+
+        <div class="dispatch-row">
+            <!-- Drivers Online Card -->
+            <a href="YOUR_DRIVERS_ONLINE_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
+                <div class="dispatch-icon drivers-icon">
+                    <span class="icon-drivers"></span>
+                </div>
+                <h3>Drivers Online</h3>
+                <p>View all active drivers currently available for pickups</p>
+                <span class="dispatch-badge drivers-badge">View Drivers</span>
+            </a>
+
+            <!-- Airport Pickup Requests Card -->
+            <a href="YOUR_PICKUP_REQUESTS_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
+                <div class="dispatch-icon requests-icon">
+                    <span class="icon-requests"></span>
+                </div>
+                <h3>Airport Pickup Requests</h3>
+                <p>Manage incoming airport pickup and drop-off requests</p>
+                <span class="dispatch-badge requests-badge">View Requests</span>
+            </a>
+
+            <!-- Pickups Claimed Card -->
+            <a href="YOUR_PICKUPS_CLAIMED_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
+                <div class="dispatch-icon claimed-icon">
+                    <span class="icon-claimed"></span>
+                </div>
+                <h3>Pickups Claimed</h3>
+                <p>Track all claimed pickups and assigned drivers</p>
+                <span class="dispatch-badge claimed-badge">View Claimed</span>
+            </a>
+
+            <!-- Flight Tracking Card -->
+            <a href="YOUR_FLIGHT_TRACKING_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
+                <div class="dispatch-icon tracking-icon">
+                    <span class="icon-tracking"></span>
+                </div>
+                <h3>Flight Tracking</h3>
+                <p>Monitor real-time flight statuses and arrival times</p>
+                <span class="dispatch-badge tracking-badge">Track Flights</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
     <section class="hero" id="home">
         <h1>Premium Airport Transportation</h1>
         <p>Reliable, comfortable, and professional transportation to and from airports</p>
