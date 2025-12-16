@@ -757,7 +757,228 @@
                 <h4>Contact</h4>
                 <p>Email: info@travylway.com</p>
                 <p>WhatsApp:
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Contact</title>
+    <style>
+        .whatsapp-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 2rem;
+        }
+
+        .whatsapp-container {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .whatsapp-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .whatsapp-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .whatsapp-content {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .whatsapp-icon-large {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .whatsapp-details {
+            text-align: left;
+            color: white;
+        }
+
+        .whatsapp-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .whatsapp-number {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+        }
+
+        .whatsapp-button {
+            display: inline-block;
+            background: white;
+            color: #25D366;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .whatsapp-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: #f0f0f0;
+        }
+
+        .whatsapp-button::before {
+            content: "💬 ";
+            font-size: 1.2rem;
+        }
+
+        .whatsapp-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .whatsapp-feature {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+        }
+
+        .whatsapp-feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .whatsapp-feature h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .whatsapp-feature p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-container {
+                padding: 2rem;
+            }
+
+            .whatsapp-header h2 {
+                font-size: 2rem;
+            }
+
+            .whatsapp-content {
+                flex-direction: column;
+            }
+
+            .whatsapp-details {
+                text-align: center;
+            }
+
+            .whatsapp-icon-large {
+                width: 100px;
+                height: 100px;
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="whatsapp-section">
+        <div class="whatsapp-container">
+            <div class="whatsapp-header">
+                <h2>Contact Us on WhatsApp</h2>
+                <p>Get instant responses and book your ride directly through WhatsApp</p>
             </div>
+
+            <div class="whatsapp-content">
+                <div class="whatsapp-icon-large">
+                    💬
+                </div>
+
+                <div class="whatsapp-details">
+                    <h3>Message us now:</h3>
+                    <div class="whatsapp-number">+1 (555) 123-4567</div>
+                    <a href="https://wa.me/15551234567?text=Hi%2C%20I%27d%20like%20to%20book%20airport%20transportation" 
+                       class="whatsapp-button" 
+                       target="_blank" 
+                       rel="noopener noreferrer">
+                        Chat on WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <div class="whatsapp-features">
+                <div class="whatsapp-feature">
+                    <div class="whatsapp-feature-icon">⚡</div>
+                    <h4>Instant Response</h4>
+                    <p>Get immediate replies to your inquiries</p>
+                </div>
+
+                <div class="whatsapp-feature">
+                    <div class="whatsapp-feature-icon">📅</div>
+                    <h4>Easy Booking</h4>
+                    <p>Book your ride with a simple message</p>
+                </div>
+
+                <div class="whatsapp-feature">
+                    <div class="whatsapp-feature-icon">🔔</div>
+                    <h4>Real-time Updates</h4>
+                    <p>Receive live status notifications</p>
+                </div>
+
+                <div class="whatsapp-feature">
+                    <div class="whatsapp-feature-icon">🌍</div>
+                    <h4>24/7 Available</h4>
+                    <p>Contact us anytime, anywhere</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
             <div class="footer-section">
                 <h4>Service Areas</h4>
                 <p>Denver Metro Area</p>
