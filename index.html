@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,6 +59,110 @@
             color: #667eea;
         }
 
+        /* Ride Request Card Styles */
+        .ride-request-wrapper {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .ride-request-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .ride-card-header {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            flex: 0 0 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ride-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .ride-card-header h2 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ride-card-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ride-card-body {
+            padding: 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .ride-info-text {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #25D366 0%, #1ea952 100%);
+            color: white;
+            text-decoration: none;
+            padding: 18px 32px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            align-self: flex-start;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -173,6 +277,98 @@
             font-weight: bold;
         }
 
+        /* Dispatch Section */
+        .dispatch-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .dispatch-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .dispatch-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .dispatch-row {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .dispatch-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            min-width: 220px;
+            max-width: 300px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dispatch-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .dispatch-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 2.5rem;
+        }
+
+        .drivers-icon { background: linear-gradient(135deg, #00D632, #00C853); color: white; }
+        .requests-icon { background: linear-gradient(135deg, #FF6B6B, #EE5A24); color: white; }
+        .claimed-icon { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .tracking-icon { background: linear-gradient(135deg, #3D95CE, #008CFF); color: white; }
+
+        .dispatch-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .dispatch-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .dispatch-badge {
+            display: inline-block;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .drivers-badge { background: linear-gradient(135deg, #00D632, #00C853); }
+        .requests-badge { background: linear-gradient(135deg, #FF6B6B, #EE5A24); }
+        .claimed-badge { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .tracking-badge { background: linear-gradient(135deg, #3D95CE, #008CFF); }
+
+        /* Payment Section */
         .payment-grid {
             display: flex;
             gap: 1.5rem;
@@ -247,6 +443,7 @@
             margin-top: 2rem;
         }
 
+        /* Footer */
         footer {
             background: #2c3e50;
             color: white;
@@ -279,6 +476,7 @@
             color: #667eea;
         }
 
+        /* Responsive */
         @media (max-width: 1200px) {
             .grid-4 {
                 grid-template-columns: repeat(3, 1fr);
@@ -312,6 +510,37 @@
             .section-header h2 {
                 font-size: 2rem;
             }
+
+            .ride-request-card {
+                flex-direction: column;
+            }
+
+            .ride-card-header {
+                flex: 0 0 auto;
+                padding: 30px;
+            }
+
+            .ride-card-header h2 {
+                font-size: 28px;
+            }
+
+            .ride-card-body {
+                padding: 30px;
+            }
+
+            .whatsapp-btn {
+                width: 100%;
+            }
+
+            .dispatch-section {
+                padding: 1.5rem;
+                margin: 1.5rem;
+            }
+
+            .dispatch-card {
+                max-width: 100%;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -328,509 +557,66 @@
         </nav>
     </header>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ride Requests - Travylway</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 1100px;
-            width: 100%;
-            overflow: hidden;
-            animation: slideUp 0.5s ease-out;
-            display: flex;
-            flex-direction: row;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            padding: 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            flex: 0 0 320px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .card-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .card-header h1 {
-            color: white;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .card-header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 18px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .card-body {
-            padding: 40px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .info-text {
-            color: #555;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .whatsapp-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, #25D366 0%, #1ea952 100%);
-            color: white;
-            text-decoration: none;
-            padding: 18px 32px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            align-self: flex-start;
-            margin-bottom: 25px;
-        }
-
-        .whatsapp-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
-        }
-
-        .whatsapp-btn:active {
-            transform: translateY(0);
-        }
-
-        .whatsapp-icon {
-            width: 28px;
-            height: 28px;
-        }
-
-        .features {
-            display: flex;
-            gap: 20px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            transition: transform 0.2s ease;
-            flex: 1;
-        }
-
-        .feature-item:hover {
-            transform: translateY(-3px);
-            background: #f0f1f3;
-        }
-
-        .feature-icon {
-            font-size: 24px;
-        }
-
-        .feature-text {
-            color: #333;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        @media (max-width: 768px) {
-            .card {
-                flex-direction: column;
-            }
-
-            .card-header {
-                flex: 0 0 auto;
-                padding: 30px;
-            }
-
-            .card-header h1 {
-                font-size: 28px;
-            }
-
-            .card-body {
-                padding: 30px;
-            }
-
-            .whatsapp-btn {
-                width: 100%;
-            }
-
-            .features {
-                flex-direction: column;
-                gap: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card-header h1 {
-                font-size: 24px;
-            }
+    <!-- Ride Request Card -->
+    <div class="ride-request-wrapper">
+        <div class="ride-request-card">
+            <div class="ride-card-header">
+                <h2>✈️ Ride Requests</h2>
+                <p>For Flight Attendants</p>
+            </div>
             
-            .whatsapp-btn {
-                font-size: 16px;
-                padding: 16px 28px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="card-header">
-            <h1>✈️ Ride Requests</h1>
-            <p>For Flight Attendants</p>
-        </div>
-        
-        <div class="card-body">
-            <p class="info-text">
-                Connect with Travylway on WhatsApp for quick and easy transportation requests.
-            </p>
-            
-            <a href="https://wa.me/17204748851?text=Hi%20Travylway!%20I%20need%20a%20ride." class="whatsapp-btn">
-                <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Request a Ride on WhatsApp
-            </a>
+            <div class="ride-card-body">
+                <p class="ride-info-text">
+                    Connect with Travylway on WhatsApp for quick and easy transportation requests.
+                </p>
+                
+                <a href="https://wa.me/17204748851?text=Hi%20Travylway!%20I%20need%20a%20ride." class="whatsapp-btn">
+                    <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Request a Ride on WhatsApp
+                </a>
+            </div>
         </div>
     </div>
-</body>
-</html>
 
-    
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drivers & Pickups</title>
-    <style>
-        .dispatch-section {
-            max-width: 1400px;
-            margin: 3rem auto;
-            padding: 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .dispatch-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .dispatch-header h2 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .dispatch-header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-        }
-
-        .dispatch-row {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            align-items: stretch;
-        }
-
-        .dispatch-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            flex: 1;
-            min-width: 220px;
-            max-width: 300px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dispatch-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .dispatch-card:hover::before {
-            left: 100%;
-        }
-
-        .dispatch-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .dispatch-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 2.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .dispatch-card:hover .dispatch-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .drivers-icon {
-            background: linear-gradient(135deg, #00D632, #00C853);
-            color: white;
-        }
-
-        .requests-icon {
-            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
-            color: white;
-        }
-
-        .claimed-icon {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .tracking-icon {
-            background: linear-gradient(135deg, #3D95CE, #008CFF);
-            color: white;
-        }
-
-        .dispatch-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 0.8rem;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .dispatch-card p {
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 1.2rem;
-            line-height: 1.5;
-        }
-
-        .dispatch-badge {
-            display: inline-block;
-            color: white;
-            padding: 0.5rem 1.2rem;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .drivers-badge {
-            background: linear-gradient(135deg, #00D632, #00C853);
-        }
-
-        .requests-badge {
-            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
-        }
-
-        .claimed-badge {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .tracking-badge {
-            background: linear-gradient(135deg, #3D95CE, #008CFF);
-        }
-
-        .dispatch-badge:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        @media (max-width: 1200px) {
-            .dispatch-row {
-                flex-wrap: wrap;
-            }
-            
-            .dispatch-card {
-                min-width: 200px;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .dispatch-row {
-                flex-wrap: wrap;
-            }
-
-            .dispatch-card {
-                min-width: calc(50% - 1rem);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .dispatch-section {
-                padding: 1.5rem;
-                margin: 1.5rem;
-            }
-
-            .dispatch-header h2 {
-                font-size: 2rem;
-            }
-
-            .dispatch-row {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .dispatch-card {
-                max-width: 100%;
-                width: 100%;
-            }
-        }
-
-        /* Icons */
-        .icon-drivers::before {
-            content: "👤";
-        }
-
-        .icon-requests::before {
-            content: "📋";
-        }
-
-        .icon-claimed::before {
-            content: "✓";
-            font-weight: bold;
-        }
-
-        .icon-tracking::before {
-            content: "✈️";
-        }
-    </style>
-</head>
-<body>
+    <!-- Dispatch Section -->
     <div class="dispatch-section">
         <div class="dispatch-header">
             <h2>Driver & Airport Pickups</h2>
-            <p></p>
         </div>
 
         <div class="dispatch-row">
-            <!-- Drivers Online Card -->
             <a href="YOUR_DRIVERS_ONLINE_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
-                <div class="dispatch-icon drivers-icon">
-                    <span class="icon-drivers"></span>
-                </div>
+                <div class="dispatch-icon drivers-icon">👤</div>
                 <h3>Drivers Online</h3>
                 <p>Active drivers currently available for pickups</p>
                 <span class="dispatch-badge drivers-badge">View Drivers</span>
             </a>
 
-            <!-- Airport Pickup Requests Card -->
             <a href="YOUR_PICKUP_REQUESTS_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
-                <div class="dispatch-icon requests-icon">
-                    <span class="icon-requests"></span>
-                </div>
+                <div class="dispatch-icon requests-icon">📋</div>
                 <h3>Airport Pickup Requests</h3>
                 <p>Airport pickup and Drop-off requests</p>
                 <span class="dispatch-badge requests-badge">View Requests</span>
             </a>
 
-            <!-- Pickups Claimed Card -->
             <a href="YOUR_PICKUPS_CLAIMED_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
-                <div class="dispatch-icon claimed-icon">
-                    <span class="icon-claimed"></span>
-                </div>
+                <div class="dispatch-icon claimed-icon">✓</div>
                 <h3>Pickups Claimed</h3>
                 <p>All claimed pickups</p>
                 <span class="dispatch-badge claimed-badge">View Claimed</span>
             </a>
 
-            <!-- Flight Tracking Card -->
             <a href="YOUR_FLIGHT_TRACKING_URL" class="dispatch-card" target="_blank" rel="noopener noreferrer">
-                <div class="dispatch-icon tracking-icon">
-                    <span class="icon-tracking"></span>
-                </div>
+                <div class="dispatch-icon tracking-icon">✈️</div>
                 <h3>Flight Tracking</h3>
                 <p>Real-time flight statuses and arrival times</p>
                 <span class="dispatch-badge tracking-badge">Track Flights</span>
             </a>
         </div>
     </div>
-</body>
-</html>
+
     <section class="hero" id="home">
         <h1>Premium Airport Transportation</h1>
         <p>Reliable, comfortable, and professional transportation to and from airports</p>
@@ -859,7 +645,7 @@
                     <span class="badge">Book Now</span>
                 </a>
 
-        <a href="https://travylway.setmore.com/services/271205a0-92f2-4f11-8e39-4d84ad7bc1d2" class="card" target="_blank">
+                <a href="https://travylway.setmore.com/services/271205a0-92f2-4f11-8e39-4d84ad7bc1d2" class="card" target="_blank">
                     <div class="card-icon">✈️</div>
                     <h3>Boulder</h3>
                     <p>University of Colorado</p>
@@ -887,7 +673,7 @@
                     <span class="badge">Book Now</span>
                 </a>
 
-       <a href="https://travylway.setmore.com/services/af6905d2-ef93-465d-bb59-1336ae0a0b2f" class="card" target="_blank">
+                <a href="https://travylway.setmore.com/services/af6905d2-ef93-465d-bb59-1336ae0a0b2f" class="card" target="_blank">
                     <div class="card-icon">✈️</div>
                     <h3>Elizabeth</h3>
                     <p>Southeast Corridor</p>
@@ -915,7 +701,7 @@
                     <span class="badge">Book Now</span>
                 </a>
 
- <a href="https://travylway.setmore.com/services/95d87a3a-39e1-49c7-a0e9-d29274e78344" class="card" target="_blank">
+                <a href="https://travylway.setmore.com/services/95d87a3a-39e1-49c7-a0e9-d29274e78344" class="card" target="_blank">
                     <div class="card-icon">✈️</div>
                     <h3>Painted Prairie</h3>
                     <p>East Metro Community</p>
@@ -970,215 +756,4 @@
             </div>
 
             <div class="note-box">
-                <p><strong style="color: #667eea;">Secure Payments:</strong> All payment methods are secure and encrypted.</p>
-            </div>
-        </div>
-    </div>
-
-    <footer id="contact">
-        <div class="footer-grid">
-            <div class="footer-section">
-                <h4>Support</h4>
-                <p>Click here for support - Hi. How can we help?</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <a href="#home">Home</a>
-                <a href="#service-areas">Service Areas</a>
-                <a href="#payment">Payment Options</a>
-            </div>
-            <div class="footer-section">
-                <h4>Contact</h4>
-                <p>Email: info@travylway.com</p>
-                <p>WhatsApp:
-            <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Contact</title>
-    <style>
-        .whatsapp-section {
-            max-width: 1400px;
-            margin: 3rem auto;
-            padding: 2rem;
-        }
-
-        .whatsapp-container {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .whatsapp-header h2 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .whatsapp-header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-
-        .whatsapp-content {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-
-        .whatsapp-icon-large {
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .whatsapp-details {
-            text-align: left;
-            color: white;
-        }
-
-        .whatsapp-details h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .whatsapp-number {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-            backdrop-filter: blur(10px);
-        }
-
-        .whatsapp-button {
-            display: inline-block;
-            background: white;
-            color: #25D366;
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .whatsapp-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            background: #f0f0f0;
-        }
-
-        .whatsapp-button::before {
-            content: "💬 ";
-            font-size: 1.2rem;
-        }
-
-        .whatsapp-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .whatsapp-feature {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            border-radius: 15px;
-            color: white;
-            text-align: center;
-        }
-
-        .whatsapp-feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .whatsapp-feature h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .whatsapp-feature p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        @media (max-width: 768px) {
-            .whatsapp-container {
-                padding: 2rem;
-            }
-
-            .whatsapp-header h2 {
-                font-size: 2rem;
-            }
-
-            .whatsapp-content {
-                flex-direction: column;
-            }
-
-            .whatsapp-details {
-                text-align: center;
-            }
-
-            .whatsapp-icon-large {
-                width: 100px;
-                height: 100px;
-                font-size: 4rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    
-            <div class="whatsapp-content">
-                <div class="whatsapp-icon-large">
-                    💬
-                </div>
-
-                <div class="whatsapp-details">
-                    <h3>Ride Requests - Message us:</h3>
-                    <a href="https://wa.me/17204748851?text=Hi%2C%20I%27d%20like%20to%20book%20airport%20transportation" 
-                       class="whatsapp-button" 
-                       target="_blank" 
-                       rel="noopener noreferrer">
-                        Chat on WhatsApp
-                    </a>
-                </div>
-            </div>
-
-                                    
-               
-</body>
-</html>
-       
+                <p><strong style="color: #667eea;">Secure Payments
