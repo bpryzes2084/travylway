@@ -1,9 +1,325 @@
-<h1>Crew-Focused Airport Transportation</h1>
-<p>Reliable Airport Rides for Flight Attendants, Pilots.</p>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Travylway – Crew & Driver Portal</title>
+<meta name="description" content="Crew-focused airport transportation with a driver board for real-time trip visibility. Request trips via WhatsApp.">
 
-<div>
-  <a href="/crew.html">I’m Air Crew</a>
-  <a href="/driver.html">I’m a Driver</a>
-</div>
+<style>
+:root{
+  --bg:#0B1C2D;          /* deep aviation navy */
+  --card:#ffffff;
+  --accent:#2563EB;      /* electric blue */
+  --text:#0F172A;
+  --light:#E5E7EB;
+  --muted:rgba(229,231,235,.82);
+  --line:rgba(255,255,255,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:var(--bg);
+  color:var(--light);
+}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1120px;margin:auto;padding:0 18px}
+
+/* Top nav */
+header{
+  position:sticky; top:0; z-index:10;
+  background:rgba(11,28,45,.82);
+  backdrop-filter: blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; gap:14px;
+}
+.brand{
+  display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px;
+}
+.logoDot{
+  width:12px;height:12px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#14B8A6);
+  box-shadow:0 0 0 6px rgba(37,99,235,.18);
+}
+.navlinks{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+.navlinks a{
+  font-weight:700; font-size:14px; padding:10px 12px;
+  border-radius:999px; transition:.18s;
+  border:1px solid transparent;
+}
+.navlinks a:hover{
+  border-color:rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);
+}
+.pill{
+  border:1px solid rgba(255,255,255,.20) !important;
+  background:rgba(255,255,255,.06);
+}
+.pill:hover{background:rgba(255,255,255,.10)}
+
+/* Buttons */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:14px 22px;
+  border-radius:999px;
+  font-weight:900;
+  transition:.18s;
+  border:0;
+}
+.btn.primary{background:var(--accent); color:#fff}
+.btn.primary:hover{transform:translateY(-2px); filter:brightness(1.02)}
+.btn.secondary{background:#fff; color:var(--text)}
+.btn.secondary:hover{transform:translateY(-2px); filter:brightness(0.98)}
+.btn.whatsapp{background:#25D366; color:#0b1c2d}
+.btn.whatsapp:hover{transform:translateY(-2px); opacity:.92}
+
+/* Hero */
+.hero{
+  padding:70px 0 28px;
+}
+.heroGrid{
+  display:grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap:22px;
+  align-items:stretch;
+}
+@media (max-width: 920px){
+  .heroGrid{grid-template-columns:1fr}
+}
+.heroCard{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border-radius:28px;
+  padding:26px;
+  box-shadow:0 24px 60px rgba(0,0,0,.25);
+  position:relative;
+  overflow:hidden;
+}
+.heroCard:before{
+  content:"";
+  position:absolute; inset:-120px -140px auto auto;
+  width:320px; height:320px; border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), rgba(20,184,166,.15), transparent 70%);
+  filter: blur(10px);
+  transform: rotate(14deg);
+}
+.hero h1{
+  margin:0 0 12px;
+  font-size:clamp(2.05rem, 3.8vw, 3.15rem);
+  line-height:1.06;
+  position:relative;
+}
+.hero p{
+  margin:0 0 18px;
+  color:var(--muted);
+  font-size:1.05rem;
+  max-width:52ch;
+  position:relative;
+}
+.actions{
+  display:flex; gap:12px; flex-wrap:wrap;
+  position:relative;
+}
+
+/* Feature cards */
+.section{
+  padding:18px 0 70px;
+}
+.panel{
+  background:#F8FAFC;
+  color:var(--text);
+  border-radius:30px;
+  padding:54px 18px;
+}
+.panel .wrap{padding:0}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:18px;
+}
+@media (max-width: 920px){
+  .cards{grid-template-columns:1fr}
+}
+.card{
+  background:#fff;
+  border:1px solid #e7eaf3;
+  border-radius:22px;
+  padding:26px;
+  box-shadow:0 20px 46px rgba(2,6,23,.10);
+}
+.card h3{margin:0 0 10px}
+.card ul{margin:0 0 16px; padding-left:18px}
+.card li{margin:0 0 8px; color:#334155}
+.card .ctaRow{display:flex; gap:10px; flex-wrap:wrap}
+.subtle{
+  margin-top:34px;
+  text-align:center;
+}
+.subtle h2{margin:0 0 10px}
+.subtle p{margin:0; color:#334155}
+
+/* Footer */
+footer{
+  padding:36px 0 44px;
+  color:rgba(229,231,235,.70);
+  text-align:center;
+  font-size:13px;
+}
+footer a{font-weight:800}
+.smallNote{
+  margin-top:10px;
+  opacity:.8;
+  font-size:12px;
+}
+
+/* Tiny badge */
+.badge{
+  display:inline-flex; gap:8px; align-items:center;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  color:rgba(229,231,235,.88);
+  font-weight:800;
+  font-size:13px;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 0 6px rgba(34,197,94,.15);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <div class="brand">
+        <span class="logoDot" aria-hidden="true"></span>
+        <span>Travylway</span>
+      </div>
+
+      <nav class="navlinks" aria-label="Primary">
+        <a href="/" class="pill">Home</a>
+        <a href="/driver.html">Driver Board</a>
+        <a href="/crew.html">Crew Requests</a>
+        <a class="pill" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
+          WhatsApp • Request Trips
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div class="heroGrid">
+
+      <section class="heroCard">
+        <div class="badge"><span class="dot" aria-hidden="true"></span><span>Live trip requests • crew-first ops</span></div>
+
+        <h1>Airport transportation built for crew schedules — not guesswork.</h1>
+        <p>
+          Reliable rides for flight attendants, pilots, and professional drivers.
+          No surge chaos. No roulette-wheel ETAs. Just on-time airport runs.
+        </p>
+
+        <div class="actions">
+          <a class="btn primary" href="/crew.html">I’m Air Crew</a>
+          <a class="btn secondary" href="/driver.html">I’m a Driver</a>
+          <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
+            WhatsApp • Request Trips
+          </a>
+        </div>
+
+        <p class="smallNote">
+          Tip: Drivers use the Driver Board to view open trips by airport code. Crew can request trips via WhatsApp or Crew Requests.
+        </p>
+      </section>
+
+      <aside class="heroCard" style="padding:26px;">
+        <h2 style="margin:0 0 10px; font-size:1.35rem;">Quick links</h2>
+        <p style="margin:0 0 16px; color:var(--muted);">
+          Jump straight to what you need. Keep it fast. Keep it clean.
+        </p>
+
+        <div class="actions" style="flex-direction:column; align-items:stretch;">
+          <a class="btn secondary" href="/driver.html">Open Driver Board</a>
+          <a class="btn primary" href="/crew.html">Crew Requests</a>
+          <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
+            WhatsApp • Request Trips
+          </a>
+        </div>
+
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:13px;">
+          Global airports supported — trips appear dynamically. No airport list maintenance.
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="panel">
+      <div class="wrap">
+        <div class="cards">
+          <div class="card">
+            <h3>✈️ For Air Crew</h3>
+            <ul>
+              <li>Scheduled pickups & drop-offs to/from airports</li>
+              <li>Early mornings & late-night support</li>
+              <li>Crew-aware timing for real report schedules</li>
+            </ul>
+            <div class="ctaRow">
+              <a class="btn primary" href="/crew.html">Request a Ride</a>
+              <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
+                WhatsApp • Request Trips
+              </a>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>🚗 For Drivers</h3>
+            <ul>
+              <li>View open trip requests by airport code</li>
+              <li>Claim trips (coming next) and run predictable airport routes</li>
+              <li>Work where you want — worldwide coverage</li>
+            </ul>
+            <div class="ctaRow">
+              <a class="btn secondary" href="/driver.html">Open Driver Board</a>
+              <a class="btn primary" href="/crew.html">See Crew Requests</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="subtle">
+          <h2>🌍 Global Airports. One Platform.</h2>
+          <p>Trips show up dynamically — anywhere crew need reliable rides.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a href="/driver.html">Driver Board</a> •
+      <a href="/crew.html">Crew Requests</a> •
+      <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+    <div class="smallNote">Built for air crew. Designed for reliability.</div>
+  </div>
+</footer>
+
+</body>
+</html>
+
 
 
