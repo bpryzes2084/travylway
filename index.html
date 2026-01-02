@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -8,9 +8,9 @@
 
 <style>
 :root{
-  --bg:#2B3A4A;           /* deep aviation navy */
+  --bg:#2B3A4A;
   --card:#ffffff;
-  --accent:#2563EB;      /* electric blue */
+  --accent:#2563EB;
   --text:#0F172A;
   --light:#E5E7EB;
   --muted:rgba(229,231,235,.82);
@@ -29,7 +29,7 @@ a{text-decoration:none;color:inherit}
 /* Top nav */
 header{
   position:sticky; top:0; z-index:10;
-  background:rgba(11,28,45,.82);
+  background:rgba(43,58,74,.86);
   backdrop-filter: blur(10px);
   border-bottom:1px solid var(--line);
 }
@@ -37,38 +37,31 @@ header{
   display:flex; align-items:center; justify-content:space-between;
   padding:14px 0; gap:14px;
 }
-.brand{
-  display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px;
-}
+.brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px;}
 .logoDot{
   width:12px;height:12px;border-radius:50%;
   background:linear-gradient(135deg,var(--accent),#14B8A6);
   box-shadow:0 0 0 6px rgba(37,99,235,.18);
 }
-.navlinks{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+.navlinks{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
 .navlinks a{
-  font-weight:700; font-size:14px; padding:10px 12px;
+  font-weight:800; font-size:14px; padding:10px 12px;
   border-radius:999px; transition:.18s;
   border:1px solid transparent;
 }
-.navlinks a:hover{
-  border-color:rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06);
-}
-.pill{
-  border:1px solid rgba(255,255,255,.20) !important;
-  background:rgba(255,255,255,.06);
-}
+.navlinks a:hover{border-color:rgba(255,255,255,.18); background:rgba(255,255,255,.06);}
+.pill{border:1px solid rgba(255,255,255,.20)!important; background:rgba(255,255,255,.06);}
 .pill:hover{background:rgba(255,255,255,.10)}
 
 /* Buttons */
 .btn{
   display:inline-flex; align-items:center; justify-content:center;
-  padding:14px 22px;
+  padding:12px 18px;
   border-radius:999px;
   font-weight:900;
   transition:.18s;
   border:0;
+  white-space:nowrap;
 }
 .btn.primary{background:var(--accent); color:#fff}
 .btn.primary:hover{transform:translateY(-2px); filter:brightness(1.02)}
@@ -78,68 +71,92 @@ header{
 .btn.whatsapp:hover{transform:translateY(-2px); opacity:.92}
 
 /* Hero */
-.hero{
-  padding:70px 0 28px;
-}
+.hero{padding:54px 0 22px;}
 .heroGrid{
   display:grid;
-  grid-template-columns: 1.15fr .85fr;
-  gap:22px;
+  grid-template-columns: 1.1fr .9fr;
+  gap:18px;
   align-items:stretch;
 }
 @media (max-width: 920px){
+  .hero{padding:36px 0 16px;}
   .heroGrid{grid-template-columns:1fr}
 }
 .heroCard{
   border:1px solid var(--line);
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border-radius:28px;
-  padding:26px;
-  box-shadow:0 24px 60px rgba(0,0,0,.25);
+  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 18px 44px rgba(0,0,0,.22);
   position:relative;
   overflow:hidden;
 }
 .heroCard:before{
   content:"";
   position:absolute; inset:-120px -140px auto auto;
-  width:320px; height:320px; border-radius:50%;
+  width:300px; height:300px; border-radius:50%;
   background:radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), rgba(20,184,166,.15), transparent 70%);
   filter: blur(10px);
   transform: rotate(14deg);
 }
 .hero h1{
-  margin:0 0 12px;
-  font-size:clamp(2.05rem, 3.8vw, 3.15rem);
-  line-height:1.06;
+  margin:0 0 10px;
+  font-size:clamp(1.65rem, 3.2vw, 2.6rem);
+  line-height:1.08;
   position:relative;
 }
 .hero p{
-  margin:0 0 18px;
+  margin:0 0 14px;
   color:var(--muted);
-  font-size:1.05rem;
-  max-width:52ch;
+  font-size:1.02rem;
+  max-width:60ch;
   position:relative;
 }
 .actions{
-  display:flex; gap:12px; flex-wrap:wrap;
+  display:flex; gap:10px; flex-wrap:wrap;
+  position:relative;
+}
+.smallNote{
+  margin-top:10px;
+  opacity:.85;
+  font-size:12px;
+  line-height:1.35;
   position:relative;
 }
 
-/* Feature cards */
-.section{
-  padding:18px 0 70px;
+/* Tiny badge */
+.badge{
+  display:inline-flex; gap:8px; align-items:center;
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  color:rgba(229,231,235,.90);
+  font-weight:900;
+  font-size:12px;
+  position:relative;
 }
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 0 6px rgba(34,197,94,.15);
+}
+
+/* Light panel sections */
+.section{padding:14px 0 60px;}
 .panel{
   background:#F8FAFC;
   color:var(--text);
-  border-radius:30px;
-  padding:54px 18px;
+  border-radius:26px;
+  padding:34px 18px;
 }
 .panel .wrap{padding:0}
+
+/* Cards (content) */
 .cards{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:18px;
+  gap:14px;
 }
 @media (max-width: 920px){
   .cards{grid-template-columns:1fr}
@@ -147,51 +164,86 @@ header{
 .card{
   background:#fff;
   border:1px solid #e7eaf3;
-  border-radius:22px;
-  padding:26px;
-  box-shadow:0 20px 46px rgba(2,6,23,.10);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 14px 30px rgba(2,6,23,.08);
 }
-.card h3{margin:0 0 10px}
-.card ul{margin:0 0 16px; padding-left:18px}
+.card h3{margin:0 0 8px}
+.card p{margin:0; color:#334155; line-height:1.4}
+.card ul{margin:0 0 12px; padding-left:18px}
 .card li{margin:0 0 8px; color:#334155}
-.card .ctaRow{display:flex; gap:10px; flex-wrap:wrap}
-.subtle{
-  margin-top:34px;
-  text-align:center;
+.ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+
+/* Denver cards 4-up on desktop, 2-up tablet, 1-up mobile */
+.denver-cards{
+  margin-top:14px;
+  grid-template-columns:repeat(4, minmax(0,1fr));
 }
-.subtle h2{margin:0 0 10px}
+@media (max-width: 1100px){
+  .denver-cards{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+@media (max-width: 600px){
+  .denver-cards{grid-template-columns:1fr}
+}
+.link-card{display:block; transition:transform .18s ease, box-shadow .18s ease;}
+.link-card:hover{transform:translateY(-3px); box-shadow:0 20px 44px rgba(2,6,23,.12);}
+
+/* Compact payment cards */
+.paymentsGrid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:12px;
+  margin-top:14px;
+}
+@media (max-width: 1100px){
+  .paymentsGrid{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+@media (max-width: 600px){
+  .paymentsGrid{grid-template-columns:1fr}
+}
+.payCard{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 14px;
+}
+.payLeft{display:flex; align-items:center; gap:10px;}
+.payIcon{
+  width:40px;height:40px;border-radius:12px;
+  display:grid;place-items:center;
+  font-weight:1000;
+  color:#fff;
+}
+.payMeta{display:flex; flex-direction:column; gap:2px}
+.payMeta b{font-size:14px}
+.payMeta span{font-size:12px; color:#64748b}
+.payLink{
+  font-size:12px;
+  font-weight:900;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid #e7eaf3;
+  background:#fff;
+}
+.payLink:hover{filter:brightness(.98)}
+.venmo{background:#3D95CE}
+.cashapp{background:#00D64F}
+.square{background:#111827}
+.paypal{background:#0070BA}
+
+.subtle{margin-top:22px; text-align:center;}
+.subtle h2{margin:0 0 8px}
 .subtle p{margin:0; color:#334155}
 
 /* Footer */
 footer{
-  padding:36px 0 44px;
-  color:rgba(229,231,235,.70);
+  padding:30px 0 40px;
+  color:rgba(229,231,235,.78);
   text-align:center;
   font-size:13px;
 }
-footer a{font-weight:800}
-.smallNote{
-  margin-top:10px;
-  opacity:.8;
-  font-size:12px;
-}
-
-/* Tiny badge */
-.badge{
-  display:inline-flex; gap:8px; align-items:center;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.05);
-  color:rgba(229,231,235,.88);
-  font-weight:800;
-  font-size:13px;
-}
-.dot{
-  width:8px;height:8px;border-radius:50%;
-  background:#22c55e;
-  box-shadow:0 0 0 6px rgba(34,197,94,.15);
-}
+footer a{font-weight:900}
 </style>
 </head>
 
@@ -208,7 +260,7 @@ footer a{font-weight:800}
       <nav class="navlinks" aria-label="Primary">
         <a href="/" class="pill">Home</a>
         <a href="/driver.html">Driver Board</a>
-        <a href="/crew.html"> Air Crew Requests</a>
+        <a href="/crew.html">Air Crew Requests</a>
         <a class="pill" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
           Request Trips via WhatsApp
         </a>
@@ -218,10 +270,15 @@ footer a{font-weight:800}
 </header>
 
 <main>
+
+  <!-- HERO -->
   <div class="wrap hero">
     <div class="heroGrid">
 
-      <h3>Airport transportation built for crew schedules.</h3>
+      <section class="heroCard">
+        <div class="badge"><span class="dot" aria-hidden="true"></span><span>Live trips feed • crew-first ops</span></div>
+
+        <h1>Airport transportation built for crew schedules.</h1>
         <p>
           Reliable rides for Flight Attendants & Pilots.
           No surge chaos. No roulette-wheel ETAs. Just on-time airport runs.
@@ -231,37 +288,78 @@ footer a{font-weight:800}
           <a class="btn primary" href="/crew.html">I’m Air Crew</a>
           <a class="btn secondary" href="/driver.html">I’m a Driver</a>
           <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
-          Request Trips via WhatsApp
+            WhatsApp • Request Trips
           </a>
         </div>
 
-        <p class="smallNote">
-          Tip: Drivers use the Driver Board to view open trips by airport code. Air Crew Members can request trips via WhatsApp
-          [This is temporary].
-        </p>
+        <div class="smallNote">
+          Tip: Drivers use the Driver Board to view open trips by airport code. WhatsApp is temporary for requests.
+        </div>
       </section>
 
-      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:13px;">
+      <aside class="heroCard">
+        <h1 style="font-size:1.35rem;margin:0 0 10px;position:relative;">Payments accepted</h1>
+        <p style="margin:0 0 8px;position:relative;color:var(--muted);">Quick options for riders and crew.</p>
+
+        <!-- Compact payment cards -->
+        <div class="paymentsGrid" style="position:relative;">
+          <div class="card payCard">
+            <div class="payLeft">
+              <div class="payIcon venmo">V</div>
+              <div class="payMeta"><b>Venmo</b><span>@yourname</span></div>
+            </div>
+            <a class="payLink" href="#" title="Add your Venmo link later">Link</a>
           </div>
+
+          <div class="card payCard">
+            <div class="payLeft">
+              <div class="payIcon cashapp">$</div>
+              <div class="payMeta"><b>Cash App</b><span>$yourname</span></div>
+            </div>
+            <a class="payLink" href="#" title="Add your Cash App link later">Link</a>
+          </div>
+
+          <div class="card payCard">
+            <div class="payLeft">
+              <div class="payIcon square">□</div>
+              <div class="payMeta"><b>Square</b><span>Payment link</span></div>
+            </div>
+            <a class="payLink" href="#" title="Add your Square link later">Link</a>
+          </div>
+
+          <div class="card payCard">
+            <div class="payLeft">
+              <div class="payIcon paypal">P</div>
+              <div class="payMeta"><b>PayPal</b><span>paypal.me/…</span></div>
+            </div>
+            <a class="payLink" href="#" title="Add your PayPal link later">Link</a>
+          </div>
+        </div>
+
+        <div class="smallNote" style="margin-top:12px;">
+          Replace the “Link” placeholders with your real payment URLs when ready.
+        </div>
       </aside>
 
     </div>
   </div>
 
+  <!-- MAIN PANEL -->
   <section class="section">
     <div class="panel">
       <div class="wrap">
+
         <div class="cards">
           <div class="card">
             <h3>✈️ For Air Crew</h3>
             <ul>
               <li>Scheduled pickups & drop-offs to/from airports</li>
               <li>Early mornings & late-nights</li>
-              </ul>
+            </ul>
             <div class="ctaRow">
               <a class="btn primary" href="/crew.html">Request a Ride</a>
               <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
-                Request Trips via WhatsApp
+                WhatsApp • Request Trips
               </a>
             </div>
           </div>
@@ -269,293 +367,94 @@ footer a{font-weight:800}
           <div class="card">
             <h3>🚗 For Drivers</h3>
             <ul>
-              <li>View open trip requests by Airport - COMING SOON </li>
-              <li>Claim trips - COMING SOON </li>
-              <li>Work when you want — Worldwide coverage</li>
+              <li>View open trip requests by airport — coming soon</li>
+              <li>Claim trips — coming soon</li>
+              <li>Work when you want — worldwide coverage</li>
             </ul>
             <div class="ctaRow">
               <a class="btn secondary" href="/driver.html">Open Driver Board</a>
-              <a class="btn primary" href="/crew.html">See Crew Pickup Requests</a>
+              <a class="btn primary" href="/crew.html">See Requests</a>
             </div>
           </div>
         </div>
-<div class="cards denver-cards">
 
-  <a href="/coming-soon" class="card link-card">
-    <h3>📍 Denver Metro - COMING SOON </h3>
-    <p>
-      Reliable transportation for travelers across Denver & surrounding areas.
-    
-    </p>
-  </a>
+        <!-- Denver cards (compact 4-up) -->
+        <div class="cards denver-cards">
+          <a href="/coming-soon" class="card link-card">
+            <h3>📍 Denver Metro</h3>
+            <p>Reliable transportation across Denver & surrounding areas.</p>
+          </a>
 
-  <a href="/coming-soon" class="card link-card">
-    <h3>🛣️ E-470 Corridor - COMING SOON </h3>
-    <p>
-      Efficient routes along the E-470 corridor throughout the Denver Metro Area.
-    </p>
-  </a>
+          <a href="/coming-soon" class="card link-card">
+            <h3>🛣️ E-470 Corridor</h3>
+            <p>Efficient routes along the E-470 corridor.</p>
+          </a>
 
-  <a href="/coming-soon" class="card link-card">
-    <h3>✈️ Denver-Based Flight Attendants - COMING SOON </h3>
-    <p>
-      Built specifically for Denver-based crews with early reports,
-      late releases, and rotating schedules.
-    </p>
-  </a>
+          <a href="/coming-soon" class="card link-card">
+            <h3>✈️ Denver-Based Flight Attendants</h3>
+            <p>Built for Denver-based crews with rotating schedules.</p>
+          </a>
 
-  <a href="/coming-soon" class="card link-card">
-    <h3>🏨 Hotels - COMING SOON </h3>
-    <p>
-      Direct pickups and drop-offs at hotel
-      locations throughout the Denver Metro Area.
-    </p>
-  </a>
-
-</div>
+          <a href="/coming-soon" class="card link-card">
+            <h3>🏨 Hotels</h3>
+            <p>Pickups & drop-offs at hotels across the Denver metro area.</p>
+          </a>
+        </div>
 
         <div class="subtle">
           <h2>🌍 Global Airports. One Platform.</h2>
           <p>Trips show up dynamically — anywhere crew need reliable rides.</p>
         </div>
+
       </div>
     </div>
   </section>
+
+  <!-- Contact card (Telegram) + Tawk script -->
+  <section id="contact-cards" style="max-width:1120px;margin:0 auto 30px;padding:0 18px;">
+    <div style="display:grid;grid-template-columns:1fr;gap:14px;">
+      <div style="background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 30px rgba(0,0,0,.14);">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div aria-hidden="true" style="width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,0.10);display:grid;place-items:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M21.8 5.3 19.1 19c-.2 1-.8 1.2-1.6.8l-4.4-3.2-2.1 2c-.2.2-.4.4-.8.4l.3-4.7 8.5-7.7c.4-.3-.1-.5-.6-.2L7.9 13.1l-4.5-1.4c-1-.3-1-1 .2-1.5l17.6-6.8c.8-.3 1.5.2 1.3 1z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:900;font-size:15px;letter-spacing:.2px;">Telegram — Driver Communication</div>
+            <div style="margin-top:6px;color:rgba(229,231,235,0.82);line-height:1.35;">
+              Dispatch coordination and driver updates.
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+              <a href="https://t.me/benterpryzes" target="_blank" rel="noopener"
+                 class="btn secondary" style="padding:10px 14px;border-radius:14px;">
+                Open Telegram ↗
+              </a>
+              <div style="font-size:12px;color:rgba(229,231,235,0.70);align-self:center;">
+                Drivers only
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer>
   <div class="wrap">
     <div>
       <a href="/driver.html">Driver Board</a> •
-      <a href="/crew.html"> Air Crew Pickup Requests</a> •
+      <a href="/crew.html">Air Crew Requests</a> •
       <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">WhatsApp</a>
     </div>
-    <div class="smallNote">Built for air crew. Designed for reliability.</div>
+    <div style="margin-top:8px;opacity:.82;font-size:12px;">Built for air crew. Designed for reliability.</div>
   </div>
 </footer>
 
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Services</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1400px;
-        }
-
-        .cards-wrapper {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 32px 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-        }
-
-        .venmo .icon {
-            background: #3D95CE;
-        }
-
-        .cashapp .icon {
-            background: #00D64F;
-        }
-
-        .square .icon {
-            background: #000000;
-        }
-
-        .paypal .icon {
-            background: #0070BA;
-        }
-
-        .card h2 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            color: #333;
-        }
-
-        .card p {
-            color: #666;
-            line-height: 1.6;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .link-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #666;
-            text-align: center;
-            transition: border-color 0.3s ease;
-        }
-
-        .link-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .venmo .link-input:focus {
-            border-color: #3D95CE;
-        }
-
-        .cashapp .link-input:focus {
-            border-color: #00D64F;
-        }
-
-        .square .link-input:focus {
-            border-color: #000000;
-        }
-
-        .paypal .link-input:focus {
-            border-color: #0070BA;
-        }
-
-        @media (max-width: 1200px) {
-            .cards-wrapper {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .cards-wrapper {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="cards-wrapper">
-            <div class="card venmo">
-                <div class="icon">V</div>
-                <h2>Venmo</h2>
-                <p>Send and receive money instantly with friends and family</p>
-                <input type="text" class="link-input" placeholder="venmo.com/username">
-            </div>
-
-            <div class="card cashapp">
-                <div class="icon">$</div>
-                <h2>Cash App</h2>
-                <p>Fast, free payments and banking for everyone</p>
-                <input type="text" class="link-input" placeholder="cash.app/$username">
-            </div>
-
-            <div class="card square">
-                <div class="icon">□</div>
-                <h2>Square</h2>
-                <p>Complete payment solutions for businesses of all sizes</p>
-                <input type="text" class="link-input" placeholder="square.link/u/username">
-            </div>
-
-            <div class="card paypal">
-                <div class="icon">P</div>
-                <h2>PayPal</h2>
-                <p>Trusted global payment platform for secure transactions</p>
-                <input type="text" class="link-input" placeholder="paypal.me/username">
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
-
-
-
-<!-- Contact Cards: Telegram (Drivers) + Tawk.to (General Support) -->
-<section id="contact-cards" style="max-width:1100px;margin:24px auto;padding:0 16px;">
-  <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:stretch;justify-content:center;">
-
-    <!-- Telegram: Drivers -->
-    <div style="flex:1 1 320px;min-width:280px;background:#0B1C2D;color:#fff;border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.18);position:relative;overflow:hidden;">
-      <div style="position:absolute;inset:-60px -60px auto auto;width:140px;height:140px;background:rgba(255,255,255,0.06);border-radius:999px;"></div>
-
-      <div style="display:flex;gap:12px;align-items:flex-start;">
-        <div aria-hidden="true" style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.10);display:grid;place-items:center;flex:0 0 auto;">
-          <!-- Telegram icon -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M21.8 5.3 19.1 19c-.2 1-.8 1.2-1.6.8l-4.4-3.2-2.1 2c-.2.2-.4.4-.8.4l.3-4.7 8.5-7.7c.4-.3-.1-.5-.6-.2L7.9 13.1l-4.5-1.4c-1-.3-1-1 .2-1.5l17.6-6.8c.8-.3 1.5.2 1.3 1z" fill="currentColor"/>
-          </svg>
-        </div>
-
-        <div style="flex:1;">
-          <div style="font-weight:800;font-size:16px;letter-spacing:.2px;">Telegram — Driver Communication</div>
-          <div style="margin-top:6px;color:rgba(255,255,255,0.78);line-height:1.35;">
-            Use Telegram for driver updates, dispatch coordination, and quick replies.
-          </div>
-
-          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-            <!-- Replace href with your Telegram group/channel/user -->
-            <a href="https://t.me/benterpryzes"
-               target="_blank" rel="noopener"
-               style="text-decoration:none;background:#ffffff;color:#0B1C2D;font-weight:800;padding:10px 12px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;">
-              Open Telegram
-              <span aria-hidden="true" style="opacity:.8;">↗</span>
-            </a>
-
-            <div style="font-size:12px;color:rgba(255,255,255,0.65);align-self:center;">
-              Drivers only
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tawk.to: General Support -->
-    
-           <!--Start of Tawk.to Script-->
+<!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
@@ -569,3 +468,5 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
+</body>
+</html>
