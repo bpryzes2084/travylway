@@ -9,7 +9,6 @@
 <style>
 :root{
   --bg:#2B3A4A;
-  --card:#ffffff;
   --accent:#2563EB;
   --text:#0F172A;
   --light:#E5E7EB;
@@ -26,437 +25,239 @@ body{
 a{text-decoration:none;color:inherit}
 .wrap{max-width:1120px;margin:auto;padding:0 18px}
 
-/* Top nav */
+/* NAV */
 header{
-  position:sticky; top:0; z-index:10;
+  position:sticky;top:0;z-index:10;
   background:rgba(43,58,74,.86);
-  backdrop-filter: blur(10px);
+  backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
 }
-.nav{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:14px 0; gap:14px;
-}
-.brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px;}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:14px 0;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900}
 .logoDot{
   width:12px;height:12px;border-radius:50%;
   background:linear-gradient(135deg,var(--accent),#14B8A6);
   box-shadow:0 0 0 6px rgba(37,99,235,.18);
 }
-.navlinks{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
+.navlinks{display:flex;gap:10px;flex-wrap:wrap}
 .navlinks a{
-  font-weight:800; font-size:14px; padding:10px 12px;
-  border-radius:999px; transition:.18s;
+  padding:10px 12px;
+  font-size:14px;
+  font-weight:800;
+  border-radius:999px;
   border:1px solid transparent;
 }
-.navlinks a:hover{border-color:rgba(255,255,255,.18); background:rgba(255,255,255,.06);}
-.pill{border:1px solid rgba(255,255,255,.20)!important; background:rgba(255,255,255,.06);}
-.pill:hover{background:rgba(255,255,255,.10)}
+.navlinks a:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06)}
+.pill{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
 
-/* Buttons */
+/* BUTTONS */
 .btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  padding:12px 18px;
-  border-radius:999px;
-  font-weight:900;
-  transition:.18s;
-  border:0;
-  white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 18px;border-radius:999px;
+  font-weight:900;border:0;transition:.18s;
 }
-.btn.primary{background:var(--accent); color:#fff}
-.btn.primary:hover{transform:translateY(-2px); filter:brightness(1.02)}
-.btn.secondary{background:#fff; color:var(--text)}
-.btn.secondary:hover{transform:translateY(-2px); filter:brightness(0.98)}
-.btn.whatsapp{background:#25D366; color:#0b1c2d}
-.btn.whatsapp:hover{transform:translateY(-2px); opacity:.92}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.secondary{background:#fff;color:var(--text)}
+.btn.whatsapp{background:#25D366;color:#0b1c2d}
+.btn:hover{transform:translateY(-2px)}
 
-/* Hero */
-.hero{padding:54px 0 22px;}
+/* HERO */
+.hero{padding:48px 0 22px}
 .heroGrid{
   display:grid;
-  grid-template-columns: 1.1fr .9fr;
+  grid-template-columns:1.1fr .9fr;
   gap:18px;
-  align-items:stretch;
 }
-@media (max-width: 920px){
-  .hero{padding:36px 0 16px;}
-  .heroGrid{grid-template-columns:1fr}
-}
+@media(max-width:900px){.heroGrid{grid-template-columns:1fr}}
 .heroCard{
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
   border:1px solid var(--line);
-  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
   border-radius:22px;
-  padding:18px;
+  padding:20px;
   box-shadow:0 18px 44px rgba(0,0,0,.22);
   position:relative;
-  overflow:hidden;
 }
-.heroCard:before{
-  content:"";
-  position:absolute; inset:-120px -140px auto auto;
-  width:300px; height:300px; border-radius:50%;
-  background:radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), rgba(20,184,166,.15), transparent 70%);
-  filter: blur(10px);
-  transform: rotate(14deg);
-}
-.hero h1{
-  margin:0 0 10px;
-  font-size:clamp(1.65rem, 3.2vw, 2.6rem);
-  line-height:1.08;
-  position:relative;
-}
-.hero p{
-  margin:0 0 14px;
-  color:var(--muted);
-  font-size:1.02rem;
-  max-width:60ch;
-  position:relative;
-}
-.actions{
-  display:flex; gap:10px; flex-wrap:wrap;
-  position:relative;
-}
-.smallNote{
-  margin-top:10px;
-  opacity:.85;
-  font-size:12px;
-  line-height:1.35;
-  position:relative;
-}
+.hero h1{margin:0 0 10px;font-size:clamp(1.6rem,3vw,2.6rem)}
+.hero p{margin:0 0 14px;color:var(--muted)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.smallNote{font-size:12px;opacity:.8}
 
-/* Tiny badge */
-.badge{
-  display:inline-flex; gap:8px; align-items:center;
-  padding:8px 10px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.05);
-  color:rgba(229,231,235,.90);
-  font-weight:900;
-  font-size:12px;
-  position:relative;
-}
-.dot{
-  width:8px;height:8px;border-radius:50%;
-  background:#22c55e;
-  box-shadow:0 0 0 6px rgba(34,197,94,.15);
-}
-
-/* Light panel sections */
-.section{padding:14px 0 60px;}
+/* LIGHT PANEL */
+.section{padding:14px 0 60px}
 .panel{
   background:#F8FAFC;
   color:var(--text);
   border-radius:26px;
   padding:34px 18px;
 }
-.panel .wrap{padding:0}
 
-/* Cards (content) */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:14px;
-}
-@media (max-width: 920px){
-  .cards{grid-template-columns:1fr}
-}
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
 .card{
   background:#fff;
-  border:1px solid #e7eaf3;
   border-radius:18px;
   padding:18px;
   box-shadow:0 14px 30px rgba(2,6,23,.08);
 }
 .card h3{margin:0 0 8px}
-.card p{margin:0; color:#334155; line-height:1.4}
-.card ul{margin:0 0 12px; padding-left:18px}
-.card li{margin:0 0 8px; color:#334155}
-.ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+.card ul{margin:0 0 12px;padding-left:18px}
+.card li{margin:0 0 8px;color:#334155}
+.ctaRow{display:flex;gap:10px;flex-wrap:wrap}
 
-/* Denver cards 4-up on desktop, 2-up tablet, 1-up mobile */
+/* DENVER */
 .denver-cards{
   margin-top:14px;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-}
-@media (max-width: 1100px){
-  .denver-cards{grid-template-columns:repeat(2, minmax(0,1fr))}
-}
-@media (max-width: 600px){
-  .denver-cards{grid-template-columns:1fr}
-}
-.link-card{display:block; transition:transform .18s ease, box-shadow .18s ease;}
-.link-card:hover{transform:translateY(-3px); box-shadow:0 20px 44px rgba(2,6,23,.12);}
-
-/* Compact payment cards */
-.paymentsGrid{
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:12px;
-  margin-top:14px;
 }
-@media (max-width: 1100px){
-  .paymentsGrid{grid-template-columns:repeat(2, minmax(0,1fr))}
-}
-@media (max-width: 600px){
-  .paymentsGrid{grid-template-columns:1fr}
-}
-.payCard{
+@media(max-width:1100px){.denver-cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.denver-cards{grid-template-columns:1fr}}
+.link-card{transition:.18s}
+.link-card:hover{transform:translateY(-3px)}
+
+/* PAYMENTS (HORIZONTAL) */
+.payments{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
   gap:12px;
-  padding:14px 14px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin:22px auto;
 }
-.payLeft{display:flex; align-items:center; gap:10px;}
-.payIcon{
-  width:40px;height:40px;border-radius:12px;
-  display:grid;place-items:center;
-  font-weight:1000;
-  color:#fff;
-}
-.payMeta{display:flex; flex-direction:column; gap:2px}
-.payMeta b{font-size:14px}
-.payMeta span{font-size:12px; color:#64748b}
-.payLink{
-  font-size:12px;
-  font-weight:900;
-  padding:10px 12px;
+.payPill{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
   border-radius:999px;
-  border:1px solid #e7eaf3;
-  background:#fff;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  min-width:220px;
+  box-shadow:0 12px 26px rgba(0,0,0,.14);
 }
-.payLink:hover{filter:brightness(.98)}
+.payIcon{
+  width:34px;height:34px;border-radius:12px;
+  display:grid;place-items:center;font-weight:900;color:#fff;
+}
 .venmo{background:#3D95CE}
 .cashapp{background:#00D64F}
 .square{background:#111827}
 .paypal{background:#0070BA}
+.payText{display:flex;flex-direction:column;font-size:13px}
+.payText small{opacity:.7}
 
-.subtle{margin-top:22px; text-align:center;}
-.subtle h2{margin:0 0 8px}
-.subtle p{margin:0; color:#334155}
-
-/* Footer */
-footer{
-  padding:30px 0 40px;
-  color:rgba(229,231,235,.78);
-  text-align:center;
-  font-size:13px;
-}
-footer a{font-weight:900}
+/* FOOTER */
+footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="wrap">
-    <div class="nav">
-      <div class="brand">
-        <span class="logoDot" aria-hidden="true"></span>
-        <span>Travylway</span>
-      </div>
-
-      <nav class="navlinks" aria-label="Primary">
-        <a href="/" class="pill">Home</a>
-        <a href="/driver.html">Driver Board</a>
-        <a href="/crew.html">Air Crew Requests</a>
-        <a class="pill" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
-          Request Trips via WhatsApp
-        </a>
-      </nav>
-    </div>
+  <div class="wrap nav">
+    <div class="brand"><span class="logoDot"></span>Travylway</div>
+    <nav class="navlinks">
+      <a href="/" class="pill">Home</a>
+      <a href="/driver.html">Driver Board</a>
+      <a href="/crew.html">Air Crew Requests</a>
+      <a class="pill" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
+    </nav>
   </div>
 </header>
 
 <main>
 
-  <!-- HERO -->
-  <div class="wrap hero">
-    <div class="heroGrid">
+<div class="wrap hero">
+  <div class="heroGrid">
 
-      <section class="heroCard">
-        <div class="badge"><span class="dot" aria-hidden="true"></span><span>Live trips feed • crew-first ops</span></div>
+    <section class="heroCard hero">
+      <h1>Airport transportation built for crew schedules.</h1>
+      <p>No surge chaos. No roulette ETAs. Just on-time rides.</p>
+      <div class="actions">
+        <a class="btn primary" href="/crew.html">I’m Air Crew</a>
+        <a class="btn secondary" href="/driver.html">I’m a Driver</a>
+        <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">
+          Request Trips
+        </a>
+      </div>
+      <div class="smallNote">WhatsApp is temporary while the request form rolls out.</div>
+    </section>
 
-        <h1>Airport transportation built for crew schedules.</h1>
-        <p>
-          Reliable rides for Flight Attendants & Pilots.
-          No surge chaos. No roulette-wheel ETAs. Just on-time airport runs.
-        </p>
+    <aside class="heroCard">
+      <h3>Payments Accepted</h3>
 
-        <div class="actions">
-          <a class="btn primary" href="/crew.html">I’m Air Crew</a>
-          <a class="btn secondary" href="/driver.html">I’m a Driver</a>
-          <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
-            WhatsApp • Request Trips
-          </a>
-        </div>
+      <div class="payments">
+        <a class="payPill" href="#">
+          <span class="payIcon venmo">V</span>
+          <span class="payText"><b>Venmo</b><small>@yourname</small></span>
+        </a>
+        <a class="payPill" href="#">
+          <span class="payIcon cashapp">$</span>
+          <span class="payText"><b>Cash App</b><small>$yourname</small></span>
+        </a>
+        <a class="payPill" href="#">
+          <span class="payIcon square">□</span>
+          <span class="payText"><b>Square</b><small>Payment link</small></span>
+        </a>
+        <a class="payPill" href="#">
+          <span class="payIcon paypal">P</span>
+          <span class="payText"><b>PayPal</b><small>paypal.me</small></span>
+        </a>
+      </div>
+    </aside>
 
-        <div class="smallNote">
-          Tip: Drivers use the Driver Board to view open trips by airport code. WhatsApp is temporary for requests.
-        </div>
-      </section>
-
-      <aside class="heroCard">
-        <h1 style="font-size:1.35rem;margin:0 0 10px;position:relative;">Payments accepted</h1>
-        <p style="margin:0 0 8px;position:relative;color:var(--muted);">Quick options for riders and crew.</p>
-
-        <!-- Compact payment cards -->
-        <div class="paymentsGrid" style="position:relative;">
-          <div class="card payCard">
-            <div class="payLeft">
-              <div class="payIcon venmo">V</div>
-              <div class="payMeta"><b>Venmo</b><span>@tway2084</span></div>
-            </div>
-            <a class="payLink" href="#" title="Add your Venmo link later">Link</a>
-          </div>
-
-          <div class="card payCard">
-            <div class="payLeft">
-              <div class="payIcon cashapp">$</div>
-              <div class="payMeta"><b>Cash App</b><span>$tway66gworld</span></div>
-            </div>
-            <a class="payLink" href="#" title="Add your Cash App link later">Link</a>
-          </div>
-
-          <div class="card payCard">
-            <div class="payLeft">
-              <div class="payIcon square">□</div>
-              <div class="payMeta"><b>Square</b><span>https://square.link/u/ck1sqoMD</span></div>
-            </div>
-            <a class="payLink" href="#" title="Add your Square link later">Link</a>
-          </div>
-
-          <div class="card payCard">
-            <div class="payLeft">
-              <div class="payIcon paypal">P</div>
-              <div class="payMeta"><b>PayPal</b><span>paypal.me/…</span></div>
-            </div>
-            <a class="payLink" href="#" title="https://www.paypal.com/ncp/payment/A28K7JNZWVMJN">Link</a>
-          </div>
-        </div>
-
-        <div class="smallNote" style="margin-top:12px;">
-          Replace the “Link” placeholders with your real payment URLs when ready.
-        </div>
-      </aside>
-
-    </div>
   </div>
+</div>
 
-  <!-- MAIN PANEL -->
-  <section class="section">
-    <div class="panel">
-      <div class="wrap">
+<section class="section">
+  <div class="panel wrap">
 
-        <div class="cards">
-          <div class="card">
-            <h3>✈️ For Air Crew</h3>
-            <ul>
-              <li>Scheduled pickups & drop-offs to/from airports</li>
-              <li>Early mornings & late-nights</li>
-            </ul>
-            <div class="ctaRow">
-              <a class="btn primary" href="/crew.html">Request a Ride</a>
-              <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">
-                WhatsApp • Request Trips
-              </a>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>🚗 For Drivers</h3>
-            <ul>
-              <li>View open trip requests by airport — coming soon</li>
-              <li>Claim trips — coming soon</li>
-              <li>Work when you want — worldwide coverage</li>
-            </ul>
-            <div class="ctaRow">
-              <a class="btn secondary" href="/driver.html">Open Driver Board</a>
-              <a class="btn primary" href="/crew.html">See Requests</a>
-            </div>
-          </div>
+    <div class="cards">
+      <div class="card">
+        <h3>✈️ For Air Crew</h3>
+        <ul>
+          <li>Scheduled airport rides</li>
+          <li>Early & late pickups</li>
+        </ul>
+        <div class="ctaRow">
+          <a class="btn primary" href="/crew.html">Request a Ride</a>
+          <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
         </div>
-
-        <!-- Denver cards (compact 4-up) -->
-        <div class="cards denver-cards">
-          <a href="/coming-soon" class="card link-card">
-            <h3>📍 Denver Metro</h3>
-            <p>Reliable transportation across Denver & surrounding areas.</p>
-          </a>
-
-          <a href="/coming-soon" class="card link-card">
-            <h3>🛣️ E-470 Corridor</h3>
-            <p>Efficient routes along the E-470 corridor.</p>
-          </a>
-
-          <a href="/coming-soon" class="card link-card">
-            <h3>✈️ Denver-Based Flight Attendants</h3>
-            <p>Built for Denver-based crews with rotating schedules.</p>
-          </a>
-
-          <a href="/coming-soon" class="card link-card">
-            <h3>🏨 Hotels</h3>
-            <p>Pickups & drop-offs at hotels across the Denver metro area.</p>
-          </a>
-        </div>
-
-        <div class="subtle">
-          <h2>🌍 Global Airports. One Platform.</h2>
-          <p>Trips show up dynamically — anywhere crew need reliable rides.</p>
-        </div>
-
       </div>
-    </div>
-  </section>
 
-  <!-- Contact card (Telegram) + Tawk script -->
-  <section id="contact-cards" style="max-width:1120px;margin:0 auto 30px;padding:0 18px;">
-    <div style="display:grid;grid-template-columns:1fr;gap:14px;">
-      <div style="background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 30px rgba(0,0,0,.14);">
-        <div style="display:flex;gap:12px;align-items:flex-start;">
-          <div aria-hidden="true" style="width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,0.10);display:grid;place-items:center;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M21.8 5.3 19.1 19c-.2 1-.8 1.2-1.6.8l-4.4-3.2-2.1 2c-.2.2-.4.4-.8.4l.3-4.7 8.5-7.7c.4-.3-.1-.5-.6-.2L7.9 13.1l-4.5-1.4c-1-.3-1-1 .2-1.5l17.6-6.8c.8-.3 1.5.2 1.3 1z" fill="currentColor"/>
-            </svg>
-          </div>
-          <div style="flex:1;">
-            <div style="font-weight:900;font-size:15px;letter-spacing:.2px;">Telegram — Driver Communication</div>
-            <div style="margin-top:6px;color:rgba(229,231,235,0.82);line-height:1.35;">
-              Dispatch coordination and driver updates.
-            </div>
-
-            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-              <a href="https://t.me/benterpryzes" target="_blank" rel="noopener"
-                 class="btn secondary" style="padding:10px 14px;border-radius:14px;">
-                Open Telegram ↗
-              </a>
-              <div style="font-size:12px;color:rgba(229,231,235,0.70);align-self:center;">
-                Drivers only
-              </div>
-            </div>
-          </div>
+      <div class="card">
+        <h3>🚗 For Drivers</h3>
+        <ul>
+          <li>View trips by airport</li>
+          <li>Claim trips (coming soon)</li>
+        </ul>
+        <div class="ctaRow">
+          <a class="btn secondary" href="/driver.html">Open Driver Board</a>
         </div>
       </div>
     </div>
-  </section>
 
-</main>
+    <div class="denver-cards">
+      <a class="card link-card" href="/coming-soon"><h3>📍 Denver Metro</h3></a>
+      <a class="card link-card" href="/coming-soon"><h3>🛣️ E-470 Corridor</h3></a>
+      <a class="card link-card" href="/coming-soon"><h3>✈️ DEN Flight Crew</h3></a>
+      <a class="card link-card" href="/coming-soon"><h3>🏨 Hotels</h3></a>
+    </div>
+
+  </div>
+</section>
 
 <footer>
   <div class="wrap">
-    <div>
-      <a href="/driver.html">Driver Board</a> •
-      <a href="/crew.html">Air Crew Requests</a> •
-      <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank" rel="noopener">WhatsApp</a>
-    </div>
-    <div style="margin-top:8px;opacity:.82;font-size:12px;">Built for air crew. Designed for reliability.</div>
+    <a href="/driver.html">Driver Board</a> •
+    <a href="/crew.html">Crew Requests</a> •
+    <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
+    <div style="margin-top:8px;">Built for air crew. Designed for reliability.</div>
   </div>
 </footer>
 
-<!--Start of Tawk.to Script-->
+<!-- Tawk.to -->
 <script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+var Tawk_API=Tawk_API||{},Tawk_LoadStart=new Date();
 (function(){
 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
 s1.async=true;
@@ -466,7 +267,7 @@ s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
-<!--End of Tawk.to Script-->
 
 </body>
 </html>
+
