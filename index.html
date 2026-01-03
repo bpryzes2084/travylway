@@ -66,3 +66,496 @@ header{
 .heroGrid{
   display:grid;
   grid-template-columns:1.1fr .9fr;
+  gap:18px;
+}
+@media(max-width:900px){.heroGrid{grid-template-columns:1fr}}
+.heroCard{
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:20px;
+  box-shadow:0 18px 44px rgba(0,0,0,.22);
+  position:relative;
+}
+.hero h1{margin:0 0 10px;font-size:clamp(1.6rem,3vw,2.6rem)}
+.hero p{margin:0 0 14px;color:var(--muted)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.smallNote{font-size:12px;opacity:.8}
+
+/* LIGHT PANEL */
+.section{padding:14px 0 60px}
+.panel{
+  background:#F8FAFC;
+  color:var(--text);
+  border-radius:26px;
+  padding:34px 18px;
+}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 14px 30px rgba(2,6,23,.08);
+  transition:.18s;
+}
+.card:hover{transform:translateY(-3px)}
+.card h3{margin:0 0 8px}
+.card ul{margin:0 0 12px;padding-left:18px}
+.card li{margin:0 0 8px;color:#334155}
+.ctaRow{display:flex;gap:10px;flex-wrap:wrap}
+
+/* DISPATCH SECTION */
+.dispatch-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin:24px 0;
+}
+@media(max-width:1100px){.dispatch-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.dispatch-grid{grid-template-columns:1fr}}
+
+.dispatch-card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px 16px;
+  box-shadow:0 14px 30px rgba(2,6,23,.08);
+  text-align:center;
+  transition:.18s;
+  display:block;
+  text-decoration:none;
+}
+.dispatch-card:hover{transform:translateY(-5px)}
+
+.dispatch-icon{
+  width:60px;
+  height:60px;
+  margin:0 auto 12px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.8rem;
+  color:#fff;
+}
+.dispatch-card h4{margin:0 0 8px;color:var(--text);font-size:1.1rem}
+.dispatch-card p{margin:0 0 12px;color:#64748b;font-size:.9rem}
+.dispatch-badge{
+  display:inline-block;
+  padding:8px 16px;
+  border-radius:999px;
+  font-size:.85rem;
+  font-weight:900;
+  color:#fff;
+}
+
+.icon-green{background:linear-gradient(135deg,#00D632,#00C853)}
+.badge-green{background:linear-gradient(135deg,#00D632,#00C853)}
+.icon-red{background:linear-gradient(135deg,#FF6B6B,#EE5A24)}
+.badge-red{background:linear-gradient(135deg,#FF6B6B,#EE5A24)}
+.icon-purple{background:linear-gradient(135deg,#667eea,#764ba2)}
+.badge-purple{background:linear-gradient(135deg,#667eea,#764ba2)}
+.icon-blue{background:linear-gradient(135deg,#3D95CE,#008CFF)}
+.badge-blue{background:linear-gradient(135deg,#3D95CE,#008CFF)}
+
+/* DENVER METRO - 4 ACROSS */
+.denver-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin:24px 0;
+}
+@media(max-width:1100px){.denver-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.denver-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.denver-grid{grid-template-columns:1fr}}
+
+.metro-card{
+  background:#fff;
+  border-radius:16px;
+  padding:18px 14px;
+  box-shadow:0 10px 24px rgba(2,6,23,.08);
+  text-align:center;
+  transition:.18s;
+  display:block;
+}
+.metro-card:hover{transform:translateY(-4px)}
+
+.metro-icon{
+  width:50px;
+  height:50px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.6rem;
+}
+.metro-card h4{margin:0 0 4px;color:var(--text);font-size:1rem}
+.metro-card p{margin:0 0 10px;color:#64748b;font-size:.85rem}
+.metro-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:#fff;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:900;
+}
+
+/* AIRPORTS */
+.airport-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin:24px 0;
+}
+@media(max-width:1100px){.airport-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.airport-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.airport-grid{grid-template-columns:1fr}}
+
+.airport-card{
+  background:#fff;
+  border-radius:16px;
+  padding:18px 14px;
+  box-shadow:0 10px 24px rgba(2,6,23,.08);
+  text-align:center;
+  transition:.18s;
+  display:block;
+  position:relative;
+}
+.airport-card:hover{transform:translateY(-4px)}
+
+.airport-icon{
+  width:50px;
+  height:50px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#3D95CE,#008CFF);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.6rem;
+}
+.airport-card h4{margin:0 0 4px;color:var(--text);font-size:1rem}
+.airport-code{
+  display:inline-block;
+  background:linear-gradient(135deg,#3D95CE,#008CFF);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:12px;
+  font-size:.75rem;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.airport-card > p{margin:0 0 10px;color:#64748b;font-size:.85rem}
+
+/* AIRPORT ACTIONS */
+.airport-actions{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  margin-top:10px;
+}
+
+.airport-btn{
+  flex:1;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:.75rem;
+  font-weight:900;
+  text-align:center;
+  transition:.18s;
+  text-decoration:none;
+  display:block;
+}
+
+.pickup-btn{
+  background:linear-gradient(135deg,#00D632,#00C853);
+  color:#fff;
+}
+
+.dropoff-btn{
+  background:linear-gradient(135deg,#FF6B6B,#EE5A24);
+  color:#fff;
+}
+
+.airport-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+/* PAYMENTS (HORIZONTAL) */
+.payments{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin:22px auto;
+}
+.payPill{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  min-width:220px;
+  box-shadow:0 12px 26px rgba(0,0,0,.14);
+  transition:.18s;
+}
+.payPill:hover{transform:translateY(-2px)}
+.payIcon{
+  width:34px;height:34px;border-radius:12px;
+  display:grid;place-items:center;font-weight:900;color:#fff;
+}
+.venmo{background:#3D95CE}
+.cashapp{background:#00D64F}
+.square{background:#111827}
+.paypal{background:#0070BA}
+.payText{display:flex;flex-direction:column;font-size:13px}
+.payText small{opacity:.7}
+
+/* SECTION HEADERS */
+.sectionHeader{
+  text-align:center;
+  margin:30px 0 20px;
+}
+.sectionHeader h2{
+  margin:0 0 6px;
+  font-size:clamp(1.6rem,3vw,2.2rem);
+  color:var(--text);
+}
+.sectionHeader p{
+  margin:0;
+  color:#64748b;
+  font-size:1rem;
+}
+
+/* FOOTER */
+footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="logoDot"></span>Travylway</div>
+    <nav class="navlinks">
+      <a href="/" class="pill">Home</a>
+      <a href="/driver.html">Driver Board</a>
+      <a href="/crew.html">Air Crew Requests</a>
+      <a class="pill" href="https://wa.me/17204748851?text=Request%20Pickup" target="_blank">WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<div class="wrap hero">
+  <div class="heroGrid">
+
+    <section class="heroCard hero">
+      <h3>Airport transportation built for crew schedules.</h3>
+      <p>No surge chaos. No roulette ETAs. Just on-time rides.</p>
+      <div class="actions">
+        <a class="btn primary" href="/crew.html">I'm Air Crew</a>
+        <a class="btn secondary" href="/driver.html">I'm a Driver</a>
+        <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">
+          Request Trips
+        </a>
+      </div>
+      <div class="smallNote">Pickup Requests via WhatsApp is temporary while the request portal is being constructed.</div>
+    </section>
+
+    <aside class="heroCard">
+      <h3>Payments Accepted</h3>
+
+      <div class="payments">
+        <div class="payPill">
+          <span class="payIcon venmo">V</span>
+          <span class="payText"><b>Venmo</b><small>@tway2084</small></span>
+        </div>
+        <div class="payPill">
+          <span class="payIcon cashapp">$</span>
+          <span class="payText"><b>Cash App</b><small>$tway66gworld</small></span>
+        </div>
+        <a class="payPill" href="https://bit.ly/4snVxsl" target="_blank">
+          <span class="payIcon square">□</span>
+          <span class="payText"><b>Square</b><small>bit.ly/4snVxsl</small></span>
+        </a>
+        <a class="payPill" href="https://paypal.me/benterpryzes" target="_blank">
+          <span class="payIcon paypal">P</span>
+          <span class="payText"><b>PayPal</b><small>paypal.me/benterpryzes</small></span>
+        </a>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<section class="section">
+  <div class="panel wrap">
+
+    <div class="cards">
+      <div class="card">
+        <h3>✈️ Air Crew</h3>
+        <ul>
+          <li>Scheduled airport rides</li>
+          <li>Early & late pickups</li>
+        </ul>
+        <div class="ctaRow">
+          <a class="btn primary" href="/crew.html">Request Pickup</a>
+          <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🚗 Drivers</h3>
+        <ul>
+          <li>View trips by airport (Coming Soon)</li>
+          <li>Claim trips (Coming Soon)</li>
+        </ul>
+        <div class="ctaRow">
+          <a class="btn secondary" href="/driver.html">Open Driver Board</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRIVER & DISPATCH MANAGEMENT -->
+    <div class="sectionHeader">
+      <h2>Driver & Dispatch Management</h2>
+      <p>Real-time tracking and operations management</p>
+    </div>
+
+    <div class="dispatch-grid">
+      <a href="YOUR_DRIVERS_ONLINE_URL" class="dispatch-card" target="_blank">
+        <div class="dispatch-icon icon-green">👤</div>
+        <h4>Drivers Online</h4>
+        <p>Active drivers available</p>
+        <span class="dispatch-badge badge-green">View Drivers</span>
+      </a>
+
+      <a href="YOUR_PICKUP_REQUESTS_URL" class="dispatch-card" target="_blank">
+        <div class="dispatch-icon icon-red">📋</div>
+        <h4>Airport Pickup Requests</h4>
+        <p>Incoming requests</p>
+        <span class="dispatch-badge badge-red">View Requests</span>
+      </a>
+
+      <a href="YOUR_PICKUPS_CLAIMED_URL" class="dispatch-card" target="_blank">
+        <div class="dispatch-icon icon-purple">✓</div>
+        <h4>Pickups Claimed</h4>
+        <p>Assigned drivers</p>
+        <span class="dispatch-badge badge-purple">View Claimed</span>
+      </a>
+
+      <a href="YOUR_FLIGHT_TRACKING_URL" class="dispatch-card" target="_blank">
+        <div class="dispatch-icon icon-blue">✈️</div>
+        <h4>Flight Tracking</h4>
+        <p>Real-time flight status</p>
+        <span class="dispatch-badge badge-blue">Track Flights</span>
+      </a>
+    </div>
+
+    <!-- DENVER METRO SERVICE AREAS -->
+    <div class="sectionHeader">
+      <h2>Denver Metro Service Areas</h2>
+      <p>Premium airport transportation throughout the Denver metropolitan area</p>
+    </div>
+
+    <div class="denver-grid">
+      <a href="YOUR_ARVADA_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Arvada - Leyden Rock</h4>
+        <p>Northwest Denver Metro</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_AURORA_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Aurora - West</h4>
+        <p>East Denver Metro</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_BOULDER_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Boulder</h4>
+        <p>University City</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_COMMERCE_CITY_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Commerce City East</h4>
+        <p>Northeast Metro</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_DENVER_EAST_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Denver East</h4>
+        <p>Central Denver</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_DENVER_SOUTH_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Denver South</h4>
+        <p>South Metro Area</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_ELIZABETH_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Elizabeth</h4>
+        <p>Southeast Corridor</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_ENGLEWOOD_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Englewood - East</h4>
+        <p>South Central Metro</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_GAYLORD_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Gaylord Hotel</h4>
+        <p>Convention Center Area</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_GREEN_VALLEY_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Green Valley Ranch</h4>
+        <p>Northeast Denver</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_PAINTED_PRAIRIE_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>Painted Prairie</h4>
+        <p>East Metro Community</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+
+      <a href="YOUR_E470_CORRIDOR_URL" class="metro-card" target="_blank">
+        <div class="metro-icon">✈️</div>
+        <h4>E-470 Corridor</h4>
+        <p>Express Toll Route Area</p>
+        <span class="metro-badge">Book Now</span>
+      </a>
+    </div>
+
+    <!-- DOMESTIC & REGIONAL AIRPORTS - ALPHABETIZED -->
+    <div class="sectionHeader">
+      <h2>Domestic & Regional Airports</h2>
+      <p>Request pickups for arriving flights or drop-offs for departing flights</p>
+    </div>
+
+    <div class="airport-grid">
