@@ -65,10 +65,9 @@ header{
 .hero{padding:48px 0 22px}
 .heroGrid{
   display:grid;
-  grid-template-columns:1.1fr .9fr;
+  grid-template-columns:1fr;
   gap:18px;
 }
-@media(max-width:900px){.heroGrid{grid-template-columns:1fr}}
 .heroCard{
   background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
   border:1px solid var(--line);
@@ -106,6 +105,113 @@ header{
 .card ul{margin:0 0 12px;padding-left:18px}
 .card li{margin:0 0 8px;color:#334155}
 .ctaRow{display:flex;gap:10px;flex-wrap:wrap}
+
+/* PAYMENT CARDS - NEW SECTION */
+.payment-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;
+  margin:24px 0;
+}
+@media(max-width:1100px){.payment-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.payment-grid{grid-template-columns:1fr}}
+
+.payment-card{
+  background:#fff;
+  border-radius:16px;
+  padding:1.5rem;
+  box-shadow:0 10px 30px rgba(2,6,23,.08);
+  transition:transform 0.3s ease;
+}
+.payment-card:hover{transform:translateY(-5px)}
+
+.card-header{
+  text-align:center;
+  margin-bottom:1rem;
+}
+.card-icon{
+  width:50px;
+  height:50px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5rem;
+  font-weight:900;
+  color:#fff;
+  margin:0 auto 0.75rem;
+}
+.cashapp-icon{background:linear-gradient(135deg,#00D632,#00C853)}
+.paypal-icon{background:linear-gradient(135deg,#00457C,#0070BA)}
+.square-icon{background:linear-gradient(135deg,#3E4348,#000000)}
+.venmo-icon{background:linear-gradient(135deg,#3D95CE,#008CFF)}
+
+.card-header h2{
+  font-size:1.2rem;
+  color:#333;
+  margin-bottom:0.25rem;
+}
+.card-header p{
+  font-size:0.8rem;
+  color:#666;
+}
+.form-group{
+  margin-bottom:1rem;
+}
+.form-group label{
+  display:block;
+  font-size:0.75rem;
+  font-weight:700;
+  color:#555;
+  margin-bottom:0.4rem;
+}
+.form-group input{
+  width:100%;
+  padding:0.6rem 0.75rem;
+  border:2px solid #e0e0e0;
+  border-radius:8px;
+  font-size:0.85rem;
+  transition:border-color 0.3s ease;
+}
+.form-group input:focus{
+  outline:none;
+  border-color:#667eea;
+}
+.form-group input::placeholder{
+  color:#aaa;
+}
+.payment-button{
+  width:100%;
+  padding:0.7rem;
+  border:none;
+  border-radius:10px;
+  font-size:0.85rem;
+  font-weight:900;
+  color:#fff;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.cashapp-btn{background:linear-gradient(135deg,#00D632,#00C853)}
+.paypal-btn{background:linear-gradient(135deg,#00457C,#0070BA)}
+.square-btn{background:linear-gradient(135deg,#3E4348,#000000)}
+.venmo-btn{background:linear-gradient(135deg,#3D95CE,#008CFF)}
+
+.payment-button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+.payment-button:active{
+  transform:translateY(0);
+}
+.helper-text{
+  font-size:0.7rem;
+  color:#888;
+  margin-top:0.4rem;
+  font-style:italic;
+  text-align:center;
+}
 
 /* DISPATCH SECTION */
 .dispatch-grid{
@@ -205,118 +311,6 @@ header{
   font-weight:900;
 }
 
-/* AIRPORTS */
-.airport-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  margin:24px 0;
-}
-@media(max-width:1100px){.airport-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:800px){.airport-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:500px){.airport-grid{grid-template-columns:1fr}}
-
-.airport-card{
-  background:#fff;
-  border-radius:16px;
-  padding:18px 14px;
-  box-shadow:0 10px 24px rgba(2,6,23,.08);
-  text-align:center;
-  transition:.18s;
-  display:block;
-  position:relative;
-}
-.airport-card:hover{transform:translateY(-4px)}
-
-.airport-icon{
-  width:50px;
-  height:50px;
-  margin:0 auto 10px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#3D95CE,#008CFF);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.6rem;
-}
-.airport-card h4{margin:0 0 4px;color:var(--text);font-size:1rem}
-.airport-code{
-  display:inline-block;
-  background:linear-gradient(135deg,#3D95CE,#008CFF);
-  color:#fff;
-  padding:4px 10px;
-  border-radius:12px;
-  font-size:.75rem;
-  font-weight:900;
-  margin-bottom:8px;
-}
-.airport-card > p{margin:0 0 10px;color:#64748b;font-size:.85rem}
-
-/* AIRPORT ACTIONS */
-.airport-actions{
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  margin-top:10px;
-}
-
-.airport-btn{
-  flex:1;
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:.75rem;
-  font-weight:900;
-  text-align:center;
-  transition:.18s;
-  text-decoration:none;
-  display:block;
-}
-
-.pickup-btn{
-  background:linear-gradient(135deg,#00D632,#00C853);
-  color:#fff;
-}
-
-.dropoff-btn{
-  background:linear-gradient(135deg,#FF6B6B,#EE5A24);
-  color:#fff;
-}
-
-.airport-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
-
-/* PAYMENTS (HORIZONTAL) */
-.payments{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin:22px auto;
-}
-.payPill{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.06);
-  min-width:220px;
-  box-shadow:0 12px 26px rgba(0,0,0,.14);
-  transition:.18s;
-}
-.payPill:hover{transform:translateY(-2px)}
-.payIcon{
-  width:34px;height:34px;border-radius:12px;
-  display:grid;place-items:center;font-weight:900;color:#fff;
-}
-.venmo{background:#3D95CE}
-.cashapp{background:#00D64F}
-.square{background:#111827}
-.paypal{background:#0070BA}
-.payText{display:flex;flex-direction:column;font-size:13px}
-.payText small{opacity:.7}
-
 /* SECTION HEADERS */
 .sectionHeader{
   text-align:center;
@@ -356,7 +350,6 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
 
 <div class="wrap hero">
   <div class="heroGrid">
-
     <section class="heroCard hero">
       <h3>Airport transportation built for crew schedules.</h3>
       <p>No surge chaos. No roulette ETAs. Just on-time rides.</p>
@@ -369,30 +362,6 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
       </div>
       <div class="smallNote">Pickup Requests via WhatsApp is temporary while the request portal is being constructed.</div>
     </section>
-
-    <aside class="heroCard">
-      <h3>Payments Accepted</h3>
-
-      <div class="payments">
-        <div class="payPill">
-          <span class="payIcon venmo">V</span>
-          <span class="payText"><b>Venmo</b><small>@tway2084</small></span>
-        </div>
-        <div class="payPill">
-          <span class="payIcon cashapp">$</span>
-          <span class="payText"><b>Cash App</b><small>$tway66gworld</small></span>
-        </div>
-        <a class="payPill" href="https://bit.ly/4snVxsl" target="_blank">
-          <span class="payIcon square">□</span>
-          <span class="payText"><b>Square</b><small>bit.ly/4snVxsl</small></span>
-        </a>
-        <a class="payPill" href="https://paypal.me/benterpryzes" target="_blank">
-          <span class="payIcon paypal">P</span>
-          <span class="payText"><b>PayPal</b><small>paypal.me/benterpryzes</small></span>
-        </a>
-      </div>
-    </aside>
-
   </div>
 </div>
 
@@ -421,6 +390,94 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
         <div class="ctaRow">
           <a class="btn secondary" href="/driver.html">Open Driver Board</a>
         </div>
+      </div>
+    </div>
+
+    <!-- PAYMENT METHODS -->
+    <div class="sectionHeader">
+      <h2>Payment Methods</h2>
+      <p>Choose your preferred payment method</p>
+    </div>
+
+    <div class="payment-grid">
+      <!-- Cash App -->
+      <div class="payment-card">
+        <div class="card-header">
+          <div class="card-icon cashapp-icon">$</div>
+          <h2>Cash App</h2>
+          <p>Fast Payments</p>
+        </div>
+        <div class="form-group">
+          <label for="cashapp-tag">$Cashtag</label>
+          <input 
+            type="text" 
+            id="cashapp-tag" 
+            placeholder="$YourCashtag"
+            value="$tway66gworld"
+          >
+        </div>
+        <button class="payment-button cashapp-btn">Send via Cash App</button>
+        <div class="helper-text">Open app to send</div>
+      </div>
+
+      <!-- PayPal -->
+      <div class="payment-card">
+        <div class="card-header">
+          <div class="card-icon paypal-icon">P</div>
+          <h2>PayPal</h2>
+          <p>Trusted Worldwide</p>
+        </div>
+        <div class="form-group">
+          <label for="paypal-link">PayPal.me Link</label>
+          <input 
+            type="url" 
+            id="paypal-link" 
+            placeholder="paypal.me/username"
+            value="https://paypal.me/benterpryzes"
+          >
+        </div>
+        <button class="payment-button paypal-btn" onclick="window.open(document.getElementById('paypal-link').value, '_blank')">Pay with PayPal</button>
+        <div class="helper-text">Click to open</div>
+      </div>
+
+      <!-- Square -->
+      <div class="payment-card">
+        <div class="card-header">
+          <div class="card-icon square-icon">□</div>
+          <h2>Square</h2>
+          <p>Secure Payments</p>
+        </div>
+        <div class="form-group">
+          <label for="square-link">Payment Link</label>
+          <input 
+            type="url" 
+            id="square-link" 
+            placeholder="bit.ly/..."
+            value="https://bit.ly/4snVxsl"
+          >
+        </div>
+        <button class="payment-button square-btn" onclick="window.open(document.getElementById('square-link').value, '_blank')">Pay with Square</button>
+        <div class="helper-text">Click to open</div>
+      </div>
+
+      <!-- Venmo -->
+      <div class="payment-card">
+        <div class="card-header">
+          <div class="card-icon venmo-icon">V</div>
+          <h2>Venmo</h2>
+          <p>Social Payments</p>
+        </div>
+        <div class="form-group">
+          <label for="venmo-username">Username</label>
+          <input 
+            type="text" 
+            id="venmo-username" 
+            placeholder="@YourVenmo"
+            value="@tway2084"
+          >
+        </div>
+        <button class="payment-button venmo-btn">Send via Venmo</button>
+        <div class="helper-text">Open app to send</div>
       </div>
     </div>
 
@@ -552,271 +609,30 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
       </a>
     </div>
 
-   <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Methods - Travylway</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  </div>
+</section>
 
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2rem;
-            min-height: 100vh;
-        }
+<footer>
+  <div class="wrap">
+    <a href="/driver.html">Driver Board</a> •
+    <a href="/crew.html">Crew Requests</a> •
+    <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
+    <div style="margin-top:8px;">Built for air crew. Designed for reliability.</div>
+  </div>
+</footer>
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+<!-- Tawk.to -->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{},Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6901a27ca00437194fc22c92/1j8n65dmu';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
 
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 2rem;
-        }
-
-        .header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header p {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .payment-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-        }
-
-        .payment-card {
-            background: white;
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .payment-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-header {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: white;
-            margin: 0 auto 0.75rem;
-        }
-
-        .cashapp-icon { background: linear-gradient(135deg, #00D632, #00C853); }
-        .paypal-icon { background: linear-gradient(135deg, #00457C, #0070BA); }
-        .square-icon { background: linear-gradient(135deg, #3E4348, #000000); }
-        .venmo-icon { background: linear-gradient(135deg, #3D95CE, #008CFF); }
-
-        .card-header h2 {
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 0.25rem;
-        }
-
-        .card-header p {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #555;
-            margin-bottom: 0.4rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.6rem 0.75rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group input::placeholder {
-            color: #aaa;
-        }
-
-        .payment-button {
-            width: 100%;
-            padding: 0.7rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 900;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .cashapp-btn { background: linear-gradient(135deg, #00D632, #00C853); }
-        .paypal-btn { background: linear-gradient(135deg, #00457C, #0070BA); }
-        .square-btn { background: linear-gradient(135deg, #3E4348, #000000); }
-        .venmo-btn { background: linear-gradient(135deg, #3D95CE, #008CFF); }
-
-        .payment-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .payment-button:active {
-            transform: translateY(0);
-        }
-
-        .helper-text {
-            font-size: 0.7rem;
-            color: #888;
-            margin-top: 0.4rem;
-            font-style: italic;
-            text-align: center;
-        }
-
-        @media (max-width: 1200px) {
-            .payment-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .payment-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Payment Methods</h1>
-            <p>Choose your preferred payment method</p>
-        </div>
-
-        <div class="payment-grid">
-            <!-- Cash App -->
-            <div class="payment-card">
-                <div class="card-header">
-                    <div class="card-icon cashapp-icon">$</div>
-                    <h2>Cash App</h2>
-                    <p>Fast Payments</p>
-                </div>
-                <div class="form-group">
-                    <label for="cashapp-tag">$Cashtag</label>
-                    <input 
-                        type="text" 
-                        id="cashapp-tag" 
-                        placeholder="$YourCashtag"
-                        value="$tway66gworld"
-                    >
-                </div>
-                <button class="payment-button cashapp-btn">Send via Cash App</button>
-                <div class="helper-text">Open app to send</div>
-            </div>
-
-            <!-- PayPal -->
-            <div class="payment-card">
-                <div class="card-header">
-                    <div class="card-icon paypal-icon">P</div>
-                    <h2>PayPal</h2>
-                    <p>Trusted Worldwide</p>
-                </div>
-                <div class="form-group">
-                    <label for="paypal-link">PayPal.me Link</label>
-                    <input 
-                        type="url" 
-                        id="paypal-link" 
-                        placeholder="paypal.me/username"
-                        value="https://paypal.me/benterpryzes"
-                    >
-                </div>
-                <button class="payment-button paypal-btn" onclick="window.open(document.getElementById('paypal-link').value, '_blank')">Pay with PayPal</button>
-                <div class="helper-text">Click to open</div>
-            </div>
-
-            <!-- Square -->
-            <div class="payment-card">
-                <div class="card-header">
-                    <div class="card-icon square-icon">□</div>
-                    <h2>Square</h2>
-                    <p>Secure Payments</p>
-                </div>
-                <div class="form-group">
-                    <label for="square-link">Payment Link</label>
-                    <input 
-                        type="url" 
-                        id="square-link" 
-                        placeholder="bit.ly/..."
-                        value="https://bit.ly/4snVxsl"
-                    >
-                </div>
-                <button class="payment-button square-btn" onclick="window.open(document.getElementById('square-link').value, '_blank')">Pay with Square</button>
-                <div class="helper-text">Click to open</div>
-            </div>
-
-            <!-- Venmo -->
-            <div class="payment-card">
-                <div class="card-header">
-                    <div class="card-icon venmo-icon">V</div>
-                    <h2>Venmo</h2>
-                    <p>Social Payments</p>
-                </div>
-                <div class="form-group">
-                    <label for="venmo-username">Username</label>
-                    <input 
-                        type="text" 
-                        id="venmo-username" 
-                        placeholder="@YourVenmo"
-                        value="@tway2084"
-                    >
-                </div>
-                <button class="payment-button venmo-btn">Send via Venmo</button>
-                <div class="helper-text">Open app to send</div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
