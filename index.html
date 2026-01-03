@@ -573,63 +573,61 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .header {
             text-align: center;
             color: white;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             opacity: 0.9;
         }
 
         .payment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
         }
 
         .payment-card {
             background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
         }
 
         .payment-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
 
         .card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
         }
 
         .card-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 900;
             color: white;
+            margin: 0 auto 0.75rem;
         }
 
         .cashapp-icon { background: linear-gradient(135deg, #00D632, #00C853); }
@@ -637,39 +635,35 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
         .square-icon { background: linear-gradient(135deg, #3E4348, #000000); }
         .venmo-icon { background: linear-gradient(135deg, #3D95CE, #008CFF); }
 
-        .card-title {
-            flex: 1;
-        }
-
-        .card-title h2 {
-            font-size: 1.5rem;
+        .card-header h2 {
+            font-size: 1.2rem;
             color: #333;
             margin-bottom: 0.25rem;
         }
 
-        .card-title p {
-            font-size: 0.9rem;
+        .card-header p {
+            font-size: 0.8rem;
             color: #666;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #555;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 0.75rem;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             transition: border-color 0.3s ease;
         }
 
@@ -684,10 +678,10 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
 
         .payment-button {
             width: 100%;
-            padding: 0.875rem;
+            padding: 0.7rem;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
             font-weight: 900;
             color: white;
             cursor: pointer;
@@ -703,7 +697,7 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
 
         .payment-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
         .payment-button:active {
@@ -711,10 +705,17 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
         }
 
         .helper-text {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: #888;
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
             font-style: italic;
+            text-align: center;
+        }
+
+        @media (max-width: 1200px) {
+            .payment-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -723,7 +724,7 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
             }
 
             .header h1 {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -740,88 +741,80 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
             <div class="payment-card">
                 <div class="card-header">
                     <div class="card-icon cashapp-icon">$</div>
-                    <div class="card-title">
-                        <h2>Cash App</h2>
-                        <p>Fast & Easy Payments</p>
-                    </div>
+                    <h2>Cash App</h2>
+                    <p>Fast Payments</p>
                 </div>
                 <div class="form-group">
-                    <label for="cashapp-tag">Cash App $Cashtag</label>
+                    <label for="cashapp-tag">$Cashtag</label>
                     <input 
                         type="text" 
                         id="cashapp-tag" 
                         placeholder="$YourCashtag"
                         value="$tway66gworld"
                     >
-                    <div class="helper-text">Open Cash App and send to this $Cashtag</div>
                 </div>
                 <button class="payment-button cashapp-btn">Send via Cash App</button>
+                <div class="helper-text">Open app to send</div>
             </div>
 
             <!-- PayPal -->
             <div class="payment-card">
                 <div class="card-header">
                     <div class="card-icon paypal-icon">P</div>
-                    <div class="card-title">
-                        <h2>PayPal</h2>
-                        <p>Trusted Worldwide</p>
-                    </div>
+                    <h2>PayPal</h2>
+                    <p>Trusted Worldwide</p>
                 </div>
                 <div class="form-group">
                     <label for="paypal-link">PayPal.me Link</label>
                     <input 
                         type="url" 
                         id="paypal-link" 
-                        placeholder="https://paypal.me/username"
+                        placeholder="paypal.me/username"
                         value="https://paypal.me/benterpryzes"
                     >
-                    <div class="helper-text">Click button to open PayPal payment page</div>
                 </div>
                 <button class="payment-button paypal-btn" onclick="window.open(document.getElementById('paypal-link').value, '_blank')">Pay with PayPal</button>
+                <div class="helper-text">Click to open</div>
             </div>
 
             <!-- Square -->
             <div class="payment-card">
                 <div class="card-header">
                     <div class="card-icon square-icon">□</div>
-                    <div class="card-title">
-                        <h2>Square</h2>
-                        <p>Secure Card Payments</p>
-                    </div>
+                    <h2>Square</h2>
+                    <p>Secure Payments</p>
                 </div>
                 <div class="form-group">
-                    <label for="square-link">Square Payment Link</label>
+                    <label for="square-link">Payment Link</label>
                     <input 
                         type="url" 
                         id="square-link" 
-                        placeholder="https://bit.ly/..."
+                        placeholder="bit.ly/..."
                         value="https://bit.ly/4snVxsl"
                     >
-                    <div class="helper-text">Click button to open Square checkout</div>
                 </div>
                 <button class="payment-button square-btn" onclick="window.open(document.getElementById('square-link').value, '_blank')">Pay with Square</button>
+                <div class="helper-text">Click to open</div>
             </div>
 
             <!-- Venmo -->
             <div class="payment-card">
                 <div class="card-header">
                     <div class="card-icon venmo-icon">V</div>
-                    <div class="card-title">
-                        <h2>Venmo</h2>
-                        <p>Social Payments</p>
-                    </div>
+                    <h2>Venmo</h2>
+                    <p>Social Payments</p>
                 </div>
                 <div class="form-group">
-                    <label for="venmo-username">Venmo Username</label>
+                    <label for="venmo-username">Username</label>
                     <input 
                         type="text" 
                         id="venmo-username" 
-                        placeholder="@YourVenmoUsername"
+                        placeholder="@YourVenmo"
                         value="@tway2084"
                     >
-                    <div class="helper-text">Open Venmo app and send to this username</div>
                 </div>
                 <button class="payment-button venmo-btn">Send via Venmo</button>
+                <div class="helper-text">Open app to send</div>
             </div>
         </div>
     </div>
