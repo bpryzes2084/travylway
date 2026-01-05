@@ -154,6 +154,7 @@ body{
   font-size:0.85rem;
   color:#666;
   font-weight:700;
+  word-break:break-all;
 }
 
 .trip-status{
@@ -198,6 +199,7 @@ body{
   color:#333;
   font-weight:700;
   margin:0;
+  word-break:break-word;
 }
 
 .trip-address{
@@ -215,7 +217,8 @@ body{
 
 .trip-address p{
   color:#333;
-  margin:0;
+  margin:0.35rem 0 0;
+  word-break:break-word;
 }
 
 .trip-notes{
@@ -236,6 +239,7 @@ body{
   color:#333;
   margin:0;
   font-style:italic;
+  word-break:break-word;
 }
 
 .trip-actions{
@@ -366,7 +370,7 @@ body{
     </div>
     <div class="stat-card">
       <div class="stat-number completed" id="completedCount">0</div>
-      <div class="stat-label">Completed Today</div>
+      <div class="stat-label">Completed</div>
     </div>
   </div>
 
@@ -375,7 +379,7 @@ body{
     <select id="statusFilter">
       <option value="all">All Trips</option>
       <option value="available">Available Only</option>
-      <option value="claimed">My Claimed Trips</option>
+      <option value="claimed">Claimed</option>
       <option value="completed">Completed</option>
     </select>
 
@@ -413,235 +417,222 @@ body{
 </div>
 
 <script>
-const WORKER_URL = 'https://travylway-api.benterpryzes2084.workers.dev';
-let currentDriverId = 'DRIVER_' + Math.random().toString(36).substr(2, 9); // Temporary ID
+  // IMPORTANT: your API is now on the domain (routes set), so use the domain API.
+  const API_BASE = 'https://travylway.com/api/trips';
 
-// Load trips on page load
-window.addEventListener('load', () => {
-  loadTrips();
-  // Auto-refresh every 30 seconds
-  setInterval(loadTrips, 30000);
-});
+  // Temporary per-session driver id (replace later with real auth)
+  let currentDriverId = 'DRIVER_' + Math.random().toString(36).substr(2, 9);
 
-async function loadTrips() {
-  const loadingState = document.getElementById('loadingState');
-  const tripsGrid = document.getElementById('tripsGrid');
-  const noTrips = document.getElementById('noTrips');
-  
-  loadingState.style.display = 'block';
-  tripsGrid.style.display = 'none';
-  noTrips.style.display = 'none';
-  
-  try {
-    const response = await fetch(WORKER_URL + '/trips');
-    const data = await response.json();
-    
-    if (data.trips && data.trips.length > 0) {
-      displayTrips(data.trips);
-      updateStats(data.trips);
-      tripsGrid.style.display = 'grid';
-    } else {
-      noTrips.style.display = 'block';
-    }
-  } catch (error) {
-    console.error('Error loading trips:', error);
-    noTrips.style.display = 'block';
-  } finally {
-    loadingState.style.display = 'none';
-  }
-}
-
-function displayTrips(trips) {
-  const tripsGrid = document.getElementById('tripsGrid');
-  const statusFilter = document.getElementById('statusFilter').value;
-  const airportFilter = document.getElementById('airportFilter').value;
-  const dateFilter = document.getElementById('dateFilter').value;
-  
-  // Filter trips
-  let filteredTrips = trips.filter(trip => {
-    if (statusFilter !== 'all' && trip.status !== statusFilter) return false;
-    if (airportFilter !== 'all' && trip.airport !== airportFilter) return false;
-    if (dateFilter && trip.flightDate !== dateFilter) return false;
-    return true;
+  // Load trips on page load
+  window.addEventListener('load', () => {
+    loadTrips();
+    // Auto-refresh every 30 seconds
+    setInterval(loadTrips, 30000);
   });
-  
-  tripsGrid.innerHTML = filteredTrips.map(trip => `
-    <div class="trip-card ${trip.status}">
-      <div class="trip-header">
-        <span class="trip-id">Trip #${trip.id}</span>
-        <span class="trip-status status-${trip.status}">${trip.status}</span>
-      </div>
-      
-      <div class="trip-details">
-        <div class="detail-item">
-          <span class="detail-icon">👤</span>
-          <div class="detail-content">
-            <h4>Passenger</h4>
-            <p>${trip.firstName} ${trip.lastName}</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <span class="detail-icon">✈️</span>
-          <div class="detail-content">
-            <h4>Flight</h4>
-            <p>${trip.airline} ${trip.flightNumber}</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <span class="detail-icon">🏢</span>
-          <div class="detail-content">
-            <h4>Airport</h4>
-            <p>${trip.airport}</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <span class="detail-icon">📅</span>
-          <div class="detail-content">
-            <h4>Date & Time</h4>
-            <p>${trip.flightDate} ${trip.flightTime}</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <span class="detail-icon">👥</span>
-          <div class="detail-content">
-            <h4>Passengers</h4>
-            <p>${trip.passengers}</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <span class="detail-icon">${trip.serviceType === 'pickup' ? '🛬' : '🛫'}</span>
-          <div class="detail-content">
-            <h4>Service</h4>
-            <p>${trip.serviceType === 'pickup' ? 'Pickup' : 'Drop-off'}</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="trip-address">
-        <h4>📍 Address</h4>
-        <p>${trip.address}</p>
-      </div>
-      
-      ${trip.notes ? `
-        <div class="trip-notes">
-          <h4>📝 Special Instructions</h4>
-          <p>${trip.notes}</p>
-        </div>
-      ` : ''}
-      
-      <div class="trip-actions">
-        ${trip.status === 'available' ? `
-          <button class="btn btn-claim" onclick="claimTrip('${trip.id}')">
-            ✓ Claim Trip
-          </button>
-        ` : ''}
-        
-        ${trip.status === 'claimed' && trip.claimedBy === currentDriverId ? `
-          <button class="btn btn-unclaim" onclick="unclaimTrip('${trip.id}')">
-            ✗ Unclaim Trip
-          </button>
-          <button class="btn btn-complete" onclick="completeTrip('${trip.id}')">
-            ✓ Mark Complete
-          </button>
-        ` : ''}
-        
-        <button class="btn btn-contact" onclick="contactPassenger('${trip.phone}')">
-          📱 Contact
-        </button>
-      </div>
-    </div>
-  `).join('');
-}
 
-function updateStats(trips) {
-  const available = trips.filter(t => t.status === 'available').length;
-  const claimed = trips.filter(t => t.status === 'claimed').length;
-  const completed = trips.filter(t => t.status === 'completed').length;
-  
-  document.getElementById('availableCount').textContent = available;
-  document.getElementById('claimedCount').textContent = claimed;
-  document.getElementById('completedCount').textContent = completed;
-}
+  async function loadTrips() {
+    const loadingState = document.getElementById('loadingState');
+    const tripsGrid = document.getElementById('tripsGrid');
+    const noTrips = document.getElementById('noTrips');
 
-async function claimTrip(tripId) {
-  if (!confirm('Claim this trip?')) return;
-  
-  try {
-    const response = await fetch(WORKER_URL + '/claim', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tripId: tripId,
-        driverId: currentDriverId
-      })
-    });
-    
-    if (response.ok) {
-      alert('Trip claimed successfully!');
-      loadTrips();
+    loadingState.style.display = 'block';
+    tripsGrid.style.display = 'none';
+    noTrips.style.display = 'none';
+
+    const statusFilter = document.getElementById('statusFilter').value;
+    const airportFilter = document.getElementById('airportFilter').value;
+    const dateFilter = document.getElementById('dateFilter').value;
+
+    // Map UI statuses -> API statuses
+    const statusMap = { available: 'OPEN', claimed: 'ASSIGNED', completed: 'COMPLETED' };
+
+    // Build API URL with optional server-side filters
+    const url = new URL(API_BASE);
+    if (airportFilter !== 'all') url.searchParams.set('airport', airportFilter);
+
+    // If user chose a specific UI status, pass the matching API status
+    if (statusFilter !== 'all' && statusMap[statusFilter]) {
+      url.searchParams.set('status', statusMap[statusFilter]);
     } else {
-      alert('Failed to claim trip');
+      // Default to OPEN if you want only open trips; otherwise omit.
+      // url.searchParams.set('status', 'OPEN');
     }
-  } catch (error) {
-    alert('Error claiming trip');
-  }
-}
 
-async function unclaimTrip(tripId) {
-  if (!confirm('Unclaim this trip?')) return;
-  
-  try {
-    const response = await fetch(WORKER_URL + '/unclaim', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tripId: tripId })
-    });
-    
-    if (response.ok) {
-      alert('Trip unclaimed');
-      loadTrips();
+    try {
+      const response = await fetch(url.toString(), { cache: 'no-store' });
+      const data = await response.json();
+
+      const trips = Array.isArray(data.trips) ? data.trips : [];
+
+      // Client-side date filter (YYYY-MM-DD based on pickup_time_utc)
+      const filteredTrips = trips.filter(trip => {
+        if (!dateFilter) return true;
+        const d = String(trip.pickup_time_utc || '').slice(0, 10);
+        return d === dateFilter;
+      });
+
+      if (filteredTrips.length > 0) {
+        displayTrips(filteredTrips);
+        updateStats(trips); // stats based on unfiltered list
+        tripsGrid.style.display = 'grid';
+      } else {
+        noTrips.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error loading trips:', error);
+      noTrips.style.display = 'block';
+    } finally {
+      loadingState.style.display = 'none';
+    }
+  }
+
+  function displayTrips(trips) {
+    const tripsGrid = document.getElementById('tripsGrid');
+
+    // Sort by pickup_time_utc ascending (soonest first)
+    trips.sort((a, b) => String(a.pickup_time_utc).localeCompare(String(b.pickup_time_utc)));
+
+    tripsGrid.innerHTML = trips.map(trip => {
+      const apiStatus = String(trip.status || '').toUpperCase();
+      const uiStatusClass =
+        apiStatus === 'OPEN' ? 'available' :
+        apiStatus === 'ASSIGNED' ? 'claimed' :
+        apiStatus === 'COMPLETED' ? 'completed' : 'available';
+
+      const uiStatusLabel =
+        apiStatus === 'OPEN' ? 'AVAILABLE' :
+        apiStatus === 'ASSIGNED' ? 'CLAIMED' :
+        apiStatus === 'COMPLETED' ? 'COMPLETED' : apiStatus;
+
+      const directionIcon = (trip.direction === 'FROM_AIRPORT') ? '🛬' : '🛫';
+
+      return `
+        <div class="trip-card ${uiStatusClass}">
+          <div class="trip-header">
+            <span class="trip-id">${trip.id}</span>
+            <span class="trip-status status-${uiStatusClass}">${uiStatusLabel}</span>
+          </div>
+
+          <div class="trip-details">
+            <div class="detail-item">
+              <span class="detail-icon">👤</span>
+              <div class="detail-content">
+                <h4>Contact</h4>
+                <p>${escapeHtml(trip.created_by || 'N/A')}</p>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-icon">🏢</span>
+              <div class="detail-content">
+                <h4>Airport</h4>
+                <p>${escapeHtml(trip.airport_code || 'N/A')}</p>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-icon">📅</span>
+              <div class="detail-content">
+                <h4>Pickup Time (UTC)</h4>
+                <p>${escapeHtml(formatUtc(trip.pickup_time_utc))}</p>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-icon">${directionIcon}</span>
+              <div class="detail-content">
+                <h4>Direction</h4>
+                <p>${escapeHtml(trip.direction || 'N/A')}</p>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-icon">🧭</span>
+              <div class="detail-content">
+                <h4>Type</h4>
+                <p>${escapeHtml(trip.rider_type || 'N/A')} • ${escapeHtml(trip.trip_type || 'N/A')}</p>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-icon">🏷️</span>
+              <div class="detail-content">
+                <h4>Category</h4>
+                <p>${escapeHtml(trip.trip_category || 'N/A')}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="trip-address">
+            <h4>📍 Pickup → Dropoff</h4>
+            <p><b>Pickup:</b> ${escapeHtml(trip.pickup_text || '')}</p>
+            <p><b>Dropoff:</b> ${escapeHtml(trip.dropoff_text || '')}</p>
+          </div>
+
+          ${trip.notes ? `
+            <div class="trip-notes">
+              <h4>📝 Notes</h4>
+              <p>${escapeHtml(trip.notes)}</p>
+            </div>
+          ` : ''}
+
+          <div class="trip-actions">
+            <!-- Claim/Complete endpoints not wired yet in your Worker. Keep disabled for now. -->
+            <button class="btn btn-claim" disabled title="Claim endpoints coming next">
+              ✓ Claim Trip
+            </button>
+
+            <button class="btn btn-contact" onclick="contactPassenger('${escapeAttr(trip.created_by || '')}')">
+              📱 Contact
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateStats(trips) {
+    const available = trips.filter(t => String(t.status).toUpperCase() === 'OPEN').length;
+    const claimed = trips.filter(t => String(t.status).toUpperCase() === 'ASSIGNED').length;
+    const completed = trips.filter(t => String(t.status).toUpperCase() === 'COMPLETED').length;
+
+    document.getElementById('availableCount').textContent = available;
+    document.getElementById('claimedCount').textContent = claimed;
+    document.getElementById('completedCount').textContent = completed;
+  }
+
+  function contactPassenger(contact) {
+    const c = String(contact || '');
+    const digits = c.replace(/\D/g, '');
+    // If it looks like a phone number, open WhatsApp; otherwise show the contact
+    if (digits.length >= 10) {
+      const last10 = digits.slice(-10);
+      window.open(`https://wa.me/1${last10}`, '_blank');
     } else {
-      alert('Failed to unclaim trip');
+      alert('Contact: ' + c);
     }
-  } catch (error) {
-    alert('Error unclaiming trip');
   }
-}
 
-async function completeTrip(tripId) {
-  if (!confirm('Mark this trip as completed?')) return;
-  
-  try {
-    const response = await fetch(WORKER_URL + '/complete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tripId: tripId })
-    });
-    
-    if (response.ok) {
-      alert('Trip marked as complete!');
-      loadTrips();
-    } else {
-      alert('Failed to complete trip');
-    }
-  } catch (error) {
-    alert('Error completing trip');
+  function formatUtc(iso) {
+    if (!iso) return '';
+    // Keep it simple: YYYY-MM-DD HH:MMZ
+    return String(iso).replace('T', ' ').replace('.000Z', 'Z');
   }
-}
 
-function contactPassenger(phone) {
-  window.open(`https://wa.me/${phone.replace(/\D/g, '')}`, '_blank');
-}
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
 
-// Apply filters
-document.getElementById('statusFilter').addEventListener('change', loadTrips);
-document.getElementById('airportFilter').addEventListener('change', loadTrips);
-document.getElementById('dateFilter').addEventListener('change', loadTrips);
+  function escapeAttr(s){
+    return String(s).replace(/'/g, "%27");
+  }
+
+  // Apply filters
+  document.getElementById('statusFilter').addEventListener('change', loadTrips);
+  document.getElementById('airportFilter').addEventListener('change', loadTrips);
+  document.getElementById('dateFilter').addEventListener('change', loadTrips);
 </script>
 
 </body>
