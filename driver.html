@@ -1,201 +1,186 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Travylway — Travylway Driver Portal</title>
-  <style>
-    body { font-family: Arial, Helvetica, sans-serif; margin: 0; background:#f6f7fb; color:#111; }
-    header { background:#fff; padding:14px 16px; box-shadow:0 2px 10px rgba(0,0,0,.06); position: sticky; top:0; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 16px; }
-    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    label { font-size: 13px; color:#444; }
-    input, select, button { padding:10px 12px; border:1px solid #d7dbe7; border-radius:10px; background:#fff; font-size:14px; }
-    button { cursor:pointer; border:0; background:#111; color:#fff; }
-    button.secondary { background:#fff; color:#111; border:1px solid #d7dbe7; }
-    .meta { font-size: 12px; color:#666; margin-top:6px; }
-    .grid { display:grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
-    .card { background:#fff; border:1px solid #e7eaf3; border-radius:14px; padding:14px; box-shadow:0 10px 28px rgba(0,0,0,.05); }
-    .topline { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
-    .badge { font-size:12px; padding:5px 10px; border-radius:999px; background:#eef2ff; color:#243bff; }
-    .kv { display:grid; grid-template-columns: 140px 1fr; gap:8px; margin-top:10px; font-size:14px; }
-    .k { color:#666; }
-    .v { color:#111; }
-    .small { font-size: 12px; color:#666; }
-    .error { background:#fff1f2; border:1px solid #fecdd3; color:#9f1239; padding:10px 12px; border-radius:12px; }
-    .ok { background:#ecfdf5; border:1px solid #bbf7d0; color:#166534; padding:10px 12px; border-radius:12px; }
-    a { color:inherit; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="wrap">
-      <div class="row" style="justify-content:space-between;">
-        <div>
-          <div style="font-weight:800; font-size:16px;">Travylway — Driver Portal</div>
-          <div class="meta">Enter an airport code to view open trips.</div>
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
 
-             
-     
+    // CORS headers
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    };
 
-      <div class="row" style="margin-top:12px;">
-        <div>
-          <label>Airport</label><br/>
-          <input id="airport" placeholder="Enter airport (e.g. DEN)" style="width:160px;" />
-
-        </div>
-        <div>
-          <label>Status</label><br/>
-          <select id="status">
-            <option value="OPEN" selected>OPEN</option>
-            <option value="CLAIMED">CLAIMED</option>
-            <option value="COMPLETED">COMPLETED</option>
-            <option value="CANCELLED">CANCELLED</option>
-          </select>
-        </div>
-        <div>
-          <label>Refresh</label><br/>
-          <select id="refresh">
-            <option value="0">Off</option>
-            <option value="5" selected>Every 5s</option>
-            <option value="10">Every 10s</option>
-            <option value="20">Every 20s</option>
-          </select>
-        </div>
-        <div style="margin-top:18px;">
-          <button id="loadBtn">Load Trips</button>
-          <button class="secondary" id="clearBtn">Clear</button>
-        </div>
-        <div style="margin-left:auto; margin-top:18px;" class="small" id="lastUpdate">—</div>
-      </div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <div id="msg"></div>
-    <div class="grid" id="grid"></div>
-  </main>
-
-<script>
-  const API_BASE = "https://d1-template.benterpryzes2084.workers.dev";
-
-  const el = (id) => document.getElementById(id);
-  let timer = null;
-
-  function setMsg(html, kind="") {
-    const box = el("msg");
-    if (!html) { box.innerHTML = ""; return; }
-    box.innerHTML = `<div class="${kind}">${html}</div>`;
-  }
-
-  function fmtTime(iso) {
-    if (!iso) return "—";
-    try {
-      const d = new Date(iso);
-      return d.toLocaleString();
-    } catch { return iso; }
-  }
-
-  function escapeHtml(s) {
-    return String(s ?? "").replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
-
-  async function loadTrips() {
-
-  const airport = el("airport").value.trim().toUpperCase();
-  if (!airport) {
-    setMsg("Enter an airport code to load trips.", "ok");
-    el("grid").innerHTML = "";
-    return;
-  }
-
-  setMsg("");
-  const status = el("status").value.trim().toUpperCase();
-
-  const url = new URL(API_BASE + "/api/trips");
-  url.searchParams.set("airport", airport);
-  if (status) url.searchParams.set("status", status);
-
-  try {
-    const res = await fetch(url.toString());
-    const data = await res.json();
-    …
-
-
-      if (!data.ok) {
-        setMsg("API returned an error: " + escapeHtml(data.error || "unknown"), "error");
-        return;
-      }
-
-      renderTrips(data.trips || []);
-      el("lastUpdate").textContent = "Last update: " + new Date().toLocaleTimeString();
-      if ((data.trips || []).length === 0) {
-        setMsg("No trips found for this filter.", "ok");
-      }
-    } catch (e) {
-      setMsg("Network/API error. Check connectivity and API availability.", "error");
-      console.error(e);
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
     }
-  }
 
-  function renderTrips(trips) {
-    const grid = el("grid");
-    grid.innerHTML = "";
-
-    trips.forEach(t => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <div class="topline">
-          <div>
-            <div style="font-weight:800; font-size:15px;">
-              ${escapeHtml(t.airport_code)} — ${escapeHtml(t.direction)}
-            </div>
-            <div class="small">Trip ID: ${escapeHtml(t.id)}</div>
-          </div>
-          <div class="badge">${escapeHtml(t.status)}</div>
-        </div>
-
-        <div class="kv">
-          <div class="k">Pickup time</div><div class="v">${escapeHtml(fmtTime(t.pickup_time_utc))}</div>
-          <div class="k">Pickup</div><div class="v">${escapeHtml(t.pickup_text)}</div>
-          <div class="k">Dropoff</div><div class="v">${escapeHtml(t.dropoff_text)}</div>
-          <div class="k">Flight</div><div class="v">${escapeHtml(t.flight_number || "—")} ${t.airline ? "(" + escapeHtml(t.airline) + ")" : ""}</div>
-          <div class="k">Notes</div><div class="v">${escapeHtml(t.notes || "—")}</div>
-          <div class="k">Created by</div><div class="v">${escapeHtml(t.created_by || "—")}</div>
-          <div class="k">Created at</div><div class="v">${escapeHtml(fmtTime(t.created_at))}</div>
-        </div>
-
-        <div class="small" style="margin-top:10px;">
-          Next step: add “Claim Trip” (Durable Objects) so only one driver can grab it.
-        </div>
-      `;
-
-      grid.appendChild(card);
-    });
-  }
-
-  function setAutoRefresh() {
-    const seconds = parseInt(el("refresh").value, 10);
-    if (timer) clearInterval(timer);
-    timer = null;
-
-    if (seconds > 0) {
-      timer = setInterval(loadTrips, seconds * 1000);
+    // Get trips
+    if (path === '/trips' && request.method === 'GET') {
+      try {
+        const trips = await env.TRIPS_KV.get('trips', { type: 'json' }) || [];
+        
+        return new Response(JSON.stringify({ trips }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
     }
+
+    // Add trip (from crew.html form)
+    if (path === '/add-trip' && request.method === 'POST') {
+      try {
+        const data = await request.json();
+        const trips = await env.TRIPS_KV.get('trips', { type: 'json' }) || [];
+        
+        const newTrip = {
+          id: Date.now().toString(),
+          ...data,
+          status: 'available',
+          claimedBy: null,
+          createdAt: new Date().toISOString()
+        };
+        
+        trips.push(newTrip);
+        await env.TRIPS_KV.put('trips', JSON.stringify(trips));
+        
+        // Send Telegram notification
+        await notifyTelegram(env, newTrip);
+        
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Claim trip
+    if (path === '/claim' && request.method === 'POST') {
+      try {
+        const { tripId, driverId } = await request.json();
+        const trips = await env.TRIPS_KV.get('trips', { type: 'json' }) || [];
+        
+        const tripIndex = trips.findIndex(t => t.id === tripId);
+        if (tripIndex !== -1 && trips[tripIndex].status === 'available') {
+          trips[tripIndex].status = 'claimed';
+          trips[tripIndex].claimedBy = driverId;
+          trips[tripIndex].claimedAt = new Date().toISOString();
+          
+          await env.TRIPS_KV.put('trips', JSON.stringify(trips));
+          
+          return new Response(JSON.stringify({ success: true }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+        
+        return new Response(JSON.stringify({ error: 'Trip not available' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Unclaim trip
+    if (path === '/unclaim' && request.method === 'POST') {
+      try {
+        const { tripId } = await request.json();
+        const trips = await env.TRIPS_KV.get('trips', { type: 'json' }) || [];
+        
+        const tripIndex = trips.findIndex(t => t.id === tripId);
+        if (tripIndex !== -1) {
+          trips[tripIndex].status = 'available';
+          trips[tripIndex].claimedBy = null;
+          
+          await env.TRIPS_KV.put('trips', JSON.stringify(trips));
+          
+          return new Response(JSON.stringify({ success: true }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+        
+        return new Response(JSON.stringify({ error: 'Trip not found' }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Complete trip
+    if (path === '/complete' && request.method === 'POST') {
+      try {
+        const { tripId } = await request.json();
+        const trips = await env.TRIPS_KV.get('trips', { type: 'json' }) || [];
+        
+        const tripIndex = trips.findIndex(t => t.id === tripId);
+        if (tripIndex !== -1) {
+          trips[tripIndex].status = 'completed';
+          trips[tripIndex].completedAt = new Date().toISOString();
+          
+          await env.TRIPS_KV.put('trips', JSON.stringify(trips));
+          
+          return new Response(JSON.stringify({ success: true }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+        
+        return new Response(JSON.stringify({ error: 'Trip not found' }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    return new Response('Not found', { status: 404 });
   }
+};
 
-  el("loadBtn").addEventListener("click", () => { loadTrips(); setAutoRefresh(); });
-  el("clearBtn").addEventListener("click", () => { el("grid").innerHTML=""; setMsg(""); });
+async function notifyTelegram(env, trip) {
+  const message = `
+🚖 NEW TRIP REQUEST
 
-  el("refresh").addEventListener("change", setAutoRefresh);
+Trip #${trip.id}
+👤 ${trip.firstName} ${trip.lastName}
+📱 ${trip.phone}
+✈️ ${trip.airline} ${trip.flightNumber}
+🏢 ${trip.airport}
+📅 ${trip.flightDate} ${trip.flightTime}
+📍 ${trip.address}
+${trip.notes ? `📝 ${trip.notes}` : ''}
 
-  // initial load
-  loadTrips();
-  setAutoRefresh();
-</script>
-</body>
-</html>
+Status: Available
+  `.trim();
+
+  await fetch(
+    `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: env.TELEGRAM_CHAT_ID,
+        text: message
+      })
+    }
+  );
+}
