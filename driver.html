@@ -423,8 +423,8 @@ const WORKER_URL = 'https://travylway-api.benterpryzes2084.workers.dev';
 const driverId = localStorage.getItem('driverId') || 'TEMP_' + Date.now();
 const driverName = localStorage.getItem('driverName') || 'Guest Driver';
 
-// Load trips on page load
-window.addEventListener('load', () => {
+// Load trips when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
   // Check for URL filter parameter
   const urlParams = new URLSearchParams(window.location.search);
   const filter = urlParams.get('filter');
