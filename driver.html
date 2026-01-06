@@ -424,11 +424,24 @@ body{
   let currentDriverId = 'DRIVER_' + Math.random().toString(36).substr(2, 9);
 
   // Load trips on page load
-  window.addEventListener('load', () => {
-    loadTrips();
-    // Auto-refresh every 30 seconds
-    setInterval(loadTrips, 30000);
-  });
+window.addEventListener('load', () => {
+  // Check for URL filter parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const filter = urlParams.get('filter');
+  
+  // Set the filter dropdown based on URL
+  if (filter === 'available') {
+    document.getElementById('statusFilter').value = 'available';
+  } else if (filter === 'claimed') {
+    document.getElementById('statusFilter').value = 'claimed';
+  } else if (filter === 'completed') {
+    document.getElementById('statusFilter').value = 'completed';
+  }
+  
+  loadTrips();
+  // Auto-refresh every 30 seconds
+  setInterval(loadTrips, 30000);
+});
 
   async function loadTrips() {
     const loadingState = document.getElementById('loadingState');
