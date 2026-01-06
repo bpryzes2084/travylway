@@ -1,3 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Driver Board - Travylway</title>
+<meta name="description" content="View available trips and claim pickups.">
+
+<style>
+:root{
+  --bg:#2B3A4A;
+  --accent:#2563EB;
+  --text:#0F172A;
+  --light:#E5E7EB;
+  --muted:rgba(229,231,235,.82);
+  --line:rgba(255,255,255,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:var(--bg);
+  color:var(--light);
+}
+
+.container{
+  max-width:1400px;
+  margin:0 auto;
+  padding:2rem 1rem;
+}
+
+.header{
+  text-align:center;
+  margin-bottom:2rem;
+}
+
+.header h1{
+  font-size:2.5rem;
+  margin-bottom:0.5rem;
+}
+
+.header p{
+  font-size:1.1rem;
+  opacity:0.9;
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:1rem;
+  margin-bottom:2rem;
+}
+
+.stat-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:1.5rem;
+  text-align:center;
+}
+
+.stat-number{
+  font-size:2.5rem;
+  font-weight:900;
+  margin-bottom:0.5rem;
+}
+
+.stat-label{
+  font-size:0.9rem;
+  opacity:0.8;
+}
+
+.available{color:#00D632}
+.claimed{color:#667eea}
+.completed{color:#FFD700}
+
+.filter-bar{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:1.5rem;
+  margin-bottom:2rem;
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.filter-bar select,
+.filter-bar input{
+  padding:0.75rem;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(255,255,255,.1);
+  color:var(--light);
+  font-size:0.95rem;
+}
+
+.filter-bar select:focus,
+.filter-bar input:focus{
+  outline:none;
+  border-color:#667eea;
+}
+
+.filter-bar button{
+  padding:0.75rem 1.5rem;
+  background:#667eea;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.filter-bar button:hover{
+  background:#5568d3;
+}
+
+.trips-grid{
+  display:grid;
+  gap:1.5rem;
+}
+
+.trip-card{
+  background:white;
+  border-radius:16px;
+  padding:1.5rem;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  color:var(--text);
+  transition:.3s;
+  border-left:4px solid transparent;
+}
+
+.trip-card.available{border-left-color:#00D632}
+.trip-card.claimed{border-left-color:#667eea}
+.trip-card.completed{border-left-color:#FFD700}
+
+.trip-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+.trip-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:start;
+  margin-bottom:1rem;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+
+.trip-id{
+  font-size:0.85rem;
+  color:#666;
+  font-weight:700;
+  word-break:break-all;
+}
+
+.trip-status{
+  padding:0.4rem 1rem;
+  border-radius:20px;
+  font-size:0.85rem;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.status-available{background:#d4edda;color:#155724}
+.status-claimed{background:#cfe2ff;color:#084298}
+.status-completed{background:#fff3cd;color:#856404}
+
+.trip-details{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:1rem;
+  margin-bottom:1rem;
+}
+
+.detail-item{
+  display:flex;
+  align-items:start;
+  gap:0.5rem;
+}
+
+.detail-icon{
+  font-size:1.2rem;
+  margin-top:0.2rem;
+}
+
+.detail-content h4{
+  font-size:0.85rem;
+  color:#666;
+  margin-bottom:0.25rem;
+  font-weight:600;
+}
+
+.detail-content p{
+  font-size:1rem;
+  color:#333;
+  font-weight:700;
+  margin:0;
+  word-break:break-word;
+}
+
+.trip-address{
+  background:#f8f9fa;
+  padding:1rem;
+  border-radius:8px;
+  margin-bottom:1rem;
+}
+
+.trip-address h4{
+  font-size:0.85rem;
+  color:#666;
+  margin-bottom:0.5rem;
+}
+
+.trip-address p{
+  color:#333;
+  margin:0.35rem 0 0;
+  word-break:break-word;
+}
+
+.trip-notes{
+  background:#fff3cd;
+  padding:1rem;
+  border-radius:8px;
+  margin-bottom:1rem;
+  border-left:3px solid #ffc107;
+}
+
+.trip-notes h4{
+  font-size:0.85rem;
+  color:#856404;
+  margin-bottom:0.5rem;
+}
+
+.trip-notes p{
+  color:#333;
+  margin:0;
+  font-style:italic;
+  word-break:break-word;
+}
+
+.trip-actions{
+  display:flex;
+  gap:0.75rem;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:0.75rem 1.5rem;
+  border:none;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.3s;
+  font-size:0.95rem;
+}
+
+.btn-claim{
+  background:#00D632;
+  color:white;
+}
+
+.btn-claim:hover{
+  background:#00C853;
+  transform:translateY(-2px);
+}
+
+.btn-unclaim{
+  background:#ff6b6b;
+  color:white;
+}
+
+.btn-unclaim:hover{
+  background:#ee5a24;
+  transform:translateY(-2px);
+}
+
+.btn-complete{
+  background:#667eea;
+  color:white;
+}
+
+.btn-complete:hover{
+  background:#5568d3;
+  transform:translateY(-2px);
+}
+
+.btn-contact{
+  background:#25D366;
+  color:white;
+}
+
+.btn-contact:hover{
+  background:#20ba5a;
+  transform:translateY(-2px);
+}
+
+.btn:disabled{
+  background:#ccc;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.loading{
+  text-align:center;
+  padding:3rem;
+  font-size:1.2rem;
+}
+
+.no-trips{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:3rem;
+  text-align:center;
+}
+
+.no-trips h3{
+  margin-bottom:0.5rem;
+}
+
+.back-link{
+  display:inline-block;
+  margin-top:2rem;
+  color:#667eea;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.back-link:hover{
+  text-decoration:underline;
+}
+
+@media(max-width:768px){
+  .header h1{
+    font-size:2rem;
+  }
+  
+  .trip-details{
+    grid-template-columns:1fr;
+  }
+  
+  .filter-bar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🚗 Driver Board</h1>
+    <p>View and claim available trips</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number available" id="availableCount">0</div>
+      <div class="stat-label">Available Trips</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number claimed" id="claimedCount">0</div>
+      <div class="stat-label">Claimed Trips</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number completed" id="completedCount">0</div>
+      <div class="stat-label">Completed</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <select id="statusFilter">
+      <option value="all">All Trips</option>
+      <option value="available">Available Only</option>
+      <option value="claimed">Claimed</option>
+      <option value="completed">Completed</option>
+    </select>
+
+    <select id="airportFilter">
+      <option value="all">All Airports</option>
+      <option value="DEN">DEN - Denver</option>
+      <option value="LAX">LAX - Los Angeles</option>
+      <option value="ORD">ORD - Chicago</option>
+      <option value="ATL">ATL - Atlanta</option>
+      <option value="JFK">JFK - New York</option>
+    </select>
+
+    <input type="date" id="dateFilter">
+
+    <button onclick="loadTrips()">🔄 Refresh</button>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loadingState" class="loading">
+    Loading trips...
+  </div>
+
+  <!-- Trips Grid -->
+  <div id="tripsGrid" class="trips-grid" style="display:none;">
+    <!-- Trips will be inserted here -->
+  </div>
+
+  <!-- No Trips -->
+  <div id="noTrips" class="no-trips" style="display:none;">
+    <h3>📭 No Trips Available</h3>
+    <p>Check back soon for new pickup requests</p>
+  </div>
+
+  <a href="/" class="back-link">← Back to Home</a>
+</div>
+
 <script>
 const WORKER_URL = 'https://travylway-api.benterpryzes2084.workers.dev';
 
@@ -130,7 +548,7 @@ function displayTrips(trips) {
             <span class="detail-icon">✈️</span>
             <div class="detail-content">
               <h4>Flight</h4>
-              <p>${trip.airline} ${trip.flightNumber || ''}</p>
+              <p>${trip.airline || 'N/A'} ${trip.flightNumber || ''}</p>
             </div>
           </div>
           
@@ -138,7 +556,7 @@ function displayTrips(trips) {
             <span class="detail-icon">🏢</span>
             <div class="detail-content">
               <h4>Airport</h4>
-              <p>${trip.airport}</p>
+              <p>${trip.airport || 'N/A'}</p>
             </div>
           </div>
           
@@ -146,7 +564,7 @@ function displayTrips(trips) {
             <span class="detail-icon">📅</span>
             <div class="detail-content">
               <h4>Date</h4>
-              <p>${trip.flightDate}</p>
+              <p>${trip.flightDate || 'N/A'}</p>
             </div>
           </div>
           
@@ -154,7 +572,7 @@ function displayTrips(trips) {
             <span class="detail-icon">🕐</span>
             <div class="detail-content">
               <h4>Time</h4>
-              <p>${trip.flightTime}</p>
+              <p>${trip.flightTime || 'N/A'}</p>
             </div>
           </div>
           
@@ -167,10 +585,12 @@ function displayTrips(trips) {
           </div>
         </div>
         
-        <div class="trip-address">
-          <h4>📍 Address</h4>
-          <p>${trip.address}</p>
-        </div>
+        ${trip.address ? `
+          <div class="trip-address">
+            <h4>📍 Address</h4>
+            <p>${trip.address}</p>
+          </div>
+        ` : ''}
         
         ${trip.notes ? `
           <div class="trip-notes">
@@ -284,3 +704,6 @@ document.getElementById('statusFilter').addEventListener('change', loadTrips);
 document.getElementById('airportFilter').addEventListener('change', loadTrips);
 document.getElementById('dateFilter').addEventListener('change', loadTrips);
 </script>
+
+</body>
+</html>
