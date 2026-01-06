@@ -410,29 +410,28 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
     </div>
 
     <div class="dispatch-grid">
-      <a href="YOUR_DRIVERS_ONLINE_URL" class="dispatch-card" target="_blank">
+      <a href="/driver.html" class="dispatch-card">
         <div class="dispatch-icon icon-green">👤</div>
         <h4>Drivers Online</h4>
         <p>Active drivers available</p>
         <span class="dispatch-badge badge-green">View Drivers</span>
       </a>
 
-    <a href="https://travylway-api.benterpryzes2084.workers.dev/request" class="dispatch-card" target="_blank" rel="noopener">
-  <div class="dispatch-icon icon-red">📋</div>
-  <h4>Pickup Requests</h4>
-  <p>Available Pickup Requests</p>
-  <span class="dispatch-badge badge-red">Pickup Request</span>
-</a>
+      <a href="/driver.html?filter=available" class="dispatch-card">
+        <div class="dispatch-icon icon-red">📋</div>
+        <h4>Airport Pickup Requests</h4>
+        <p>Incoming requests</p>
+        <span class="dispatch-badge badge-red">View Requests</span>
+      </a>
 
-
-      <a href="YOUR_PICKUPS_CLAIMED_URL" class="dispatch-card" target="_blank">
+      <a href="/driver.html?filter=claimed" class="dispatch-card">
         <div class="dispatch-icon icon-purple">✓</div>
         <h4>Pickups Claimed</h4>
         <p>Assigned drivers</p>
         <span class="dispatch-badge badge-purple">View Claimed</span>
       </a>
 
-      <a href="YOUR_FLIGHT_TRACKING_URL" class="dispatch-card" target="_blank">
+      <a href="https://flightaware.com/live/" class="dispatch-card" target="_blank">
         <div class="dispatch-icon icon-blue">✈️</div>
         <h4>Flight Tracking</h4>
         <p>Real-time flight status</p>
