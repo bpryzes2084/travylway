@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Drivers Online - Travylway</title>
+<meta name="description" content="View all active drivers currently online.">
+
+<style>
+:root{
+  --bg:#2B3A4A;
+  --accent:#2563EB;
+  --text:#0F172A;
+  --light:#E5E7EB;
+  --muted:rgba(229,231,235,.82);
+  --line:rgba(255,255,255,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:var(--bg);
+  color:var(--light);
+}
+
+.container{
+  max-width:1400px;
+  margin:0 auto;
+  padding:2rem 1rem;
+}
+
+.header{
+  text-align:center;
+  margin-bottom:2rem;
+}
+
+.header h1{
+  font-size:2.5rem;
+  margin-bottom:0.5rem;
+}
+
+.header p{
+  font-size:1.1rem;
+  opacity:0.9;
+}
+
+.stats-bar{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:1.5rem;
+  margin-bottom:2rem;
+  display:flex;
+  justify-content:space-around;
+  flex-wrap:wrap;
+  gap:2rem;
+}
+
+.stat-item{
+  text-align:center;
+}
+
+.stat-number{
+  font-size:3rem;
+  font-weight:900;
+  color:#00D632;
+  margin-bottom:0.5rem;
+}
+
+.stat-label{
+  font-size:0.9rem;
+  opacity:0.8;
+}
+
+.filter-bar{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:1.5rem;
+  margin-bottom:2rem;
+  display:flex;
+  gap:1rem;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.filter-bar select{
+  padding:0.75rem;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(255,255,255,.1);
+  color:var(--light);
+  font-size:0.95rem;
+}
+
+.filter-bar button{
+  padding:0.75rem 1.5rem;
+  background:#667eea;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.filter-bar button:hover{
+  background:#5568d3;
+}
+
+.drivers-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(350px, 1fr));
+  gap:1.5rem;
+}
+
+.driver-card{
+  background:white;
+  border-radius:16px;
+  padding:1.5rem;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  color:var(--text);
+  transition:.3s;
+  position:relative;
+  overflow:hidden;
+}
+
+.driver-card.online{
+  border-left:4px solid #00D632;
+}
+
+.driver-card.offline{
+  border-left:4px solid #999;
+  opacity:0.6;
+}
+
+.driver-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+.driver-status{
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  padding:0.4rem 1rem;
+  border-radius:20px;
+  font-size:0.75rem;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.status-online{
+  background:#d4edda;
+  color:#155724;
+}
+
+.status-offline{
+  background:#f8d7da;
+  color:#721c24;
+}
+
+.driver-header{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+
+.driver-avatar{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5rem;
+  font-weight:900;
+  color:white;
+}
+
+.driver-info h3{
+  margin:0 0 0.25rem 0;
+  font-size:1.2rem;
+}
+
+.driver-info p{
+  margin:0;
+  color:#666;
+  font-size:0.9rem;
+}
+
+.driver-details{
+  display:grid;
+  gap:0.75rem;
+  margin-bottom:1rem;
+}
+
+.detail-row{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  font-size:0.9rem;
+}
+
+.detail-icon{
+  font-size:1.1rem;
+}
+
+.detail-label{
+  color:#666;
+  font-weight:600;
+}
+
+.driver-stats{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:1rem;
+  padding-top:1rem;
+  border-top:1px solid #e0e0e0;
+}
+
+.stat{
+  text-ali
