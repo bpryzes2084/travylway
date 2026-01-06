@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Travylway Reviews</title>
+  <meta name="description" content="Leave a review for Travylway and read approved feedback." />
+  <style>
+    :root{--bg:#0f172a;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--text:#e5e7eb;--muted:rgba(229,231,235,.82);--accent:#2563eb;--ok:#064e3b;--err:#7f1d1d}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text)}
+    .wrap{max-width:980px;margin:0 auto;padding:22px 16px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+    h1{margin:0;font-size:22px}
+    .sub{margin:6px 0 0;color:var(--muted);line-height:1.4}
+    label{display:block;font-weight:900;font-size:13px;margin:10px 0 6px}
+    input,select,textarea{width:100%;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:var(--text);outline:none}
+    textarea{min-height:110px;resize:vertical}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:820px){.grid{grid-template-columns:1fr}}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+    .btn{padding:12px 16px;border-radius:999px;font-weight:900;border:0;cursor:pointer}
+    .primary{background:var(--accent);color:#fff}
+    .ghost{background:rgba(255,255,255,.10);color:var(--text);text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .msg{margin-top:12px;padding:12px;border-radius:14px;font-weight:900}
+    .ok{background:var(--ok);color:#d1fae5}
+    .err{background:var(--err);color:#fee2e2}
+    .small{font-size:12px;opacity:.88;line-height:1.45}
+    .review{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:14px;margin:10px 0}
+    .reviewTop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(255,255,255,.10);margin-right:6px}
+    .meta{opacity:.8;font-size:12px;margin-top:6px}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <h1>Travylway Reviews</h1>
+        <p class="sub">Reviews are moderated. New reviews won’t appear until approved.</p>
+      </div>
+      <a class="ghost btn" href="/">Back to Home</a>
+    </div>
+
+    <section class="card">
+      <h2 style="margin:0 0 6px;font-size:18px">Leave a Review</h2>
+
+      <div class="grid">
+        <div>
+          <label for="name">Name (optional)</label>
+          <input id="name" placeholder="First name or nickname" />
+        </div>
+        <div>
+          <label for="role">I am a…</label>
+          <select id="role">
+            <option value="TRAVELER" selected>Traveler</option>
+            <option value="CREW">Flight crew</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="rating">Rating</label>
+          <select id="rating">
+            <option value="5" selected>★★★★★ (5)</option>
+            <option value="4">★★★★☆ (4)</option>
+            <option value="3">★★★☆☆ (3)</option>
+            <option value="2">★★☆☆☆ (2)</option>
+            <option value="1">★☆☆☆☆ (1)</option>
+          </select>
+        </div>
+        <div>
+          <label for="airport">Airport code (optional)</label>
+          <input id="airport" placeholder="DEN" />
+          <div class="small">Example: DEN, LAX, ORD</div>
+        </div>
+        <div style="grid-column:1/-1">
+          <label for="comment">Review</label>
+          <textarea id="comment" placeholder="How was the pickup? Timing? Communication?"></textarea>
+          <div class="small">Don’t include sensitive info (full address, codes, etc.).</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn primary" id="submitBtn" type="button">Submit Review</button>
+        <button class="btn ghost" id="refreshBtn" type="button">Refresh</button>
+      </div>
+
+      <div id="submitMsg"></div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin:0 0 6px;font-size:18px">Approved Reviews</h2>
+      <p class="small" style="margin:0;color:var(--muted)">Only approved reviews are shown.</p>
+      <div id="reviewsBox" class="small" style="margin-top:12px">Loading reviews...</div>
+    </section>
+  </div>
+
+<script>
+  // Uses your domain worker route. Works on GitHub + Cloudflare.
+  const API = "/api/reviews";
+
+  const el = (id) => document.getElementById(id);
+  const submitBtn = el("submitBtn");
+  const refreshBtn = el("refreshBtn");
+  const submitMsg = el("submitMsg");
+  const reviewsBox = el("reviewsBox");
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function stars(n){
+    n = Math.max(1, Math.min(5, Number(n) || 5));
+    return "★★★★★☆☆☆☆☆".slice(5 - n, 10 - n);
+  }
+  function normalizeAirport(v){
+    const a = String(v || "").trim().toUpperCase();
+    if (!a) return null;
+    if (!/^[A-Z0-9]{3,4}$/.test(a)) return null;
+    return a;
+  }
+  function showMsg(text, kind){
+    submitMsg.innerHTML = '<div class="msg '+kind+'">'+escapeHtml(text)+'</div>';
+  }
+
+  async function loadReviews(){
+    reviewsBox.textContent = "Loading reviews...";
+    try{
+      const res = await fetch(API + "?status=APPROVED&limit=50", { cache:"no-store" });
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok || !data.ok){
+        reviewsBox.innerHTML = '<div class="msg err">Could not load reviews.</div>';
+        return;
+      }
+      const list = Array.isArray(data.reviews) ? data.reviews : [];
+      if(!list.length){
+        reviewsBox.innerHTML = "<div>No approved reviews yet.</div>";
+        return;
+      }
+      reviewsBox.innerHTML = list.map(r => {
+        const who = r.name ? escapeHtml(r.name) : "Anonymous";
+        const role = r.role ? escapeHtml(String(r.role).toUpperCase()) : "REVIEW";
+        const airport = r.airport_code ? escapeHtml(r.airport_code) : null;
+        const rating = Number(r.rating || 5);
+        const time = r.created_at ? new Date(r.created_at).toLocaleString() : "";
+        const comment = escapeHtml(r.comment || "");
+
+        return `
+          <div class="review">
+            <div class="reviewTop">
+              <div>
+                <span class="pill">${role}</span>
+                ${airport ? `<span class="pill">${airport}</span>` : ``}
+              </div>
+              <div title="${rating}/5">${stars(rating)}</div>
+            </div>
+            <div style="margin-top:8px;font-weight:900">${who}</div>
+            <div style="margin-top:8px;line-height:1.45">${comment}</div>
+            <div class="meta">${escapeHtml(time)}</div>
+          </div>
+        `;
+      }).join("");
+    } catch(e){
+      console.error(e);
+      reviewsBox.innerHTML = '<div class="msg err">Network error loading reviews.</div>';
+    }
+  }
+
+  submitBtn.addEventListener("click", async () => {
+    submitMsg.innerHTML = "";
+    const payload = {
+      name: el("name").value.trim() || null,
+      role: String(el("role").value || "").trim().toUpperCase(),
+      rating: Number(el("rating").value || 5),
+      airport_code: normalizeAirport(el("airport").value),
+      comment: el("comment").value.trim()
+    };
+
+    if (!payload.comment || payload.comment.length < 10) {
+      return showMsg("Please write at least 10 characters.", "err");
+    }
+    if (![1,2,3,4,5].includes(payload.rating)) payload.rating = 5;
+
+    try{
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+      const res = await fetch(API, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok || !data.ok){
+        return showMsg("Not submitted: " + (data.error || ("HTTP "+res.status)), "err");
+      }
+      showMsg("Submitted ✅ Thanks! Your review will appear after approval.", "ok");
+      el("comment").value = "";
+      loadReviews();
+    } catch(e){
+      console.error(e);
+      showMsg("Network error. Try again.", "err");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Review";
+    }
+  });
+
+  refreshBtn.addEventListener("click", loadReviews);
+  loadReviews();
+</script>
+</body>
+</html>
