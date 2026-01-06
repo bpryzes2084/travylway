@@ -311,6 +311,81 @@ header{
   font-weight:900;
 }
 
+/* TELEGRAM SECTION */
+.telegram-card{
+  background:#fff;
+  border-radius:20px;
+  padding:2rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.1);
+  color:var(--text);
+}
+.telegram-header{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+.telegram-icon{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#0088cc,#229ED9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2.5rem;
+}
+.telegram-title h2{
+  margin:0 0 0.25rem;
+  font-size:1.5rem;
+  color:#333;
+}
+.telegram-title p{
+  margin:0;
+  color:#666;
+  font-size:0.9rem;
+}
+.telegram-content p{
+  font-weight:600;
+  color:#333;
+  margin-bottom:0.75rem;
+}
+.telegram-content ul{
+  list-style:none;
+  padding:0;
+  margin:0 0 1.5rem;
+}
+.telegram-content li{
+  padding:0.5rem 0;
+  color:#555;
+}
+.telegram-content li:before{
+  content:"✓ ";
+  color:#0088cc;
+  font-weight:900;
+  margin-right:0.5rem;
+}
+.telegram-button{
+  display:block;
+  width:100%;
+  padding:1rem;
+  background:linear-gradient(135deg,#0088cc,#229ED9);
+  color:white;
+  border:none;
+  border-radius:12px;
+  font-size:1.1rem;
+  font-weight:900;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  text-transform:uppercase;
+  text-align:center;
+  text-decoration:none;
+}
+.telegram-button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(0,136,204,0.4);
+}
+
 /* SECTION HEADERS */
 .sectionHeader{
   text-align:center;
@@ -340,9 +415,7 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
     <nav class="navlinks">
       <a href="/" class="pill">Home</a>
       <a href="/driver.html">Driver Board</a>
-      <a href="https://travylway-api.benterpryzes2084.workers.dev/request" target="_blank" rel="noopener">
-  Pickup Requests
-</a>
+      <a href="/crew.html" target="_blank">Pickup Requests</a>
       <a href="#reviews">Reviews</a>
       <a class="pill" href="https://wa.me/17204748851?text=Request%20Pickup" target="_blank">WhatsApp</a>
     </nav>
@@ -364,38 +437,10 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
       </p>
 
       <div class="actions" style="justify-content:center;gap:10px;">
-        <a class="btn primary"
-           href="https://travylway-api.benterpryzes2084.workers.dev/crew"
-           target="_blank"
-           rel="noopener">
-          Air Crew Member
-        </a>
-
-       <a class="btn secondary"
-   href="/crew.html"
-   target="_blank"
-   rel="noopener">
-  Pickup Request
-</a>
-```
-
----
-
-## Search Your Entire index.html:
-
-**Search for ALL instances of:**
-```
-travylway-api.benterpryzes2084.workers.dev
-
-        <a class="btn secondary" href="/driver-login.html" target="_blank">Driver Login </a>
-        
-
-        <a class="btn whatsapp"
-           href="https://wa.me/17204748851?text=Request%20Trips"
-           target="_blank"
-           rel="noopener">
-          WhatsApp
-        </a>
+        <a class="btn primary" href="/crew.html" target="_blank">Air Crew Member</a>
+        <a class="btn secondary" href="/crew.html" target="_blank">Pickup Request</a>
+        <a class="btn secondary" href="/driver-login.html" target="_blank">Driver Login</a>
+        <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
       </div>
 
       <div class="smallNote" style="margin-top:14px;max-width:560px;margin-left:auto;margin-right:auto;">
@@ -409,9 +454,8 @@ travylway-api.benterpryzes2084.workers.dev
 
 <section class="section">
   <div class="panel wrap">
-  
 
-<!-- DRIVER & DISPATCH MANAGEMENT -->
+    <!-- DRIVER & DISPATCH MANAGEMENT -->
     <div class="sectionHeader">
       <h2>Driver & Dispatch Management</h2>
       <p>Real-time tracking and operations management</p>
@@ -454,103 +498,90 @@ travylway-api.benterpryzes2084.workers.dev
     </div>
 
     <div class="denver-grid">
-      <a href="YOUR_ARVADA_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Arvada - Leyden Rock</h4>
         <p>Northwest Denver Metro</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_AURORA_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Aurora - West</h4>
         <p>East Denver Metro</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_BOULDER_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Boulder</h4>
         <p>University City</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_COMMERCE_CITY_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Commerce City East</h4>
         <p>Northeast Metro</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_DENVER_EAST_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Denver East</h4>
         <p>Central Denver</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_DENVER_SOUTH_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Denver South</h4>
         <p>South Metro Area</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_ELIZABETH_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Elizabeth</h4>
         <p>Southeast Corridor</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_ENGLEWOOD_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Englewood - East</h4>
         <p>South Central Metro</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_GAYLORD_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Gaylord Hotel</h4>
         <p>Convention Center Area</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_GREEN_VALLEY_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Green Valley Ranch</h4>
         <p>Northeast Denver</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_PAINTED_PRAIRIE_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>Painted Prairie</h4>
         <p>East Metro Community</p>
         <span class="metro-badge">Book Now</span>
       </a>
 
-      <a href="YOUR_E470_CORRIDOR_URL" class="metro-card" target="_blank">
+      <a href="/crew.html" class="metro-card" target="_blank">
         <div class="metro-icon">✈️</div>
         <h4>E-470 Corridor</h4>
         <p>Express Toll Route Area</p>
         <span class="metro-badge">Book Now</span>
       </a>
     </div>
-
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <a href="/driver.html">Driver Board</a> •
-    <a href="/crew.html">Pickup Requests</a> •
-    <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
-    <div style="margin-top:8px;">Built for air crew. Designed for reliability.</div>
-  </div>
-</footer>
-
 
     <!-- PAYMENT METHODS -->
     <div class="sectionHeader">
@@ -573,6 +604,7 @@ travylway-api.benterpryzes2084.workers.dev
             id="cashapp-tag" 
             placeholder="$YourCashtag"
             value="$tway66gworld"
+            readonly
           >
         </div>
         <button class="payment-button cashapp-btn">Send via Cash App</button>
@@ -593,6 +625,7 @@ travylway-api.benterpryzes2084.workers.dev
             id="paypal-link" 
             placeholder="paypal.me/username"
             value="https://paypal.me/benterpryzes"
+            readonly
           >
         </div>
         <button class="payment-button paypal-btn" onclick="window.open(document.getElementById('paypal-link').value, '_blank')">Pay with PayPal</button>
@@ -613,6 +646,7 @@ travylway-api.benterpryzes2084.workers.dev
             id="square-link" 
             placeholder="bit.ly/..."
             value="https://bit.ly/4snVxsl"
+            readonly
           >
         </div>
         <button class="payment-button square-btn" onclick="window.open(document.getElementById('square-link').value, '_blank')">Pay with Square</button>
@@ -633,6 +667,7 @@ travylway-api.benterpryzes2084.workers.dev
             id="venmo-username" 
             placeholder="@YourVenmo"
             value="@tway2084"
+            readonly
           >
         </div>
         <button class="payment-button venmo-btn">Send via Venmo</button>
@@ -640,9 +675,7 @@ travylway-api.benterpryzes2084.workers.dev
       </div>
     </div>
 
-
-  
-<!-- TELEGRAM FOR DRIVERS -->
+    <!-- TELEGRAM FOR DRIVERS -->
     <div class="sectionHeader">
       <h2>Contact Us on Telegram</h2>
       <p>Connect with us for trip updates and support</p>
@@ -681,8 +714,18 @@ travylway-api.benterpryzes2084.workers.dev
       </div>
     </div>
 
+  </div>
+</section>
 
-  
+<footer>
+  <div class="wrap">
+    <a href="/driver.html">Driver Board</a> •
+    <a href="/crew.html">Pickup Requests</a> •
+    <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
+    <div style="margin-top:8px;">Built for air crew. Designed for reliability.</div>
+  </div>
+</footer>
+
 <!-- Tawk.to -->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{},Tawk_LoadStart=new Date();
