@@ -267,7 +267,6 @@ body{
       ✗ Something went wrong. Please try again or contact us via WhatsApp.
     </div>
 
-    <!-- WhatsApp Notification Info -->
     <div class="info-box">
       <strong>📱 How You'll Be Contacted:</strong>
       <p>
@@ -277,7 +276,6 @@ body{
     </div>
 
     <form id="pickupForm">
-      <!-- Personal Information -->
       <div class="form-group">
         <label for="name">Name <span class="required">*</span></label>
         <input type="text" id="name" name="name" placeholder="John Doe" required>
@@ -294,14 +292,12 @@ body{
         </div>
       </div>
 
-      <!-- Address with Autocomplete -->
       <div class="form-group">
         <label for="address">Pickup Address <span class="required">*</span></label>
         <input type="text" id="address" name="address" placeholder="Enter your pickup address" required>
         <small>Start typing your address and select from suggestions</small>
       </div>
 
-      <!-- Trip Details -->
       <div class="form-group">
         <label for="serviceType">Service Type <span class="required">*</span></label>
         <select id="serviceType" name="serviceType" required>
@@ -345,7 +341,6 @@ body{
         </div>
       </div>
 
-      <!-- Price Estimate -->
       <div id="priceEstimate" class="price-estimate">
         <h3>💰 Estimated Price</h3>
         <div class="price-details">
@@ -355,7 +350,6 @@ body{
         <small style="color:#1565c0; margin-top:0.5rem; display:block;">Airline Crew Discounted Rate</small>
       </div>
 
-      <!-- Additional Notes -->
       <div class="form-group">
         <label for="notes">Special Instructions</label>
         <textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
@@ -370,28 +364,27 @@ body{
   </div>
 </div>
 
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places"></script>
-
 <script>
-// PRICING CONFIGURATION - AIRLINE CREW RATES
 const BASE_FARE = 2.50;
 const PER_MILE_RATE = 1.25;
 const MINIMUM_FARE = 18;
 const MAXIMUM_FARE = 120;
-const FREE_MILES = 3; // First 3 miles included in base fare
+const FREE_MILES = 3;
 
 let pickupAutocomplete;
 let airportAutocomplete;
 let pickupLocation = null;
 let airportLocation = null;
 
-// Initialize Google Maps autocomplete
 function initAutocomplete() {
-  // Pickup address autocomplete
+  if (typeof google === 'undefined') {
+    console.error('Google Maps not loaded');
+    return;
+  }
+
   pickupAutocomplete = new google.maps.places.Autocomplete(
     document.getElementById('address'),
-    { types: ['address'] }
+    { types: ['address'], componentRestrictions: { country: 'us' } }
   );
   
   pickupAutocomplete.addListener('place_changed', function() {
@@ -402,7 +395,6 @@ function initAutocomplete() {
     }
   });
   
-  // Airport autocomplete
   airportAutocomplete = new google.maps.places.Autocomplete(
     document.getElementById('airport'),
     { types: ['airport'] }
@@ -417,7 +409,6 @@ function initAutocomplete() {
   });
 }
 
-// Calculate distance and price
 function calculatePrice() {
   if (!pickupLocation || !airportLocation) {
     return;
@@ -438,9 +429,95 @@ function calculatePrice() {
         const distanceInMeters = result.distance.value;
         const distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
         
-        // Calculate price
         let price = BASE_FARE;
         const chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
         price += chargeableMiles * PER_MILE_RATE;
+        price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
+        price = Math.round(price);
         
-        // Apply minimum and max
+        document.getElementById('distanceDisplay').textContent = 'Distance: ' + distanceInMiles + ' miles';
+        document.getElementById('priceDisplay').textContent = '$' + price;
+        document.getElementById('priceEstimate').style.display = 'block';
+        
+        document.getElementById('calculatedDistance').value = distanceInMiles;
+        document.getElementById('calculatedPrice').value = price;
+      }
+    }
+  });
+}
+
+const form = document.getElementById('pickupForm');
+
+const distanceField = document.createElement('input');
+distanceField.type = 'hidden';
+distanceField.id = 'calculatedDistance';
+distanceField.name = 'calculatedDistance';
+form.appendChild(distanceField);
+
+const priceField = document.createElement('input');
+priceField.type = 'hidden';
+priceField.id = 'calculatedPrice';
+priceField.name = 'calculatedPrice';
+form.appendChild(priceField);
+
+const serviceTierField = document.createElement('input');
+serviceTierField.type = 'hidden';
+serviceTierField.name = 'serviceTier';
+serviceTierField.value = 'crew';
+form.appendChild(serviceTierField);
+
+document.getElementById('pickupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('submitBtn');
+  const successMsg = document.getElementById('successMessage');
+  const errorMsg = document.getElementById('errorMessage');
+  
+  successMsg.style.display = 'none';
+  errorMsg.style.display = 'none';
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+  
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  
+  try {
+    const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/add-trip', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (response.ok) {
+      successMsg.style.display = 'block';
+      e.target.reset();
+      document.getElementById('priceEstimate').style.display = 'none';
+      pickupLocation = null;
+      airportLocation = null;
+      successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch (error) {
+    errorMsg.style.display = 'block';
+    errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Request';
+  }
+});
+
+window.addEventListener('load', function() {
+  if (typeof google !== 'undefined') {
+    initAutocomplete();
+  }
+});
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
+
+</body>
+</html>
