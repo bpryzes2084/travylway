@@ -1,502 +1,199 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Driver Board - Travylway</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Travylway — Driver Board</title>
+  <meta name="description" content="Driver Board for viewing open pickup requests by airport." />
 
-<style>
-:root {
-  --bg: #1a1a2e;
-  --card-bg: #16213e;
-  --accent: #0f3460;
-  --primary: #e94560;
-  --text: #f1f1f1;
-  --muted: #a0a0a0;
-  --success: #4caf50;
-  --warning: #ff9800;
-  --available: #2196f3;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  padding: 1rem;
-  line-height: 1.6;
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.header {
-  background: var(--card-bg);
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-
-.header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  color: var(--primary);
-}
-
-.header-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.driver-info {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.status-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.status-online {
-  background: var(--success);
-  color: white;
-}
-
-.status-offline {
-  background: var(--muted);
-  color: white;
-}
-
-.btn {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.btn-logout {
-  background: var(--primary);
-  color: white;
-}
-
-.btn-logout:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
-}
-
-.filter-section {
-  background: var(--card-bg);
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.filter-btn {
-  padding: 0.6rem 1.2rem;
-  border: 2px solid var(--accent);
-  background: transparent;
-  color: var(--text);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
-}
-
-.filter-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: white;
-}
-
-.filter-btn:hover {
-  border-color: var(--primary);
-}
-
-.trips-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.trip-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  transition: all 0.3s ease;
-  border-left: 4px solid var(--accent);
-}
-
-.trip-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-}
-
-.trip-card.available {
-  border-left-color: var(--available);
-}
-
-.trip-card.claimed {
-  border-left-color: var(--warning);
-}
-
-.trip-card.completed {
-  border-left-color: var(--success);
-  opacity: 0.7;
-}
-
-.trip-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--accent);
-}
-
-.trip-id {
-  font-weight: 700;
-  color: var(--primary);
-  font-size: 0.9rem;
-}
-
-.trip-status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.trip-status.available {
-  background: var(--available);
-  color: white;
-}
-
-.trip-status.claimed {
-  background: var(--warning);
-  color: white;
-}
-
-.trip-status.completed {
-  background: var(--success);
-  color: white;
-}
-
-.service-tier-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-left: 0.5rem;
-}
-
-.tier-crew {
-  background: #e3f2fd;
-  color: #1565c0;
-}
-
-.tier-general {
-  background: #f3e5f5;
-  color: #6a1b9a;
-}
-
-.trip-details {
-  margin: 1rem 0;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
-}
-
-.detail-label {
-  color: var(--muted);
-  font-weight: 600;
-}
-
-.detail-value {
-  color: var(--text);
-  font-weight: 500;
-  text-align: right;
-  max-width: 60%;
-  word-break: break-word;
-}
-
-.whatsapp-link {
-  color: #25D366;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.whatsapp-link:hover {
-  text-decoration: underline;
-}
-
-.trip-pricing {
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(76, 175, 80, 0.05));
-  padding: 0.75rem;
-  border-radius: 8px;
-  margin: 0.75rem 0;
-  border-left: 3px solid var(--success);
-}
-
-.trip-pricing-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.25rem 0;
-}
-
-.trip-pricing-label {
-  color: #81c784;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.trip-pricing-value {
-  color: #a5d6a7;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.trip-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-}
-
-.btn-claim,
-.btn-unclaim,
-.btn-complete,
-.btn-whatsapp {
-  flex: 1;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.btn-claim {
-  background: var(--available);
-  color: white;
-}
-
-.btn-claim:hover {
-  background: #1976d2;
-  transform: translateY(-2px);
-}
-
-.btn-unclaim {
-  background: var(--warning);
-  color: white;
-}
-
-.btn-unclaim:hover {
-  background: #f57c00;
-  transform: translateY(-2px);
-}
-
-.btn-complete {
-  background: var(--success);
-  color: white;
-}
-
-.btn-complete:hover {
-  background: #388e3c;
-  transform: translateY(-2px);
-}
-
-.btn-whatsapp {
-  background: #25D366;
-  color: white;
-}
-
-.btn-whatsapp:hover {
-  background: #128c7e;
-  transform: translateY(-2px);
-}
-
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  background: var(--card-bg);
-  border-radius: 12px;
-  color: var(--muted);
-}
-
-.empty-state h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: var(--muted);
-}
-
-@media (max-width: 768px) {
-  .trips-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .header-info {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .filter-section {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .filter-btn {
-    width: 100%;
-  }
-}
-</style>
+  <style>
+    :root { --bg:#0b1c2d; --card:#ffffff; --ink:#0f172a; --muted:#475569; --line:#e2e8f0; --accent:#2563eb; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#f6f7fb;color:var(--ink)}
+    header{background:var(--bg);color:#fff;position:sticky;top:0;z-index:10}
+    .wrap{max-width:980px;margin:0 auto;padding:16px}
+    .top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .title{font-weight:900;letter-spacing:.2px}
+    .subtitle{opacity:.8;font-size:13px}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.06);margin-top:14px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+    label{font-size:12px;color:var(--muted);font-weight:700}
+    input,select,button{padding:10px 12px;border:1px solid #d7dbe7;border-radius:12px;background:#fff;font-size:14px}
+    button{cursor:pointer;border:0;background:#111;color:#fff;font-weight:900}
+    button.secondary{background:#fff;color:#111;border:1px solid #d7dbe7}
+    .grow{flex:1 1 160px}
+    .meta{font-size:12px;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .msg{margin-top:14px}
+    .ok{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;padding:10px 12px;border-radius:12px}
+    .err{background:#fff1f2;border:1px solid #fecdd3;color:#9f1239;padding:10px 12px;border-radius:12px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.06)}
+    .topline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .badge{font-size:12px;padding:5px 10px;border-radius:999px;background:#eef2ff;color:#243bff;font-weight:900}
+    .kv{display:grid;grid-template-columns:140px 1fr;gap:8px;margin-top:10px;font-size:14px}
+    .k{color:var(--muted)}
+    .v{color:var(--ink)}
+    a{color:inherit}
+  </style>
 </head>
 
 <body>
-
-<div class="container">
-  <div class="header">
-    <h1>🚗 Driver Board</h1>
-    <div class="header-info">
-      <div class="driver-info">
-        <span id="driverName">Loading...</span>
-        <span id="statusBadge" class="status-badge status-offline">Offline</span>
+  <header>
+    <div class="wrap">
+      <div class="top">
+        <div>
+          <div class="title">Travylway — Driver Board</div>
+          <div class="subtitle">Enter an airport code (DEN, LAX, etc.) to view open trips.</div>
+        </div>
+        <div style="font-weight:800;font-size:13px;opacity:.85">Live backend: travylway-api</div>
       </div>
-      <button onclick="logout()" class="btn btn-logout">Logout</button>
     </div>
-  </div>
+  </header>
 
-  <div class="filter-section">
-    <span style="font-weight: 700; margin-right: 1rem;">Filter:</span>
-    <button class="filter-btn active" onclick="filterTrips('all')">All Trips</button>
-    <button class="filter-btn" onclick="filterTrips('available')">Available</button>
-    <button class="filter-btn" onclick="filterTrips('claimed')">My Claimed</button>
-    <button class="filter-btn" onclick="filterTrips('completed')">Completed</button>
-  </div>
+  <main class="wrap">
+    <div class="panel">
+      <div class="row">
+        <div class="grow">
+          <label for="airport">Airport</label><br/>
+          <input id="airport" placeholder="DEN" autocomplete="off" />
+        </div>
 
-  <div id="tripsContainer" class="loading">
-    Loading trips...
-  </div>
-</div>
+        <div>
+          <label for="status">Status</label><br/>
+          <select id="status">
+            <option value="OPEN" selected>OPEN</option>
+            <option value="CLAIMED">CLAIMED</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="refresh">Refresh</label><br/>
+          <select id="refresh">
+            <option value="0">Off</option>
+            <option value="5" selected>Every 5s</option>
+            <option value="10">Every 10s</option>
+            <option value="20">Every 20s</option>
+          </select>
+        </div>
+
+        <div>
+          <button id="loadBtn">Load Trips</button>
+          <button class="secondary" id="clearBtn">Clear</button>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div id="lastUpdate">—</div>
+        <div style="opacity:.85">API: <a href="https://travylway-api.benterpryzes2084.workers.dev" target="_blank" rel="noopener">workers.dev</a></div>
+      </div>
+    </div>
+
+    <div class="msg" id="msg"></div>
+    <div class="grid" id="grid"></div>
+  </main>
 
 <script>
-const API_URL = 'https://travylway-api.benterpryzes2084.workers.dev';
-let allTrips = [];
-let currentFilter = 'all';
-let driverId = null;
+  const API_BASE = "https://travylway-api.benterpryzes2084.workers.dev";
+  const el = (id) => document.getElementById(id);
+  let timer = null;
 
-// Check if driver is logged in
-async function checkAuth() {
-  driverId = localStorage.getItem('driverId');
-  const driverName = localStorage.getItem('driverName');
-  
-  if (!driverId || !driverName) {
-    window.location.href = '/driver-login.html';
-    return;
+  function setMsg(text, kind) {
+    const box = el("msg");
+    if (!text) { box.innerHTML = ""; return; }
+    box.innerHTML = `<div class="${kind}">${escapeHtml(text)}</div>`;
   }
-  
-  document.getElementById('driverName').textContent = driverName;
-  document.getElementById('statusBadge').textContent = 'Online';
-  document.getElementById('statusBadge').className = 'status-badge status-online';
-  
-  // Load trips
-  await loadTrips();
-  
-  // Refresh every 15 seconds
-  setInterval(loadTrips, 15000);
-}
 
-// Load all trips
-async function loadTrips() {
-  try {
-    const response = await fetch(`${API_URL}/trips`);
-    const data = await response.json();
-    allTrips = data.trips || [];
-    displayTrips();
-  } catch (error) {
-    console.error('Failed to load trips:', error);
-    document.getElementById('tripsContainer').innerHTML = `
-      <div class="empty-state">
-        <h3>Failed to load trips</h3>
-        <p>Please refresh the page</p>
-      </div>
-    `;
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
   }
-}
 
-// Display trips based on filter
-function displayTrips() {
-  let filteredTrips = allTrips;
-  
-  if (currentFilter === 'available') {
-    filteredTrips = allTrips.filter(t => t.status === 'available');
-  } else if (currentFilter === 'claimed') {
-    filteredTrips = allTrips.filter(t => t.claimedBy === driverId);
-  } else if (currentFilter === 'completed') {
-    filteredTrips = allTrips.filter(t => t.status === 'completed');
+  function fmtTime(iso) {
+    if (!iso) return "—";
+    try { return new Date(iso).toLocaleString(); } catch { return iso; }
   }
-  
-  const container = document.getElementById('tripsContainer');
-  
-  if (filteredTrips.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <h3>No trips found</h3>
-        <p>Check back soon for new requests</p>
-      </div>
-    `;
-    return;
+
+  async function loadTrips() {
+    const airport = el("airport").value.trim().toUpperCase();
+    if (!airport) {
+      el("grid").innerHTML = "";
+      setMsg("Enter an airport code to load trips.", "ok");
+      return;
+    }
+
+    const status = el("status").value.trim().toUpperCase();
+    const url = new URL(API_BASE + "/api/trips");
+    url.searchParams.set("airport", airport);
+    url.searchParams.set("status", status);
+
+    try {
+      const res = await fetch(url.toString(), { method: "GET" });
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        setMsg("API error: " + (data.error || res.statusText || "unknown"), "err");
+        return;
+      }
+
+      renderTrips(data.trips || []);
+      el("lastUpdate").textContent = "Last update: " + new Date().toLocaleTimeString();
+
+      if ((data.trips || []).length === 0) setMsg("No trips found for this filter.", "ok");
+      else setMsg("", "");
+    } catch (e) {
+      console.error(e);
+      setMsg("Network/API error. Check connectivity and API availability.", "err");
+    }
   }
-  
-  // Sort: available first, then claimed, then completed
-  filteredTrips.sort((a, b) => {
-    const statusOrder = { available: 0, claimed: 1, completed: 2 };
-    return statusOrder[a.status] - statusOrder[b.status];
-  });
-  
-  container.innerHTML = `<div class="trips-grid">${filteredTrips.map(renderTripCard).join('')}</div>`
+
+  function renderTrips(trips) {
+    const grid = el("grid");
+    grid.innerHTML = "";
+
+    for (const t of trips) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="topline">
+          <div>
+            <div style="font-weight:900;">
+              ${escapeHtml(t.airport_code || "—")} — ${escapeHtml(t.direction || t.trip_type || "TRIP")}
+            </div>
+            <div style="font-size:12px;color:#64748b">Trip ID: ${escapeHtml(t.id)}</div>
+          </div>
+          <div class="badge">${escapeHtml(t.status || "—")}</div>
+        </div>
+
+        <div class="kv">
+          <div class="k">Pickup time</div><div class="v">${escapeHtml(fmtTime(t.pickup_time_utc))}</div>
+          <div class="k">Pickup</div><div class="v">${escapeHtml(t.pickup_text)}</div>
+          <div class="k">Dropoff</div><div class="v">${escapeHtml(t.dropoff_text)}</div>
+          <div class="k">Flight</div><div class="v">${escapeHtml(t.flight_number || "—")} ${t.airline ? "(" + escapeHtml(t.airline) + ")" : ""}</div>
+          <div class="k">Notes</div><div class="v">${escapeHtml(t.notes || "—")}</div>
+          <div class="k">Created by</div><div class="v">${escapeHtml(t.created_by || "—")}</div>
+          <div class="k">Created at</div><div class="v">${escapeHtml(fmtTime(t.created_at))}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+  }
+
+  function setAutoRefresh() {
+    const seconds = parseInt(el("refresh").value, 10);
+    if (timer) clearInterval(timer);
+    timer = null;
+    if (seconds > 0) timer = setInterval(loadTrips, seconds * 1000);
+  }
+
+  el("loadBtn").addEventListener("click", () => { loadTrips(); setAutoRefresh(); });
+  el("clearBtn").addEventListener("click", () => { el("grid").innerHTML=""; setMsg("", ""); });
+  el("refresh").addEventListener("change", setAutoRefresh);
+
+  // Don’t auto-load until airport is entered (prevents pointless calls)
+  setMsg("Enter an airport code to load trips.", "ok");
+</script>
+</body>
+</html>
