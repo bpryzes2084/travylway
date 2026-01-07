@@ -175,6 +175,25 @@ body{
   text-align:center;
 }
 
+.info-box{
+  background:#e8f5e9;
+  padding:1rem 1.25rem;
+  border-radius:10px;
+  margin-bottom:1.5rem;
+  border-left:4px solid #25D366;
+}
+
+.info-box strong{
+  color:#1b5e20;
+  font-size:1rem;
+}
+
+.info-box p{
+  margin:0.5rem 0 0;
+  line-height:1.6;
+  color:#2e7d32;
+}
+
 @media(max-width:768px){
   .form-row{
     grid-template-columns:1fr;
@@ -208,6 +227,15 @@ body{
       ✗ Something went wrong. Please try again or contact us via WhatsApp.
     </div>
 
+    <!-- WhatsApp Notification Info -->
+    <div class="info-box">
+      <strong>📱 How You'll Be Contacted:</strong>
+      <p>
+        When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong> 
+        to confirm pickup details and answer questions. Make sure your phone number is correct!
+      </p>
+    </div>
+
     <form id="pickupForm">
       <!-- Personal Information -->
       <div class="form-group">
@@ -224,13 +252,6 @@ body{
           <label for="email">Email Address</label>
           <input type="email" id="email" name="email" placeholder="you@airline.com">
         </div>
-      </div>
-
-      <!-- Telegram Username Field - NEW! -->
-      <div class="form-group">
-        <label for="telegram">Telegram Username (Optional)</label>
-        <input type="text" id="telegram" name="telegram" placeholder="@username">
-        <small>💬 Get instant notifications when your trip is claimed. You'll also receive an SMS.</small>
       </div>
 
       <!-- Trip Details -->
