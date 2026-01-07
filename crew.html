@@ -89,6 +89,14 @@ body{
   min-height:100px;
 }
 
+.form-group small{
+  color:#666;
+  font-size:0.85rem;
+  display:block;
+  margin-top:0.25rem;
+  font-weight:400;
+}
+
 .form-row{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -216,6 +224,13 @@ body{
           <label for="email">Email Address</label>
           <input type="email" id="email" name="email" placeholder="you@airline.com">
         </div>
+      </div>
+
+      <!-- Telegram Username Field - NEW! -->
+      <div class="form-group">
+        <label for="telegram">Telegram Username (Optional)</label>
+        <input type="text" id="telegram" name="telegram" placeholder="@username">
+        <small>💬 Get instant notifications when your trip is claimed. You'll also receive an SMS.</small>
       </div>
 
       <!-- Trip Details -->
