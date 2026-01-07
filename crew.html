@@ -227,11 +227,13 @@ body{
   color:#0d47a1;
 }
 
-.pac-container{
-  z-index:10000;
-  border-radius:8px;
-  margin-top:4px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+gmpx-place-autocomplete-element {
+  width: 100%;
 }
 
 @media(max-width:768px){
@@ -294,7 +296,13 @@ body{
 
       <div class="form-group">
         <label for="address">Pickup Address <span class="required">*</span></label>
-        <input type="text" id="address" name="address" placeholder="Enter your pickup address" required>
+        <div class="autocomplete-container">
+          <gmpx-place-autocomplete-element 
+            id="addressAutocomplete"
+            placeholder="Enter your pickup address">
+          </gmpx-place-autocomplete-element>
+        </div>
+        <input type="hidden" id="address" name="address" required>
         <small>Start typing your address and select from suggestions</small>
       </div>
 
@@ -310,7 +318,14 @@ body{
       <div class="form-row">
         <div class="form-group">
           <label for="airport">Airport <span class="required">*</span></label>
-          <input type="text" id="airport" name="airport" placeholder="Denver International Airport" required>
+          <div class="autocomplete-container">
+            <gmpx-place-autocomplete-element 
+              id="airportAutocomplete"
+              placeholder="Denver International Airport"
+              type="establishment">
+            </gmpx-place-autocomplete-element>
+          </div>
+          <input type="hidden" id="airport" name="airport" required>
           <small>Start typing airport name</small>
         </div>
         <div class="form-group">
@@ -364,50 +379,46 @@ body{
   </div>
 </div>
 
-<script>
+<script type="module">
+import {APILoader} from 'https://unpkg.com/@googlemaps/extended-component-library@0.6';
+
 const BASE_FARE = 2.50;
 const PER_MILE_RATE = 1.25;
 const MINIMUM_FARE = 18;
 const MAXIMUM_FARE = 120;
 const FREE_MILES = 3;
 
-let pickupAutocomplete;
-let airportAutocomplete;
 let pickupLocation = null;
 let airportLocation = null;
 
-function initAutocomplete() {
-  if (typeof google === 'undefined') {
-    console.error('Google Maps not loaded');
-    return;
-  }
+const apiOptions = {
+  apiKey: 'AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo',
+  version: 'beta'
+};
 
-  pickupAutocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('address'),
-    { types: ['address'], componentRestrictions: { country: 'us' } }
-  );
-  
-  pickupAutocomplete.addListener('place_changed', function() {
-    const place = pickupAutocomplete.getPlace();
-    if (place.geometry) {
-      pickupLocation = place.geometry.location;
-      calculatePrice();
-    }
-  });
-  
-  airportAutocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('airport'),
-    { types: ['airport'] }
-  );
-  
-  airportAutocomplete.addListener('place_changed', function() {
-    const place = airportAutocomplete.getPlace();
-    if (place.geometry) {
-      airportLocation = place.geometry.location;
-      calculatePrice();
-    }
-  });
-}
+const apiLoader = new APILoader(apiOptions);
+await apiLoader.load();
+
+const addressAutocomplete = document.getElementById('addressAutocomplete');
+const airportAutocomplete = document.getElementById('airportAutocomplete');
+
+addressAutocomplete.addEventListener('gmpx-placechange', () => {
+  const place = addressAutocomplete.value;
+  if (place) {
+    document.getElementById('address').value = place.formattedAddress || '';
+    pickupLocation = place.location;
+    calculatePrice();
+  }
+});
+
+airportAutocomplete.addEventListener('gmpx-placechange', () => {
+  const place = airportAutocomplete.value;
+  if (place) {
+    document.getElementById('airport').value = place.formattedAddress || place.displayName || '';
+    airportLocation = place.location;
+    calculatePrice();
+  }
+});
 
 function calculatePrice() {
   if (!pickupLocation || !airportLocation) {
@@ -497,6 +508,8 @@ document.getElementById('pickupForm').addEventListener('submit', async function(
       document.getElementById('priceEstimate').style.display = 'none';
       pickupLocation = null;
       airportLocation = null;
+      addressAutocomplete.value = null;
+      airportAutocomplete.value = null;
       successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
       throw new Error('Submission failed');
@@ -509,15 +522,7 @@ document.getElementById('pickupForm').addEventListener('submit', async function(
     submitBtn.textContent = 'Submit Request';
   }
 });
-
-window.addEventListener('load', function() {
-  if (typeof google !== 'undefined') {
-    initAutocomplete();
-  }
-});
 </script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
 
 </body>
 </html>
