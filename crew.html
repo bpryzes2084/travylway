@@ -1,153 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Air Crew Pickup Request - Travylway</title>
-<style>
-:root{--bg:#2B3A4A;--accent:#2563EB;--text:#0F172A;--light:#E5E7EB}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--light);padding:2rem 1rem}
-.container{max-width:700px;margin:0 auto}
-.form-card{background:white;border-radius:20px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.3);color:var(--text)}
-.form-header{text-align:center;margin-bottom:2rem}
-.form-header h1{font-size:2rem;margin-bottom:0.5rem;color:#333}
-.form-header p{color:#666;font-size:1rem}
-.form-group{margin-bottom:1.5rem}
-.form-group label{display:block;font-weight:700;margin-bottom:0.5rem;color:#333;font-size:0.95rem}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.75rem;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;transition:border-color 0.3s ease}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#667eea}
-.form-group textarea{resize:vertical;min-height:100px}
-.form-group small{color:#666;font-size:0.85rem;display:block;margin-top:0.25rem}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.required{color:#ff6b6b}
-.submit-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;font-size:1.1rem;font-weight:900;cursor:pointer;transition:all 0.3s ease;text-transform:uppercase}
-.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(102,126,234,0.4)}
-.submit-btn:disabled{background:#ccc;cursor:not-allowed;transform:none}
-.success-message,.error-message{padding:1rem;border-radius:10px;margin-bottom:1.5rem;text-align:center;font-weight:600;display:none}
-.success-message{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
-.error-message{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
-.back-link{display:inline-block;margin-top:1.5rem;color:#667eea;text-decoration:none;font-weight:600}
-.back-link:hover{text-decoration:underline}
-.optional-note{font-size:0.85rem;color:#666;font-style:italic;margin-bottom:1.5rem;text-align:center}
-.info-box{background:#e8f5e9;padding:1rem 1.25rem;border-radius:10px;margin-bottom:1.5rem;border-left:4px solid #25D366}
-.info-box strong{color:#1b5e20;font-size:1rem}
-.info-box p{margin:0.5rem 0 0;line-height:1.6;color:#2e7d32}
-.price-estimate{background:#e3f2fd;padding:1.5rem;border-radius:10px;margin:1.5rem 0;border-left:4px solid #2196f3;display:none}
-.price-estimate h3{margin:0 0 0.5rem 0;color:#1565c0;font-size:1.1rem}
-.price-details{display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem}
-.distance{color:#1976d2;font-size:0.95rem}
-.price{font-size:1.8rem;font-weight:900;color:#0d47a1}
-.calc-btn{background:#2196f3;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:700;margin:1rem 0;width:100%;font-size:1rem}
-.calc-btn:hover{background:#1976d2}
-@media(max-width:768px){.form-row{grid-template-columns:1fr}.form-card{padding:1.5rem}.form-header h1{font-size:1.5rem}}
-</style>
-</head>
-<body>
-<div class="container">
-<div class="form-card">
-<div class="form-header">
-<h1>✈️ Airline Crew Transportation</h1>
-<p>Special discounted rates for airline crew members</p>
-<p class="optional-note">Only name and phone number are required</p>
-</div>
-
-<div id="successMessage" class="success-message">✓ Request submitted successfully!</div>
-<div id="errorMessage" class="error-message">✗ Something went wrong. Please try again.</div>
-
-<div class="info-box">
-<strong>📱 How You'll Be Contacted:</strong>
-<p>When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong> to confirm pickup details.</p>
-</div>
-
-<form id="pickupForm">
-<div class="form-group">
-<label for="name">Name <span class="required">*</span></label>
-<input type="text" id="name" name="name" placeholder="John Doe" required>
-</div>
-
-<div class="form-row">
-<div class="form-group">
-<label for="phone">Phone Number <span class="required">*</span></label>
-<input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
-</div>
-<div class="form-group">
-<label for="email">Email Address</label>
-<input type="email" id="email" name="email" placeholder="you@airline.com">
-</div>
-</div>
-
-<div class="form-group">
-<label for="address">Pickup Address <span class="required">*</span></label>
-<input type="text" id="address" name="address" placeholder="123 Main St, Aurora, CO 80012" required>
-<small>Include street, city, state, and zip code</small>
-</div>
-
-<div class="form-group">
-<label for="airport">Airport <span class="required">*</span></label>
-<input type="text" id="airport" name="airport" value="Denver International Airport" required>
-<small>You can change this if needed</small>
-</div>
-
-<div class="form-group">
-<label for="serviceType">Service Type <span class="required">*</span></label>
-<select id="serviceType" name="serviceType" required>
-<option value="">-- Select Service --</option>
-<option value="pickup">Airport Pickup (arriving flight)</option>
-<option value="dropoff">Airport Drop-off (departing flight)</option>
-</select>
-</div>
-
-<button type="button" class="calc-btn" id="calcBtn">📍 Calculate Distance & Price</button>
-
-<div id="priceEstimate" class="price-estimate">
-<h3>💰 Estimated Price</h3>
-<div class="price-details">
-<span class="distance" id="distanceDisplay">Distance: -- miles</span>
-<span class="price" id="priceDisplay">$--</span>
-</div>
-<small style="color:#1565c0;margin-top:0.5rem;display:block">Airline Crew Discounted Rate</small>
-</div>
-
-<div class="form-group">
-<label for="airline">Airline</label>
-<input type="text" id="airline" name="airline" placeholder="United, Delta, Southwest, etc.">
-</div>
-
-<div class="form-row">
-<div class="form-group">
-<label for="flightNumber">Flight Number</label>
-<input type="text" id="flightNumber" name="flightNumber" placeholder="UA1234">
-</div>
-<div class="form-group">
-<label for="flightDate">Flight Date</label>
-<input type="date" id="flightDate" name="flightDate">
-</div>
-</div>
-
-<div class="form-row">
-<div class="form-group">
-<label for="flightTime">Flight Time</label>
-<input type="time" id="flightTime" name="flightTime">
-</div>
-<div class="form-group">
-<label for="passengers">Passengers</label>
-<input type="number" id="passengers" name="passengers" min="1" max="10" placeholder="1">
-</div>
-</div>
-
-<div class="form-group">
-<label for="notes">Special Instructions</label>
-<textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
-</div>
-
-<button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
-</form>
-
-<a href="/" class="back-link">← Back to Home</a>
-</div>
-</div>
-
 <script>
 var BASE_FARE = 2.50;
 var PER_MILE_RATE = 1.25;
@@ -174,8 +24,13 @@ serviceTierField.name = 'serviceTier';
 serviceTierField.value = 'crew';
 form.appendChild(serviceTierField);
 
+var map;
+var placesService;
+
 function initMap() {
   console.log('Google Maps loaded');
+  map = new google.maps.Map(document.createElement('div'));
+  placesService = new google.maps.places.PlacesService(map);
 }
 
 function calculatePrice() {
@@ -187,7 +42,7 @@ function calculatePrice() {
     return;
   }
   
-  if (typeof google === 'undefined') {
+  if (typeof google === 'undefined' || !placesService) {
     alert('Google Maps is still loading. Please wait a moment and try again.');
     return;
   }
@@ -196,24 +51,43 @@ function calculatePrice() {
   calcBtn.disabled = true;
   calcBtn.textContent = 'Calculating...';
   
-  var geocoder = new google.maps.Geocoder();
+  var addressRequest = {
+    query: address + ', USA',
+    fields: ['geometry', 'formatted_address']
+  };
   
-  geocoder.geocode({ address: address + ', USA' }, function(results1, status1) {
-    if (status1 === 'OK' && results1[0]) {
+  placesService.findPlaceFromQuery(addressRequest, function(results1, status1) {
+    console.log('Address search status:', status1);
+    console.log('Address results:', results1);
+    
+    if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
       var pickupLoc = results1[0].geometry.location;
+      console.log('Pickup found:', pickupLoc.lat(), pickupLoc.lng());
       
-      geocoder.geocode({ address: airport }, function(results2, status2) {
-        if (status2 === 'OK' && results2[0]) {
+      var airportRequest = {
+        query: airport,
+        fields: ['geometry', 'formatted_address']
+      };
+      
+      placesService.findPlaceFromQuery(airportRequest, function(results2, status2) {
+        console.log('Airport search status:', status2);
+        console.log('Airport results:', results2);
+        
+        if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
           var airportLoc = results2[0].geometry.location;
+          console.log('Airport found:', airportLoc.lat(), airportLoc.lng());
           
-          var service = new google.maps.DistanceMatrixService();
+          var distanceService = new google.maps.DistanceMatrixService();
           
-          service.getDistanceMatrix({
+          distanceService.getDistanceMatrix({
             origins: [pickupLoc],
             destinations: [airportLoc],
             travelMode: 'DRIVING',
             unitSystem: google.maps.UnitSystem.IMPERIAL
           }, function(response, status) {
+            console.log('Distance calculation status:', status);
+            console.log('Distance response:', response);
+            
             if (status === 'OK') {
               var result = response.rows[0].elements[0];
               
@@ -236,24 +110,24 @@ function calculatePrice() {
                 calcBtn.disabled = false;
                 calcBtn.textContent = '✓ Price Calculated';
               } else {
-                alert('Could not calculate distance.');
+                alert('Could not calculate distance: ' + result.status);
                 calcBtn.disabled = false;
                 calcBtn.textContent = '📍 Calculate Distance & Price';
               }
             } else {
-              alert('Distance calculation failed.');
+              alert('Distance calculation failed: ' + status);
               calcBtn.disabled = false;
               calcBtn.textContent = '📍 Calculate Distance & Price';
             }
           });
         } else {
-          alert('Could not find airport. Please check spelling.');
+          alert('Could not find airport.\n\nPlease try: "Denver International Airport, CO"');
           calcBtn.disabled = false;
           calcBtn.textContent = '📍 Calculate Distance & Price';
         }
       });
     } else {
-      alert('Could not find address. Please check spelling.');
+      alert('Could not find address.\n\nPlease include:\n- Street number and name\n- City, State, Zip\n\nExample: "123 Main St, Aurora, CO 80012"');
       calcBtn.disabled = false;
       calcBtn.textContent = '📍 Calculate Distance & Price';
     }
@@ -307,8 +181,3 @@ document.getElementById('pickupForm').addEventListener('submit', function(e) {
   });
 });
 </script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&callback=initMap" async defer></script>
-
-</body>
-</html>
