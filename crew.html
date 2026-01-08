@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Air Crew Pickup Request - Travylway</title>
-
 <style>
 :root{--bg:#2B3A4A;--accent:#2563EB;--text:#0F172A;--light:#E5E7EB}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -12,132 +11,369 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 .container{max-width:700px;margin:0 auto}
 .form-card{background:white;border-radius:20px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.3);color:var(--text)}
 .form-header{text-align:center;margin-bottom:2rem}
-.form-header h1{font-size:2rem;margin-bottom:.5rem;color:#333}
+.form-header h1{font-size:2rem;margin-bottom:0.5rem;color:#333}
+.form-header p{color:#666;font-size:1rem}
 .form-group{margin-bottom:1.5rem}
-.form-group label{display:block;font-weight:700;margin-bottom:.5rem;color:#333}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem;border:2px solid #e0e0e0;border-radius:10px}
-.submit-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;font-size:1.1rem;font-weight:900}
+.form-group label{display:block;font-weight:700;margin-bottom:0.5rem;color:#333;font-size:0.95rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.75rem;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;transition:border-color 0.3s ease}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#667eea}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-group small{color:#666;font-size:0.85rem;display:block;margin-top:0.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.required{color:#ff6b6b}
+.submit-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;font-size:1.1rem;font-weight:900;cursor:pointer;transition:all 0.3s ease;text-transform:uppercase}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(102,126,234,0.4)}
+.submit-btn:disabled{background:#ccc;cursor:not-allowed;transform:none}
 .success-message,.error-message{padding:1rem;border-radius:10px;margin-bottom:1.5rem;text-align:center;font-weight:600;display:none}
-.success-message{background:#d4edda;color:#155724}
-.error-message{background:#f8d7da;color:#721c24}
-.calc-btn{background:#2196f3;color:white;border:none;padding:.75rem;border-radius:8px;width:100%;font-weight:700}
-.price-estimate{background:#e3f2fd;padding:1.5rem;border-radius:10px;margin:1.5rem 0;display:none}
-.price{font-size:1.8rem;font-weight:900}
+.success-message{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.error-message{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.back-link{display:inline-block;margin-top:1.5rem;color:#667eea;text-decoration:none;font-weight:600}
+.back-link:hover{text-decoration:underline}
+.optional-note{font-size:0.85rem;color:#666;font-style:italic;margin-bottom:1.5rem;text-align:center}
+.info-box{background:#e8f5e9;padding:1rem 1.25rem;border-radius:10px;margin-bottom:1.5rem;border-left:4px solid #25D366}
+.info-box strong{color:#1b5e20;font-size:1rem}
+.info-box p{margin:0.5rem 0 0;line-height:1.6;color:#2e7d32}
+.price-estimate{background:#e3f2fd;padding:1.5rem;border-radius:10px;margin:1.5rem 0;border-left:4px solid #2196f3;display:none}
+.price-estimate h3{margin:0 0 0.5rem 0;color:#1565c0;font-size:1.1rem}
+.price-details{display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem}
+.distance{color:#1976d2;font-size:0.95rem}
+.price{font-size:1.8rem;font-weight:900;color:#0d47a1}
+.calc-btn{background:#2196f3;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:700;margin:1rem 0;width:100%;font-size:1rem}
+.calc-btn:hover{background:#1976d2}
+@media(max-width:768px){.form-row{grid-template-columns:1fr}.form-card{padding:1.5rem}.form-header h1{font-size:1.5rem}}
 </style>
 </head>
-
 <body>
 <div class="container">
 <div class="form-card">
-
 <div class="form-header">
 <h1>✈️ Airline Crew Transportation</h1>
 <p>Special discounted rates for airline crew members</p>
+<p class="optional-note">Only name and phone number are required</p>
 </div>
 
 <div id="successMessage" class="success-message">✓ Request submitted successfully!</div>
-<div id="errorMessage" class="error-message"></div>
+<div id="errorMessage" class="error-message">✗ Something went wrong. Please try again.</div>
+
+<div class="info-box">
+<strong>📱 How You'll Be Contacted:</strong>
+<p>When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong> to confirm pickup details.</p>
+</div>
 
 <form id="pickupForm">
-
 <div class="form-group">
-<label>Name *</label>
-<input id="name" required>
+<label for="name">Name <span class="required">*</span></label>
+<input type="text" id="name" name="name" placeholder="John Doe" required>
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label for="phone">Phone Number <span class="required">*</span></label>
+<input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+</div>
+<div class="form-group">
+<label for="email">Email Address</label>
+<input type="email" id="email" name="email" placeholder="you@airline.com">
+</div>
 </div>
 
 <div class="form-group">
-<label>Pickup Address *</label>
-<input id="address" required placeholder="Enter address or choose below">
+<label for="address">Pickup Address <span class="required">*</span></label>
+<input type="text" id="address" name="address" placeholder="123 Main St, Aurora, CO 80012" required>
+<small>Include street, city, state, and zip code</small>
 </div>
 
-<!-- GREEN VALLEY RANCH DROPDOWN -->
-<div class="form-group" id="gvrDropdown" style="display:none;">
-<label style="color:#1565c0;font-weight:900;">🏠 Green Valley Ranch Crash Pads</label>
-<select id="gvrAddress">
-<option value="">-- Select Crash Pad Address --</option>
-<option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd</option>
-<option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St</option>
-<option value="5800 Tower Rd, Denver, CO 80249">5800 Tower Rd</option>
-<option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr</option>
-<option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl</option>
-<option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave</option>
-<option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir</option>
+<!-- GREEN VALLEY RANCH DROPDOWN (NOW ALWAYS VISIBLE) -->
+<div class="form-group" id="gvrDropdown" style="margin-top:-1rem; margin-bottom:1.5rem;">
+  <label for="gvrAddress" style="color:#1565c0; font-weight:900;">🏠 Select Your Green Valley Ranch Crash Pad</label>
+  <select id="gvrAddress" style="width:100%; padding:0.75rem; border:2px solid #2196f3; border-radius:10px; font-size:1rem; font-weight:600;">
+    <option value="">-- Select Your Crash Pad Address --</option>
+    <option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd</option>
+    <option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St</option>
+    <option value="5800 Tower Rd, Denver, CO 80249">5800 Tower Rd</option>
+    <option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr</option>
+    <option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl</option>
+    <option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave</option>
+    <option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir</option>
+  </select>
+  <small style="color:#1565c0; font-size:0.85rem; display:block; margin-top:0.5rem; font-weight:600;">
+    ✓ Choose your crash pad address, then click Calculate Distance & Price below
+  </small>
+</div>
+
+<div class="form-group">
+<label for="airport">Airport <span class="required">*</span></label>
+<input type="text" id="airport" name="airport" value="Denver International Airport" required>
+<small>You can change this if needed</small>
+</div>
+
+<div class="form-group">
+<label for="serviceType">Service Type <span class="required">*</span></label>
+<select id="serviceType" name="serviceType" required>
+<option value="">-- Select Service --</option>
+<option value="pickup">Airport Pickup (arriving flight)</option>
+<option value="dropoff">Airport Drop-off (departing flight)</option>
 </select>
 </div>
 
-<div class="form-group">
-<label>Airport *</label>
-<input id="airport" value="Denver International Airport" required>
+<button type="button" class="calc-btn" id="calcBtn">📍 Calculate Distance & Price</button>
+
+<div id="priceEstimate" class="price-estimate">
+<h3>💰 Estimated Price</h3>
+<div class="price-details">
+<span class="distance" id="distanceDisplay">Distance: -- miles</span>
+<span class="price" id="priceDisplay">$--</span>
+</div>
+<small style="color:#1565c0;margin-top:0.5rem;display:block">Airline Crew Discounted Rate</small>
 </div>
 
 <div class="form-group">
-<label>Service Type *</label>
-<select id="serviceType" required>
-<option value="">Select</option>
-<option value="pickup">Airport Pickup</option>
-<option value="dropoff">Airport Dropoff</option>
-</select>
+<label for="airline">Airline</label>
+<input type="text" id="airline" name="airline" placeholder="United, Delta, Southwest, etc.">
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label for="flightNumber">Flight Number</label>
+<input type="text" id="flightNumber" name="flightNumber" placeholder="UA1234">
+</div>
+<div class="form-group">
+<label for="flightDate">Flight Date</label>
+<input type="date" id="flightDate" name="flightDate">
+</div>
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label for="flightTime">Flight Time</label>
+<input type="time" id="flightTime" name="flightTime">
+</div>
+<div class="form-group">
+<label for="passengers">Passengers</label>
+<input type="number" id="passengers" name="passengers" min="1" max="10" placeholder="1">
+</div>
+</div>
+
+<div class="form-group">
+<label for="notes">Special Instructions</label>
+<textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
 </div>
 
 <button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
 </form>
 
+<a href="/" class="back-link">← Back to Home</a>
 </div>
 </div>
 
 <script>
-const API_URL = "https://travylway-api.benterpryzes2084.workers.dev/api/trips";
+var BASE_FARE = 2.25;
+var PER_MILE_RATE = 1.25;
+var MINIMUM_FARE = 10;
+var MAXIMUM_FARE = 15;
+var FREE_MILES = 0;
 
-// Show GVR dropdown if arriving from card
-const params = new URLSearchParams(window.location.search);
-if (params.get("location") === "gvr") {
-  document.getElementById("gvrDropdown").style.display = "block";
+var map;
+var placesService;
+
+function initMap() {
+  console.log('Google Maps loaded');
+  map = new google.maps.Map(document.createElement('div'));
+  placesService = new google.maps.places.PlacesService(map);
 }
 
-// Auto-fill address when dropdown selected
-document.getElementById("gvrAddress").addEventListener("change", e => {
-  if (e.target.value) {
-    document.getElementById("address").value = e.target.value;
-  }
-});
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('pickupForm');
 
-document.getElementById("pickupForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
+  // Always allow dropdown selection to fill address
+  document.getElementById('gvrAddress').addEventListener('change', function() {
+    if (this.value) document.getElementById('address').value = this.value;
+  });
 
-  const errorMsg = document.getElementById("errorMessage");
-  const successMsg = document.getElementById("successMessage");
-  errorMsg.style.display = "none";
-  successMsg.style.display = "none";
+  // Hidden fields
+  var distanceField = document.createElement('input');
+  distanceField.type = 'hidden';
+  distanceField.id = 'calculatedDistance';
+  distanceField.name = 'calculatedDistance';
+  form.appendChild(distanceField);
 
-  const payload = {
-    created_by: document.getElementById("name").value,
-    pickup_text: document.getElementById("address").value,
-    dropoff_text: document.getElementById("airport").value,
-    pickup_time_utc: new Date().toISOString(),
-    trip_type: "AIRPORT",
-    rider_type: "CREW",
-    direction: document.getElementById("serviceType").value === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT",
-    airport_code: "DEN"
-  };
+  var priceField = document.createElement('input');
+  priceField.type = 'hidden';
+  priceField.id = 'calculatedPrice';
+  priceField.name = 'calculatedPrice';
+  form.appendChild(priceField);
 
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+  var serviceTierField = document.createElement('input');
+  serviceTierField.type = 'hidden';
+  serviceTierField.name = 'serviceTier';
+  serviceTierField.value = 'crew';
+  form.appendChild(serviceTierField);
+
+  function calculatePrice() {
+    var address = document.getElementById('address').value;
+    var airport = document.getElementById('airport').value;
+
+    if (!address || !airport) {
+      alert('Please enter both pickup address and airport');
+      return;
+    }
+
+    if (typeof google === 'undefined' || !placesService) {
+      alert('Google Maps is still loading. Please wait a moment and try again.');
+      return;
+    }
+
+    var calcBtn = document.getElementById('calcBtn');
+    calcBtn.disabled = true;
+    calcBtn.textContent = 'Calculating...';
+
+    var addressRequest = {
+      query: address + ', USA',
+      fields: ['geometry', 'formatted_address']
+    };
+
+    placesService.findPlaceFromQuery(addressRequest, function(results1, status1) {
+      if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
+        var pickupLoc = results1[0].geometry.location;
+
+        var airportRequest = {
+          query: airport,
+          fields: ['geometry', 'formatted_address']
+        };
+
+        placesService.findPlaceFromQuery(airportRequest, function(results2, status2) {
+          if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
+            var airportLoc = results2[0].geometry.location;
+
+            var distanceService = new google.maps.DistanceMatrixService();
+            distanceService.getDistanceMatrix({
+              origins: [pickupLoc],
+              destinations: [airportLoc],
+              travelMode: 'DRIVING',
+              unitSystem: google.maps.UnitSystem.IMPERIAL
+            }, function(response, status) {
+              if (status === 'OK') {
+                var result = response.rows[0].elements[0];
+
+                if (result.status === 'OK') {
+                  var distanceInMeters = result.distance.value;
+                  var distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
+
+                  var price = BASE_FARE;
+                  var chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
+                  price += chargeableMiles * PER_MILE_RATE;
+                  price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
+                  price = Math.round(price);
+
+                  document.getElementById('distanceDisplay').textContent = 'Distance: ' + distanceInMiles + ' miles';
+                  document.getElementById('priceDisplay').textContent = '$' + price;
+                  document.getElementById('priceEstimate').style.display = 'block';
+                  document.getElementById('calculatedDistance').value = distanceInMiles;
+                  document.getElementById('calculatedPrice').value = price;
+
+                  calcBtn.disabled = false;
+                  calcBtn.textContent = '✓ Price Calculated';
+                } else {
+                  alert('Could not calculate distance: ' + result.status);
+                  calcBtn.disabled = false;
+                  calcBtn.textContent = '📍 Calculate Distance & Price';
+                }
+              } else {
+                alert('Distance calculation failed: ' + status);
+                calcBtn.disabled = false;
+                calcBtn.textContent = '📍 Calculate Distance & Price';
+              }
+            });
+          } else {
+            alert('Could not find airport.\n\nPlease try: "Denver International Airport, CO"');
+            calcBtn.disabled = false;
+            calcBtn.textContent = '📍 Calculate Distance & Price';
+          }
+        });
+      } else {
+        alert('Could not find address.\n\nPlease include:\n- Street number and name\n- City, State, Zip\n\nExample: "123 Main St, Aurora, CO 80012"');
+        calcBtn.disabled = false;
+        calcBtn.textContent = '📍 Calculate Distance & Price';
+      }
     });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Request failed");
-
-    successMsg.style.display = "block";
-    e.target.reset();
-  } catch (err) {
-    errorMsg.textContent = "✗ " + err.message;
-    errorMsg.style.display = "block";
   }
+
+  document.getElementById('calcBtn').addEventListener('click', calculatePrice);
+
+  // -------------------------------
+  // SUBMIT (FIXED)
+  // - POST to /api/trips (not /add-trip)
+  // - send required field names
+  // - display real backend errors
+  // -------------------------------
+  document.getElementById('pickupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var submitBtn = document.getElementById('submitBtn');
+    var successMsg = document.getElementById('successMessage');
+    var errorMsg = document.getElementById('errorMessage');
+
+    successMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    var formData = new FormData(e.target);
+    var data = {};
+    formData.forEach(function(value, key) { data[key] = value; });
+
+    var payload = {
+      created_by: data.name || 'crew',
+      pickup_text: data.address || '',
+      dropoff_text: data.airport || 'Denver International Airport',
+      pickup_time_utc: new Date().toISOString(),
+      trip_type: 'AIRPORT',
+      rider_type: 'CREW',
+      direction: data.serviceType === 'pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
+      airport_code: 'DEN',
+      flight_number: data.flightNumber || null,
+      airline: data.airline || null,
+      notes: data.notes || null
+    };
+
+    fetch('https://travylway-api.benterpryzes2084.workers.dev/api/trips', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(async function(response) {
+      var text = await response.text();
+      var resp;
+      try { resp = JSON.parse(text); } catch { resp = { raw: text }; }
+
+      if (response.ok) {
+        successMsg.style.display = 'block';
+        e.target.reset();
+        document.getElementById('priceEstimate').style.display = 'none';
+        document.getElementById('airport').value = 'Denver International Airport';
+
+        successMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
+      } else {
+        errorMsg.textContent = '✗ ' + (resp.error || resp.detail || resp.raw || ('Request failed (' + response.status + ')'));
+        errorMsg.style.display = 'block';
+        errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
+      }
+    })
+    .catch(function(error) {
+      errorMsg.textContent = '✗ ' + (error.message || 'Something went wrong. Please try again.');
+      errorMsg.style.display = 'block';
+      errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
+    })
+    .finally(function() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Request';
+    });
+  });
 });
 </script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>
