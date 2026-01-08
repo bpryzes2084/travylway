@@ -12,12 +12,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 .container{max-width:700px;margin:0 auto}
 .form-card{background:white;border-radius:20px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.3);color:var(--text)}
 .form-header{text-align:center;margin-bottom:2rem}
-.form-header h1{font-size:2rem;margin-bottom:0.5rem;color:#333}
-.form-header p{color:#666}
+.form-header h1{font-size:2rem;margin-bottom:.5rem;color:#333}
 .form-group{margin-bottom:1.5rem}
-.form-group label{display:block;font-weight:700;margin-bottom:0.5rem;color:#333}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem}
-.submit-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;font-size:1.1rem;font-weight:900;cursor:pointer}
+.form-group label{display:block;font-weight:700;margin-bottom:.5rem;color:#333}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem;border:2px solid #e0e0e0;border-radius:10px}
+.submit-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;font-size:1.1rem;font-weight:900}
 .success-message,.error-message{padding:1rem;border-radius:10px;margin-bottom:1.5rem;text-align:center;font-weight:600;display:none}
 .success-message{background:#d4edda;color:#155724}
 .error-message{background:#f8d7da;color:#721c24}
@@ -48,7 +47,22 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 
 <div class="form-group">
 <label>Pickup Address *</label>
-<input id="address" required>
+<input id="address" required placeholder="Enter address or choose below">
+</div>
+
+<!-- GREEN VALLEY RANCH DROPDOWN -->
+<div class="form-group" id="gvrDropdown" style="display:none;">
+<label style="color:#1565c0;font-weight:900;">🏠 Green Valley Ranch Crash Pads</label>
+<select id="gvrAddress">
+<option value="">-- Select Crash Pad Address --</option>
+<option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd</option>
+<option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St</option>
+<option value="5800 Tower Rd, Denver, CO 80249">5800 Tower Rd</option>
+<option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr</option>
+<option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl</option>
+<option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave</option>
+<option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir</option>
+</select>
 </div>
 
 <div class="form-group">
@@ -60,31 +74,9 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 <label>Service Type *</label>
 <select id="serviceType" required>
 <option value="">Select</option>
-<option value="pickup">Pickup</option>
-<option value="dropoff">Dropoff</option>
+<option value="pickup">Airport Pickup</option>
+<option value="dropoff">Airport Dropoff</option>
 </select>
-</div>
-
-<button type="button" class="calc-btn" id="calcBtn">Calculate Price</button>
-
-<div id="priceEstimate" class="price-estimate">
-<div>Distance: <span id="distanceDisplay">--</span></div>
-<div class="price">$<span id="priceDisplay">--</span></div>
-</div>
-
-<div class="form-group">
-<label>Airline</label>
-<input id="airline">
-</div>
-
-<div class="form-group">
-<label>Flight Number</label>
-<input id="flightNumber">
-</div>
-
-<div class="form-group">
-<label>Notes</label>
-<textarea id="notes"></textarea>
 </div>
 
 <button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
@@ -96,18 +88,18 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 <script>
 const API_URL = "https://travylway-api.benterpryzes2084.workers.dev/api/trips";
 
-// pricing
-const BASE_FARE = 2.25;
-const PER_MILE_RATE = 1.25;
-const MINIMUM_FARE = 10;
-const MAXIMUM_FARE = 15;
-
-let placesService;
-
-function initMap() {
-  const map = new google.maps.Map(document.createElement("div"));
-  placesService = new google.maps.places.PlacesService(map);
+// Show GVR dropdown if arriving from card
+const params = new URLSearchParams(window.location.search);
+if (params.get("location") === "gvr") {
+  document.getElementById("gvrDropdown").style.display = "block";
 }
+
+// Auto-fill address when dropdown selected
+document.getElementById("gvrAddress").addEventListener("change", e => {
+  if (e.target.value) {
+    document.getElementById("address").value = e.target.value;
+  }
+});
 
 document.getElementById("pickupForm").addEventListener("submit", async function(e) {
   e.preventDefault();
@@ -125,10 +117,7 @@ document.getElementById("pickupForm").addEventListener("submit", async function(
     trip_type: "AIRPORT",
     rider_type: "CREW",
     direction: document.getElementById("serviceType").value === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT",
-    airport_code: "DEN",
-    airline: document.getElementById("airline").value || null,
-    flight_number: document.getElementById("flightNumber").value || null,
-    notes: document.getElementById("notes").value || null
+    airport_code: "DEN"
   };
 
   try {
@@ -138,9 +127,7 @@ document.getElementById("pickupForm").addEventListener("submit", async function(
       body: JSON.stringify(payload)
     });
 
-    const text = await res.text();
-    const data = JSON.parse(text);
-
+    const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Request failed");
 
     successMsg.style.display = "block";
@@ -152,7 +139,6 @@ document.getElementById("pickupForm").addEventListener("submit", async function(
 });
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initMap" async defer></script>
-
 </body>
 </html>
+
