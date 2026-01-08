@@ -8,19 +8,19 @@
 
 <style>
 :root{
-  --bg:#2B3A4A;
+  --bg:#ffffff;
   --accent:#2563EB;
   --text:#0F172A;
-  --light:#E5E7EB;
-  --muted:rgba(229,231,235,.82);
-  --line:rgba(255,255,255,.10);
+  --light:#334155;
+  --muted:#64748b;
+  --line:rgba(0,0,0,.08);
 }
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   background:var(--bg);
-  color:var(--light);
+  color:var(--text);
 }
 a{text-decoration:none;color:inherit}
 .wrap{max-width:1120px;margin:auto;padding:0 18px}
@@ -28,12 +28,13 @@ a{text-decoration:none;color:inherit}
 /* NAV */
 header{
   position:sticky;top:0;z-index:10;
-  background:rgba(43,58,74,.86);
+  background:rgba(255,255,255,.98);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
 }
 .nav{display:flex;justify-content:space-between;align-items:center;padding:14px 0;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;color:var(--text)}
 .logoDot{
   width:12px;height:12px;border-radius:50%;
   background:linear-gradient(135deg,var(--accent),#14B8A6);
@@ -46,9 +47,110 @@ header{
   font-weight:800;
   border-radius:999px;
   border:1px solid transparent;
+  color:var(--text);
 }
-.navlinks a:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06)}
-.pill{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.navlinks a:hover{border-color:rgba(0,0,0,.1);background:rgba(0,0,0,.03)}
+.pill{border-color:rgba(37,99,235,.2);background:rgba(37,99,235,.06);color:var(--accent)}
+
+/* AIRPORT SEARCH HERO */
+.search-hero{
+  padding:60px 0 40px;
+  text-align:center;
+}
+.search-hero h1{
+  margin:0 0 10px;
+  font-size:clamp(2rem,4vw,3rem);
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.search-hero p{
+  margin:0 0 30px;
+  color:var(--muted);
+  font-size:1.2rem;
+}
+.airport-search-box{
+  max-width:500px;
+  margin:0 auto 20px;
+  position:relative;
+}
+.airport-input{
+  width:100%;
+  padding:1.25rem 1.5rem;
+  font-size:2rem;
+  text-align:center;
+  border:3px solid #667eea;
+  border-radius:16px;
+  text-transform:uppercase;
+  letter-spacing:8px;
+  font-weight:900;
+  color:var(--text);
+  transition:all 0.3s ease;
+  background:white;
+}
+.airport-input:focus{
+  outline:none;
+  border-color:#764ba2;
+  box-shadow:0 0 0 4px rgba(118,75,162,0.1);
+}
+.airport-input::placeholder{
+  color:#ccc;
+  letter-spacing:4px;
+  font-size:1.5rem;
+}
+.helper-text-search{
+  color:#999;
+  font-size:0.9rem;
+  margin:10px 0 20px;
+}
+.cta-button-search{
+  display:inline-block;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:white;
+  padding:1rem 3rem;
+  border-radius:12px;
+  font-size:1.2rem;
+  font-weight:900;
+  text-decoration:none;
+  transition:all 0.3s ease;
+  border:none;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+.cta-button-search:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(102,126,234,0.4);
+}
+.cta-button-search:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+  transform:none;
+}
+.airport-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+  justify-content:center;
+  margin-top:20px;
+}
+.airport-tag{
+  background:#f8f9fa;
+  padding:0.6rem 1.2rem;
+  border-radius:8px;
+  font-weight:700;
+  color:var(--text);
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  border:2px solid transparent;
+}
+.airport-tag:hover{
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:white;
+  transform:translateY(-2px);
+}
 
 /* BUTTONS */
 .btn{
@@ -57,29 +159,29 @@ header{
   font-weight:900;border:0;transition:.18s;
 }
 .btn.primary{background:var(--accent);color:#fff}
-.btn.secondary{background:#fff;color:var(--text)}
-.btn.whatsapp{background:#25D366;color:#0b1c2d}
+.btn.secondary{background:#f1f5f9;color:var(--text)}
+.btn.whatsapp{background:#25D366;color:#fff}
 .btn:hover{transform:translateY(-2px)}
 
 /* HERO */
-.hero{padding:48px 0 22px}
+.hero{padding:40px 0 20px}
 .heroGrid{
   display:grid;
   grid-template-columns:1fr;
   gap:18px;
 }
 .heroCard{
-  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  background:#f8fafc;
   border:1px solid var(--line);
   border-radius:22px;
   padding:20px;
-  box-shadow:0 18px 44px rgba(0,0,0,.22);
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
   position:relative;
 }
 .hero h1{margin:0 0 10px;font-size:clamp(1.6rem,3vw,2.6rem)}
 .hero p{margin:0 0 14px;color:var(--muted)}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
-.smallNote{font-size:12px;opacity:.8}
+.smallNote{font-size:12px;opacity:.7;color:var(--muted)}
 
 /* LIGHT PANEL */
 .section{padding:14px 0 60px}
@@ -88,6 +190,7 @@ header{
   color:var(--text);
   border-radius:26px;
   padding:34px 18px;
+  border:1px solid var(--line);
 }
 
 /* CARDS */
@@ -97,16 +200,17 @@ header{
   background:#fff;
   border-radius:18px;
   padding:18px;
-  box-shadow:0 14px 30px rgba(2,6,23,.08);
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
   transition:.18s;
+  border:1px solid var(--line);
 }
-.card:hover{transform:translateY(-3px)}
-.card h3{margin:0 0 8px}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.1)}
+.card h3{margin:0 0 8px;color:var(--text)}
 .card ul{margin:0 0 12px;padding-left:18px}
 .card li{margin:0 0 8px;color:#334155}
 .ctaRow{display:flex;gap:10px;flex-wrap:wrap}
 
-/* PAYMENT CARDS - NEW SECTION */
+/* PAYMENT CARDS */
 .payment-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -120,10 +224,11 @@ header{
   background:#fff;
   border-radius:16px;
   padding:1.5rem;
-  box-shadow:0 10px 30px rgba(2,6,23,.08);
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
   transition:transform 0.3s ease;
+  border:1px solid var(--line);
 }
-.payment-card:hover{transform:translateY(-5px)}
+.payment-card:hover{transform:translateY(-5px);box-shadow:0 8px 30px rgba(0,0,0,.1)}
 
 .card-header{
   text-align:center;
@@ -227,13 +332,14 @@ header{
   background:#fff;
   border-radius:18px;
   padding:20px 16px;
-  box-shadow:0 14px 30px rgba(2,6,23,.08);
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
   text-align:center;
   transition:.18s;
   display:block;
   text-decoration:none;
+  border:1px solid var(--line);
 }
-.dispatch-card:hover{transform:translateY(-5px)}
+.dispatch-card:hover{transform:translateY(-5px);box-shadow:0 8px 30px rgba(0,0,0,.1)}
 
 .dispatch-icon{
   width:60px;
@@ -266,7 +372,7 @@ header{
 .icon-blue{background:linear-gradient(135deg,#3D95CE,#008CFF)}
 .badge-blue{background:linear-gradient(135deg,#3D95CE,#008CFF)}
 
-/* DENVER METRO - 4 ACROSS */
+/* DENVER METRO */
 .denver-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -281,12 +387,13 @@ header{
   background:#fff;
   border-radius:16px;
   padding:18px 14px;
-  box-shadow:0 10px 24px rgba(2,6,23,.08);
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
   text-align:center;
   transition:.18s;
   display:block;
+  border:1px solid var(--line);
 }
-.metro-card:hover{transform:translateY(-4px)}
+.metro-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.1)}
 
 .metro-icon{
   width:50px;
@@ -316,8 +423,9 @@ header{
   background:#fff;
   border-radius:20px;
   padding:2rem;
-  box-shadow:0 20px 60px rgba(0,0,0,.1);
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
   color:var(--text);
+  border:1px solid var(--line);
 }
 .telegram-header{
   display:flex;
@@ -403,7 +511,20 @@ header{
 }
 
 /* FOOTER */
-footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
+footer{padding:30px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
+footer a{color:var(--accent)}
+footer a:hover{text-decoration:underline}
+
+@media(max-width:768px){
+  .airport-input{
+    font-size:1.5rem;
+    letter-spacing:4px;
+    padding:1rem;
+  }
+  .search-hero h1{
+    font-size:1.8rem;
+  }
+}
 </style>
 </head>
 
@@ -424,11 +545,44 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
 
 <main>
 
+<!-- AIRPORT SEARCH HERO -->
+<div class="wrap search-hero">
+  <h1>✈️ TRAVYLWAY</h1>
+  <p>Airport Transportation for Airline Crew</p>
+  
+  <div class="airport-search-box">
+    <input 
+      type="text" 
+      id="airportCode" 
+      class="airport-input" 
+      placeholder="DEN"
+      maxlength="3"
+      autocomplete="off"
+    >
+  </div>
+  <p class="helper-text-search">Enter your 3-letter airport code</p>
+  
+  <button class="cta-button-search" id="requestPickup" disabled>
+    Request Pickup
+  </button>
+  
+  <div class="airport-tags">
+    <span class="airport-tag" onclick="selectAirport('DEN')">DEN - Denver</span>
+    <span class="airport-tag" onclick="selectAirport('LAX')">LAX - Los Angeles</span>
+    <span class="airport-tag" onclick="selectAirport('ORD')">ORD - Chicago</span>
+    <span class="airport-tag" onclick="selectAirport('ATL')">ATL - Atlanta</span>
+    <span class="airport-tag" onclick="selectAirport('DFW')">DFW - Dallas</span>
+    <span class="airport-tag" onclick="selectAirport('MCO')">MCO - Orlando</span>
+    <span class="airport-tag" onclick="selectAirport('PHX')">PHX - Phoenix</span>
+    <span class="airport-tag" onclick="selectAirport('MIA')">MIA - Miami</span>
+  </div>
+</div>
+
 <div class="wrap hero" style="display:flex;justify-content:center;">
   <div class="heroGrid" style="max-width:860px;width:100%;">
     <section class="heroCard hero" style="text-align:center;padding:22px 20px;">
       
-      <h3 style="margin-top:0;">
+      <h3 style="margin-top:0;color:var(--text)">
         Airport transportation built for crew schedules.
       </h3>
 
@@ -725,6 +879,56 @@ footer{padding:30px 0 40px;text-align:center;font-size:13px;opacity:.8}
     <div style="margin-top:8px;">Built for air crew. Designed for reliability.</div>
   </div>
 </footer>
+
+<!-- AIRPORT SEARCH SCRIPT -->
+<script>
+var airportInput = document.getElementById('airportCode');
+var requestBtn = document.getElementById('requestPickup');
+
+// Auto-uppercase and validate
+airportInput.addEventListener('input', function(e) {
+  var value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+  e.target.value = value;
+  
+  if (value.length === 3) {
+    requestBtn.disabled = false;
+  } else {
+    requestBtn.disabled = true;
+  }
+});
+
+// Focus input on load
+window.addEventListener('load', function() {
+  airportInput.focus();
+});
+
+// Handle enter key
+airportInput.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter' && airportInput.value.length === 3) {
+    goToBooking();
+  }
+});
+
+// Request pickup button
+requestBtn.addEventListener('click', goToBooking);
+
+function goToBooking() {
+  var code = airportInput.value.toUpperCase();
+  if (code.length === 3) {
+    // Store airport code for pre-fill
+    localStorage.setItem('airportCode', code);
+    // Redirect to booking page
+    window.location.href = '/crew.html';
+  }
+}
+
+// Quick select airport
+function selectAirport(code) {
+  airportInput.value = code;
+  airportInput.dispatchEvent(new Event('input'));
+  requestBtn.disabled = false;
+}
+</script>
 
 <!-- Tawk.to -->
 <script type="text/javascript">
