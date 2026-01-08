@@ -83,6 +83,24 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 <small>Include street, city, state, and zip code</small>
 </div>
 
+<!-- GREEN VALLEY RANCH DROPDOWN -->
+<div class="form-group" id="gvrDropdown" style="display:none; margin-top:-1rem; margin-bottom:1.5rem;">
+  <label for="gvrAddress" style="color:#1565c0; font-weight:900;">🏠 Select Your Green Valley Ranch Crash Pad</label>
+  <select id="gvrAddress" style="width:100%; padding:0.75rem; border:2px solid #2196f3; border-radius:10px; font-size:1rem; font-weight:600;">
+    <option value="">-- Select Your Crash Pad Address --</option>
+    <option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd</option>
+    <option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St</option>
+    <option value="5800 Tower Rd, Denver, CO 80249">5800 Tower Rd</option>
+    <option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr</option>
+    <option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl</option>
+    <option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave</option>
+    <option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir</option>
+  </select>
+  <small style="color:#1565c0; font-size:0.85rem; display:block; margin-top:0.5rem; font-weight:600;">
+    ✓ Choose your crash pad address, then click Calculate Distance & Price below
+  </small>
+</div>
+
 <div class="form-group">
 <label for="airport">Airport <span class="required">*</span></label>
 <input type="text" id="airport" name="airport" value="Denver International Airport" required>
@@ -166,6 +184,27 @@ function initMap() {
 
 document.addEventListener('DOMContentLoaded', function() {
   var form = document.getElementById('pickupForm');
+  
+  // Check if coming from Green Valley Ranch card
+  var urlParams = new URLSearchParams(window.location.search);
+  
+  if (urlParams.get('location') === 'gvr') {
+    // Show the dropdown
+    document.getElementById('gvrDropdown').style.display = 'block';
+    
+    // Pre-fill airport
+    document.getElementById('airport').value = 'Denver International Airport';
+    
+    // Change address placeholder
+    document.getElementById('address').placeholder = 'Select your crash pad address above ☝️';
+    
+    // When user selects an address from dropdown, fill the address field
+    document.getElementById('gvrAddress').addEventListener('change', function() {
+      if (this.value) {
+        document.getElementById('address').value = this.value;
+      }
+    });
+  }
   
   var distanceField = document.createElement('input');
   distanceField.type = 'hidden';
@@ -315,6 +354,11 @@ document.addEventListener('DOMContentLoaded', function() {
         e.target.reset();
         document.getElementById('priceEstimate').style.display = 'none';
         document.getElementById('airport').value = 'Denver International Airport';
+        
+        // Hide GVR dropdown if it was shown
+        document.getElementById('gvrDropdown').style.display = 'none';
+        document.getElementById('address').placeholder = '123 Main St, Aurora, CO 80012';
+        
         successMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
       } else {
         throw new Error('Failed');
