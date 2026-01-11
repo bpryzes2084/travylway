@@ -78,6 +78,26 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 </div>
 
 <div class="form-group">
+<label for="crashpadSelect">Denver Based Flight Attendants - Select Your Crash Pad (Optional)</label>
+<select id="crashpadSelect" name="crashpadSelect">
+<option value="">-- Select a crash pad or enter address below --</option>
+<option value="6660 Lisbon Street, Aurora, CO 80019">GVR - 6660 Lisbon Street, Aurora, CO 80019</option>
+<option value="1777 Willow St, Denver, CO 80220">Denver - 1777 Willow St, Denver, CO 80220</option>
+<option value="5489 Netherland St, Denver, CO 80249">GVR - 5489 Netherland St, Denver, CO 80249</option>
+<option value="20920 52nd Ave, Denver, CO 80249">GVR - 20920 52nd Ave, Denver, CO 80249</option>
+<option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">GVR - 4909 Green Valley Ranch Blvd, Denver, CO 80249</option>
+<option value="20040 Mitchell Cir, Denver, CO 80249">GVR - 20040 Mitchell Cir, Denver, CO 80249</option>
+<option value="18001 E 47th Dr, Denver, CO 80249">GVR - 18001 E 47th Dr, Denver, CO 80249</option>
+<option value="18109 E 51st Pl, Denver, CO 80249">GVR - 18109 E 51st Pl, Denver, CO 80249</option>
+<option value="18113 E 51st Ave, Denver, CO 80249">GVR - 18113 E 51st Ave, Denver, CO 80249</option>
+<option value="10058 Granby St, Commerce City, CO 80022">Commerce City - 10058 Granby St, Commerce City, CO 80022</option>
+<option value="11446 Helena St, Commerce City, CO 80022">Commerce City - 11446 Helena St, Commerce City, CO 80022</option>
+<option value="12975 E 107th Pl, Commerce City, CO 80022">Commerce City - 12975 E 107th Pl, Commerce City, CO 80022</option>
+</select>
+<small>Select your crash pad to auto-fill the address, or enter manually below</small>
+</div>
+
+<div class="form-group">
 <label for="address">Pickup Address <span class="required">*</span></label>
 <input type="text" id="address" name="address" placeholder="123 Main St, Aurora, CO 80012" required>
 <small>Include street, city, state, and zip code</small>
@@ -170,8 +190,8 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 </div>
 
 <script>
-var BASE_FARE = 4.75;
-var PER_MILE_RATE = 1.00;
+var BASE_FARE = 2.25;
+var PER_MILE_RATE = 1.25;
 var MINIMUM_FARE = 10;
 var MAXIMUM_FARE = 15;
 var FREE_MILES = 0;
@@ -279,6 +299,16 @@ document.addEventListener('DOMContentLoaded', function() {
   window.locationConfig = config;
 
   // ========================================
+  // CRASH PAD AUTO-FILL
+  // ========================================
+  document.getElementById('crashpadSelect').addEventListener('change', function() {
+    var selectedAddress = this.value;
+    if (selectedAddress) {
+      document.getElementById('address').value = selectedAddress;
+    }
+  });
+
+  // ========================================
   // FORM LOGIC
   // ========================================
   var form = document.getElementById('pickupForm');
@@ -363,6 +393,23 @@ document.addEventListener('DOMContentLoaded', function() {
                   document.getElementById('priceEstimate').style.display = 'block';
                   document.getElementById('calculatedDistance').value = distanceInMiles;
                   document.getElementById('calculatedPrice').value = price;
+
+                  // Auto-populate payment info in notes
+                  var paymentInfo = '💰 ESTIMATED FARE: $' + price + '\n\n';
+                  paymentInfo += '📱 PAYMENT METHODS:\n';
+                  paymentInfo += '• CashApp: $tway66gworld\n';
+                  paymentInfo += '• Venmo: @Tway2084\n';
+                  paymentInfo += '• PayPal: paypal.me/benterpryzes\n';
+                  paymentInfo += '• Square: bit.ly/4snVxsl\n';
+                  paymentInfo += '• Cash accepted\n\n';
+                  
+                  var notesField = document.getElementById('notes');
+                  var currentNotes = notesField.value.trim();
+                  if (currentNotes) {
+                    notesField.value = paymentInfo + '---\n' + currentNotes;
+                  } else {
+                    notesField.value = paymentInfo;
+                  }
 
                   calcBtn.disabled = false;
                   calcBtn.textContent = '✓ Price Calculated';
