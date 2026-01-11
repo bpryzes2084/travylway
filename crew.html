@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -326,6 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var payload = {
       created_by: data.name || 'crew',
+      rider_phone: data.phone || '',  // 
       pickup_text: data.address || '',
       dropoff_text: data.airport || 'Denver International Airport',
       pickup_time_utc: new Date().toISOString(),
