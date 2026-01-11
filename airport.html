@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Book Your Ride - Travylway</title>
-<meta name="description" content="Request reliable transportation service with Travylway.">
- \
+<title>Airport Transportation - Travylway</title>
+<meta name="description" content="Reliable airport transportation service with Travylway.">
+ 
 <style>
 :root{
   --bg:#2B3A4A;
@@ -227,11 +227,21 @@ body{
   color:#0d47a1;
 }
 
-.pac-container{
-  z-index:10000;
+.calc-btn{
+  background:#2196f3;
+  color:white;
+  border:none;
+  padding:0.75rem 1.5rem;
   border-radius:8px;
-  margin-top:4px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  cursor:pointer;
+  font-weight:700;
+  margin:1rem 0;
+  width:100%;
+  font-size:1rem;
+}
+
+.calc-btn:hover{
+  background:#1976d2;
 }
 
 @media(max-width:768px){
@@ -254,17 +264,17 @@ body{
 <div class="container">
   <div class="form-card">
     <div class="form-header">
-      <h1>🚗 Book Your Ride</h1>
-      <p>Reliable transportation at competitive rates</p>
-      <p class="optional-note">Fill out the form below to request your ride</p>
+      <h1>✈️ Airport Transportation</h1>
+      <p>Reliable rides to and from the airport</p>
+      <p class="optional-note">Only name and phone number are required</p>
     </div>
 
     <div id="successMessage" class="success-message">
-      ✓ Request submitted successfully! We'll contact you shortly.
+      ✓ Request submitted successfully!
     </div>
 
     <div id="errorMessage" class="error-message">
-      ✗ Something went wrong. Please try again or contact us via WhatsApp.
+      ✗ Something went wrong. Please try again.
     </div>
 
     <!-- WhatsApp Notification Info -->
@@ -272,7 +282,7 @@ body{
       <strong>📱 How You'll Be Contacted:</strong>
       <p>
         When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong> 
-        to confirm pickup details and answer questions. Make sure your phone number is correct!
+        to confirm pickup details.
       </p>
     </div>
 
@@ -294,29 +304,64 @@ body{
         </div>
       </div>
 
-      <!-- Pickup Address with Autocomplete -->
+      <!-- Pickup Address -->
       <div class="form-group">
         <label for="address">Pickup Address <span class="required">*</span></label>
-        <input type="text" id="address" name="address" placeholder="Enter your pickup address" required>
-        <small>Start typing your address and select from suggestions</small>
+        <input type="text" id="address" name="address" placeholder="123 Main St, City, State ZIP" required>
+        <small>Include street, city, state, and zip code</small>
       </div>
 
-      <!-- Destination Address with Autocomplete -->
+      <!-- Airport -->
       <div class="form-group">
-        <label for="destination">Destination Address <span class="required">*</span></label>
-        <input type="text" id="destination" name="destination" placeholder="Enter your destination" required>
-        <small>Start typing your destination and select from suggestions</small>
+        <label for="airport">Airport <span class="required">*</span></label>
+        <input type="text" id="airport" name="airport" value="Denver International Airport" required>
+        <small>You can change this if needed</small>
+      </div>
+
+      <!-- Service Type -->
+      <div class="form-group">
+        <label for="serviceType">Service Type <span class="required">*</span></label>
+        <select id="serviceType" name="serviceType" required>
+          <option value="">-- Select Service --</option>
+          <option value="pickup">Airport Pickup (arriving flight)</option>
+          <option value="dropoff">Airport Drop-off (departing flight)</option>
+        </select>
+      </div>
+
+      <!-- Calculate Price Button -->
+      <button type="button" class="calc-btn" id="calcBtn">📍 Calculate Distance & Price</button>
+
+      <!-- Price Estimate -->
+      <div id="priceEstimate" class="price-estimate">
+        <h3>💰 Estimated Price</h3>
+        <div class="price-details">
+          <span class="distance" id="distanceDisplay">Distance: -- miles</span>
+          <span class="price" id="priceDisplay">$--</span>
+        </div>
+        <small style="color:#1565c0; margin-top:0.5rem; display:block;">Standard Rate</small>
+      </div>
+
+      <!-- Flight Information (Optional) -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="flightNumber">Flight Number</label>
+          <input type="text" id="flightNumber" name="flightNumber" placeholder="UA1234">
+        </div>
+        <div class="form-group">
+          <label for="airline">Airline</label>
+          <input type="text" id="airline" name="airline" placeholder="United, Delta, etc.">
+        </div>
       </div>
 
       <!-- Date and Time -->
       <div class="form-row">
         <div class="form-group">
-          <label for="pickupDate">Pickup Date <span class="required">*</span></label>
-          <input type="date" id="pickupDate" name="pickupDate" required>
+          <label for="flightDate">Pickup Date <span class="required">*</span></label>
+          <input type="date" id="flightDate" name="flightDate" required>
         </div>
         <div class="form-group">
-          <label for="pickupTime">Pickup Time <span class="required">*</span></label>
-          <input type="time" id="pickupTime" name="pickupTime" required>
+          <label for="flightTime">Pickup Time <span class="required">*</span></label>
+          <input type="time" id="flightTime" name="flightTime" required>
         </div>
       </div>
 
@@ -326,20 +371,10 @@ body{
         <input type="number" id="passengers" name="passengers" min="1" max="10" placeholder="1" value="1">
       </div>
 
-      <!-- Price Estimate -->
-      <div id="priceEstimate" class="price-estimate">
-        <h3>💰 Estimated Price</h3>
-        <div class="price-details">
-          <span class="distance" id="distanceDisplay">Distance: -- miles</span>
-          <span class="price" id="priceDisplay">$--</span>
-        </div>
-        <small style="color:#1565c0; margin-top:0.5rem; display:block;">Final price confirmed by driver</small>
-      </div>
-
       <!-- Additional Notes -->
       <div class="form-group">
         <label for="notes">Special Instructions</label>
-        <textarea id="notes" name="notes" placeholder="Any special requests or additional information..."></textarea>
+        <textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn">
@@ -351,100 +386,197 @@ body{
   </div>
 </div>
 
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places"></script>
-
 <script>
+// ========================================
+// LOCATION-BASED CONFIGURATION
+// ========================================
+const urlParams = new URLSearchParams(window.location.search);
+const locationParam = urlParams.get('location');
+
+// Location-specific settings
+const locationConfig = {
+  'gvr': { 
+    airport: 'Denver International Airport', 
+    airportCode: 'DEN',
+    name: 'Denver - Green Valley Ranch'
+  },
+  'den': { 
+    airport: 'Denver International Airport', 
+    airportCode: 'DEN',
+    name: 'Denver'
+  },
+  'ord': { 
+    airport: "Chicago O'Hare International Airport", 
+    airportCode: 'ORD',
+    name: 'Chicago'
+  },
+  'phx': { 
+    airport: 'Phoenix Sky Harbor International Airport', 
+    airportCode: 'PHX',
+    name: 'Phoenix'
+  },
+  'atl': { 
+    airport: 'Hartsfield-Jackson Atlanta International Airport', 
+    airportCode: 'ATL',
+    name: 'Atlanta'
+  },
+  'lax': { 
+    airport: 'Los Angeles International Airport', 
+    airportCode: 'LAX',
+    name: 'Los Angeles'
+  },
+  'sfo': { 
+    airport: 'San Francisco International Airport', 
+    airportCode: 'SFO',
+    name: 'San Francisco'
+  },
+  'jfk': { 
+    airport: 'John F. Kennedy International Airport', 
+    airportCode: 'JFK',
+    name: 'New York JFK'
+  },
+  'ewr': { 
+    airport: 'Newark Liberty International Airport', 
+    airportCode: 'EWR',
+    name: 'Newark'
+  },
+  'mia': { 
+    airport: 'Miami International Airport', 
+    airportCode: 'MIA',
+    name: 'Miami'
+  }
+};
+
+const config = locationConfig[locationParam] || { 
+  airport: 'Denver International Airport', 
+  airportCode: 'DEN',
+  name: null
+};
+
+// Auto-fill airport based on location
+document.getElementById('airport').value = config.airport;
+
+// Store config for later use
+window.locationConfig = config;
+
+// ========================================
 // PRICING CONFIGURATION - GENERAL PUBLIC RATES
+// ========================================
 const BASE_FARE = 8.00;
 const PER_MILE_RATE = 2.50;
 const MINIMUM_FARE = 22;
 const MAXIMUM_FARE = 150;
 const FREE_MILES = 3; // First 3 miles included in base fare
 
-let pickupAutocomplete;
-let destinationAutocomplete;
-let pickupLocation = null;
-let destinationLocation = null;
+var map;
+var placesService;
 
-// Initialize Google Maps autocomplete
-function initAutocomplete() {
-  // Pickup address autocomplete
-  pickupAutocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('address'),
-    { types: ['address'] }
-  );
-  
-  pickupAutocomplete.addListener('place_changed', function() {
-    const place = pickupAutocomplete.getPlace();
-    if (place.geometry) {
-      pickupLocation = place.geometry.location;
-      calculatePrice();
-    }
-  });
-  
-  // Destination autocomplete
-  destinationAutocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('destination'),
-    { types: ['address', 'establishment'] }
-  );
-  
-  destinationAutocomplete.addListener('place_changed', function() {
-    const place = destinationAutocomplete.getPlace();
-    if (place.geometry) {
-      destinationLocation = place.geometry.location;
-      calculatePrice();
-    }
-  });
+function initMap() {
+  console.log('Google Maps loaded');
+  map = new google.maps.Map(document.createElement('div'));
+  placesService = new google.maps.places.PlacesService(map);
 }
 
-// Calculate distance and price
+// ========================================
+// PRICE CALCULATION
+// ========================================
 function calculatePrice() {
-  if (!pickupLocation || !destinationLocation) {
+  var address = document.getElementById('address').value;
+  var airport = document.getElementById('airport').value;
+
+  if (!address || !airport) {
+    alert('Please enter both pickup address and airport');
     return;
   }
-  
-  const service = new google.maps.DistanceMatrixService();
-  
-  service.getDistanceMatrix({
-    origins: [pickupLocation],
-    destinations: [destinationLocation],
-    travelMode: 'DRIVING',
-    unitSystem: google.maps.UnitSystem.IMPERIAL
-  }, function(response, status) {
-    if (status === 'OK') {
-      const result = response.rows[0].elements[0];
-      
-      if (result.status === 'OK') {
-        const distanceInMeters = result.distance.value;
-        const distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
-        
-        // Calculate price
-        let price = BASE_FARE;
-        const chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
-        price += chargeableMiles * PER_MILE_RATE;
-        
-        // Apply minimum and maximum
-        price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
-        
-        // Round to nearest dollar
-        price = Math.round(price);
-        
-        // Display results
-        document.getElementById('distanceDisplay').textContent = `Distance: ${distanceInMiles} miles`;
-        document.getElementById('priceDisplay').textContent = `$${price}`;
-        document.getElementById('priceEstimate').style.display = 'block';
-        
-        // Store in hidden fields
-        document.getElementById('calculatedDistance').value = distanceInMiles;
-        document.getElementById('calculatedPrice').value = price;
-      }
+
+  if (typeof google === 'undefined' || !placesService) {
+    alert('Google Maps is still loading. Please wait a moment and try again.');
+    return;
+  }
+
+  var calcBtn = document.getElementById('calcBtn');
+  calcBtn.disabled = true;
+  calcBtn.textContent = 'Calculating...';
+
+  var addressRequest = {
+    query: address + ', USA',
+    fields: ['geometry', 'formatted_address']
+  };
+
+  placesService.findPlaceFromQuery(addressRequest, function(results1, status1) {
+    if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
+      var pickupLoc = results1[0].geometry.location;
+
+      var airportRequest = {
+        query: airport,
+        fields: ['geometry', 'formatted_address']
+      };
+
+      placesService.findPlaceFromQuery(airportRequest, function(results2, status2) {
+        if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
+          var airportLoc = results2[0].geometry.location;
+
+          var distanceService = new google.maps.DistanceMatrixService();
+          distanceService.getDistanceMatrix({
+            origins: [pickupLoc],
+            destinations: [airportLoc],
+            travelMode: 'DRIVING',
+            unitSystem: google.maps.UnitSystem.IMPERIAL
+          }, function(response, status) {
+            if (status === 'OK') {
+              var result = response.rows[0].elements[0];
+
+              if (result.status === 'OK') {
+                var distanceInMeters = result.distance.value;
+                var distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
+
+                var price = BASE_FARE;
+                var chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
+                price += chargeableMiles * PER_MILE_RATE;
+                price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
+                price = Math.round(price);
+
+                document.getElementById('distanceDisplay').textContent = 'Distance: ' + distanceInMiles + ' miles';
+                document.getElementById('priceDisplay').textContent = '$' + price;
+                document.getElementById('priceEstimate').style.display = 'block';
+                document.getElementById('calculatedDistance').value = distanceInMiles;
+                document.getElementById('calculatedPrice').value = price;
+
+                calcBtn.disabled = false;
+                calcBtn.textContent = '✓ Price Calculated';
+              } else {
+                alert('Could not calculate distance: ' + result.status);
+                calcBtn.disabled = false;
+                calcBtn.textContent = '📍 Calculate Distance & Price';
+              }
+            } else {
+              alert('Distance calculation failed: ' + status);
+              calcBtn.disabled = false;
+              calcBtn.textContent = '📍 Calculate Distance & Price';
+            }
+          });
+        } else {
+          alert('Could not find airport.\n\nPlease try the full airport name.');
+          calcBtn.disabled = false;
+          calcBtn.textContent = '📍 Calculate Distance & Price';
+        }
+      });
+    } else {
+      alert('Could not find address.\n\nPlease include:\n- Street number and name\n- City, State, Zip\n\nExample: "123 Main St, Aurora, CO 80012"');
+      calcBtn.disabled = false;
+      calcBtn.textContent = '📍 Calculate Distance & Price';
     }
   });
 }
 
-// Add hidden fields to form for distance and price
+document.getElementById('calcBtn').addEventListener('click', calculatePrice);
+
+// ========================================
+// FORM SETUP
+// ========================================
 const form = document.getElementById('pickupForm');
+
+// Hidden fields
 const distanceField = document.createElement('input');
 distanceField.type = 'hidden';
 distanceField.id = 'calculatedDistance';
@@ -465,12 +597,11 @@ form.appendChild(serviceTierField);
 
 // Set minimum date to today
 const today = new Date().toISOString().split('T')[0];
-document.getElementById('pickupDate').setAttribute('min', today);
+document.getElementById('flightDate').setAttribute('min', today);
 
-// Initialize autocomplete when page loads
-window.addEventListener('load', initAutocomplete);
-
-// Form submission
+// ========================================
+// FORM SUBMISSION
+// ========================================
 document.getElementById('pickupForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
@@ -478,53 +609,74 @@ document.getElementById('pickupForm').addEventListener('submit', async (e) => {
   const successMsg = document.getElementById('successMessage');
   const errorMsg = document.getElementById('errorMessage');
   
-  // Hide messages
   successMsg.style.display = 'none';
   errorMsg.style.display = 'none';
+  errorMsg.textContent = '';
   
-  // Disable button
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting...';
   
-  // Get form data
   const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData.entries());
+  const data = {};
+  formData.forEach(function(value, key) { data[key] = value; });
+
+  // Combine date and time for pickup_time_utc
+  const pickupDateTime = new Date(data.flightDate + 'T' + data.flightTime);
   
-  // Map pickupDate/pickupTime to flightDate/flightTime for backend compatibility
-  data.flightDate = data.pickupDate;
-  data.flightTime = data.pickupTime;
-  data.serviceType = 'pickup'; // Default service type
+  const payload = {
+    created_by: data.name || 'general',
+    rider_phone: data.phone || '',
+    pickup_text: data.address || '',
+    dropoff_text: data.airport || config.airport,
+    pickup_time_utc: pickupDateTime.toISOString(),
+    trip_type: 'AIRPORT',
+    rider_type: 'GENERAL',
+    direction: data.serviceType === 'pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
+    airport_code: config.airportCode || 'DEN',
+    flight_number: data.flightNumber || null,
+    airline: data.airline || null,
+    notes: data.notes || null
+  };
   
   try {
-    // Send to Cloudflare Worker
-    const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/add-trip', {
+    const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/api/trips', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
+    
+    const text = await response.text();
+    let resp;
+    try { resp = JSON.parse(text); } catch { resp = { raw: text }; }
     
     if (response.ok) {
       successMsg.style.display = 'block';
       e.target.reset();
       document.getElementById('priceEstimate').style.display = 'none';
-      pickupLocation = null;
-      destinationLocation = null;
-      // Scroll to success message
-      successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.getElementById('airport').value = config.airport;
+      
+      successMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
     } else {
-      throw new Error('Submission failed');
+      errorMsg.textContent = '✗ ' + (resp.error || resp.detail || resp.raw || ('Request failed (' + response.status + ')'));
+      errorMsg.style.display = 'block';
+      errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
     }
   } catch (error) {
+    errorMsg.textContent = '✗ ' + (error.message || 'Something went wrong. Please try again.');
     errorMsg.style.display = 'block';
-    errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Request';
   }
 });
+
+// Initialize Google Maps when loaded
+window.addEventListener('load', initMap);
 </script>
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initMap" async defer></script>
 
 </body>
 </html>
