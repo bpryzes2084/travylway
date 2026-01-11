@@ -98,9 +98,9 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 </div>
 
 <div class="form-group">
-<label for="address">Pickup Address <span class="required">*</span></label>
+<label for="address" id="addressLabel">Your Address <span class="required">*</span></label>
 <input type="text" id="address" name="address" placeholder="123 Main St, Aurora, CO 80012" required>
-<small>Include street, city, state, and zip code</small>
+<small id="addressHelper">Include street, city, state, and zip code</small>
 </div>
 
 
@@ -309,6 +309,32 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ========================================
+  // SERVICE TYPE - UPDATE ADDRESS LABEL
+  // ========================================
+  document.getElementById('serviceType').addEventListener('change', function() {
+    var serviceType = this.value;
+    var addressLabel = document.getElementById('addressLabel');
+    var addressHelper = document.getElementById('addressHelper');
+    var crashpadLabel = document.querySelector('label[for="crashpadSelect"]');
+    
+    if (serviceType === 'pickup') {
+      // Arriving at airport - going TO their address
+      addressLabel.innerHTML = 'Destination Address <span class="required">*</span>';
+      addressHelper.textContent = 'Where should we take you? (Your crash pad, home, etc.)';
+      crashpadLabel.textContent = 'Denver Based Flight Attendants - Select Your Crash Pad (Optional)';
+    } else if (serviceType === 'dropoff') {
+      // Departing - leaving FROM their address
+      addressLabel.innerHTML = 'Pickup Address <span class="required">*</span>';
+      addressHelper.textContent = 'Where should we pick you up? (Your crash pad, home, etc.)';
+      crashpadLabel.textContent = 'Denver Based Flight Attendants - Select Your Crash Pad (Optional)';
+    } else {
+      // Default
+      addressLabel.innerHTML = 'Your Address <span class="required">*</span>';
+      addressHelper.textContent = 'Include street, city, state, and zip code';
+    }
+  });
+
+  // ========================================
   // FORM LOGIC
   // ========================================
   var form = document.getElementById('pickupForm');
@@ -357,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     placesService.findPlaceFromQuery(addressRequest, function(results1, status1) {
       if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
-        var pickupLoc = results1[0].geometry.location;
+        var addressLoc = results1[0].geometry.location;
 
         var airportRequest = {
           query: airport,
@@ -368,10 +394,24 @@ document.addEventListener('DOMContentLoaded', function() {
           if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
             var airportLoc = results2[0].geometry.location;
 
+            // Determine origin and destination based on service type
+            var serviceType = document.getElementById('serviceType').value;
+            var origin, destination;
+            
+            if (serviceType === 'pickup') {
+              // Airport Pickup: FROM airport TO address
+              origin = airportLoc;
+              destination = addressLoc;
+            } else {
+              // Airport Dropoff: FROM address TO airport
+              origin = addressLoc;
+              destination = airportLoc;
+            }
+
             var distanceService = new google.maps.DistanceMatrixService();
             distanceService.getDistanceMatrix({
-              origins: [pickupLoc],
-              destinations: [airportLoc],
+              origins: [origin],
+              destinations: [destination],
               travelMode: 'DRIVING',
               unitSystem: google.maps.UnitSystem.IMPERIAL
             }, function(response, status) {
@@ -461,11 +501,23 @@ document.addEventListener('DOMContentLoaded', function() {
     var data = {};
     formData.forEach(function(value, key) { data[key] = value; });
 
+    // Swap pickup/dropoff based on service type
+    var pickupText, dropoffText;
+    if (data.serviceType === 'pickup') {
+      // Airport Pickup: FROM airport TO address
+      pickupText = data.airport || config.airport;
+      dropoffText = data.address || '';
+    } else {
+      // Airport Dropoff: FROM address TO airport
+      pickupText = data.address || '';
+      dropoffText = data.airport || config.airport;
+    }
+
     var payload = {
       created_by: data.name || 'crew',
       rider_phone: data.phone || '',
-      pickup_text: data.address || '',
-      dropoff_text: data.airport || config.airport,
+      pickup_text: pickupText,
+      dropoff_text: dropoffText,
       pickup_time_utc: new Date().toISOString(),
       trip_type: 'AIRPORT',
       rider_type: 'CREW',
