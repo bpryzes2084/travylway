@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // LOCATION-BASED CONFIGURATION
   // ========================================
   const urlParams = new URLSearchParams(window.location.search);
-  const location = urlParams.get('location');
+  const locationParam = urlParams.get('location');
 
   // Location-specific settings
   const locationConfig = {
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  const config = locationConfig[location] || { 
+  const config = locationConfig[locationParam] || { 
     airport: 'Denver International Airport', 
     airportCode: 'DEN',
     base: null, 
