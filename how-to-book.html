@@ -1,132 +1,492 @@
-# How to Book a Ride - Flight Attendants & Pilots
+<!doctype html> 
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Air Crew Pickup Request - Travylway</title>
+<style>
+:root{--bg:#2B3A4A;--accent:#2563EB;--text:#0F172A;--light:#E5E7EB}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--light);padding:2rem 1rem}
+.container{max-width:700px;margin:0 auto}
+.form-card{background:white;border-radius:20px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.3);color:var(--text)}
+.form-header{text-align:center;margin-bottom:2rem}
+.form-header h1{font-size:2rem;margin-bottom:0.5rem;color:#333}
+.form-header p{color:#666;font-size:1rem}
+.form-group{margin-bottom:1.5rem}
+.form-group label{display:block;font-weight:700;margin-bottom:0.5rem;color:#333;font-size:0.95rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.75rem;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;transition:border-color 0.3s ease}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#667eea}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-group small{color:#666;font-size:0.85rem;display:block;margin-top:0.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.required{color:#ff6b6b}
+.submit-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;font-size:1.1rem;font-weight:900;cursor:pointer;transition:all 0.3s ease;text-transform:uppercase}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(102,126,234,0.4)}
+.submit-btn:disabled{background:#ccc;cursor:not-allowed;transform:none}
+.success-message,.error-message{padding:1rem;border-radius:10px;margin-bottom:1.5rem;text-align:center;font-weight:600;display:none}
+.success-message{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.error-message{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.back-link{display:inline-block;margin-top:1.5rem;color:#667eea;text-decoration:none;font-weight:600}
+.back-link:hover{text-decoration:underline}
+.optional-note{font-size:0.85rem;color:#666;font-style:italic;margin-bottom:1.5rem;text-align:center}
+.info-box{background:#e8f5e9;padding:1rem 1.25rem;border-radius:10px;margin-bottom:1.5rem;border-left:4px solid #25D366}
+.info-box strong{color:#1b5e20;font-size:1rem}
+.info-box p{margin:0.5rem 0 0;line-height:1.6;color:#2e7d32}
+.price-estimate{background:#e3f2fd;padding:1.5rem;border-radius:10px;margin:1.5rem 0;border-left:4px solid #2196f3;display:none}
+.price-estimate h3{margin:0 0 0.5rem 0;color:#1565c0;font-size:1.1rem}
+.price-details{display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem}
+.distance{color:#1976d2;font-size:0.95rem}
+.price{font-size:1.8rem;font-weight:900;color:#0d47a1}
+.calc-btn{background:#2196f3;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:700;margin:1rem 0;width:100%;font-size:1rem}
+.calc-btn:hover{background:#1976d2}
+@media(max-width:768px){.form-row{grid-template-columns:1fr}.form-card{padding:1.5rem}.form-header h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="form-card">
+<div class="form-header">
+<h1>✈️ Airline Crew Transportation</h1>
+<p>Special discounted rates for airline crew members</p>
+<p class="optional-note">Only name and phone number are required</p>
+</div>
 
-## Quick Guide: Airport Transportation for Airline Crew
+<div id="successMessage" class="success-message">✓ Request submitted successfully!</div>
+<div id="errorMessage" class="error-message">✗ Something went wrong. Please try again.</div>
 
----
+<div class="info-box">
+<strong>📱 How You'll Be Contacted:</strong>
+<p>When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong> to confirm pickup details.</p>
+</div>
 
-### Step 1: Go to Travylway.com
-Visit **travylway.com** and click the **"Airline Crew"** button on the homepage.
+<form id="pickupForm">
+<div class="form-group">
+<label for="name">Name <span class="required">*</span></label>
+<input type="text" id="name" name="name" placeholder="John Doe" required>
+</div>
 
----
+<div class="form-row">
+<div class="form-group">
+<label for="phone">Phone Number <span class="required">*</span></label>
+<input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+</div>
+<div class="form-group">
+<label for="email">Email Address</label>
+<input type="email" id="email" name="email" placeholder="you@airline.com">
+</div>
+</div>
 
-### Step 2: Enter Your Information
-The crew booking form will open. Fill in the required fields:
+<div class="form-group">
+<label for="address">Pickup Address <span class="required">*</span></label>
+<input type="text" id="address" name="address" placeholder="123 Main St, Aurora, CO 80012" required>
+<small>Include street, city, state, and zip code</small>
+</div>
 
-**Personal Details:**
-- **Name** (required)
-- **Phone Number** (required) - You'll be contacted via WhatsApp
-- **Email Address** (optional)
 
----
+<div class="form-group">
+<label for="airport">Airport <span class="required">*</span></label>
+<input type="text" id="airport" name="airport" value="Denver International Airport" required>
+<small>You can change this if needed</small>
+</div>
 
-### Step 3: Enter Your Pickup Address
-Type your full pickup address:
-- Street address
-- City, State, ZIP
+<div class="form-group">
+<label for="serviceType">Service Type <span class="required">*</span></label>
+<select id="serviceType" name="serviceType" required>
+<option value="">-- Select Service --</option>
+<option value="pickup">Airport Pickup (arriving flight)</option>
+<option value="dropoff">Airport Drop-off (departing flight)</option>
+</select>
+</div>
 
----
+<!-- CREW VERIFICATION FIELDS -->
+<div class="form-group" id="baseAirportGroup">
+<label for="baseAirport">What's Your Base? <span class="required">*</span></label>
+<input type="text" id="baseAirport" name="baseAirport" placeholder="Enter your base airport code" required style="text-transform:uppercase">
+<small>Your airline's home base airport (e.g., DEN, TPA, PHX, ORD, etc.)</small>
+</div>
 
-### Step 4: Verify Airport
-The airport field is pre-filled to **Denver International Airport**.
+<div class="form-group">
+<label for="tripType">Trip Type <span class="required">*</span></label>
+<select id="tripType" name="tripType" required>
+<option value="">-- Select Trip Type --</option>
+<option value="returning">Returning from trip to my base</option>
+<option value="commuting-to">🛫 Commuting TO my base for work</option>
+<option value="commuting-from">🏠 Commuting FROM my base (going home)</option>
+<option value="deadheading">✈️ Deadheading</option>
+<option value="positioning">🔄 Positioning flight</option>
+</select>
+<small>This helps us understand your travel situation</small>
+</div>
 
-✅ Leave it as-is if going to/from DEN  
-✏️ Change it if you need a different airport
+<button type="button" class="calc-btn" id="calcBtn">📍 Calculate Distance & Price</button>
 
----
+<div id="priceEstimate" class="price-estimate">
+<h3>💰 Estimated Price</h3>
+<div class="price-details">
+<span class="distance" id="distanceDisplay">Distance: -- miles</span>
+<span class="price" id="priceDisplay">$--</span>
+</div>
+<small style="color:#1565c0;margin-top:0.5rem;display:block">Airline Crew Discounted Rate</small>
+</div>
 
-### Step 5: Select Service Type
-Choose your service:
-- **Airport Pickup** (arriving flight - need ride FROM airport)
-- **Airport Drop-off** (departing flight - need ride TO airport)
+<div class="form-group">
+<label for="airline">Airline</label>
+<input type="text" id="airline" name="airline" placeholder="United, Delta, Southwest, etc.">
+</div>
 
----
+<div class="form-row">
+<div class="form-group">
+<label for="flightNumber">Flight Number</label>
+<input type="text" id="flightNumber" name="flightNumber" placeholder="UA1234">
+</div>
+<div class="form-group">
+<label for="flightDate">Flight Date</label>
+<input type="date" id="flightDate" name="flightDate">
+</div>
+</div>
 
-### Step 6: Crew Verification
+<div class="form-row">
+<div class="form-group">
+<label for="flightTime">Flight Time</label>
+<input type="time" id="flightTime" name="flightTime">
+</div>
+<div class="form-group">
+<label for="passengers">Passengers</label>
+<input type="number" id="passengers" name="passengers" min="1" max="10" placeholder="1">
+</div>
+</div>
 
-**What's Your Base?**
-Enter your airline home base airport code.
-- **Example:** DEN, ORD, PHX, TPA, etc.
+<div class="form-group">
+<label for="notes">Special Instructions</label>
+<textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
+</div>
 
-**Trip Type:**
-Select the option that describes your trip:
-- Returning from trip to my base
-- 🛫 Commuting TO my base for work
-- 🏠 Commuting FROM my base (going home)
-- ✈️ Deadheading
-- 🔄 Positioning flight
+<button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
+</form>
 
-💡 **Why we ask:** This helps us understand your schedule and ensures you're crew.
+<a href="/" class="back-link">← Back to Home</a>
+</div>
+</div>
 
----
+<script>
+var BASE_FARE = 2.25;
+var PER_MILE_RATE = 1.25;
+var MINIMUM_FARE = 10;
+var MAXIMUM_FARE = 15;
+var FREE_MILES = 0;
 
-### Step 7: Calculate Your Price
-Click the **"📍 Calculate Distance & Price"** button.
+var map;
+var placesService;
 
-The system will:
-- Calculate the distance between your address and the airport
-- Show you the **discounted crew rate**
-- Display the estimated price
+function initMap() {
+  console.log('Google Maps loaded');
+  map = new google.maps.Map(document.createElement('div'));
+  placesService = new google.maps.places.PlacesService(map);
+}
 
-✅ **Crew rates are 50-60% lower than standard rates!**
+document.addEventListener('DOMContentLoaded', function() {
+  // ========================================
+  // LOCATION-BASED CONFIGURATION
+  // ========================================
+  const urlParams = new URLSearchParams(window.location.search);
+  const locationParam = urlParams.get('location');
 
----
+  // Location-specific settings
+  const locationConfig = {
+    'gvr': { 
+      airport: 'Denver International Airport', 
+      airportCode: 'DEN',
+      base: 'DEN', 
+      name: 'Denver - Green Valley Ranch'
+    },
+    'den': { 
+      airport: 'Denver International Airport', 
+      airportCode: 'DEN',
+      base: 'DEN', 
+      name: 'Denver'
+    },
+    'ord': { 
+      airport: "Chicago O'Hare International Airport", 
+      airportCode: 'ORD',
+      base: 'ORD', 
+      name: 'Chicago'
+    },
+    'phx': { 
+      airport: 'Phoenix Sky Harbor International Airport', 
+      airportCode: 'PHX',
+      base: 'PHX', 
+      name: 'Phoenix'
+    },
+    'atl': { 
+      airport: 'Hartsfield-Jackson Atlanta International Airport', 
+      airportCode: 'ATL',
+      base: 'ATL', 
+      name: 'Atlanta'
+    },
+    'lax': { 
+      airport: 'Los Angeles International Airport', 
+      airportCode: 'LAX',
+      base: 'LAX', 
+      name: 'Los Angeles'
+    },
+    'sfo': { 
+      airport: 'San Francisco International Airport', 
+      airportCode: 'SFO',
+      base: 'SFO', 
+      name: 'San Francisco'
+    },
+    'jfk': { 
+      airport: 'John F. Kennedy International Airport', 
+      airportCode: 'JFK',
+      base: 'JFK', 
+      name: 'New York JFK'
+    },
+    'ewr': { 
+      airport: 'Newark Liberty International Airport', 
+      airportCode: 'EWR',
+      base: 'EWR', 
+      name: 'Newark'
+    },
+    'mia': { 
+      airport: 'Miami International Airport', 
+      airportCode: 'MIA',
+      base: 'MIA', 
+      name: 'Miami'
+    }
+  };
 
-### Step 8: Add Flight Details (Optional)
-If you want, you can add:
-- **Airline** (United, Delta, Southwest, etc.)
-- **Flight Number** (UA1234)
-- **Flight Date**
-- **Flight Time**
-- **Number of Passengers**
+  const config = locationConfig[locationParam] || { 
+    airport: 'Denver International Airport', 
+    airportCode: 'DEN',
+    base: null, 
+    name: null
+  };
 
----
+  // Apply location-specific configuration
+  // Auto-fill airport
+  document.getElementById('airport').value = config.airport;
 
-### Step 9: Special Instructions (Optional)
-Add any special requests:
-- Luggage details
-- Preferred pickup time
-- Gate information
-- Any other notes for your driver
+  // Handle base airport field
+  if (config.base) {
+    document.getElementById('baseAirport').value = config.base;
+    document.getElementById('baseAirport').readOnly = true;
+    document.getElementById('baseAirport').style.backgroundColor = '#f0f0f0';
+    document.querySelector('#baseAirportGroup small').textContent = 'Base airport for this location';
+  }
 
----
+  // Store config for later use
+  window.locationConfig = config;
 
-### Step 10: Submit Your Request
-Click the **"Submit Request"** button.
+  // ========================================
+  // FORM LOGIC
+  // ========================================
+  var form = document.getElementById('pickupForm');
 
-✅ **Success!** You'll see a confirmation message.
+  // Hidden fields
+  var distanceField = document.createElement('input');
+  distanceField.type = 'hidden';
+  distanceField.id = 'calculatedDistance';
+  distanceField.name = 'calculatedDistance';
+  form.appendChild(distanceField);
 
----
+  var priceField = document.createElement('input');
+  priceField.type = 'hidden';
+  priceField.id = 'calculatedPrice';
+  priceField.name = 'calculatedPrice';
+  form.appendChild(priceField);
 
-## What Happens Next?
+  var serviceTierField = document.createElement('input');
+  serviceTierField.type = 'hidden';
+  serviceTierField.name = 'serviceTier';
+  serviceTierField.value = 'crew';
+  form.appendChild(serviceTierField);
 
-1. **Your request goes to the driver board** for drivers to claim
-2. **A driver claims your trip** and will contact you via **WhatsApp**
-3. **Driver confirms pickup details** with you directly
-4. **Driver has 48 hours to unclaim the trip** if something changes
-5. **You get picked up on time!**
+  function calculatePrice() {
+    var address = document.getElementById('address').value;
+    var airport = document.getElementById('airport').value;
 
----
+    if (!address || !airport) {
+      alert('Please enter both pickup address and airport');
+      return;
+    }
 
-## Need Help?
+    if (typeof google === 'undefined' || !placesService) {
+      alert('Google Maps is still loading. Please wait a moment and try again.');
+      return;
+    }
 
-📱 **WhatsApp:** [+1 (720) 474-8851](https://wa.me/17204748851)  
-**Telegram:** [@Benterpryzes](https://t.me/Benterpryzes)
+    var calcBtn = document.getElementById('calcBtn');
+    calcBtn.disabled = true;
+    calcBtn.textContent = 'Calculating...';
 
----
+    var addressRequest = {
+      query: address + ', USA',
+      fields: ['geometry', 'formatted_address']
+    };
 
-## Pro Tips for Flight Attendants
+    placesService.findPlaceFromQuery(addressRequest, function(results1, status1) {
+      if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
+        var pickupLoc = results1[0].geometry.location;
 
-✈️ **Book 24-48 hours in advance** for guaranteed availability  
-📱 **Keep your phone handy** - driver will contact you via WhatsApp  
-🏠 **Save your crash pad address** for faster future bookings  
-⏰ **Allow extra time** for traffic during peak hours  
-💼 **Mention luggage** in special instructions if you have bags  
+        var airportRequest = {
+          query: airport,
+          fields: ['geometry', 'formatted_address']
+        };
 
----
+        placesService.findPlaceFromQuery(airportRequest, function(results2, status2) {
+          if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
+            var airportLoc = results2[0].geometry.location;
 
-**Questions?** Contact us anytime via WhatsApp or Telegram!
+            var distanceService = new google.maps.DistanceMatrixService();
+            distanceService.getDistanceMatrix({
+              origins: [pickupLoc],
+              destinations: [airportLoc],
+              travelMode: 'DRIVING',
+              unitSystem: google.maps.UnitSystem.IMPERIAL
+            }, function(response, status) {
+              if (status === 'OK') {
+                var result = response.rows[0].elements[0];
 
----
+                if (result.status === 'OK') {
+                  var distanceInMeters = result.distance.value;
+                  var distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
 
-*Built for air crew. Designed for reliability.*  
-**travylway.com**
+                  var price = BASE_FARE;
+                  var chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
+                  price += chargeableMiles * PER_MILE_RATE;
+                  price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
+                  price = Math.round(price);
+
+                  document.getElementById('distanceDisplay').textContent = 'Distance: ' + distanceInMiles + ' miles';
+                  document.getElementById('priceDisplay').textContent = '$' + price;
+                  document.getElementById('priceEstimate').style.display = 'block';
+                  document.getElementById('calculatedDistance').value = distanceInMiles;
+                  document.getElementById('calculatedPrice').value = price;
+
+                  // Auto-populate payment info in notes
+                  var paymentInfo = '💰 ESTIMATED FARE: $' + price + '\n\n';
+                  paymentInfo += '📱 PAYMENT METHODS:\n';
+                  paymentInfo += '• CashApp: $tway66gworld\n';
+                  paymentInfo += '• Venmo: @Tway2084\n';
+                  paymentInfo += '• PayPal: paypal.me/benterpryzes\n';
+                  paymentInfo += '• Square: bit.ly/4snVxsl\n';
+                  paymentInfo += '• Cash accepted\n\n';
+                  
+                  var notesField = document.getElementById('notes');
+                  var currentNotes = notesField.value.trim();
+                  if (currentNotes) {
+                    notesField.value = paymentInfo + '---\n' + currentNotes;
+                  } else {
+                    notesField.value = paymentInfo;
+                  }
+
+                  calcBtn.disabled = false;
+                  calcBtn.textContent = '✓ Price Calculated';
+                } else {
+                  alert('Could not calculate distance: ' + result.status);
+                  calcBtn.disabled = false;
+                  calcBtn.textContent = '📍 Calculate Distance & Price';
+                }
+              } else {
+                alert('Distance calculation failed: ' + status);
+                calcBtn.disabled = false;
+                calcBtn.textContent = '📍 Calculate Distance & Price';
+              }
+            });
+          } else {
+            alert('Could not find airport.\n\nPlease try the full airport name.');
+            calcBtn.disabled = false;
+            calcBtn.textContent = '📍 Calculate Distance & Price';
+          }
+        });
+      } else {
+        alert('Could not find address.\n\nPlease include:\n- Street number and name\n- City, State, Zip\n\nExample: "123 Main St, Aurora, CO 80012"');
+        calcBtn.disabled = false;
+        calcBtn.textContent = '📍 Calculate Distance & Price';
+      }
+    });
+  }
+
+  document.getElementById('calcBtn').addEventListener('click', calculatePrice);
+
+  // ========================================
+  // FORM SUBMISSION
+  // ========================================
+  document.getElementById('pickupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var submitBtn = document.getElementById('submitBtn');
+    var successMsg = document.getElementById('successMessage');
+    var errorMsg = document.getElementById('errorMessage');
+
+    successMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    var formData = new FormData(e.target);
+    var data = {};
+    formData.forEach(function(value, key) { data[key] = value; });
+
+    var payload = {
+      created_by: data.name || 'crew',
+      rider_phone: data.phone || '',
+      pickup_text: data.address || '',
+      dropoff_text: data.airport || config.airport,
+      pickup_time_utc: new Date().toISOString(),
+      trip_type: 'AIRPORT',
+      rider_type: 'CREW',
+      direction: data.serviceType === 'pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
+      airport_code: config.airportCode || 'DEN',
+      base_airport: data.baseAirport ? data.baseAirport.toUpperCase() : config.base,
+      crew_trip_type: data.tripType || null,
+      flight_number: data.flightNumber || null,
+      airline: data.airline || null,
+      notes: data.notes || null
+    };
+
+    fetch('https://travylway-api.benterpryzes2084.workers.dev/api/trips', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(async function(response) {
+      var text = await response.text();
+      var resp;
+      try { resp = JSON.parse(text); } catch { resp = { raw: text }; }
+
+      if (response.ok) {
+        successMsg.style.display = 'block';
+        e.target.reset();
+        document.getElementById('priceEstimate').style.display = 'none';
+        document.getElementById('airport').value = config.airport;
+        if (config.base) {
+          document.getElementById('baseAirport').value = config.base;
+        }
+
+        successMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
+      } else {
+        errorMsg.textContent = '✗ ' + (resp.error || resp.detail || resp.raw || ('Request failed (' + response.status + ')'));
+        errorMsg.style.display = 'block';
+        errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
+      }
+    })
+    .catch(function(error) {
+      errorMsg.textContent = '✗ ' + (error.message || 'Something went wrong. Please try again.');
+      errorMsg.style.display = 'block';
+      errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
+    })
+    .finally(function() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Request';
+    });
+  });
+});
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initMap" async defer></script>
+</body>
+</html>
