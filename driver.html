@@ -1,199 +1,333 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Travylway — Driver Board</title>
-  <meta name="description" content="Driver Board for viewing open pickup requests by airport." />
-
-  <style>
-    :root { --bg:#0b1c2d; --card:#ffffff; --ink:#0f172a; --muted:#475569; --line:#e2e8f0; --accent:#2563eb; }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#f6f7fb;color:var(--ink)}
-    header{background:var(--bg);color:#fff;position:sticky;top:0;z-index:10}
-    .wrap{max-width:980px;margin:0 auto;padding:16px}
-    .top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .title{font-weight:900;letter-spacing:.2px}
-    .subtitle{opacity:.8;font-size:13px}
-    .panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.06);margin-top:14px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
-    label{font-size:12px;color:var(--muted);font-weight:700}
-    input,select,button{padding:10px 12px;border:1px solid #d7dbe7;border-radius:12px;background:#fff;font-size:14px}
-    button{cursor:pointer;border:0;background:#111;color:#fff;font-weight:900}
-    button.secondary{background:#fff;color:#111;border:1px solid #d7dbe7}
-    .grow{flex:1 1 160px}
-    .meta{font-size:12px;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .msg{margin-top:14px}
-    .ok{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;padding:10px 12px;border-radius:12px}
-    .err{background:#fff1f2;border:1px solid #fecdd3;color:#9f1239;padding:10px 12px;border-radius:12px}
-    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.06)}
-    .topline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-    .badge{font-size:12px;padding:5px 10px;border-radius:999px;background:#eef2ff;color:#243bff;font-weight:900}
-    .kv{display:grid;grid-template-columns:140px 1fr;gap:8px;margin-top:10px;font-size:14px}
-    .k{color:var(--muted)}
-    .v{color:var(--ink)}
-    a{color:inherit}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Driver Board - Travylway</title>
+<style>
+:root{
+  --bg:#2B3A4A;
+  --accent:#2563EB;
+  --text:#0F172A;
+  --light:#E5E7EB;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:var(--bg);
+  color:var(--light);
+  padding:1rem;
+}
+.container{max-width:1200px;margin:0 auto}
+h1{text-align:center;margin-bottom:2rem;color:white}
+.trips-grid{
+  display:grid;
+  gap:1.5rem;
+}
+.trip-card{
+  background:white;
+  border-radius:16px;
+  padding:1.5rem;
+  color:var(--text);
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+.trip-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1rem;
+  padding-bottom:1rem;
+  border-bottom:2px solid #e0e0e0;
+}
+.trip-id{
+  font-weight:900;
+  font-size:0.9rem;
+  color:#667eea;
+}
+.status-badge{
+  padding:0.5rem 1rem;
+  border-radius:20px;
+  font-weight:700;
+  font-size:0.85rem;
+  text-transform:uppercase;
+}
+.status-open{background:#e3f2fd;color:#1976d2}
+.status-claimed{background:#fff3cd;color:#856404}
+.status-en-route{background:#d1ecf1;color:#0c5460}
+.status-complete{background:#d4edda;color:#155724}
+.trip-details{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+.detail-item{
+  display:flex;
+  flex-direction:column;
+  gap:0.25rem;
+}
+.detail-label{
+  font-size:0.75rem;
+  font-weight:700;
+  color:#666;
+  text-transform:uppercase;
+}
+.detail-value{
+  font-size:1rem;
+  font-weight:600;
+  color:#333;
+}
+.trip-actions{
+  display:flex;
+  gap:0.75rem;
+  flex-wrap:wrap;
+}
+.btn{
+  padding:0.75rem 1.5rem;
+  border:none;
+  border-radius:10px;
+  font-weight:900;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  text-decoration:none;
+  display:inline-block;
+  text-align:center;
+}
+.btn-primary{background:#667eea;color:white}
+.btn-success{background:#25D366;color:white}
+.btn-warning{background:#ffc107;color:#333}
+.btn-complete{background:#28a745;color:white}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.loading{text-align:center;padding:3rem;color:white;font-size:1.2rem}
+.error{background:#f8d7da;color:#721c24;padding:1rem;border-radius:10px;margin:1rem 0}
+@media(max-width:768px){
+  .trip-details{grid-template-columns:1fr}
+  .trip-actions{flex-direction:column}
+  .btn{width:100%}
+}
+</style>
 </head>
-
 <body>
-  <header>
-    <div class="wrap">
-      <div class="top">
-        <div>
-          <div class="title">Travylway — Driver Board</div>
-          <div class="subtitle">Enter an airport code (DEN, LAX, etc.) to view open trips.</div>
-        </div>
-        <div style="font-weight:800;font-size:13px;opacity:.85">Live backend: travylway-api</div>
-      </div>
-    </div>
-  </header>
 
-  <main class="wrap">
-    <div class="panel">
-      <div class="row">
-        <div class="grow">
-          <label for="airport">Airport</label><br/>
-          <input id="airport" placeholder="DEN" autocomplete="off" />
-        </div>
-
-        <div>
-          <label for="status">Status</label><br/>
-          <select id="status">
-            <option value="OPEN" selected>OPEN</option>
-            <option value="CLAIMED">CLAIMED</option>
-            <option value="COMPLETED">COMPLETED</option>
-            <option value="CANCELLED">CANCELLED</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="refresh">Refresh</label><br/>
-          <select id="refresh">
-            <option value="0">Off</option>
-            <option value="5" selected>Every 5s</option>
-            <option value="10">Every 10s</option>
-            <option value="20">Every 20s</option>
-          </select>
-        </div>
-
-        <div>
-          <button id="loadBtn">Load Trips</button>
-          <button class="secondary" id="clearBtn">Clear</button>
-        </div>
-      </div>
-
-      <div class="meta">
-        <div id="lastUpdate">—</div>
-        <div style="opacity:.85">API: <a href="https://travylway-api.benterpryzes2084.workers.dev" target="_blank" rel="noopener">workers.dev</a></div>
-      </div>
-    </div>
-
-    <div class="msg" id="msg"></div>
-    <div class="grid" id="grid"></div>
-  </main>
+<div class="container">
+  <h1>🚗 Driver Board</h1>
+  
+  <div id="loading" class="loading">Loading trips...</div>
+  <div id="error" class="error" style="display:none"></div>
+  <div id="trips" class="trips-grid"></div>
+</div>
 
 <script>
-  const API_BASE = "https://travylway-api.benterpryzes2084.workers.dev";
-  const el = (id) => document.getElementById(id);
-  let timer = null;
+const API_BASE = 'https://travylway-api.benterpryzes2084.workers.dev';
 
-  function setMsg(text, kind) {
-    const box = el("msg");
-    if (!text) { box.innerHTML = ""; return; }
-    box.innerHTML = `<div class="${kind}">${escapeHtml(text)}</div>`;
-  }
-
-  function escapeHtml(s) {
-    return String(s ?? "").replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
-
-  function fmtTime(iso) {
-    if (!iso) return "—";
-    try { return new Date(iso).toLocaleString(); } catch { return iso; }
-  }
-
-  async function loadTrips() {
-    const airport = el("airport").value.trim().toUpperCase();
-    if (!airport) {
-      el("grid").innerHTML = "";
-      setMsg("Enter an airport code to load trips.", "ok");
-      return;
+async function loadTrips() {
+  try {
+    const response = await fetch(`${API_BASE}/api/trips?status=OPEN`);
+    const data = await response.json();
+    
+    document.getElementById('loading').style.display = 'none';
+    
+    if (data.ok && data.trips) {
+      displayTrips(data.trips);
+    } else {
+      showError('Failed to load trips');
     }
+  } catch (error) {
+    document.getElementById('loading').style.display = 'none';
+    showError('Error loading trips: ' + error.message);
+  }
+}
 
-    const status = el("status").value.trim().toUpperCase();
-    const url = new URL(API_BASE + "/api/trips");
-    url.searchParams.set("airport", airport);
-    url.searchParams.set("status", status);
+function displayTrips(trips) {
+  const container = document.getElementById('trips');
+  
+  if (trips.length === 0) {
+    container.innerHTML = '<p style="text-align:center;color:white;padding:2rem">No open trips available</p>';
+    return;
+  }
+  
+  container.innerHTML = trips.map(trip => createTripCard(trip)).join('');
+}
 
-    try {
-      const res = await fetch(url.toString(), { method: "GET" });
-      const data = await res.json();
+function createTripCard(trip) {
+  const statusClass = `status-${(trip.status || 'open').toLowerCase().replace('_', '-')}`;
+  const statusText = (trip.status || 'OPEN').replace('_', ' ');
+  
+  // Extract phone number from notes or use placeholder
+  const phoneMatch = trip.rider_phone || '';
+  const cleanPhone = phoneMatch.replace(/\D/g, '');
+  const displayPhone = phoneMatch || 'No phone';
+  
+  return `
+    <div class="trip-card">
+      <div class="trip-header">
+        <span class="trip-id">ID: ${trip.id.substring(0, 8)}</span>
+        <span class="status-badge ${statusClass}">${statusText}</span>
+      </div>
+      
+      <div class="trip-details">
+        <div class="detail-item">
+          <span class="detail-label">Passenger</span>
+          <span class="detail-value">${trip.created_by || 'Unknown'}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Phone</span>
+          <span class="detail-value">${displayPhone}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Rider Type</span>
+          <span class="detail-value">${trip.rider_type || 'GENERAL'}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Pickup</span>
+          <span class="detail-value">${trip.pickup_text || 'N/A'}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Dropoff</span>
+          <span class="detail-value">${trip.dropoff_text || 'N/A'}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Time</span>
+          <span class="detail-value">${formatDate(trip.pickup_time_utc)}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Trip Type</span>
+          <span class="detail-value">${trip.trip_type || 'N/A'}</span>
+        </div>
+      </div>
+      
+      ${trip.notes ? `<div style="background:#f8f9fa;padding:1rem;border-radius:8px;margin-bottom:1rem;font-size:0.9rem;white-space:pre-wrap">${trip.notes}</div>` : ''}
+      
+      <div class="trip-actions">
+        <button class="btn btn-primary" onclick="claimTrip('${trip.id}')">
+          Claim Trip
+        </button>
+        
+        <a href="https://wa.me/1${cleanPhone}?text=${encodeURIComponent(`Hi ${trip.created_by}, I'm your Travylway driver. I've claimed your trip and will contact you shortly!`)}" 
+           class="btn btn-success" 
+           target="_blank">
+          📱 Contact via WhatsApp
+        </a>
+        
+        <button class="btn btn-warning" onclick="markEnRoute('${trip.id}', '${escapeQuotes(trip.created_by)}', '${escapeQuotes(trip.pickup_text)}', '${cleanPhone}')">
+          🚗 En Route
+        </button>
+        
+        <button class="btn btn-complete" onclick="markComplete('${trip.id}', '${escapeQuotes(trip.created_by)}', '${cleanPhone}')">
+          ✓ Complete Trip
+        </button>
+      </div>
+    </div>
+  `;
+}
 
-      if (!res.ok || !data.ok) {
-        setMsg("API error: " + (data.error || res.statusText || "unknown"), "err");
-        return;
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  });
+}
+
+function escapeQuotes(str) {
+  return (str || '').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+async function claimTrip(tripId) {
+  const driverName = prompt('Enter your name:');
+  if (!driverName) return;
+  
+  try {
+    const response = await fetch(`${API_BASE}/api/trips/${tripId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'CLAIMED',
+        driver_name: driverName
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.ok) {
+      alert('Trip claimed successfully!');
+      loadTrips();
+    } else {
+      alert('Failed to claim trip: ' + (data.error || 'Unknown error'));
+    }
+  } catch (error) {
+    alert('Error claiming trip: ' + error.message);
+  }
+}
+
+function markEnRoute(tripId, passengerName, pickupAddress, phone) {
+  // Update status in database
+  fetch(`${API_BASE}/api/trips/${tripId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: 'EN_ROUTE' })
+  }).then(response => response.json())
+    .then(data => {
+      if (data.ok) {
+        // Open WhatsApp with en route message
+        const message = `Hi ${passengerName}, I'm on my way to pick you up at ${pickupAddress}. I'll be there shortly!`;
+        window.open(`https://wa.me/1${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        
+        // Reload trips
+        loadTrips();
       }
+    })
+    .catch(error => {
+      alert('Error updating trip: ' + error.message);
+    });
+}
 
-      renderTrips(data.trips || []);
-      el("lastUpdate").textContent = "Last update: " + new Date().toLocaleTimeString();
+function markComplete(tripId, passengerName, phone) {
+  if (!confirm('Mark this trip as complete?')) return;
+  
+  // Update status in database
+  fetch(`${API_BASE}/api/trips/${tripId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: 'COMPLETE' })
+  }).then(response => response.json())
+    .then(data => {
+      if (data.ok) {
+        // Open WhatsApp with completion message
+        const message = `Thank you for riding with Travylway, ${passengerName}! Have a great day! 🚗✨`;
+        window.open(`https://wa.me/1${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        
+        // Reload trips
+        loadTrips();
+      }
+    })
+    .catch(error => {
+      alert('Error completing trip: ' + error.message);
+    });
+}
 
-      if ((data.trips || []).length === 0) setMsg("No trips found for this filter.", "ok");
-      else setMsg("", "");
-    } catch (e) {
-      console.error(e);
-      setMsg("Network/API error. Check connectivity and API availability.", "err");
-    }
-  }
+function showError(message) {
+  const errorDiv = document.getElementById('error');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+}
 
-  function renderTrips(trips) {
-    const grid = el("grid");
-    grid.innerHTML = "";
+// Load trips on page load
+loadTrips();
 
-    for (const t of trips) {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="topline">
-          <div>
-            <div style="font-weight:900;">
-              ${escapeHtml(t.airport_code || "—")} — ${escapeHtml(t.direction || t.trip_type || "TRIP")}
-            </div>
-            <div style="font-size:12px;color:#64748b">Trip ID: ${escapeHtml(t.id)}</div>
-          </div>
-          <div class="badge">${escapeHtml(t.status || "—")}</div>
-        </div>
-
-        <div class="kv">
-          <div class="k">Pickup time</div><div class="v">${escapeHtml(fmtTime(t.pickup_time_utc))}</div>
-          <div class="k">Pickup</div><div class="v">${escapeHtml(t.pickup_text)}</div>
-          <div class="k">Dropoff</div><div class="v">${escapeHtml(t.dropoff_text)}</div>
-          <div class="k">Flight</div><div class="v">${escapeHtml(t.flight_number || "—")} ${t.airline ? "(" + escapeHtml(t.airline) + ")" : ""}</div>
-          <div class="k">Notes</div><div class="v">${escapeHtml(t.notes || "—")}</div>
-          <div class="k">Created by</div><div class="v">${escapeHtml(t.created_by || "—")}</div>
-          <div class="k">Created at</div><div class="v">${escapeHtml(fmtTime(t.created_at))}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    }
-  }
-
-  function setAutoRefresh() {
-    const seconds = parseInt(el("refresh").value, 10);
-    if (timer) clearInterval(timer);
-    timer = null;
-    if (seconds > 0) timer = setInterval(loadTrips, seconds * 1000);
-  }
-
-  el("loadBtn").addEventListener("click", () => { loadTrips(); setAutoRefresh(); });
-  el("clearBtn").addEventListener("click", () => { el("grid").innerHTML=""; setMsg("", ""); });
-  el("refresh").addEventListener("change", setAutoRefresh);
-
-  // Don’t auto-load until airport is entered (prevents pointless calls)
-  setMsg("Enter an airport code to load trips.", "ok");
+// Refresh every 30 seconds
+setInterval(loadTrips, 30000);
 </script>
+
 </body>
 </html>
