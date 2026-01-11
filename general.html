@@ -368,11 +368,11 @@ body{
 // ========================================
 // PRICING CONFIGURATION - GENERAL PUBLIC RATES
 // ========================================
-const BASE_FARE = 4.99;
+const BASE_FARE = 4.89;
 const PER_MILE_RATE = 1.50;
 const MINIMUM_FARE = 12;
-const MAXIMUM_FARE = 100.00;
-const FREE_MILES = 0; // First 3 miles included in base fare
+const MAXIMUM_FARE = 100;
+const FREE_MILES = 0;
 
 var map;
 var placesService;
@@ -447,6 +447,23 @@ function calculatePrice() {
                 document.getElementById('priceEstimate').style.display = 'block';
                 document.getElementById('calculatedDistance').value = distanceInMiles;
                 document.getElementById('calculatedPrice').value = price;
+
+                // Auto-populate payment info in notes
+                var paymentInfo = '💰 ESTIMATED FARE: $' + price + '\n\n';
+                paymentInfo += '📱 PAYMENT METHODS:\n';
+                paymentInfo += '• CashApp: $tway66gworld\n';
+                paymentInfo += '• Venmo: @Tway2084\n';
+                paymentInfo += '• PayPal: paypal.me/benterpryzes\n';
+                paymentInfo += '• Square: bit.ly/4snVxsl\n';
+                paymentInfo += '• Cash accepted\n\n';
+                
+                var notesField = document.getElementById('notes');
+                var currentNotes = notesField.value.trim();
+                if (currentNotes) {
+                  notesField.value = paymentInfo + '---\n' + currentNotes;
+                } else {
+                  notesField.value = paymentInfo;
+                }
 
                 calcBtn.disabled = false;
                 calcBtn.textContent = '✓ Price Calculated';
