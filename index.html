@@ -52,7 +52,7 @@ header{
 .navlinks a:hover{border-color:rgba(0,0,0,.1);background:rgba(0,0,0,.03)}
 .pill{border-color:rgba(37,99,235,.2);background:rgba(37,99,235,.06);color:var(--accent)}
 
-/* AIRPORT SEARCH HERO */
+/* HERO WITH QUOTE */
 .search-hero{
   padding:60px 0 40px;
   text-align:center;
@@ -70,86 +70,26 @@ header{
   color:var(--muted);
   font-size:1.2rem;
 }
-.airport-search-box{
-  max-width:500px;
-  margin:0 auto 20px;
-  position:relative;
-}
-.airport-input{
-  width:100%;
-  padding:1.25rem 1.5rem;
-  font-size:2rem;
-  text-align:center;
-  border:3px solid #667eea;
-  border-radius:16px;
-  text-transform:uppercase;
-  letter-spacing:8px;
-  font-weight:900;
-  color:var(--text);
-  transition:all 0.3s ease;
-  background:white;
-}
-.airport-input:focus{
-  outline:none;
-  border-color:#764ba2;
-  box-shadow:0 0 0 4px rgba(118,75,162,0.1);
-}
-.airport-input::placeholder{
-  color:#ccc;
-  letter-spacing:4px;
-  font-size:1.5rem;
-}
-.helper-text-search{
-  color:#999;
-  font-size:0.9rem;
-  margin:10px 0 20px;
-}
-.cta-button-search{
-  display:inline-block;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  color:white;
-  padding:1rem 3rem;
+.quote-box{
+  max-width:700px;
+  margin:30px auto;
+  padding:2rem;
+  background:linear-gradient(135deg, rgba(102,126,234,0.05), rgba(118,75,162,0.05));
+  border-left:4px solid #667eea;
   border-radius:12px;
-  font-size:1.2rem;
-  font-weight:900;
-  text-decoration:none;
-  transition:all 0.3s ease;
-  border:none;
-  cursor:pointer;
-  text-transform:uppercase;
-  letter-spacing:1px;
 }
-.cta-button-search:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 30px rgba(102,126,234,0.4);
-}
-.cta-button-search:disabled{
-  opacity:0.5;
-  cursor:not-allowed;
-  transform:none;
-}
-.airport-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.5rem;
-  justify-content:center;
-  margin-top:20px;
-}
-.airport-tag{
-  background:#f8f9fa;
-  padding:0.6rem 1.2rem;
-  border-radius:8px;
-  font-weight:700;
+.quote-text{
+  font-size:1.3rem;
+  font-style:italic;
   color:var(--text);
-  font-size:0.9rem;
-  cursor:pointer;
-  transition:all 0.2s ease;
-  border:2px solid transparent;
+  margin:0 0 10px;
+  line-height:1.6;
 }
-.airport-tag:hover{
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  color:white;
-  transform:translateY(-2px);
+.quote-author{
+  font-size:1rem;
+  color:var(--muted);
+  font-weight:700;
+  margin:0;
 }
 
 /* BUTTONS */
@@ -418,82 +358,6 @@ header{
   font-weight:900;
 }
 
-/* TELEGRAM SECTION */
-.telegram-card{
-  background:#fff;
-  border-radius:20px;
-  padding:2rem;
-  box-shadow:0 4px 20px rgba(0,0,0,.06);
-  color:var(--text);
-  border:1px solid var(--line);
-}
-.telegram-header{
-  display:flex;
-  align-items:center;
-  gap:1rem;
-  margin-bottom:1.5rem;
-}
-.telegram-icon{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#0088cc,#229ED9);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:2.5rem;
-}
-.telegram-title h2{
-  margin:0 0 0.25rem;
-  font-size:1.5rem;
-  color:#333;
-}
-.telegram-title p{
-  margin:0;
-  color:#666;
-  font-size:0.9rem;
-}
-.telegram-content p{
-  font-weight:600;
-  color:#333;
-  margin-bottom:0.75rem;
-}
-.telegram-content ul{
-  list-style:none;
-  padding:0;
-  margin:0 0 1.5rem;
-}
-.telegram-content li{
-  padding:0.5rem 0;
-  color:#555;
-}
-.telegram-content li:before{
-  content:"✓ ";
-  color:#0088cc;
-  font-weight:900;
-  margin-right:0.5rem;
-}
-.telegram-button{
-  display:block;
-  width:100%;
-  padding:1rem;
-  background:linear-gradient(135deg,#0088cc,#229ED9);
-  color:white;
-  border:none;
-  border-radius:12px;
-  font-size:1.1rem;
-  font-weight:900;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  text-transform:uppercase;
-  text-align:center;
-  text-decoration:none;
-}
-.telegram-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 30px rgba(0,136,204,0.4);
-}
-
 /* SECTION HEADERS */
 .sectionHeader{
   text-align:center;
@@ -516,13 +380,14 @@ footer a{color:var(--accent)}
 footer a:hover{text-decoration:underline}
 
 @media(max-width:768px){
-  .airport-input{
-    font-size:1.5rem;
-    letter-spacing:4px;
-    padding:1rem;
-  }
   .search-hero h1{
     font-size:1.8rem;
+  }
+  .quote-box{
+    padding:1.5rem;
+  }
+  .quote-text{
+    font-size:1.1rem;
   }
 }
 </style>
@@ -536,37 +401,25 @@ footer a:hover{text-decoration:underline}
     <nav class="navlinks">
       <a href="/" class="pill">Home</a>
       <a href="/driver.html">Driver Board</a>
-      <a href="/crew.html" target="_blank">Pickup Requests</a>
-      <a href="#reviews">Reviews</a>
-      <a class="pill" href="https://wa.me/17204748851?text=Request%20Pickup" target="_blank">WhatsApp</a>
+      <a href="/crew.html">Crew Pickup</a>
+      <a href="/airport.html">Airport Rides</a>
+      <a href="/general.html">General Rides</a>
     </nav>
   </div>
 </header>
 
 <main>
 
-<!-- AIRPORT SEARCH HERO -->
+<!-- HERO WITH QUOTE -->
 <div class="wrap search-hero">
   <h1>✈️ TRAVYLWAY</h1>
   <p>Airport Transportation for Airline Crew</p>
   
-  <div class="airport-search-box">
-    <input 
-      type="text" 
-      id="airportCode" 
-      class="airport-input" 
-      placeholder="DEN"
-      maxlength="3"
-      autocomplete="off"
-    >
+  <div class="quote-box">
+    <p class="quote-text">"Do unto others as you would have them do unto you."</p>
+    <p class="quote-author">— Matthew 7:12</p>
   </div>
-  <p class="helper-text-search">Enter your 3-letter airport code</p>
-  
-  <button class="cta-button-search" id="requestPickup" disabled>
-    Request Pickup
-  </button>
-  
- 
+</div>
 
 <div class="wrap hero" style="display:flex;justify-content:center;">
   <div class="heroGrid" style="max-width:860px;width:100%;">
@@ -581,14 +434,14 @@ footer a:hover{text-decoration:underline}
       </p>
 
       <div class="actions" style="justify-content:center;gap:10px;">
-        <a class="btn primary" href="/crew.html" target="_blank">Air Crew Pickup Request</a>
-        <a class="btn secondary" href="/crew.html" target="_blank">Pickup Request</a>
-        <a class="btn secondary" href="/driver-login.html" target="_blank">Driver Login</a>
+        <a class="btn primary" href="/crew.html">Airline Crew</a>
+        <a class="btn secondary" href="/airport.html">Airport Rides</a>
+        <a class="btn secondary" href="/driver-login.html">Driver Login</a>
         <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
       </div>
 
       <div class="smallNote" style="margin-top:14px;max-width:560px;margin-left:auto;margin-right:auto;">
-        Pickup Requests via WhatsApp is temporary while the pickup request portal is being finalized.
+        Request rides online or via WhatsApp for immediate assistance.
       </div>
 
     </section>
@@ -635,44 +488,6 @@ footer a:hover{text-decoration:underline}
       </a>
     </div>
 
-    <!-- DENVER METRO SERVICE - CURRENT CUSTOMERS ONLY -->
-<div class="sectionHeader">
-  <h4>Denver Metro Service - Current Customers Only</h4>
-  <p>Exclusive service areas for existing Travylway clients</p>
-</div>
-
-<div class="denver-grid">
-  
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
-    <div class="metro-icon">🔒</div>
-    <h4>Aurora North</h4>
-    <p>North Aurora Area</p>
-    <span class="metro-badge">Book Ride</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
-    <div class="metro-icon">🔒</div>
-    <h4>Boulder</h4>
-    <p>Boulder Metro Area</p>
-    <span class="metro-badge">Book Ride</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
-    <div class="metro-icon">🔒</div>
-    <h4>Denver Metro</h4>
-    <p>Denver Metro Area</p>
-    <span class="metro-badge">Book Ride</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
-    <div class="metro-icon">🔒</div>
-    <h4>E-470 Corridor</h4>
-    <p>East Metro Toll Route</p>
-    <span class="metro-badge">Book Ride</span>
-  </a>
-
-</div>
-    
     <!-- DENVER BASED FLIGHT ATTENDANTS -->
 <div class="sectionHeader">
   <h4>Denver Based Flight Attendants</h4>
@@ -681,21 +496,21 @@ footer a:hover{text-decoration:underline}
 
 <div class="denver-grid">
   
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
+  <a href="/crew.html?location=den" class="metro-card">
     <div class="metro-icon">🏠</div>
     <h4>Brighton Crash Pads</h4>
     <p>Northeast Metro Area</p>
     <span class="metro-badge">Book Ride</span>
   </a>
 
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
+  <a href="/crew.html?location=den" class="metro-card">
     <div class="metro-icon">🏠</div>
     <h4>Denver Crash Pads</h4>
     <p>Central Denver</p>
     <span class="metro-badge">Book Ride</span>
   </a>
 
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
+  <a href="/crew.html?location=den" class="metro-card">
     <div class="metro-icon">🏠</div>
     <h4>Commerce City Crash Pads</h4>
     <p>Northeast Metro</p>
@@ -711,326 +526,6 @@ footer a:hover{text-decoration:underline}
 
 </div>
 
-<!-- MAJOR AIRPORTS -->
-<div class="sectionHeader">
-  <h3>Major Airports</h3>
-  <p>Premium airport transportation for airline crew at 44+ major hubs</p>
-</div>
-
-<div class="denver-grid">
-  
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('AMA')">
-    <div class="metro-icon">✈️</div>
-    <h4>AMA - Amarillo</h4>
-    <p>Rick Husband Amarillo</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('ANC')">
-    <div class="metro-icon">✈️</div>
-    <h4>ANC - Anchorage</h4>
-    <p>Ted Stevens Anchorage</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('ATL')">
-    <div class="metro-icon">✈️</div>
-    <h4>ATL - Atlanta</h4>
-    <p>Hartsfield-Jackson</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('BHM')">
-    <div class="metro-icon">✈️</div>
-    <h4>BHM - Birmingham</h4>
-    <p>Birmingham-Shuttlesworth</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('BOS')">
-    <div class="metro-icon">✈️</div>
-    <h4>BOS - Boston</h4>
-    <p>Logan International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('BUR')">
-    <div class="metro-icon">✈️</div>
-    <h4>BUR - Burbank</h4>
-    <p>Hollywood Burbank Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('BWI')">
-    <div class="metro-icon">✈️</div>
-    <h4>BWI - Baltimore</h4>
-    <p>Baltimore/Washington</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('CLT')">
-    <div class="metro-icon">✈️</div>
-    <h4>CLT - Charlotte</h4>
-    <p>Charlotte Douglas</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('COS')">
-    <div class="metro-icon">✈️</div>
-    <h4>COS - Colorado Springs</h4>
-    <p>Colorado Springs Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DCA')">
-    <div class="metro-icon">✈️</div>
-    <h4>DCA - Washington</h4>
-    <p>Ronald Reagan National</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DEN')">
-    <div class="metro-icon">✈️</div>
-    <h4>DEN - Denver</h4>
-    <p>Denver International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DFW')">
-    <div class="metro-icon">✈️</div>
-    <h4>DFW - Dallas</h4>
-    <p>Dallas/Fort Worth</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('DTW')">
-    <div class="metro-icon">✈️</div>
-    <h4>DTW - Detroit</h4>
-    <p>Detroit Metro Wayne</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('EWR')">
-    <div class="metro-icon">✈️</div>
-    <h4>EWR - Newark</h4>
-    <p>Newark Liberty</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('FLL')">
-    <div class="metro-icon">✈️</div>
-    <h4>FLL - Fort Lauderdale</h4>
-    <p>Fort Lauderdale-Hollywood</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('HNL')">
-    <div class="metro-icon">✈️</div>
-    <h4>HNL - Honolulu</h4>
-    <p>Honolulu International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('HOU')">
-    <div class="metro-icon">✈️</div>
-    <h4>HOU - Houston</h4>
-    <p>William P. Hobby Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('IAD')">
-    <div class="metro-icon">✈️</div>
-    <h4>IAD - Washington</h4>
-    <p>Dulles International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('IAH')">
-    <div class="metro-icon">✈️</div>
-    <h4>IAH - Houston</h4>
-    <p>George Bush Intercontinental</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('JAX')">
-    <div class="metro-icon">✈️</div>
-    <h4>JAX - Jacksonville</h4>
-    <p>Jacksonville International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('JFK')">
-    <div class="metro-icon">✈️</div>
-    <h4>JFK - New York</h4>
-    <p>John F. Kennedy</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('LAS')">
-    <div class="metro-icon">✈️</div>
-    <h4>LAS - Las Vegas</h4>
-    <p>Harry Reid International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('LAX')">
-    <div class="metro-icon">✈️</div>
-    <h4>LAX - Los Angeles</h4>
-    <p>Los Angeles International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('LGA')">
-    <div class="metro-icon">✈️</div>
-    <h4>LGA - New York</h4>
-    <p>LaGuardia Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('LIT')">
-    <div class="metro-icon">✈️</div>
-    <h4>LIT - Little Rock</h4>
-    <p>Bill and Hillary Clinton</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('MCO')">
-    <div class="metro-icon">✈️</div>
-    <h4>MCO - Orlando</h4>
-    <p>Orlando International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('MDW')">
-    <div class="metro-icon">✈️</div>
-    <h4>MDW - Chicago</h4>
-    <p>Midway International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('MIA')">
-    <div class="metro-icon">✈️</div>
-    <h4>MIA - Miami</h4>
-    <p>Miami International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('MSP')">
-    <div class="metro-icon">✈️</div>
-    <h4>MSP - Minneapolis</h4>
-    <p>Minneapolis-St. Paul</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('MSY')">
-    <div class="metro-icon">✈️</div>
-    <h4>MSY - New Orleans</h4>
-    <p>Louis Armstrong New Orleans</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('OKC')">
-    <div class="metro-icon">✈️</div>
-    <h4>OKC - Oklahoma City</h4>
-    <p>Will Rogers World Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('ORD')">
-    <div class="metro-icon">✈️</div>
-    <h4>ORD - Chicago</h4>
-    <p>O'Hare International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('PDX')">
-    <div class="metro-icon">✈️</div>
-    <h4>PDX - Portland</h4>
-    <p>Portland International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('PHL')">
-    <div class="metro-icon">✈️</div>
-    <h4>PHL - Philadelphia</h4>
-    <p>Philadelphia International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('PHX')">
-    <div class="metro-icon">✈️</div>
-    <h4>PHX - Phoenix</h4>
-    <p>Sky Harbor International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('SAN')">
-    <div class="metro-icon">✈️</div>
-    <h4>SAN - San Diego</h4>
-    <p>San Diego International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('SAF')">
-    <div class="metro-icon">✈️</div>
-    <h4>SAF - Santa Fe</h4>
-    <p>Santa Fe Municipal Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('SAT')">
-    <div class="metro-icon">✈️</div>
-    <h4>SAT - San Antonio</h4>
-    <p>San Antonio International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('SEA')">
-    <div class="metro-icon">✈️</div>
-    <h4>SEA - Seattle</h4>
-    <p>Seattle-Tacoma</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('SFO')">
-    <div class="metro-icon">✈️</div>
-    <h4>SFO - San Francisco</h4>
-    <p>San Francisco International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('SLC')">
-    <div class="metro-icon">✈️</div>
-    <h4>SLC - Salt Lake City</h4>
-    <p>Salt Lake City International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('SNA')">
-    <div class="metro-icon">✈️</div>
-    <h4>SNA - Orange County</h4>
-    <p>John Wayne Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-  <a href="/crew.html" class="metro-card" onclick="selectAirport('TPA')">
-    <div class="metro-icon">✈️</div>
-    <h4>TPA - Tampa</h4>
-    <p>Tampa International</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
- <a href="/crew.html" class="metro-card" onclick="selectAirport('TUL')">
-    <div class="metro-icon">✈️</div>
-    <h4>TUL - Tulsa</h4>
-    <p>Tulsa International Airport</p>
-    <span class="metro-badge">Book Now</span>
-  </a>
-
-
-
-  
-</div>
     <!-- PAYMENT METHODS -->
     <div class="sectionHeader">
       <h2>Payment Methods</h2>
@@ -1123,42 +618,18 @@ footer a:hover{text-decoration:underline}
       </div>
     </div>
 
-    <!-- TELEGRAM FOR DRIVERS -->
+    <!-- TELEGRAM CONTACT -->
     <div class="sectionHeader">
-      <h2>Contact Us on Telegram</h2>
-      <p>Connect with us for trip updates and support</p>
+      <h2>Stay Connected</h2>
+      <p>Get instant trip updates and support</p>
     </div>
 
-    <div style="max-width: 600px; margin: 0 auto;">
-      <div class="telegram-card">
-        <div class="telegram-header">
-          <div class="telegram-icon">📱</div>
-          <div class="telegram-title">
-            <h2>Telegram</h2>
-            <p>Instant notifications • Trip updates • Direct support</p>
-          </div>
-        </div>
-        <div class="telegram-content">
-          <p>Message us on Telegram for:</p>
-          <ul>
-            <li>Real-time trip notifications</li>
-            <li>Instant dispatch updates</li>
-            <li>Direct communication</li>
-            <li>Get immediate support</li>
-          </ul>
-        </div>
-        <div class="form-group">
-          <label for="telegram-username">Telegram Username</label>
-          <input 
-            type="text" 
-            id="telegram-username" 
-            placeholder="@Benterpryzes"
-            value="@Benterpryzes"
-            readonly
-          >
-        </div>
-        <a href="https://t.me/Benterpryzes" class="telegram-button" target="_blank">Message on Telegram</a>
-        <div class="helper-text">Click to open Telegram and start chatting</div>
+    <div style="max-width: 500px; margin: 0 auto; text-align: center;">
+      <div style="background:#fff; border-radius:16px; padding:2rem; box-shadow:0 4px 20px rgba(0,0,0,.06); border:1px solid var(--line);">
+        <div style="width:60px; height:60px; margin:0 auto 1rem; border-radius:50%; background:linear-gradient(135deg,#0088cc,#229ED9); display:flex; align-items:center; justify-content:center; font-size:2rem;">📱</div>
+        <h3 style="margin:0 0 0.5rem; color:#333;">Message Us on Telegram</h3>
+        <p style="margin:0 0 1.5rem; color:#666; font-size:0.9rem;">Real-time updates • Direct support • Instant notifications</p>
+        <a href="https://t.me/Benterpryzes" class="telegram-button" target="_blank" style="display:inline-block; padding:0.9rem 2rem; background:linear-gradient(135deg,#0088cc,#229ED9); color:white; text-decoration:none; border-radius:10px; font-weight:900; transition:all 0.3s ease;">@Benterpryzes</a>
       </div>
     </div>
 
@@ -1168,61 +639,12 @@ footer a:hover{text-decoration:underline}
 <footer>
   <div class="wrap">
     <a href="/driver.html">Driver Board</a> •
-    <a href="/crew.html">Pickup Requests</a> •
+    <a href="/crew.html">Airline Crew</a> •
+    <a href="/airport.html">Airport Rides</a> •
     <a href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
     <div style="margin-top:8px;">Built for air crew. Designed for reliability.</div>
   </div>
 </footer>
-
-<!-- AIRPORT SEARCH SCRIPT -->
-<script>
-var airportInput = document.getElementById('airportCode');
-var requestBtn = document.getElementById('requestPickup');
-
-// Auto-uppercase and validate
-airportInput.addEventListener('input', function(e) {
-  var value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
-  e.target.value = value;
-  
-  if (value.length === 3) {
-    requestBtn.disabled = false;
-  } else {
-    requestBtn.disabled = true;
-  }
-});
-
-// Focus input on load
-window.addEventListener('load', function() {
-  airportInput.focus();
-});
-
-// Handle enter key
-airportInput.addEventListener('keypress', function(e) {
-  if (e.key === 'Enter' && airportInput.value.length === 3) {
-    goToBooking();
-  }
-});
-
-// Request pickup button
-requestBtn.addEventListener('click', goToBooking);
-
-function goToBooking() {
-  var code = airportInput.value.toUpperCase();
-  if (code.length === 3) {
-    // Store airport code for pre-fill
-    localStorage.setItem('airportCode', code);
-    // Redirect to booking page
-    window.location.href = '/crew.html';
-  }
-}
-
-// Quick select airport
-function selectAirport(code) {
-  airportInput.value = code;
-  airportInput.dispatchEvent(new Event('input'));
-  requestBtn.disabled = false;
-}
-</script>
 
 <!-- Tawk.to -->
 <script type="text/javascript">
