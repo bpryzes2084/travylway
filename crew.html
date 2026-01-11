@@ -83,23 +83,6 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 <small>Include street, city, state, and zip code</small>
 </div>
 
-<!-- GREEN VALLEY RANCH DROPDOWN (NOW ALWAYS VISIBLE) -->
-<div class="form-group" id="gvrDropdown" style="margin-top:-1rem; margin-bottom:1.5rem;">
-  <label for="gvrAddress" style="color:#1565c0; font-weight:900;">🏠 Select Your Green Valley Ranch Crash Pad</label>
-  <select id="gvrAddress" style="width:100%; padding:0.75rem; border:2px solid #2196f3; border-radius:10px; font-size:1rem; font-weight:600;">
-    <option value="">-- Select Your Crash Pad Address --</option>
-    <option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd</option>
-    <option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St</option>
-    <option value="5800 Tower Rd, Denver, CO 80249">5800 Tower Rd</option>
-    <option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr</option>
-    <option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl</option>
-    <option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave</option>
-    <option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir</option>
-  </select>
-  <small style="color:#1565c0; font-size:0.85rem; display:block; margin-top:0.5rem; font-weight:600;">
-    ✓ Choose your crash pad address, then click Calculate Distance & Price below
-  </small>
-</div>
 
 <div class="form-group">
 <label for="airport">Airport <span class="required">*</span></label>
@@ -114,6 +97,26 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;backgro
 <option value="pickup">Airport Pickup (arriving flight)</option>
 <option value="dropoff">Airport Drop-off (departing flight)</option>
 </select>
+</div>
+
+<!-- CREW VERIFICATION FIELDS -->
+<div class="form-group" id="baseAirportGroup">
+<label for="baseAirport">What's Your Base? <span class="required">*</span></label>
+<input type="text" id="baseAirport" name="baseAirport" placeholder="Enter your base airport code" required style="text-transform:uppercase">
+<small>Your airline's home base airport (e.g., DEN, TPA, PHX, ORD, etc.)</small>
+</div>
+
+<div class="form-group">
+<label for="tripType">Trip Type <span class="required">*</span></label>
+<select id="tripType" name="tripType" required>
+<option value="">-- Select Trip Type --</option>
+<option value="returning">Returning from trip to my base</option>
+<option value="commuting-to">🛫 Commuting TO my base for work</option>
+<option value="commuting-from">🏠 Commuting FROM my base (going home)</option>
+<option value="deadheading">✈️ Deadheading</option>
+<option value="positioning">🔄 Positioning flight</option>
+</select>
+<small>This helps us understand your travel situation</small>
 </div>
 
 <button type="button" class="calc-btn" id="calcBtn">📍 Calculate Distance & Price</button>
@@ -183,12 +186,102 @@ function initMap() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  var form = document.getElementById('pickupForm');
+  // ========================================
+  // LOCATION-BASED CONFIGURATION
+  // ========================================
+  const urlParams = new URLSearchParams(window.location.search);
+  const location = urlParams.get('location');
 
-  // Always allow dropdown selection to fill address
-  document.getElementById('gvrAddress').addEventListener('change', function() {
-    if (this.value) document.getElementById('address').value = this.value;
-  });
+  // Location-specific settings
+  const locationConfig = {
+    'gvr': { 
+      airport: 'Denver International Airport', 
+      airportCode: 'DEN',
+      base: 'DEN', 
+      name: 'Denver - Green Valley Ranch'
+    },
+    'den': { 
+      airport: 'Denver International Airport', 
+      airportCode: 'DEN',
+      base: 'DEN', 
+      name: 'Denver'
+    },
+    'ord': { 
+      airport: "Chicago O'Hare International Airport", 
+      airportCode: 'ORD',
+      base: 'ORD', 
+      name: 'Chicago'
+    },
+    'phx': { 
+      airport: 'Phoenix Sky Harbor International Airport', 
+      airportCode: 'PHX',
+      base: 'PHX', 
+      name: 'Phoenix'
+    },
+    'atl': { 
+      airport: 'Hartsfield-Jackson Atlanta International Airport', 
+      airportCode: 'ATL',
+      base: 'ATL', 
+      name: 'Atlanta'
+    },
+    'lax': { 
+      airport: 'Los Angeles International Airport', 
+      airportCode: 'LAX',
+      base: 'LAX', 
+      name: 'Los Angeles'
+    },
+    'sfo': { 
+      airport: 'San Francisco International Airport', 
+      airportCode: 'SFO',
+      base: 'SFO', 
+      name: 'San Francisco'
+    },
+    'jfk': { 
+      airport: 'John F. Kennedy International Airport', 
+      airportCode: 'JFK',
+      base: 'JFK', 
+      name: 'New York JFK'
+    },
+    'ewr': { 
+      airport: 'Newark Liberty International Airport', 
+      airportCode: 'EWR',
+      base: 'EWR', 
+      name: 'Newark'
+    },
+    'mia': { 
+      airport: 'Miami International Airport', 
+      airportCode: 'MIA',
+      base: 'MIA', 
+      name: 'Miami'
+    }
+  };
+
+  const config = locationConfig[location] || { 
+    airport: 'Denver International Airport', 
+    airportCode: 'DEN',
+    base: null, 
+    name: null
+  };
+
+  // Apply location-specific configuration
+  // Auto-fill airport
+  document.getElementById('airport').value = config.airport;
+
+  // Handle base airport field
+  if (config.base) {
+    document.getElementById('baseAirport').value = config.base;
+    document.getElementById('baseAirport').readOnly = true;
+    document.getElementById('baseAirport').style.backgroundColor = '#f0f0f0';
+    document.querySelector('#baseAirportGroup small').textContent = 'Base airport for this location';
+  }
+
+  // Store config for later use
+  window.locationConfig = config;
+
+  // ========================================
+  // FORM LOGIC
+  // ========================================
+  var form = document.getElementById('pickupForm');
 
   // Hidden fields
   var distanceField = document.createElement('input');
@@ -285,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
               }
             });
           } else {
-            alert('Could not find airport.\n\nPlease try: "Denver International Airport, CO"');
+            alert('Could not find airport.\n\nPlease try the full airport name.');
             calcBtn.disabled = false;
             calcBtn.textContent = '📍 Calculate Distance & Price';
           }
@@ -300,12 +393,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('calcBtn').addEventListener('click', calculatePrice);
 
-  // -------------------------------
-  // SUBMIT (FIXED)
-  // - POST to /api/trips (not /add-trip)
-  // - send required field names
-  // - display real backend errors
-  // -------------------------------
+  // ========================================
+  // FORM SUBMISSION
+  // ========================================
   document.getElementById('pickupForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -326,14 +416,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var payload = {
       created_by: data.name || 'crew',
-      rider_phone: data.phone || '',  // 
+      rider_phone: data.phone || '',
       pickup_text: data.address || '',
-      dropoff_text: data.airport || 'Denver International Airport',
+      dropoff_text: data.airport || config.airport,
       pickup_time_utc: new Date().toISOString(),
       trip_type: 'AIRPORT',
       rider_type: 'CREW',
       direction: data.serviceType === 'pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
-      airport_code: 'DEN',
+      airport_code: config.airportCode || 'DEN',
+      base_airport: data.baseAirport ? data.baseAirport.toUpperCase() : config.base,
+      crew_trip_type: data.tripType || null,
       flight_number: data.flightNumber || null,
       airline: data.airline || null,
       notes: data.notes || null
@@ -353,7 +445,10 @@ document.addEventListener('DOMContentLoaded', function() {
         successMsg.style.display = 'block';
         e.target.reset();
         document.getElementById('priceEstimate').style.display = 'none';
-        document.getElementById('airport').value = 'Denver International Airport';
+        document.getElementById('airport').value = config.airport;
+        if (config.base) {
+          document.getElementById('baseAirport').value = config.base;
+        }
 
         successMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
       } else {
