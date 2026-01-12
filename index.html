@@ -358,6 +358,62 @@ header{
   font-weight:900;
 }
 
+/* REVIEWS */
+.reviews-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1.5rem;
+  margin:24px 0;
+}
+@media(max-width:900px){.reviews-grid{grid-template-columns:1fr}}
+
+.review-card{
+  background:#fff;
+  border-radius:16px;
+  padding:1.5rem;
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
+  border:1px solid var(--line);
+  transition:.18s;
+}
+.review-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.1)}
+
+.stars{
+  font-size:1.2rem;
+  margin-bottom:0.75rem;
+  color:#fbbf24;
+}
+.review-text{
+  color:#374151;
+  font-size:0.95rem;
+  line-height:1.6;
+  margin:0 0 1rem;
+  font-style:italic;
+}
+.review-author{
+  color:#6b7280;
+  font-size:0.85rem;
+  font-weight:700;
+  margin:0;
+}
+
+/* REVIEW CTA BUTTON */
+.review-cta-button{
+  display:inline-block;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  color:#fff;
+  padding:1rem 3rem;
+  border-radius:12px;
+  font-size:1.2rem;
+  font-weight:900;
+  text-decoration:none;
+  transition:all 0.3s ease;
+  box-shadow:0 4px 20px rgba(251,191,36,0.3);
+}
+.review-cta-button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(251,191,36,0.5);
+}
+
 /* SECTION HEADERS */
 .sectionHeader{
   text-align:center;
@@ -400,10 +456,10 @@ footer a:hover{text-decoration:underline}
     <div class="brand"><span class="logoDot"></span>Travylway</div>
     <nav class="navlinks">
       <a href="/" class="pill">Home</a>
-      <a href="/driver.html">Driver Board</a>
-      <a href="/crew.html">Crew Pickup</a>
-      <a href="/airport.html">Airport Rides</a>
-      <a href="/general.html">General Rides</a>
+      <a href="/driver.html" target="_blank">Driver Board</a>
+      <a href="/crew.html" target="_blank">Crew Pickup</a>
+      <a href="/airport.html" target="_blank">Airport Rides</a>
+      <a href="/general.html" target="_blank">General Rides</a>
     </nav>
   </div>
 </header>
@@ -412,11 +468,12 @@ footer a:hover{text-decoration:underline}
 
 <!-- HERO WITH QUOTE -->
 <div class="wrap search-hero">
-  <h3>✈️ TRAVYLWAY</h3>
-    
+  <h1>✈️ TRAVYLWAY</h1>
+  <p>Airport Transportation for Airline Crew</p>
+  
   <div class="quote-box">
     <p class="quote-text">"Do unto others as you would have them do unto you."</p>
-    <p class="quote-author"> Luke 6:31
+    <p class="quote-author">— Matthew 7:12</p>
   </div>
 </div>
 
@@ -487,43 +544,78 @@ footer a:hover{text-decoration:underline}
       </a>
     </div>
 
-    <!-- DENVER BASED FLIGHT ATTENDANTS -->
-<div class="sectionHeader">
-  <h4>Denver Based Flight Attendants</h4>
-  <p>Crash pad locations and crew housing near DEN</p>
-</div>
+    <!-- CUSTOMER REVIEWS -->
+    <div class="sectionHeader">
+      <h2>What Our Customers Say</h2>
+      <p>Real reviews from flight attendants, pilots, and travelers</p>
+    </div>
 
-<div class="denver-grid">
-  
-  <a href="/crew.html?location=den" class="metro-card">
-    <div class="metro-icon">🏠</div>
-    <h4>Brighton Crash Pads</h4>
-    <p>Northeast Metro Area</p>
-    <span class="metro-badge">Book Ride</span>
-  </a>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"Clay is hands down the best driver I've had! He's incredibly punctual, professional, and genuinely cares about his riders. Whether it's an airport drop-off or getting me home, I always feel safe and taken care of."</p>
+        <p class="review-author">— Israt T., Frequent Traveler</p>
+      </div>
 
-  <a href="/crew.html?location=den" class="metro-card">
-    <div class="metro-icon">🏠</div>
-    <h4>Denver Crash Pads</h4>
-    <p>Central Denver</p>
-    <span class="metro-badge">Book Ride</span>
-  </a>
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"Clayton is so consistent and I love that I can always count on him to get me where I need to go! Even when I sit reserve in Denver, Clay makes it a point to communicate and be available!"</p>
+        <p class="review-author">— Andrea B. & Beth M., Flight Attendants</p>
+      </div>
 
-  <a href="/crew.html?location=den" class="metro-card">
-    <div class="metro-icon">🏠</div>
-    <h4>Commerce City Crash Pads</h4>
-    <p>Northeast Metro</p>
-    <span class="metro-badge">Book Ride</span>
-  </a>
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"I had a great experience to and from the airport. Communication was clear and timely, pickup was smooth, and he was attentive and professional the whole time. The car was spotless, and the ride was comfortable. I'd absolutely book again!"</p>
+        <p class="review-author">— Jen</p>
+      </div>
 
- <a href="/crew.html?location=gvr" class="metro-card">
-  <div class="metro-icon">🏠</div>
-  <h4>Green Valley Ranch Crash Pads</h4>
-  <p>East Aurora Area - 7 Locations</p>
-  <span class="metro-badge">Book Ride</span>
-</a>
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"Clay is amazing when it comes to airport runs. He tracks your flight, keeps in touch the whole time, and is super flexible if your flight gets delayed or even canceled. It takes so much stress off knowing he's handling the timing."</p>
+        <p class="review-author">— Israt T.</p>
+      </div>
 
-</div>
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"Love this Service, excellent communication, five star across the board better than Uber. Clay is reliable and always communicates if things change with flights. We always book with him!!"</p>
+        <p class="review-author">— Jay L. & Shannon</p>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"We are forever grateful for Clayton and his amazing service. He checks in before and keeps us on schedule! Always on time, great prices, best driver. It's a big thing to trust someone so much for myself and my family."</p>
+        <p class="review-author">— Di, Tom & Diana S.</p>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"Clayton provides outstanding service for our family when we travel to and from Denver. He is reliable, personable, and knowledgeable about various routes to and from DIA. His professionalism and expert navigation skills are evident even before you are in the car."</p>
+        <p class="review-author">— Debra T. & Joann A.</p>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">"Clay is professional, reliable, punctual, friendly, and goes above and beyond with exceptional service. He personalizes your experience and keeps an eye on your flight for any changes. You'll never have a more tailored ride like this with a rideshare service!"</p>
+        <p class="review-author">— Tyffany</p>
+      </div>
+    </div>
+
+    <!-- LEAVE A REVIEW -->
+    <div class="sectionHeader" style="margin-top:3rem">
+      <h2>📝 Share Your Experience</h2>
+      <p>Your feedback helps us serve you better</p>
+    </div>
+
+    <div style="max-width:600px; margin:2rem auto; text-align:center;">
+      <a href="https://reviews.setmore.com/v1/accounts/72e71731-01cd-44bb-80cc-2f70189c0449/reviews/write-review" 
+         target="_blank" 
+         class="review-cta-button">
+        ⭐ Leave a Review
+      </a>
+      <p style="margin-top:1.5rem; color:#666; font-size:0.9rem;">
+        We appreciate your feedback and read every review!
+      </p>
+    </div>
 
     <!-- PAYMENT METHODS -->
     <div class="sectionHeader">
