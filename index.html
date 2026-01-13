@@ -52,7 +52,7 @@ header{
 .navlinks a:hover{border-color:rgba(0,0,0,.1);background:rgba(0,0,0,.03)}
 .pill{border-color:rgba(37,99,235,.2);background:rgba(37,99,235,.06);color:var(--accent)}
 
-/* HERO WITH QUOTE */
+/* HERO */
 .search-hero{
   padding:60px 0 40px;
   text-align:center;
@@ -445,27 +445,27 @@ footer a:hover{text-decoration:underline}
 
 <main>
 
-<!-- HERO WITH QUOTE -->
+<!-- HERO -->
 <div class="wrap search-hero">
-  <h1>✈️ TRAVYLWAY</h1>
-  <p>Airport Transportation for Airline Crew, Airport Employees, General Travelers & Point-to-Point</p>
+  <h1 data-i18n="hero.title">✈️ TRAVYLWAY</h1>
+  <p data-i18n="hero.subtitle">Airport Transportation for Airline Crew, Airport Employees, General Travelers & Point-to-Point</p>
 </div>
 
 <div class="wrap hero" style="display:flex;justify-content:center;">
   <div class="heroGrid" style="max-width:860px;width:100%;">
     <section class="heroCard hero" style="text-align:center;padding:22px 20px;">
       
-      <h3 style="margin-top:0;color:var(--text)">
+      <h3 style="margin-top:0;color:var(--text)" data-i18n="hero.tagline">
         Professional transportation for everyone who needs reliable rides.
       </h3>
 
-      <p style="margin:8px auto 16px;max-width:520px;">
-        No surge chaos. No roulette ETAs. Just on-time rides.
+      <p style="margin:8px auto 16px;max-width:520px;" data-i18n="hero.description">
+        No surge pricing. No roulette ETAs. Just on-time rides.
       </p>
 
       <div class="actions" style="justify-content:center;gap:10px;">
-        <a class="btn primary" href="/crew.html">Airline Crew</a>
-        <a class="btn secondary" href="/airport.html">Airport Rides</a>
+        <a class="btn primary" href="/crew.html" data-i18n="service.crew.button">Airline Crew</a>
+        <a class="btn secondary" href="/airport.html" data-i18n="service.airport.button">Airport Rides</a>
         <a class="btn secondary" href="/driver-login.html">Driver Login</a>
         <a class="btn whatsapp" href="https://wa.me/17204748851?text=Request%20Trips" target="_blank">WhatsApp</a>
       </div>
@@ -520,8 +520,8 @@ footer a:hover{text-decoration:underline}
 
     <!-- CUSTOMER REVIEWS -->
     <div class="sectionHeader">
-      <h2>What Our Customers Say</h2>
-      <p>Real reviews from flight attendants, pilots, and travelers</p>
+      <h2 data-i18n="reviews.title">What Our Customers Say</h2>
+      <p data-i18n="reviews.subtitle">Real reviews from flight attendants, pilots, and travelers</p>
     </div>
 
     <div class="reviews-grid">
@@ -576,17 +576,18 @@ footer a:hover{text-decoration:underline}
 
     <!-- LEAVE A REVIEW -->
     <div class="sectionHeader" style="margin-top:3rem">
-      <h2>📝 Share Your Experience</h2>
-      <p>Your feedback helps us serve you better</p>
+      <h2 data-i18n="reviews.cta.title">📝 Share Your Experience</h2>
+      <p data-i18n="reviews.cta.subtitle">Your feedback helps us serve you better</p>
     </div>
 
     <div style="max-width:600px; margin:2rem auto; text-align:center;">
       <a href="https://reviews.setmore.com/v1/accounts/72e71731-01cd-44bb-80cc-2f70189c0449/reviews/write-review" 
          target="_blank" 
-         class="review-cta-button">
+         class="review-cta-button"
+         data-i18n="reviews.cta.button">
         ⭐ Leave a Review
       </a>
-      <p style="margin-top:1.5rem; color:#666; font-size:0.9rem;">
+      <p style="margin-top:1.5rem; color:#666; font-size:0.9rem;" data-i18n="reviews.cta.note">
         We appreciate your feedback and read every review!
       </p>
     </div>
@@ -723,6 +724,11 @@ s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
+
+
+<!-- Translation System -->
+<script src="travylway-i18n.js"></script>
+<script src="translations-index.js"></script>
 
 </body>
 </html>
