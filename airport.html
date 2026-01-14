@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Airport Transportation - Travylway</title>
 <meta name="description" content="Reliable airport transportation service with Travylway.">
- 
+
+<!-- Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <style>
 :root{
   --bg:#2B3A4A;
@@ -244,15 +247,21 @@ body{
   background:#1976d2;
 }
 
+.turnstile-wrap{
+  margin: 1.25rem 0 0.75rem;
+  display:flex;
+  justify-content:center;
+}
+
 @media(max-width:768px){
   .form-row{
     grid-template-columns:1fr;
   }
-  
+
   .form-card{
     padding:1.5rem;
   }
-  
+
   .form-header h1{
     font-size:1.5rem;
   }
@@ -277,17 +286,15 @@ body{
       ✗ Something went wrong. Please try again.
     </div>
 
-    <!-- WhatsApp Notification Info -->
     <div class="info-box">
       <strong>📱 How You'll Be Contacted:</strong>
       <p>
-        When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong> 
+        When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong>
         to confirm pickup details.
       </p>
     </div>
 
     <form id="pickupForm">
-      <!-- Personal Information -->
       <div class="form-group">
         <label for="name">Name <span class="required">*</span></label>
         <input type="text" id="name" name="name" placeholder="John Doe" required>
@@ -304,11 +311,15 @@ body{
         </div>
       </div>
 
-      <!-- Pickup Address -->
+      <!-- Service Type -->
       <div class="form-group">
-        <label for="address">Pickup Address <span class="required">*</span></label>
-        <input type="text" id="address" name="address" placeholder="123 Main St, City, State ZIP" required>
-        <small>Include street, city, state, and zip code</small>
+        <label for="serviceType">Service Type <span class="required">*</span></label>
+        <select id="serviceType" name="serviceType" required>
+          <option value="">-- Select Service --</option>
+          <option value="pickup">Airport Pickup (arriving flight)</option>
+          <option value="dropoff">Airport Drop-off (departing flight)</option>
+        </select>
+        <small>Pickup = you are arriving at the airport. Drop-off = you are going to the airport.</small>
       </div>
 
       <!-- Airport -->
@@ -318,14 +329,19 @@ body{
         <small>You can change this if needed</small>
       </div>
 
-      <!-- Service Type -->
-      <div class="form-group">
-        <label for="serviceType">Service Type <span class="required">*</span></label>
-        <select id="serviceType" name="serviceType" required>
-          <option value="">-- Select Service --</option>
-          <option value="pickup">Airport Pickup (arriving flight)</option>
-          <option value="dropoff">Airport Drop-off (departing flight)</option>
-        </select>
+      <!-- Address + Destination -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="address" id="addressLabel">Pickup Address <span class="required">*</span></label>
+          <input type="text" id="address" name="address" placeholder="123 Main St, City, State ZIP" required>
+          <small id="addressHelp">Include street, city, state, and zip code</small>
+        </div>
+
+        <div class="form-group">
+          <label for="destination" id="destinationLabel">Destination Address <span class="required">*</span></label>
+          <input type="text" id="destination" name="destination" placeholder="Hotel / home / address" required>
+          <small id="destinationHelp">Where you want to go after pickup</small>
+        </div>
       </div>
 
       <!-- Calculate Price Button -->
@@ -365,21 +381,28 @@ body{
         </div>
       </div>
 
-      <!-- Number of Passengers -->
       <div class="form-group">
         <label for="passengers">Number of Passengers</label>
         <input type="number" id="passengers" name="passengers" min="1" max="10" placeholder="1" value="1">
       </div>
 
-      <!-- Additional Notes -->
       <div class="form-group">
         <label for="notes">Special Instructions</label>
         <textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
       </div>
 
-      <button type="submit" class="submit-btn" id="submitBtn">
-        Submit Request
-      </button>
+      <!-- Turnstile -->
+      <div class="turnstile-wrap">
+        <div
+          class="cf-turnstile"
+          data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
+          data-callback="onTurnstileVerified"
+          data-expired-callback="onTurnstileExpired"
+          data-error-callback="onTurnstileError">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
     </form>
 
     <a href="/" class="back-link">← Back to Home</a>
@@ -388,105 +411,124 @@ body{
 
 <script>
 // ========================================
+// TURNSTILE (RELIABLE)
+// ========================================
+let turnstileToken = "";
+function onTurnstileVerified(token){ turnstileToken = token; }
+function onTurnstileExpired(){ turnstileToken = ""; }
+function onTurnstileError(){ turnstileToken = ""; }
+
+// ========================================
 // LOCATION-BASED CONFIGURATION
 // ========================================
 const urlParams = new URLSearchParams(window.location.search);
 const locationParam = urlParams.get('location');
 
-// Location-specific settings
 const locationConfig = {
-  'gvr': { 
-    airport: 'Denver International Airport', 
-    airportCode: 'DEN',
-    name: 'Denver - Green Valley Ranch'
-  },
-  'den': { 
-    airport: 'Denver International Airport', 
-    airportCode: 'DEN',
-    name: 'Denver'
-  },
-  'ord': { 
-    airport: "Chicago O'Hare International Airport", 
-    airportCode: 'ORD',
-    name: 'Chicago'
-  },
-  'phx': { 
-    airport: 'Phoenix Sky Harbor International Airport', 
-    airportCode: 'PHX',
-    name: 'Phoenix'
-  },
-  'atl': { 
-    airport: 'Hartsfield-Jackson Atlanta International Airport', 
-    airportCode: 'ATL',
-    name: 'Atlanta'
-  },
-  'lax': { 
-    airport: 'Los Angeles International Airport', 
-    airportCode: 'LAX',
-    name: 'Los Angeles'
-  },
-  'sfo': { 
-    airport: 'San Francisco International Airport', 
-    airportCode: 'SFO',
-    name: 'San Francisco'
-  },
-  'jfk': { 
-    airport: 'John F. Kennedy International Airport', 
-    airportCode: 'JFK',
-    name: 'New York JFK'
-  },
-  'ewr': { 
-    airport: 'Newark Liberty International Airport', 
-    airportCode: 'EWR',
-    name: 'Newark'
-  },
-  'mia': { 
-    airport: 'Miami International Airport', 
-    airportCode: 'MIA',
-    name: 'Miami'
-  }
+  'gvr': { airport: 'Denver International Airport', airportCode: 'DEN', name: 'Denver - Green Valley Ranch' },
+  'den': { airport: 'Denver International Airport', airportCode: 'DEN', name: 'Denver' },
+  'ord': { airport: "Chicago O'Hare International Airport", airportCode: 'ORD', name: 'Chicago' },
+  'phx': { airport: 'Phoenix Sky Harbor International Airport', airportCode: 'PHX', name: 'Phoenix' },
+  'atl': { airport: 'Hartsfield-Jackson Atlanta International Airport', airportCode: 'ATL', name: 'Atlanta' },
+  'lax': { airport: 'Los Angeles International Airport', airportCode: 'LAX', name: 'Los Angeles' },
+  'sfo': { airport: 'San Francisco International Airport', airportCode: 'SFO', name: 'San Francisco' },
+  'jfk': { airport: 'John F. Kennedy International Airport', airportCode: 'JFK', name: 'New York JFK' },
+  'ewr': { airport: 'Newark Liberty International Airport', airportCode: 'EWR', name: 'Newark' },
+  'mia': { airport: 'Miami International Airport', airportCode: 'MIA', name: 'Miami' }
 };
 
-const config = locationConfig[locationParam] || { 
-  airport: 'Denver International Airport', 
-  airportCode: 'DEN',
-  name: null
-};
-
-// Auto-fill airport based on location
+const config = locationConfig[locationParam] || { airport: 'Denver International Airport', airportCode: 'DEN', name: null };
 document.getElementById('airport').value = config.airport;
-
-// Store config for later use
 window.locationConfig = config;
 
 // ========================================
-// PRICING CONFIGURATION - GENERAL PUBLIC RATES
+// PRICING CONFIGURATION
 // ========================================
 const BASE_FARE = 4.89;
-const PER_MILE_RATE = 1.50;
+const PER_MILE_RATE = 1.25;
 const MINIMUM_FARE = 22;
 const MAXIMUM_FARE = 150;
-const FREE_MILES = 0; // First 3 miles included in base fare
+const FREE_MILES = 0;
 
 var map;
 var placesService;
 
 function initMap() {
-  console.log('Google Maps loaded');
   map = new google.maps.Map(document.createElement('div'));
   placesService = new google.maps.places.PlacesService(map);
 }
 
 // ========================================
-// PRICE CALCULATION
+// SERVICE TYPE LABEL LOGIC
+// ========================================
+const serviceTypeEl = document.getElementById('serviceType');
+const addressLabel = document.getElementById('addressLabel');
+const destinationLabel = document.getElementById('destinationLabel');
+const addressHelp = document.getElementById('addressHelp');
+const destinationHelp = document.getElementById('destinationHelp');
+
+function updateLabels(){
+  const st = serviceTypeEl.value;
+  if(st === 'pickup'){
+    // arriving: airport -> destination, so destination matters most
+    addressLabel.textContent = "Airport Pickup Details *";
+    addressHelp.textContent = "Enter where you will meet the driver at the airport (terminal, baggage claim, door, etc.)";
+    destinationLabel.textContent = "Destination Address *";
+    destinationHelp.textContent = "Where you want to go after the airport (hotel/home)";
+    document.getElementById('address').placeholder = "DEN terminal / baggage claim / meeting point";
+    document.getElementById('destination').placeholder = "Hotel / home address";
+  } else if(st === 'dropoff'){
+    // departing: address -> airport
+    addressLabel.textContent = "Pickup Address *";
+    addressHelp.textContent = "Your pickup location (home/hotel)";
+    destinationLabel.textContent = "Airport Drop-off Details *";
+    destinationHelp.textContent = "Terminal/airline dropoff details (optional but helpful)";
+    document.getElementById('address').placeholder = "123 Main St, City, State ZIP";
+    document.getElementById('destination').placeholder = "Terminal / airline / door number";
+  } else {
+    addressLabel.textContent = "Pickup Address *";
+    destinationLabel.textContent = "Destination Address *";
+    addressHelp.textContent = "Include street, city, state, and zip code";
+    destinationHelp.textContent = "Where you want to go";
+  }
+}
+serviceTypeEl.addEventListener('change', updateLabels);
+updateLabels();
+
+// ========================================
+// PRICE CALCULATION (based on service type)
 // ========================================
 function calculatePrice() {
-  var address = document.getElementById('address').value;
-  var airport = document.getElementById('airport').value;
+  const address = document.getElementById('address').value.trim();
+  const destination = document.getElementById('destination').value.trim();
+  const airport = document.getElementById('airport').value.trim();
+  const serviceType = document.getElementById('serviceType').value;
 
-  if (!address || !airport) {
-    alert('Please enter both pickup address and airport');
+  if (!serviceType) {
+    alert('Please select a Service Type first.');
     return;
+  }
+
+  // Determine the two endpoints for distance calc
+  // pickup: airport -> destination
+  // dropoff: address -> airport
+  let originQuery = "";
+  let destQuery = "";
+
+  if (serviceType === 'pickup') {
+    originQuery = airport;
+    destQuery = destination;
+    if (!destination) {
+      alert('Please enter Destination Address.');
+      return;
+    }
+  } else {
+    originQuery = address;
+    destQuery = airport;
+    if (!address) {
+      alert('Please enter Pickup Address.');
+      return;
+    }
   }
 
   if (typeof google === 'undefined' || !placesService) {
@@ -494,44 +536,37 @@ function calculatePrice() {
     return;
   }
 
-  var calcBtn = document.getElementById('calcBtn');
+  const calcBtn = document.getElementById('calcBtn');
   calcBtn.disabled = true;
   calcBtn.textContent = 'Calculating...';
 
-  var addressRequest = {
-    query: address + ', USA',
-    fields: ['geometry', 'formatted_address']
-  };
+  const originRequest = { query: originQuery + ', USA', fields: ['geometry', 'formatted_address'] };
 
-  placesService.findPlaceFromQuery(addressRequest, function(results1, status1) {
+  placesService.findPlaceFromQuery(originRequest, function(results1, status1) {
     if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
-      var pickupLoc = results1[0].geometry.location;
+      const originLoc = results1[0].geometry.location;
 
-      var airportRequest = {
-        query: airport,
-        fields: ['geometry', 'formatted_address']
-      };
+      const destRequest = { query: destQuery, fields: ['geometry', 'formatted_address'] };
 
-      placesService.findPlaceFromQuery(airportRequest, function(results2, status2) {
+      placesService.findPlaceFromQuery(destRequest, function(results2, status2) {
         if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
-          var airportLoc = results2[0].geometry.location;
+          const destLoc = results2[0].geometry.location;
 
-          var distanceService = new google.maps.DistanceMatrixService();
+          const distanceService = new google.maps.DistanceMatrixService();
           distanceService.getDistanceMatrix({
-            origins: [pickupLoc],
-            destinations: [airportLoc],
+            origins: [originLoc],
+            destinations: [destLoc],
             travelMode: 'DRIVING',
             unitSystem: google.maps.UnitSystem.IMPERIAL
           }, function(response, status) {
             if (status === 'OK') {
-              var result = response.rows[0].elements[0];
-
+              const result = response.rows[0].elements[0];
               if (result.status === 'OK') {
-                var distanceInMeters = result.distance.value;
-                var distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
+                const distanceInMeters = result.distance.value;
+                const distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
 
-                var price = BASE_FARE;
-                var chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
+                let price = BASE_FARE;
+                const chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
                 price += chargeableMiles * PER_MILE_RATE;
                 price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
                 price = Math.round(price);
@@ -543,21 +578,17 @@ function calculatePrice() {
                 document.getElementById('calculatedPrice').value = price;
 
                 // Auto-populate payment info in notes
-                var paymentInfo = '💰 ESTIMATED FARE: $' + price + '\n\n';
+                let paymentInfo = '💰 ESTIMATED FARE: $' + price + '\n\n';
                 paymentInfo += '📱 PAYMENT METHODS:\n';
                 paymentInfo += '• CashApp: $tway66gworld\n';
                 paymentInfo += '• Venmo: @Tway2084\n';
                 paymentInfo += '• PayPal: paypal.me/benterpryzes\n';
                 paymentInfo += '• Square: bit.ly/4snVxsl\n';
                 paymentInfo += '• Cash accepted\n\n';
-                
-                var notesField = document.getElementById('notes');
-                var currentNotes = notesField.value.trim();
-                if (currentNotes) {
-                  notesField.value = paymentInfo + '---\n' + currentNotes;
-                } else {
-                  notesField.value = paymentInfo;
-                }
+
+                const notesField = document.getElementById('notes');
+                const currentNotes = notesField.value.trim();
+                notesField.value = currentNotes ? (paymentInfo + '---\n' + currentNotes) : paymentInfo;
 
                 calcBtn.disabled = false;
                 calcBtn.textContent = '✓ Price Calculated';
@@ -573,13 +604,13 @@ function calculatePrice() {
             }
           });
         } else {
-          alert('Could not find airport.\n\nPlease try the full airport name.');
+          alert('Could not find destination/airport. Please try a more complete name/address.');
           calcBtn.disabled = false;
           calcBtn.textContent = '📍 Calculate Distance & Price';
         }
       });
     } else {
-      alert('Could not find address.\n\nPlease include:\n- Street number and name\n- City, State, Zip\n\nExample: "123 Main St, Aurora, CO 80012"');
+      alert('Could not find the origin address. Please enter a complete address or airport name.');
       calcBtn.disabled = false;
       calcBtn.textContent = '📍 Calculate Distance & Price';
     }
@@ -617,61 +648,90 @@ const today = new Date().toISOString().split('T')[0];
 document.getElementById('flightDate').setAttribute('min', today);
 
 // ========================================
-// FORM SUBMISSION
+// FORM SUBMISSION (same-origin API)
 // ========================================
 document.getElementById('pickupForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  
+
   const submitBtn = document.getElementById('submitBtn');
   const successMsg = document.getElementById('successMessage');
   const errorMsg = document.getElementById('errorMessage');
-  
+
   successMsg.style.display = 'none';
   errorMsg.style.display = 'none';
   errorMsg.textContent = '';
-  
+
+  if (!turnstileToken) {
+    errorMsg.textContent = '✗ Please complete the security verification (Turnstile).';
+    errorMsg.style.display = 'block';
+    errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
+    return;
+  }
+
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting...';
-  
+
   const formData = new FormData(e.target);
   const data = {};
-  formData.forEach(function(value, key) { data[key] = value; });
+  formData.forEach((value, key) => { data[key] = value; });
 
-  // Combine date and time for pickup_time_utc
+  // Combine date + time
   const pickupDateTime = new Date(data.flightDate + 'T' + data.flightTime);
-  
+
+  const serviceType = data.serviceType; // pickup or dropoff
+  const airportName = (data.airport || config.airport || '').trim();
+  const airportCode = (config.airportCode || 'DEN').toUpperCase();
+  const address = (data.address || '').trim();
+  const destination = (data.destination || '').trim();
+
+  // Map pickup/dropoff based on service type
+  // pickup: airport -> destination
+  // dropoff: address -> airport
+  let pickup_text = '';
+  let dropoff_text = '';
+
+  if (serviceType === 'pickup') {
+    pickup_text = `${airportCode} Airport — ${address || 'Terminal/Meeting Point'}`;
+    dropoff_text = destination;
+  } else {
+    pickup_text = address;
+    dropoff_text = `${airportCode} Airport — ${airportName}${destination ? (' — ' + destination) : ''}`;
+  }
+
   const payload = {
     created_by: data.name || 'general',
     rider_phone: data.phone || '',
-    pickup_text: data.address || '',
-    dropoff_text: data.airport || config.airport,
+    pickup_text,
+    dropoff_text,
     pickup_time_utc: pickupDateTime.toISOString(),
     trip_type: 'AIRPORT',
     rider_type: 'GENERAL',
-    direction: data.serviceType === 'pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
-    airport_code: config.airportCode || 'DEN',
+    direction: serviceType === 'pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
+    airport_code: airportCode,
     flight_number: data.flightNumber || null,
     airline: data.airline || null,
-    notes: data.notes || null
+    notes: data.notes || null,
+    "cf-turnstile-response": turnstileToken
   };
-  
+
   try {
-    const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/api/trips', {
+    const response = await fetch('/api/trips', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    
+
     const text = await response.text();
     let resp;
     try { resp = JSON.parse(text); } catch { resp = { raw: text }; }
-    
-    if (response.ok) {
+
+    if (response.ok && resp.ok) {
       successMsg.style.display = 'block';
       e.target.reset();
       document.getElementById('priceEstimate').style.display = 'none';
       document.getElementById('airport').value = config.airport;
-      
+      updateLabels();
+
       successMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
     } else {
       errorMsg.textContent = '✗ ' + (resp.error || resp.detail || resp.raw || ('Request failed (' + response.status + ')'));
@@ -685,6 +745,8 @@ document.getElementById('pickupForm').addEventListener('submit', async (e) => {
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Request';
+    turnstileToken = "";
+    if (typeof turnstile !== 'undefined') turnstile.reset();
   }
 });
 
@@ -692,7 +754,7 @@ document.getElementById('pickupForm').addEventListener('submit', async (e) => {
 window.addEventListener('load', initMap);
 </script>
 
-<!-- Google Maps API -->
+<!-- Google Maps API (NOTE: exposing keys in client code is normal for Maps, but lock it down in GCP console) -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initMap" async defer></script>
 
 </body>
