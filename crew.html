@@ -488,7 +488,7 @@
             <!-- Cloudflare Turnstile Widget -->
             <div class="turnstile-container">
                 <div class="cf-turnstile" 
-                     data-sitekey="YOUR_RIDER_SITEKEY_HERE"
+                     data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
                      data-theme="light"
                      data-size="normal"
                      data-callback="onCrewBookingVerified">
@@ -545,18 +545,24 @@
         });
         
         // ========================================
-        // SERVICE TYPE - UPDATE PLACEHOLDER
+        // SERVICE TYPE - AUTO-FILL AIRPORT
         // ========================================
         document.getElementById('serviceType').addEventListener('change', (e) => {
             const pickupField = document.getElementById('pickupLocation');
             const dropoffField = document.getElementById('dropoffLocation');
             
             if (e.target.value === 'airport_pickup') {
-                pickupField.placeholder = 'Airport terminal';
-                dropoffField.placeholder = 'Your home or hotel address';
+                // Coming FROM airport - pickup is airport, dropoff is their address
+                pickupField.value = 'Airport';
+                pickupField.placeholder = 'Airport name and terminal';
+                dropoffField.value = '';
+                dropoffField.placeholder = 'Your home, hotel, or crashpad address';
             } else if (e.target.value === 'airport_dropoff') {
-                pickupField.placeholder = 'Your home or hotel address';
-                dropoffField.placeholder = 'Airport terminal';
+                // Going TO airport - pickup is their address, dropoff is airport
+                pickupField.value = '';
+                pickupField.placeholder = 'Your home, hotel, or crashpad address';
+                dropoffField.value = 'Airport';
+                dropoffField.placeholder = 'Airport name and terminal';
             }
         });
         
