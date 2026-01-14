@@ -1,171 +1,387 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TravylWay – Book a Ride</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rider Booking - Travylway</title>
+<meta name="description" content="Book a ride with Travylway. Airport and point-to-point rides available.">
 
-  <!-- Cloudflare Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<!-- Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      background: #f6f7fb;
-      color: #111827;
-    }
+<style>
+:root{
+  --bg:#2B3A4A;
+  --accent:#2563EB;
+  --text:#0F172A;
+  --light:#E5E7EB;
+  --muted:rgba(229,231,235,.82);
+  --line:rgba(255,255,255,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:var(--bg);
+  color:var(--light);
+  padding:2rem 1rem;
+}
 
-    header {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+.container{ max-width:700px; margin:0 auto; }
 
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 0 16px;
-    }
+.form-card{
+  background:white;
+  border-radius:20px;
+  padding:2.5rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  color:var(--text);
+}
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    }
+.form-header{ text-align:center; margin-bottom:2rem; }
+.form-header h1{ font-size:2rem; margin-bottom:0.5rem; color:#333; }
+.form-header p{ color:#666; font-size:1rem; }
 
-    label {
-      display: block;
-      font-weight: 600;
-      margin: 14px 0 6px;
-    }
+.form-group{ margin-bottom:1.5rem; }
+.form-group label{
+  display:block;
+  font-weight:700;
+  margin-bottom:0.5rem;
+  color:#333;
+  font-size:0.95rem;
+}
 
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      font-size: 15px;
-    }
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  padding:0.75rem;
+  border:2px solid #e0e0e0;
+  border-radius:10px;
+  font-size:1rem;
+  font-family:inherit;
+  transition:border-color 0.3s ease;
+}
 
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  outline:none;
+  border-color:#667eea;
+}
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
+.form-group textarea{ resize:vertical; min-height:100px; }
 
-    @media (max-width: 700px) {
-      .row { grid-template-columns: 1fr; }
-    }
+.form-group small{
+  color:#666;
+  font-size:0.85rem;
+  display:block;
+  margin-top:0.25rem;
+  font-weight:400;
+}
 
-    .turnstile-wrap {
-      margin: 20px 0;
-      display: flex;
-      justify-content: center;
-    }
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+}
 
-    button {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 16px;
-    }
+.required{ color:#ff6b6b; }
 
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+.submit-btn{
+  width:100%;
+  padding:1rem;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:white;
+  border:none;
+  border-radius:12px;
+  font-size:1.1rem;
+  font-weight:900;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
 
-    .msg {
-      display: none;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      font-size: 14px;
-    }
+.submit-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(102,126,234,0.4);
+}
 
-    .msg.success {
-      display: block;
-      background: #dcfce7;
-      color: #14532d;
-      border: 1px solid #86efac;
-    }
+.submit-btn:disabled{ background:#ccc; cursor:not-allowed; transform:none; }
 
-    .msg.error {
-      display: block;
-      background: #fee2e2;
-      color: #7f1d1d;
-      border: 1px solid #fecaca;
-    }
-  </style>
+.success-message,
+.error-message{
+  padding:1rem;
+  border-radius:10px;
+  margin-bottom:1.5rem;
+  text-align:center;
+  font-weight:600;
+  display:none;
+}
+
+.success-message{
+  background:#d4edda;
+  color:#155724;
+  border:1px solid #c3e6cb;
+}
+
+.error-message{
+  background:#f8d7da;
+  color:#721c24;
+  border:1px solid #f5c6cb;
+}
+
+.back-link{
+  display:inline-block;
+  margin-top:1.5rem;
+  color:#667eea;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.back-link:hover{ text-decoration:underline; }
+
+.optional-note{
+  font-size:0.85rem;
+  color:#666;
+  font-style:italic;
+  margin-bottom:1.5rem;
+  text-align:center;
+}
+
+.info-box{
+  background:#e8f5e9;
+  padding:1rem 1.25rem;
+  border-radius:10px;
+  margin-bottom:1.5rem;
+  border-left:4px solid #25D366;
+}
+
+.info-box strong{ color:#1b5e20; font-size:1rem; }
+.info-box p{ margin:0.5rem 0 0; line-height:1.6; color:#2e7d32; }
+
+.price-estimate{
+  background:#e3f2fd;
+  padding:1.5rem;
+  border-radius:10px;
+  margin:1.5rem 0;
+  border-left:4px solid #2196f3;
+  display:none;
+}
+
+.price-estimate h3{
+  margin:0 0 0.5rem 0;
+  color:#1565c0;
+  font-size:1.1rem;
+}
+
+.price-details{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:0.75rem;
+}
+
+.distance{ color:#1976d2; font-size:0.95rem; }
+.price{ font-size:1.8rem; font-weight:900; color:#0d47a1; }
+
+.calc-btn{
+  background:#2196f3;
+  color:white;
+  border:none;
+  padding:0.75rem 1.5rem;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+  margin:1rem 0;
+  width:100%;
+  font-size:1rem;
+}
+
+.calc-btn:hover{ background:#1976d2; }
+
+.turnstile-wrap{
+  margin: 1.25rem 0 0.75rem;
+  display:flex;
+  justify-content:center;
+}
+
+.hidden{ display:none !important; }
+
+@media(max-width:768px){
+  .form-row{ grid-template-columns:1fr; }
+  .form-card{ padding:1.5rem; }
+  .form-header h1{ font-size:1.5rem; }
+}
+</style>
 </head>
 
 <body>
+<div class="container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>🚖 Rider Booking</h1>
+      <p>Airport rides + point-to-point rides</p>
+      <p class="optional-note">Name and phone are required</p>
+    </div>
 
-<header>
-  <h1>TravylWay – Book a Ride</h1>
-  <p>Submit your request. Approval is handled by dispatch.</p>
-</header>
+    <div id="successMessage" class="success-message">✓ Request submitted successfully!</div>
+    <div id="errorMessage" class="error-message">✗ Something went wrong. Please try again.</div>
 
-<main>
-  <div class="card">
-    <div id="message" class="msg"></div>
+    <div class="info-box">
+      <strong>📱 How You'll Be Contacted:</strong>
+      <p>
+        When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong>
+        to confirm pickup details.
+      </p>
+    </div>
 
     <form id="bookingForm">
-      <div class="row">
-        <div>
-          <label>Your Name *</label>
-          <input id="name" required />
-        </div>
+      <!-- PERSONAL -->
+      <div class="form-group">
+        <label for="name">Name <span class="required">*</span></label>
+        <input type="text" id="name" name="name" placeholder="John Doe" required>
+      </div>
 
-        <div>
-          <label>Phone (WhatsApp) *</label>
-          <input id="phone" required />
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone Number <span class="required">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com">
         </div>
       </div>
 
-      <div class="row">
-        <div>
-          <label>Rider Type *</label>
-          <select id="riderType">
+      <!-- RIDER + TRIP TYPE -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="riderType">Rider Type <span class="required">*</span></label>
+          <select id="riderType" name="riderType" required>
             <option value="GENERAL">General</option>
-            <option value="CREW">Crew</option>
+            <option value="CREW">Crew Member</option>
           </select>
+          <small>This affects how trips are categorized internally.</small>
         </div>
 
-        <div>
-          <label>Trip Type *</label>
-          <select id="tripType">
+        <div class="form-group">
+          <label for="tripType">Trip Type <span class="required">*</span></label>
+          <select id="tripType" name="tripType" required>
             <option value="AIRPORT">Airport</option>
             <option value="POINT_TO_POINT">Point-to-Point</option>
           </select>
         </div>
       </div>
 
-      <label>Pickup Location *</label>
-      <input id="pickupText" required />
+      <!-- =========================
+           AIRPORT SECTION (EXACT LAYOUT)
+           ========================= -->
+      <div id="airportSection">
+        <div class="form-group">
+          <label for="serviceType">Service Type <span class="required">*</span></label>
+          <select id="serviceType" name="serviceType" required>
+            <option value="">-- Select Service --</option>
+            <option value="pickup">Airport Pickup (arriving flight)</option>
+            <option value="dropoff">Airport Drop-off (departing flight)</option>
+          </select>
+          <small>Pickup = you are arriving at the airport. Drop-off = you are going to the airport.</small>
+        </div>
 
-      <label>Dropoff Location *</label>
-      <input id="dropoffText" required />
+        <div class="form-group">
+          <label for="airport">Airport <span class="required">*</span></label>
+          <input type="text" id="airport" name="airport" value="Denver International Airport" required>
+          <small>You can change this if needed</small>
+        </div>
 
-      <label>Pickup Date & Time *</label>
-      <input id="pickupTime" type="datetime-local" required />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="address" id="addressLabel">Pickup Address <span class="required">*</span></label>
+            <input type="text" id="address" name="address" placeholder="123 Main St, City, State ZIP">
+            <small id="addressHelp">Include street, city, state, and zip code</small>
+          </div>
 
-      <label>Notes (optional)</label>
-      <textarea id="notes"></textarea>
+          <div class="form-group">
+            <label for="destination" id="destinationLabel">Destination Address <span class="required">*</span></label>
+            <input type="text" id="destination" name="destination" placeholder="Hotel / home / address">
+            <small id="destinationHelp">Where you want to go after pickup</small>
+          </div>
+        </div>
+
+        <button type="button" class="calc-btn" id="calcBtn">📍 Calculate Distance & Price</button>
+
+        <div id="priceEstimate" class="price-estimate">
+          <h3>💰 Estimated Price</h3>
+          <div class="price-details">
+            <span class="distance" id="distanceDisplay">Distance: -- miles</span>
+            <span class="price" id="priceDisplay">$--</span>
+          </div>
+          <small style="color:#1565c0; margin-top:0.5rem; display:block;">Standard Rate</small>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="flightNumber">Flight Number</label>
+            <input type="text" id="flightNumber" name="flightNumber" placeholder="UA1234">
+          </div>
+          <div class="form-group">
+            <label for="airline">Airline</label>
+            <input type="text" id="airline" name="airline" placeholder="United, Delta, etc.">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="flightDate">Pickup Date <span class="required">*</span></label>
+            <input type="date" id="flightDate" name="flightDate">
+          </div>
+          <div class="form-group">
+            <label for="flightTime">Pickup Time <span class="required">*</span></label>
+            <input type="time" id="flightTime" name="flightTime">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="passengers">Number of Passengers</label>
+          <input type="number" id="passengers" name="passengers" min="1" max="10" placeholder="1" value="1">
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Special Instructions</label>
+          <textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
+        </div>
+      </div>
+
+      <!-- =========================
+           POINT-TO-POINT SECTION (NEW, MINIMAL)
+           ========================= -->
+      <div id="p2pSection" class="hidden">
+        <div class="form-group">
+          <label for="p2pPickup">Pickup Location <span class="required">*</span></label>
+          <input type="text" id="p2pPickup" name="p2pPickup" placeholder="Pickup address / hotel">
+        </div>
+
+        <div class="form-group">
+          <label for="p2pDropoff">Dropoff Location <span class="required">*</span></label>
+          <input type="text" id="p2pDropoff" name="p2pDropoff" placeholder="Dropoff address / hotel">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="p2pDate">Pickup Date <span class="required">*</span></label>
+            <input type="date" id="p2pDate" name="p2pDate">
+          </div>
+          <div class="form-group">
+            <label for="p2pTime">Pickup Time <span class="required">*</span></label>
+            <input type="time" id="p2pTime" name="p2pTime">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="p2pNotes">Notes (optional)</label>
+          <textarea id="p2pNotes" name="p2pNotes" placeholder="Any details that help the driver..."></textarea>
+        </div>
+      </div>
 
       <!-- Turnstile -->
       <div class="turnstile-wrap">
@@ -178,89 +394,393 @@
         </div>
       </div>
 
-      <button id="submitBtn" type="submit">Submit Ride Request</button>
+      <button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
     </form>
+
+    <a href="/" class="back-link">← Back to Home</a>
   </div>
-</main>
+</div>
 
 <script>
-/* =============================
-   TURNSTILE HANDLING (CORRECT)
-   ============================= */
+// ========================================
+// TURNSTILE
+// ========================================
 let turnstileToken = "";
+function onTurnstileVerified(token){ turnstileToken = token; }
+function onTurnstileExpired(){ turnstileToken = ""; }
+function onTurnstileError(){ turnstileToken = ""; }
 
-function onTurnstileVerified(token) {
-  turnstileToken = token;
+// ========================================
+// LOCATION CONFIG (same as airport.html)
+// ========================================
+const urlParams = new URLSearchParams(window.location.search);
+const locationParam = urlParams.get('location');
+
+const locationConfig = {
+  'gvr': { airport: 'Denver International Airport', airportCode: 'DEN', name: 'Denver - Green Valley Ranch' },
+  'den': { airport: 'Denver International Airport', airportCode: 'DEN', name: 'Denver' },
+  'ord': { airport: "Chicago O'Hare International Airport", airportCode: 'ORD', name: 'Chicago' },
+  'phx': { airport: 'Phoenix Sky Harbor International Airport', airportCode: 'PHX', name: 'Phoenix' },
+  'atl': { airport: 'Hartsfield-Jackson Atlanta International Airport', airportCode: 'ATL', name: 'Atlanta' },
+  'lax': { airport: 'Los Angeles International Airport', airportCode: 'LAX', name: 'Los Angeles' },
+  'sfo': { airport: 'San Francisco International Airport', airportCode: 'SFO', name: 'San Francisco' },
+  'jfk': { airport: 'John F. Kennedy International Airport', airportCode: 'JFK', name: 'New York JFK' },
+  'ewr': { airport: 'Newark Liberty International Airport', airportCode: 'EWR', name: 'Newark' },
+  'mia': { airport: 'Miami International Airport', airportCode: 'MIA', name: 'Miami' }
+};
+
+const config = locationConfig[locationParam] || { airport: 'Denver International Airport', airportCode: 'DEN', name: null };
+document.getElementById('airport').value = config.airport;
+
+// ========================================
+// PRICING CONFIG
+// ========================================
+const BASE_FARE = 4.89;
+const PER_MILE_RATE = 1.25;
+const MINIMUM_FARE = 22;
+const MAXIMUM_FARE = 150;
+const FREE_MILES = 0;
+
+var map;
+var placesService;
+
+function initMap() {
+  map = new google.maps.Map(document.createElement('div'));
+  placesService = new google.maps.places.PlacesService(map);
 }
 
-function onTurnstileExpired() {
-  turnstileToken = "";
+// ========================================
+// UI: Trip Type toggle
+// ========================================
+const tripTypeEl = document.getElementById('tripType');
+const airportSection = document.getElementById('airportSection');
+const p2pSection = document.getElementById('p2pSection');
+
+function setTripMode(){
+  const isAirport = tripTypeEl.value === 'AIRPORT';
+  airportSection.classList.toggle('hidden', !isAirport);
+  p2pSection.classList.toggle('hidden', isAirport);
 }
+tripTypeEl.addEventListener('change', setTripMode);
+setTripMode();
 
-function onTurnstileError() {
-  turnstileToken = "";
+// ========================================
+// Airport labels (same behavior)
+// ========================================
+const serviceTypeEl = document.getElementById('serviceType');
+const addressLabel = document.getElementById('addressLabel');
+const destinationLabel = document.getElementById('destinationLabel');
+const addressHelp = document.getElementById('addressHelp');
+const destinationHelp = document.getElementById('destinationHelp');
+
+function updateLabels(){
+  const st = serviceTypeEl.value;
+  const addressEl = document.getElementById('address');
+  const destinationEl = document.getElementById('destination');
+
+  if(st === 'pickup'){
+    addressLabel.textContent = "Airport Pickup Details *";
+    addressHelp.textContent = "Enter where you will meet the driver at the airport (terminal, baggage claim, door, etc.)";
+    destinationLabel.textContent = "Destination Address *";
+    destinationHelp.textContent = "Where you want to go after the airport (hotel/home)";
+    addressEl.placeholder = "DEN terminal / baggage claim / meeting point";
+    destinationEl.placeholder = "Hotel / home address";
+  } else if(st === 'dropoff'){
+    addressLabel.textContent = "Pickup Address *";
+    addressHelp.textContent = "Your pickup location (home/hotel)";
+    destinationLabel.textContent = "Airport Drop-off Details *";
+    destinationHelp.textContent = "Terminal/airline dropoff details (optional but helpful)";
+    addressEl.placeholder = "123 Main St, City, State ZIP";
+    destinationEl.placeholder = "Terminal / airline / door number";
+  } else {
+    addressLabel.textContent = "Pickup Address *";
+    destinationLabel.textContent = "Destination Address *";
+    addressHelp.textContent = "Include street, city, state, and zip code";
+    destinationHelp.textContent = "Where you want to go";
+  }
 }
+serviceTypeEl.addEventListener('change', updateLabels);
+updateLabels();
 
-/* =============================
-   FORM LOGIC
-   ============================= */
-const form = document.getElementById("bookingForm");
-const msg = document.getElementById("message");
-const btn = document.getElementById("submitBtn");
+// ========================================
+// Hidden fields for calc
+// ========================================
+const form = document.getElementById('bookingForm');
+const distanceField = document.createElement('input');
+distanceField.type = 'hidden';
+distanceField.id = 'calculatedDistance';
+distanceField.name = 'calculatedDistance';
+form.appendChild(distanceField);
 
-function showMsg(text, type) {
-  msg.textContent = text;
-  msg.className = "msg " + type;
-}
+const priceField = document.createElement('input');
+priceField.type = 'hidden';
+priceField.id = 'calculatedPrice';
+priceField.name = 'calculatedPrice';
+form.appendChild(priceField);
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+// Date mins
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('flightDate').setAttribute('min', today);
+document.getElementById('p2pDate').setAttribute('min', today);
 
-  if (!turnstileToken) {
-    showMsg("Please complete the security verification (Turnstile).", "error");
+// ========================================
+// PRICE CALC (Airport only)
+// ========================================
+function calculatePrice() {
+  const serviceType = serviceTypeEl.value;
+  const airport = document.getElementById('airport').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const destination = document.getElementById('destination').value.trim();
+
+  if (!serviceType) { alert('Please select a Service Type first.'); return; }
+  if (!airport) { alert('Please enter airport.'); return; }
+
+  let originQuery = "";
+  let destQuery = "";
+
+  if (serviceType === 'pickup') {
+    if (!destination) { alert('Please enter Destination Address.'); return; }
+    originQuery = airport;
+    destQuery = destination;
+  } else {
+    if (!address) { alert('Please enter Pickup Address.'); return; }
+    originQuery = address;
+    destQuery = airport;
+  }
+
+  if (typeof google === 'undefined' || !placesService) {
+    alert('Google Maps is still loading. Please wait a moment and try again.');
     return;
   }
 
-  btn.disabled = true;
-  btn.textContent = "Submitting…";
+  const calcBtn = document.getElementById('calcBtn');
+  calcBtn.disabled = true;
+  calcBtn.textContent = 'Calculating...';
 
-  const payload = {
-    created_by: document.getElementById("name").value.trim(),
-    rider_phone: document.getElementById("phone").value.trim(),
-    rider_type: document.getElementById("riderType").value,
-    trip_type: document.getElementById("tripType").value,
-    pickup_text: document.getElementById("pickupText").value.trim(),
-    dropoff_text: document.getElementById("dropoffText").value.trim(),
-    pickup_time_utc: new Date(document.getElementById("pickupTime").value).toISOString(),
-    notes: document.getElementById("notes").value.trim(),
-    "cf-turnstile-response": turnstileToken
-  };
+  const originRequest = { query: originQuery + ', USA', fields: ['geometry', 'formatted_address'] };
+
+  placesService.findPlaceFromQuery(originRequest, function(results1, status1) {
+    if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
+      const originLoc = results1[0].geometry.location;
+
+      const destRequest = { query: destQuery, fields: ['geometry', 'formatted_address'] };
+
+      placesService.findPlaceFromQuery(destRequest, function(results2, status2) {
+        if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
+          const destLoc = results2[0].geometry.location;
+
+          const distanceService = new google.maps.DistanceMatrixService();
+          distanceService.getDistanceMatrix({
+            origins: [originLoc],
+            destinations: [destLoc],
+            travelMode: 'DRIVING',
+            unitSystem: google.maps.UnitSystem.IMPERIAL
+          }, function(response, status) {
+            if (status === 'OK') {
+              const result = response.rows[0].elements[0];
+              if (result.status === 'OK') {
+                const distanceInMeters = result.distance.value;
+                const distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
+
+                let price = BASE_FARE;
+                const chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
+                price += chargeableMiles * PER_MILE_RATE;
+                price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
+                price = Math.round(price);
+
+                document.getElementById('distanceDisplay').textContent = 'Distance: ' + distanceInMiles + ' miles';
+                document.getElementById('priceDisplay').textContent = '$' + price;
+                document.getElementById('priceEstimate').style.display = 'block';
+                distanceField.value = distanceInMiles;
+                priceField.value = price;
+
+                let paymentInfo = '💰 ESTIMATED FARE: $' + price + '\n\n';
+                paymentInfo += '📱 PAYMENT METHODS:\n';
+                paymentInfo += '• CashApp: $tway66gworld\n';
+                paymentInfo += '• Venmo: @Tway2084\n';
+                paymentInfo += '• PayPal: paypal.me/benterpryzes\n';
+                paymentInfo += '• Square: bit.ly/4snVxsl\n';
+                paymentInfo += '• Cash accepted\n\n';
+
+                const notesField = document.getElementById('notes');
+                const currentNotes = notesField.value.trim();
+                notesField.value = currentNotes ? (paymentInfo + '---\n' + currentNotes) : paymentInfo;
+
+                calcBtn.disabled = false;
+                calcBtn.textContent = '✓ Price Calculated';
+              } else {
+                alert('Could not calculate distance: ' + result.status);
+                calcBtn.disabled = false;
+                calcBtn.textContent = '📍 Calculate Distance & Price';
+              }
+            } else {
+              alert('Distance calculation failed: ' + status);
+              calcBtn.disabled = false;
+              calcBtn.textContent = '📍 Calculate Distance & Price';
+            }
+          });
+        } else {
+          alert('Could not find destination/airport. Please try a more complete name/address.');
+          calcBtn.disabled = false;
+          calcBtn.textContent = '📍 Calculate Distance & Price';
+        }
+      });
+    } else {
+      alert('Could not find the origin address. Please enter a complete address or airport name.');
+      calcBtn.disabled = false;
+      calcBtn.textContent = '📍 Calculate Distance & Price';
+    }
+  });
+}
+document.getElementById('calcBtn').addEventListener('click', calculatePrice);
+
+// ========================================
+// SUBMISSION (Airport + P2P)
+// ========================================
+document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submitBtn');
+  const successMsg = document.getElementById('successMessage');
+  const errorMsg = document.getElementById('errorMessage');
+
+  successMsg.style.display = 'none';
+  errorMsg.style.display = 'none';
+  errorMsg.textContent = '';
+
+  if (!turnstileToken) {
+    errorMsg.textContent = '✗ Please complete the security verification (Turnstile).';
+    errorMsg.style.display = 'block';
+    errorMsg.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
 
   try {
-    const res = await fetch("/api/trips", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const riderType = document.getElementById('riderType').value;
+    const tripType = tripTypeEl.value;
+
+    if (!name || !phone) throw new Error("Name and phone are required.");
+
+    let payload = null;
+
+    if (tripType === 'AIRPORT') {
+      const serviceType = serviceTypeEl.value;
+      const airportName = document.getElementById('airport').value.trim() || config.airport;
+      const airportCode = (config.airportCode || 'DEN').toUpperCase();
+
+      const address = document.getElementById('address').value.trim();
+      const destination = document.getElementById('destination').value.trim();
+      const flightDate = document.getElementById('flightDate').value;
+      const flightTime = document.getElementById('flightTime').value;
+
+      if (!serviceType) throw new Error("Please select Service Type.");
+      if (!flightDate || !flightTime) throw new Error("Pickup date and time are required.");
+
+      const pickupDateTime = new Date(flightDate + 'T' + flightTime);
+
+      let pickup_text = '';
+      let dropoff_text = '';
+
+      if (serviceType === 'pickup') {
+        // arriving: airport -> destination
+        if (!destination) throw new Error("Destination address is required for airport pickup.");
+        pickup_text = `${airportCode} Airport — ${address || 'Terminal/Meeting Point'}`;
+        dropoff_text = destination;
+      } else {
+        // departing: address -> airport
+        if (!address) throw new Error("Pickup address is required for airport drop-off.");
+        pickup_text = address;
+        dropoff_text = `${airportCode} Airport — ${airportName}${destination ? (' — ' + destination) : ''}`;
+      }
+
+      payload = {
+        created_by: name,
+        rider_phone: phone,
+        pickup_text,
+        dropoff_text,
+        pickup_time_utc: pickupDateTime.toISOString(),
+        trip_type: 'AIRPORT',
+        rider_type: riderType,
+        direction: serviceType === 'pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
+        airport_code: airportCode,
+        flight_number: document.getElementById('flightNumber').value.trim() || null,
+        airline: document.getElementById('airline').value.trim() || null,
+        notes: document.getElementById('notes').value.trim() || null,
+        "cf-turnstile-response": turnstileToken
+      };
+
+    } else {
+      // POINT TO POINT
+      const p2pPickup = document.getElementById('p2pPickup').value.trim();
+      const p2pDropoff = document.getElementById('p2pDropoff').value.trim();
+      const p2pDate = document.getElementById('p2pDate').value;
+      const p2pTime = document.getElementById('p2pTime').value;
+
+      if (!p2pPickup || !p2pDropoff) throw new Error("Pickup and dropoff are required for point-to-point.");
+      if (!p2pDate || !p2pTime) throw new Error("Pickup date and time are required.");
+
+      const pickupDateTime = new Date(p2pDate + 'T' + p2pTime);
+
+      payload = {
+        created_by: name,
+        rider_phone: phone,
+        pickup_text: p2pPickup,
+        dropoff_text: p2pDropoff,
+        pickup_time_utc: pickupDateTime.toISOString(),
+        trip_type: 'POINT_TO_POINT',
+        rider_type: riderType,
+        notes: document.getElementById('p2pNotes').value.trim() || null,
+        "cf-turnstile-response": turnstileToken
+      };
+    }
+
+    const response = await fetch('/api/trips', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const data = await res.json();
+    const text = await response.text();
+    let resp;
+    try { resp = JSON.parse(text); } catch { resp = { raw: text }; }
 
-    if (res.ok && data.ok) {
-      showMsg("✅ Request submitted. Status: PENDING approval.", "success");
-      form.reset();
+    if (response.ok && resp.ok) {
+      successMsg.style.display = 'block';
+      e.target.reset();
+      document.getElementById('priceEstimate').style.display = 'none';
+      document.getElementById('airport').value = config.airport;
+      updateLabels();
+      setTripMode();
+      successMsg.scrollIntoView({behavior:'smooth', block:'center'});
     } else {
-      showMsg(data.error || "Request failed.", "error");
+      errorMsg.textContent = '✗ ' + (resp.error || resp.detail || resp.raw || ('Request failed (' + response.status + ')'));
+      errorMsg.style.display = 'block';
+      errorMsg.scrollIntoView({behavior:'smooth', block:'center'});
     }
-  } catch (err) {
-    showMsg("Network error. Please try again.", "error");
+
+  } catch (error) {
+    errorMsg.textContent = '✗ ' + (error.message || 'Something went wrong. Please try again.');
+    errorMsg.style.display = 'block';
+    errorMsg.scrollIntoView({behavior:'smooth', block:'center'});
   } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Request';
     turnstileToken = "";
-    if (typeof turnstile !== "undefined") turnstile.reset();
-    btn.disabled = false;
-    btn.textContent = "Submit Ride Request";
+    if (typeof turnstile !== 'undefined') turnstile.reset();
   }
 });
+
+// init Maps
+window.addEventListener('load', initMap);
 </script>
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initMap" async defer></script>
 
 </body>
 </html>
