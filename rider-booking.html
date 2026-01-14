@@ -326,8 +326,9 @@
       clearMsg();
 
       // Turnstile token is injected into the DOM by Turnstile script
-      const tokenField = form.querySelector('textarea[name="cf-turnstile-response"]');
-      const turnstileToken = tokenField ? tokenField.value : "";
+     const tokenField = form.querySelector('[name="cf-turnstile-response"]');
+const turnstileToken = tokenField ? tokenField.value : "";
+
 
       if (!turnstileToken) {
         showMsg("Please complete the security verification (Turnstile).", "error");
