@@ -1,1 +1,427 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravylWay - Rider Registration</title>
+    
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <link rel="preconnect" href="https://challenges.cloudflare.com">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            color: #666;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .turnstile-container {
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .veteran-badge {
+            background: #f0f4ff;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .veteran-badge h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .veteran-badge p {
+            color: #666;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .logo h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>TravylWay</h1>
+            <p>Professional Transportation</p>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('register')">Register</div>
+            <div class="tab" onclick="switchTab('login')">Login</div>
+        </div>
+        
+        <!-- Registration Form -->
+        <div id="registerSection" class="form-section active">
+            <div id="registerMessage" class="message"></div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address (Optional)</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(720) 555-0123" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="riderType">I am a... *</label>
+                    <select id="riderType" name="rider_type" required>
+                        <option value="">Select your rider type...</option>
+                        <option value="crew_member">✈️ Airline Crew Member</option>
+                        <option value="college_student">🎓 College Student</option>
+                        <option value="business_traveler">💼 Business Traveler</option>
+                        <option value="tourist">🌎 Tourist/Visitor</option>
+                        <option value="local_resident">🏠 Local Resident</option>
+                        <option value="senior">👴 Senior Citizen</option>
+                        <option value="medical_patient">🏥 Medical Patient</option>
+                        <option value="event_attendee">🎉 Event Attendee</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Home Address (Optional)</label>
+                    <input type="text" id="address" name="address" placeholder="For faster booking in the future">
+                    <small style="color: #666; font-size: 12px;">We'll save this to speed up your future bookings</small>
+                </div>
+                
+                <!-- Cloudflare Turnstile Widget -->
+                <div class="turnstile-container">
+                    <div class="cf-turnstile" 
+                         data-sitekey="YOUR_RIDER_SITEKEY_HERE"
+                         data-theme="light"
+                         data-size="normal"
+                         data-callback="onRegisterVerified">
+                    </div>
+                </div>
+                
+                <button type="submit" id="registerBtn">Complete Registration</button>
+            </form>
+        </div>
+        
+        <!-- Login Form -->
+        <div id="loginSection" class="form-section">
+            <div id="loginMessage" class="message"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginPhone">Phone Number *</label>
+                    <input type="tel" id="loginPhone" name="phone" placeholder="(720) 555-0123" required>
+                </div>
+                
+                <!-- Cloudflare Turnstile Widget -->
+                <div class="turnstile-container">
+                    <div class="cf-turnstile" 
+                         data-sitekey="0x4AAAAAACMeY92R9MqzCQJc"
+                         data-theme="light"
+                         data-size="normal"
+                         data-callback="onLoginVerified">
+                    </div>
+                </div>
+                
+                <button type="submit" id="loginBtn">Rider Login</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        let registerVerified = false;
+        let loginVerified = false;
+        
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            
+            if (tab === 'register') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('registerSection').classList.add('active');
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('loginSection').classList.add('active');
+            }
+            
+            // Reset messages
+            hideMessage('registerMessage');
+            hideMessage('loginMessage');
+        }
+        
+        // Turnstile callbacks
+        function onRegisterVerified(token) {
+            registerVerified = true;
+            console.log('Registration verified');
+        }
+        
+        function onLoginVerified(token) {
+            loginVerified = true;
+            console.log('Login verified');
+        }
+        
+        // Registration form handler
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const token = formData.get('cf-turnstile-response');
+            
+            if (!token) {
+                showMessage('registerMessage', 'Please complete the security verification', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+            
+            try {
+                const response = await fetch('/api/rider-register', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('registerMessage', 'Registration successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/rider-booking.html';
+                    }, 2000);
+                } else {
+                    showMessage('registerMessage', result.error || 'Registration failed. Please try again.', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Complete Registration';
+                    // Reset Turnstile
+                    turnstile.reset();
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showMessage('registerMessage', 'Network error. Please check your connection and try again.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Complete Registration';
+            }
+        });
+        
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const token = formData.get('cf-turnstile-response');
+            
+            if (!token) {
+                showMessage('loginMessage', 'Please complete the security verification', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+            
+            try {
+                const response = await fetch('/api/rider-login', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('loginMessage', 'Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/rider-booking.html';
+                    }, 1500);
+                } else {
+                    showMessage('loginMessage', result.error || 'Login failed. Please check your credentials.', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Driver Login';
+                    turnstile.reset();
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('loginMessage', 'Network error. Please check your connection and try again.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Driver Login';
+            }
+        });
+        
+        // Message helper functions
+        function showMessage(id, text, type) {
+            const msg = document.getElementById(id);
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+        }
+        
+        function hideMessage(id) {
+            const msg = document.getElementById(id);
+            msg.className = 'message';
+        }
+        
+        // Auto-refresh Turnstile tokens after 4 minutes (before 5-minute expiry)
+        setInterval(() => {
+            if (typeof turnstile !== 'undefined') {
+                turnstile.reset();
+            }
+        }, 4 * 60 * 1000);
+    </script>
+</body>
+</html>
