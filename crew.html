@@ -73,34 +73,6 @@
             margin-bottom: 10px;
         }
         
-        .crew-benefits {
-            background: #f0f4ff;
-            border-left: 4px solid #1e3c72;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 4px;
-        }
-        
-        .crew-benefits h3 {
-            color: #1e3c72;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        
-        .crew-benefits ul {
-            margin-left: 20px;
-            color: #555;
-            font-size: 14px;
-        }
-        
-        .crew-benefits li {
-            margin-bottom: 8px;
-        }
-        
-        .crew-benefits strong {
-            color: #1e3c72;
-        }
-        
         .form-group {
             margin-bottom: 20px;
         }
@@ -278,6 +250,18 @@
             cursor: not-allowed;
         }
         
+        optgroup {
+            font-weight: 700;
+            font-style: normal;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        optgroup option {
+            font-weight: 400;
+            padding-left: 10px;
+        }
+        
         @media (max-width: 600px) {
             .container {
                 padding: 25px;
@@ -312,18 +296,6 @@
         
         <span class="discount-badge">✨ Special Crew Member Rates</span>
         
-        <div class="crew-benefits">
-            <h3>Why Airline Crew Members Choose TravylWay:</h3>
-            <ul>
-                <li><strong>Crew-Focused Service:</strong> We understand airline schedules and crew lifestyle</li>
-                <li><strong>Crashpad Friendly:</strong> Quick-select addresses for known crew housing</li>
-                <li><strong>Flight Tracking:</strong> We monitor your flight and adjust pickup times automatically</li>
-                <li><strong>Flexible Scheduling:</strong> Early mornings, late nights - we're here when you need us</li>
-                <li><strong>Professional Drivers:</strong> Many are veterans who understand discipline and service</li>
-                <li><strong>Crew Discounts:</strong> Special discounted rates for airline employees</li>
-            </ul>
-        </div>
-        
         <div id="bookingMessage" class="message"></div>
         
         <form id="crewBookingForm">
@@ -332,24 +304,125 @@
             <input type="hidden" name="booking_source" value="crew_page">
             
             <div class="form-group">
-                <label for="crashpadSelect">Known Crew Housing - Quick Select (Optional)</label>
+                <label for="crashpadSelect">Denver Based Flight Attendants (Optional)</label>
                 <select id="crashpadSelect" name="crashpadSelect">
                     <option value="">-- Select a crash pad or enter address below --</option>
-                    <option value="Denver International Airport" - 8500 Pena Blvd, Denver, CO 80249</option>
-                    <option value="6660 Lisbon Street, Aurora, CO 80019">GVR - 6660 Lisbon Street, Aurora, CO 80019</option>
-                    <option value="1777 Willow St, Denver, CO 80220">Denver - 1777 Willow St, Denver, CO 80220</option>
-                    <option value="5489 Netherland St, Denver, CO 80249">GVR - 5489 Netherland St, Denver, CO 80249</option>
-                    <option value="20920 52nd Ave, Denver, CO 80249">GVR - 20920 52nd Ave, Denver, CO 80249</option>
-                    <option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">GVR - 4909 Green Valley Ranch Blvd, Denver, CO 80249</option>
-                    <option value="20040 Mitchell Cir, Denver, CO 80249">GVR - 20040 Mitchell Cir, Denver, CO 80249</option>
-                    <option value="18001 E 47th Dr, Denver, CO 80249">GVR - 18001 E 47th Dr, Denver, CO 80249</option>
-                    <option value="18109 E 51st Pl, Denver, CO 80249">GVR - 18109 E 51st Pl, Denver, CO 80249</option>
-                    <option value="18113 E 51st Ave, Denver, CO 80249">GVR - 18113 E 51st Ave, Denver, CO 80249</option>
-                    <option value="10058 Granby St, Commerce City, CO 80022">Commerce City - 10058 Granby St, Commerce City, CO 80022</option>
-                    <option value="11446 Helena St, Commerce City, CO 80022">Commerce City - 11446 Helena St, Commerce City, CO 80022</option>
-                    <option value="12975 E 107th Pl, Commerce City, CO 80022">Commerce City - 12975 E 107th Pl, Commerce City, CO 80022</option>
+                    <option value="6660 Lisbon Street, Aurora, CO 80019">6660 Lisbon Street, Aurora, CO 80019</option>
+                    <option value="1777 Willow St, Denver, CO 80220">1777 Willow St, Denver, CO 80220</option>
+                    <option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St, Denver, CO 80249</option>
+                    <option value="20920 52nd Ave, Denver, CO 80249">20920 52nd Ave, Denver, CO 80249</option>
+                    <option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd, Denver, CO 80249</option>
+                    <option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir, Denver, CO 80249</option>
+                    <option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr, Denver, CO 80249</option>
+                    <option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl, Denver, CO 80249</option>
+                    <option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave, Denver, CO 80249</option>
+                    <option value="10058 Granby St, Commerce City, CO 80022">10058 Granby St, Commerce City, CO 80022</option>
+                    <option value="11446 Helena St, Commerce City, CO 80022">11446 Helena St, Commerce City, CO 80022</option>
+                    <option value="12975 E 107th Pl, Commerce City, CO 80022">12975 E 107th Pl, Commerce City, CO 80022</option>
                 </select>
                 <small class="info-text">Select your crash pad to auto-fill the address, or enter manually below</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="airportSelect">Select Your Airport (Optional)</label>
+                <select id="airportSelect" name="airportSelect">
+                    <option value="">-- Select airport or enter custom location --</option>
+                    
+                    <!-- UNITED STATES - WEST -->
+                    <optgroup label="🇺🇸 US - West Coast">
+                        <option value="Los Angeles International Airport">LAX - Los Angeles International Airport</option>
+                        <option value="San Francisco International Airport">SFO - San Francisco International Airport</option>
+                        <option value="Seattle-Tacoma International Airport">SEA - Seattle-Tacoma International Airport</option>
+                        <option value="Portland International Airport">PDX - Portland International Airport</option>
+                        <option value="San Diego International Airport">SAN - San Diego International Airport</option>
+                        <option value="Las Vegas Harry Reid International Airport">LAS - Las Vegas Harry Reid International Airport</option>
+                    </optgroup>
+                    
+                    <!-- UNITED STATES - MOUNTAIN -->
+                    <optgroup label="🇺🇸 US - Mountain Region">
+                        <option value="Denver International Airport">DEN - Denver International Airport</option>
+                        <option value="Phoenix Sky Harbor International Airport">PHX - Phoenix Sky Harbor International Airport</option>
+                        <option value="Salt Lake City International Airport">SLC - Salt Lake City International Airport</option>
+                    </optgroup>
+                    
+                    <!-- UNITED STATES - MIDWEST -->
+                    <optgroup label="🇺🇸 US - Midwest">
+                        <option value="Chicago O'Hare International Airport">ORD - Chicago O'Hare International Airport</option>
+                        <option value="Minneapolis-St. Paul International Airport">MSP - Minneapolis-St. Paul International Airport</option>
+                        <option value="Detroit Metropolitan Wayne County Airport">DTW - Detroit Metropolitan Airport</option>
+                    </optgroup>
+                    
+                    <!-- UNITED STATES - SOUTH -->
+                    <optgroup label="🇺🇸 US - South">
+                        <option value="Hartsfield-Jackson Atlanta International Airport">ATL - Hartsfield-Jackson Atlanta International Airport</option>
+                        <option value="Dallas/Fort Worth International Airport">DFW - Dallas/Fort Worth International Airport</option>
+                        <option value="George Bush Intercontinental Airport">IAH - Houston George Bush Intercontinental</option>
+                        <option value="Austin-Bergstrom International Airport">AUS - Austin-Bergstrom International Airport</option>
+                        <option value="Nashville International Airport">BNA - Nashville International Airport</option>
+                        <option value="Charlotte Douglas International Airport">CLT - Charlotte Douglas International Airport</option>
+                    </optgroup>
+                    
+                    <!-- UNITED STATES - FLORIDA -->
+                    <optgroup label="🇺🇸 US - Florida">
+                        <option value="Miami International Airport">MIA - Miami International Airport</option>
+                        <option value="Fort Lauderdale-Hollywood International Airport">FLL - Fort Lauderdale-Hollywood International</option>
+                        <option value="Orlando International Airport">MCO - Orlando International Airport</option>
+                        <option value="Tampa International Airport">TPA - Tampa International Airport</option>
+                    </optgroup>
+                    
+                    <!-- UNITED STATES - NORTHEAST -->
+                    <optgroup label="🇺🇸 US - Northeast">
+                        <option value="John F. Kennedy International Airport">JFK - John F. Kennedy International Airport</option>
+                        <option value="Newark Liberty International Airport">EWR - Newark Liberty International Airport</option>
+                        <option value="LaGuardia Airport">LGA - LaGuardia Airport</option>
+                        <option value="Boston Logan International Airport">BOS - Boston Logan International Airport</option>
+                        <option value="Philadelphia International Airport">PHL - Philadelphia International Airport</option>
+                        <option value="Ronald Reagan Washington National Airport">DCA - Ronald Reagan Washington National</option>
+                        <option value="Washington Dulles International Airport">IAD - Washington Dulles International Airport</option>
+                    </optgroup>
+                    
+                    <!-- CANADA -->
+                    <optgroup label="🇨🇦 Canada">
+                        <option value="Toronto Pearson International Airport">YYZ - Toronto Pearson International Airport</option>
+                        <option value="Vancouver International Airport">YVR - Vancouver International Airport</option>
+                        <option value="Montreal-Pierre Elliott Trudeau International Airport">YUL - Montreal-Pierre Elliott Trudeau International</option>
+                    </optgroup>
+                    
+                    <!-- MEXICO -->
+                    <optgroup label="🇲🇽 Mexico">
+                        <option value="Mexico City International Airport">MEX - Mexico City International Airport</option>
+                        <option value="Cancún International Airport">CUN - Cancún International Airport</option>
+                    </optgroup>
+                    
+                    <!-- EUROPE - UK & IRELAND -->
+                    <optgroup label="🇬🇧 UK & Ireland">
+                        <option value="London Heathrow Airport">LHR - London Heathrow Airport</option>
+                        <option value="London Gatwick Airport">LGW - London Gatwick Airport</option>
+                        <option value="Dublin Airport">DUB - Dublin Airport</option>
+                    </optgroup>
+                    
+                    <!-- EUROPE - WESTERN -->
+                    <optgroup label="🇪🇺 Europe - Western">
+                        <option value="Paris Charles de Gaulle Airport">CDG - Paris Charles de Gaulle Airport</option>
+                        <option value="Amsterdam Schiphol Airport">AMS - Amsterdam Schiphol Airport</option>
+                        <option value="Frankfurt Airport">FRA - Frankfurt Airport</option>
+                    </optgroup>
+                    
+                    <!-- MIDDLE EAST -->
+                    <optgroup label="🏜️ Middle East">
+                        <option value="Dubai International Airport">DXB - Dubai International Airport</option>
+                        <option value="Doha Hamad International Airport">DOH - Doha Hamad International Airport</option>
+                    </optgroup>
+                    
+                    <!-- ASIA -->
+                    <optgroup label="🌏 Asia">
+                        <option value="Tokyo Narita International Airport">NRT - Tokyo Narita International Airport</option>
+                        <option value="Seoul Incheon International Airport">ICN - Seoul Incheon International Airport</option>
+                        <option value="Singapore Changi Airport">SIN - Singapore Changi Airport</option>
+                        <option value="Hong Kong International Airport">HKG - Hong Kong International Airport</option>
+                    </optgroup>
+                </select>
+                <small class="info-text">Quick-select major airports worldwide</small>
             </div>
             
             <div class="form-group">
@@ -362,15 +435,201 @@
             </div>
             
             <div class="form-group">
-                <label for="pickupLocation">Pickup Location *</label>
-                <input type="text" id="pickupLocation" name="pickup_location" 
-                       placeholder="e.g., 1234 Main St, City, State or Airport Terminal" required>
+                <label for="pickupLocationSelect">Pickup Location - Quick Select (Optional)</label>
+                <select id="pickupLocationSelect" name="pickupLocationSelect">
+                    <option value="">-- Quick select or enter address below --</option>
+                    
+                    <!-- AIRPORTS - US WEST -->
+                    <optgroup label="✈️ Airports - West Coast">
+                        <option value="Los Angeles International Airport, 1 World Way, Los Angeles, CA 90045">LAX - Los Angeles International Airport</option>
+                        <option value="San Francisco International Airport, San Francisco, CA 94128">SFO - San Francisco International Airport</option>
+                        <option value="Seattle-Tacoma International Airport, Seattle, WA 98158">SEA - Seattle-Tacoma International Airport</option>
+                        <option value="Portland International Airport, Portland, OR 97218">PDX - Portland International Airport</option>
+                        <option value="San Diego International Airport, San Diego, CA 92101">SAN - San Diego International Airport</option>
+                        <option value="Las Vegas Harry Reid International Airport, Las Vegas, NV 89111">LAS - Las Vegas Harry Reid International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US MOUNTAIN -->
+                    <optgroup label="✈️ Airports - Mountain Region">
+                        <option value="Denver International Airport, 8500 Pena Blvd, Denver, CO 80249">DEN - Denver International Airport</option>
+                        <option value="Phoenix Sky Harbor International Airport, Phoenix, AZ 85034">PHX - Phoenix Sky Harbor International Airport</option>
+                        <option value="Salt Lake City International Airport, Salt Lake City, UT 84122">SLC - Salt Lake City International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US MIDWEST -->
+                    <optgroup label="✈️ Airports - Midwest">
+                        <option value="Chicago O'Hare International Airport, Chicago, IL 60666">ORD - Chicago O'Hare International Airport</option>
+                        <option value="Minneapolis-St. Paul International Airport, Minneapolis, MN 55111">MSP - Minneapolis-St. Paul International Airport</option>
+                        <option value="Detroit Metropolitan Wayne County Airport, Detroit, MI 48242">DTW - Detroit Metropolitan Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US SOUTH -->
+                    <optgroup label="✈️ Airports - South">
+                        <option value="Hartsfield-Jackson Atlanta International Airport, Atlanta, GA 30320">ATL - Hartsfield-Jackson Atlanta International Airport</option>
+                        <option value="Dallas/Fort Worth International Airport, Dallas, TX 75261">DFW - Dallas/Fort Worth International Airport</option>
+                        <option value="George Bush Intercontinental Airport, Houston, TX 77032">IAH - Houston George Bush Intercontinental</option>
+                        <option value="Austin-Bergstrom International Airport, Austin, TX 78719">AUS - Austin-Bergstrom International Airport</option>
+                        <option value="Nashville International Airport, Nashville, TN 37214">BNA - Nashville International Airport</option>
+                        <option value="Charlotte Douglas International Airport, Charlotte, NC 28208">CLT - Charlotte Douglas International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US FLORIDA -->
+                    <optgroup label="✈️ Airports - Florida">
+                        <option value="Miami International Airport, Miami, FL 33126">MIA - Miami International Airport</option>
+                        <option value="Fort Lauderdale-Hollywood International Airport, Fort Lauderdale, FL 33315">FLL - Fort Lauderdale-Hollywood International</option>
+                        <option value="Orlando International Airport, Orlando, FL 32827">MCO - Orlando International Airport</option>
+                        <option value="Tampa International Airport, Tampa, FL 33607">TPA - Tampa International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US NORTHEAST -->
+                    <optgroup label="✈️ Airports - Northeast">
+                        <option value="John F. Kennedy International Airport, Queens, NY 11430">JFK - John F. Kennedy International Airport</option>
+                        <option value="Newark Liberty International Airport, Newark, NJ 07114">EWR - Newark Liberty International Airport</option>
+                        <option value="LaGuardia Airport, Queens, NY 11371">LGA - LaGuardia Airport</option>
+                        <option value="Boston Logan International Airport, Boston, MA 02128">BOS - Boston Logan International Airport</option>
+                        <option value="Philadelphia International Airport, Philadelphia, PA 19153">PHL - Philadelphia International Airport</option>
+                        <option value="Ronald Reagan Washington National Airport, Arlington, VA 22202">DCA - Ronald Reagan Washington National</option>
+                        <option value="Washington Dulles International Airport, Dulles, VA 20166">IAD - Washington Dulles International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - CANADA -->
+                    <optgroup label="✈️ Airports - Canada">
+                        <option value="Toronto Pearson International Airport, Mississauga, ON L5P 1B2, Canada">YYZ - Toronto Pearson International Airport</option>
+                        <option value="Vancouver International Airport, Richmond, BC V7B 0A1, Canada">YVR - Vancouver International Airport</option>
+                        <option value="Montreal-Pierre Elliott Trudeau International Airport, Dorval, QC H4Y 1H1, Canada">YUL - Montreal International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - INTERNATIONAL -->
+                    <optgroup label="✈️ Airports - International">
+                        <option value="London Heathrow Airport, Longford TW6, UK">LHR - London Heathrow Airport</option>
+                        <option value="Paris Charles de Gaulle Airport, 95700 Roissy-en-France, France">CDG - Paris Charles de Gaulle Airport</option>
+                        <option value="Frankfurt Airport, 60547 Frankfurt, Germany">FRA - Frankfurt Airport</option>
+                        <option value="Dubai International Airport, Dubai, UAE">DXB - Dubai International Airport</option>
+                        <option value="Tokyo Narita International Airport, Narita, Chiba 282-0004, Japan">NRT - Tokyo Narita International Airport</option>
+                    </optgroup>
+                    
+                    <!-- DENVER CRASHPADS -->
+                    <optgroup label="🏠 Denver Based Flight Attendants - Known Crew Housing">
+                        <option value="6660 Lisbon Street, Aurora, CO 80019">6660 Lisbon Street, Aurora, CO 80019</option>
+                        <option value="1777 Willow St, Denver, CO 80220">1777 Willow St, Denver, CO 80220</option>
+                        <option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St, Denver, CO 80249</option>
+                        <option value="20920 52nd Ave, Denver, CO 80249">20920 52nd Ave, Denver, CO 80249</option>
+                        <option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd, Denver, CO 80249</option>
+                        <option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir, Denver, CO 80249</option>
+                        <option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr, Denver, CO 80249</option>
+                        <option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl, Denver, CO 80249</option>
+                        <option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave, Denver, CO 80249</option>
+                        <option value="10058 Granby St, Commerce City, CO 80022">10058 Granby St, Commerce City, CO 80022</option>
+                        <option value="11446 Helena St, Commerce City, CO 80022">11446 Helena St, Commerce City, CO 80022</option>
+                        <option value="12975 E 107th Pl, Commerce City, CO 80022">12975 E 107th Pl, Commerce City, CO 80022</option>
+                    </optgroup>
+                </select>
+                <small class="info-text">Quick-select airport or crashpad, or enter custom address below</small>
             </div>
             
             <div class="form-group">
-                <label for="dropoffLocation">Dropoff Location *</label>
+                <label for="pickupLocation">Pickup Location (Enter or Auto-Filled)</label>
+                <input type="text" id="pickupLocation" name="pickup_location" 
+                       placeholder="Full address with city, state, zip">
+            </div>
+            
+            <div class="form-group">
+                <label for="dropoffLocationSelect">Dropoff Location - Quick Select (Optional)</label>
+                <select id="dropoffLocationSelect" name="dropoffLocationSelect">
+                    <option value="">-- Quick select or enter address below --</option>
+                    
+                    <!-- AIRPORTS - US WEST -->
+                    <optgroup label="✈️ Airports - West Coast">
+                        <option value="Los Angeles International Airport, 1 World Way, Los Angeles, CA 90045">LAX - Los Angeles International Airport</option>
+                        <option value="San Francisco International Airport, San Francisco, CA 94128">SFO - San Francisco International Airport</option>
+                        <option value="Seattle-Tacoma International Airport, Seattle, WA 98158">SEA - Seattle-Tacoma International Airport</option>
+                        <option value="Portland International Airport, Portland, OR 97218">PDX - Portland International Airport</option>
+                        <option value="San Diego International Airport, San Diego, CA 92101">SAN - San Diego International Airport</option>
+                        <option value="Las Vegas Harry Reid International Airport, Las Vegas, NV 89111">LAS - Las Vegas Harry Reid International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US MOUNTAIN -->
+                    <optgroup label="✈️ Airports - Mountain Region">
+                        <option value="Denver International Airport, 8500 Pena Blvd, Denver, CO 80249">DEN - Denver International Airport</option>
+                        <option value="Phoenix Sky Harbor International Airport, Phoenix, AZ 85034">PHX - Phoenix Sky Harbor International Airport</option>
+                        <option value="Salt Lake City International Airport, Salt Lake City, UT 84122">SLC - Salt Lake City International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US MIDWEST -->
+                    <optgroup label="✈️ Airports - Midwest">
+                        <option value="Chicago O'Hare International Airport, Chicago, IL 60666">ORD - Chicago O'Hare International Airport</option>
+                        <option value="Minneapolis-St. Paul International Airport, Minneapolis, MN 55111">MSP - Minneapolis-St. Paul International Airport</option>
+                        <option value="Detroit Metropolitan Wayne County Airport, Detroit, MI 48242">DTW - Detroit Metropolitan Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US SOUTH -->
+                    <optgroup label="✈️ Airports - South">
+                        <option value="Hartsfield-Jackson Atlanta International Airport, Atlanta, GA 30320">ATL - Hartsfield-Jackson Atlanta International Airport</option>
+                        <option value="Dallas/Fort Worth International Airport, Dallas, TX 75261">DFW - Dallas/Fort Worth International Airport</option>
+                        <option value="George Bush Intercontinental Airport, Houston, TX 77032">IAH - Houston George Bush Intercontinental</option>
+                        <option value="Austin-Bergstrom International Airport, Austin, TX 78719">AUS - Austin-Bergstrom International Airport</option>
+                        <option value="Nashville International Airport, Nashville, TN 37214">BNA - Nashville International Airport</option>
+                        <option value="Charlotte Douglas International Airport, Charlotte, NC 28208">CLT - Charlotte Douglas International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US FLORIDA -->
+                    <optgroup label="✈️ Airports - Florida">
+                        <option value="Miami International Airport, Miami, FL 33126">MIA - Miami International Airport</option>
+                        <option value="Fort Lauderdale-Hollywood International Airport, Fort Lauderdale, FL 33315">FLL - Fort Lauderdale-Hollywood International</option>
+                        <option value="Orlando International Airport, Orlando, FL 32827">MCO - Orlando International Airport</option>
+                        <option value="Tampa International Airport, Tampa, FL 33607">TPA - Tampa International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - US NORTHEAST -->
+                    <optgroup label="✈️ Airports - Northeast">
+                        <option value="John F. Kennedy International Airport, Queens, NY 11430">JFK - John F. Kennedy International Airport</option>
+                        <option value="Newark Liberty International Airport, Newark, NJ 07114">EWR - Newark Liberty International Airport</option>
+                        <option value="LaGuardia Airport, Queens, NY 11371">LGA - LaGuardia Airport</option>
+                        <option value="Boston Logan International Airport, Boston, MA 02128">BOS - Boston Logan International Airport</option>
+                        <option value="Philadelphia International Airport, Philadelphia, PA 19153">PHL - Philadelphia International Airport</option>
+                        <option value="Ronald Reagan Washington National Airport, Arlington, VA 22202">DCA - Ronald Reagan Washington National</option>
+                        <option value="Washington Dulles International Airport, Dulles, VA 20166">IAD - Washington Dulles International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - CANADA -->
+                    <optgroup label="✈️ Airports - Canada">
+                        <option value="Toronto Pearson International Airport, Mississauga, ON L5P 1B2, Canada">YYZ - Toronto Pearson International Airport</option>
+                        <option value="Vancouver International Airport, Richmond, BC V7B 0A1, Canada">YVR - Vancouver International Airport</option>
+                        <option value="Montreal-Pierre Elliott Trudeau International Airport, Dorval, QC H4Y 1H1, Canada">YUL - Montreal International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AIRPORTS - INTERNATIONAL -->
+                    <optgroup label="✈️ Airports - International">
+                        <option value="London Heathrow Airport, Longford TW6, UK">LHR - London Heathrow Airport</option>
+                        <option value="Paris Charles de Gaulle Airport, 95700 Roissy-en-France, France">CDG - Paris Charles de Gaulle Airport</option>
+                        <option value="Frankfurt Airport, 60547 Frankfurt, Germany">FRA - Frankfurt Airport</option>
+                        <option value="Dubai International Airport, Dubai, UAE">DXB - Dubai International Airport</option>
+                        <option value="Tokyo Narita International Airport, Narita, Chiba 282-0004, Japan">NRT - Tokyo Narita International Airport</option>
+                    </optgroup>
+                    
+                    <!-- DENVER CRASHPADS -->
+                    <optgroup label="🏠 Denver Based Flight Attendants - Known Crew Housing">
+                        <option value="6660 Lisbon Street, Aurora, CO 80019">6660 Lisbon Street, Aurora, CO 80019</option>
+                        <option value="1777 Willow St, Denver, CO 80220">1777 Willow St, Denver, CO 80220</option>
+                        <option value="5489 Netherland St, Denver, CO 80249">5489 Netherland St, Denver, CO 80249</option>
+                        <option value="20920 52nd Ave, Denver, CO 80249">20920 52nd Ave, Denver, CO 80249</option>
+                        <option value="4909 Green Valley Ranch Blvd, Denver, CO 80249">4909 Green Valley Ranch Blvd, Denver, CO 80249</option>
+                        <option value="20040 Mitchell Cir, Denver, CO 80249">20040 Mitchell Cir, Denver, CO 80249</option>
+                        <option value="18001 E 47th Dr, Denver, CO 80249">18001 E 47th Dr, Denver, CO 80249</option>
+                        <option value="18109 E 51st Pl, Denver, CO 80249">18109 E 51st Pl, Denver, CO 80249</option>
+                        <option value="18113 E 51st Ave, Denver, CO 80249">18113 E 51st Ave, Denver, CO 80249</option>
+                        <option value="10058 Granby St, Commerce City, CO 80022">10058 Granby St, Commerce City, CO 80022</option>
+                        <option value="11446 Helena St, Commerce City, CO 80022">11446 Helena St, Commerce City, CO 80022</option>
+                        <option value="12975 E 107th Pl, Commerce City, CO 80022">12975 E 107th Pl, Commerce City, CO 80022</option>
+                    </optgroup>
+                </select>
+                <small class="info-text">Quick-select airport or crashpad, or enter custom address below</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="dropoffLocation">Dropoff Location (Enter or Auto-Filled)</label>
                 <input type="text" id="dropoffLocation" name="dropoff_location" 
-                       placeholder="Destination address or airport terminal" required>
+                       placeholder="Full address with city, state, zip">
             </div>
             
             <div class="row">
@@ -427,16 +686,16 @@
             </div>
             
             <div class="form-group">
-                <label for="baseAirport">Your Base Airport *</label>
+                <label for="baseAirport">Your Base Airport (Optional)</label>
                 <input type="text" id="baseAirport" name="baseAirport" 
-                       placeholder="e.g., DEN, ORD, ATL, LAX" required 
+                       placeholder="e.g., DEN, ORD, ATL, LAX" 
                        style="text-transform:uppercase">
                 <small class="info-text">Your airline's home base airport code</small>
             </div>
 
             <div class="form-group">
-                <label for="tripType">Trip Type *</label>
-                <select id="tripType" name="tripType" required>
+                <label for="tripType">Trip Type (Optional)</label>
+                <select id="tripType" name="tripType">
                     <option value="">-- Select Trip Type --</option>
                     <option value="returning-home">🏠 Returning home from work trip</option>
                     <option value="going-to-work">✈️ Going to work (heading to airport for trip)</option>
@@ -536,14 +795,56 @@
         }
         
         // ========================================
-        // CRASH PAD AUTO-FILL
+        // CRASH PAD AUTO-FILL (LEGACY - keeping for backward compatibility)
         // ========================================
-        document.getElementById('crashpadSelect').addEventListener('change', function() {
-            var selectedAddress = this.value;
-            if (selectedAddress) {
-                document.getElementById('pickupLocation').value = selectedAddress;
+        if (document.getElementById('crashpadSelect')) {
+            document.getElementById('crashpadSelect').addEventListener('change', function() {
+                var selectedAddress = this.value;
+                if (selectedAddress) {
+                    document.getElementById('pickupLocation').value = selectedAddress;
+                }
+            });
+        }
+        
+        // ========================================
+        // PICKUP LOCATION SELECT AUTO-FILL
+        // ========================================
+        document.getElementById('pickupLocationSelect').addEventListener('change', function() {
+            var selectedLocation = this.value;
+            if (selectedLocation) {
+                document.getElementById('pickupLocation').value = selectedLocation;
             }
         });
+        
+        // ========================================
+        // DROPOFF LOCATION SELECT AUTO-FILL
+        // ========================================
+        document.getElementById('dropoffLocationSelect').addEventListener('change', function() {
+            var selectedLocation = this.value;
+            if (selectedLocation) {
+                document.getElementById('dropoffLocation').value = selectedLocation;
+            }
+        });
+        
+        // ========================================
+        // AIRPORT SELECT AUTO-FILL (LEGACY - keeping for backward compatibility)
+        // ========================================
+        if (document.getElementById('airportSelect')) {
+            document.getElementById('airportSelect').addEventListener('change', function() {
+                var selectedAirport = this.value;
+                var serviceType = document.getElementById('serviceType').value;
+                
+                if (selectedAirport) {
+                    if (serviceType === 'airport_pickup') {
+                        document.getElementById('pickupLocation').value = selectedAirport;
+                    } else if (serviceType === 'airport_dropoff') {
+                        document.getElementById('dropoffLocation').value = selectedAirport;
+                    } else {
+                        document.getElementById('pickupLocation').value = selectedAirport;
+                    }
+                }
+            });
+        }
         
         // ========================================
         // SERVICE TYPE - AUTO-FILL AIRPORT
@@ -554,15 +855,11 @@
             
             if (e.target.value === 'airport_pickup') {
                 // Coming FROM airport - pickup is airport, dropoff is their address
-                pickupField.value = 'Airport';
                 pickupField.placeholder = 'Airport name and terminal';
-                dropoffField.value = '';
                 dropoffField.placeholder = 'Your home, hotel, or crashpad address';
             } else if (e.target.value === 'airport_dropoff') {
                 // Going TO airport - pickup is their address, dropoff is airport
-                pickupField.value = '';
                 pickupField.placeholder = 'Your home, hotel, or crashpad address';
-                dropoffField.value = 'Airport';
                 dropoffField.placeholder = 'Airport name and terminal';
             }
         });
@@ -703,20 +1000,20 @@
                 // Map form fields to API format
                 const payload = {
                     'cf-turnstile-response': token,
-                    created_by: formDataObj.passengerName || 'crew',
+                    created_by: formDataObj.passenger_name || 'crew',
                     rider_phone: formDataObj.phone || '',
-                    pickup_text: formDataObj.pickupLocation || '',
-                    dropoff_text: formDataObj.dropoffLocation || '',
-                    pickup_time_utc: new Date().toISOString(), // Use current time or combine date/time fields
+                    pickup_text: formDataObj.pickup_location || '',
+                    dropoff_text: formDataObj.dropoff_location || '',
+                    pickup_time_utc: new Date().toISOString(),
                     trip_type: 'AIRPORT',
                     rider_type: 'CREW',
-                    direction: formDataObj.serviceType === 'airport_pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
-                    airport_code: 'DEN', // Default, can be extracted from location
+                    direction: formDataObj.service_type === 'airport_pickup' ? 'FROM_AIRPORT' : 'TO_AIRPORT',
+                    airport_code: 'DEN',
                     base_airport: formDataObj.baseAirport ? formDataObj.baseAirport.toUpperCase() : null,
                     crew_trip_type: formDataObj.tripType || null,
                     flight_number: formDataObj.flight_number || null,
                     airline: formDataObj.airline || null,
-                    notes: formDataObj.specialRequests || null
+                    notes: formDataObj.special_requests || null
                 };
                 
                 const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/api/trips', {
