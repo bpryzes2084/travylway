@@ -329,49 +329,65 @@
                     <option value="">-- Select airport or enter custom location --</option>
                     
                     <!-- UNITED STATES - WEST -->
-                    <optgroup label="🇺🇸 US - West Coast">
+                    <optgroup label="🇺🇸 West Coast">
                         <option value="Los Angeles International Airport">LAX - Los Angeles International Airport</option>
                         <option value="San Francisco International Airport">SFO - San Francisco International Airport</option>
                         <option value="Seattle-Tacoma International Airport">SEA - Seattle-Tacoma International Airport</option>
                         <option value="Portland International Airport">PDX - Portland International Airport</option>
                         <option value="San Diego International Airport">SAN - San Diego International Airport</option>
+                        <option value="Norman Y. Mineta San Jose International Airport">SJC - San Jose International Airport</option>
+                        <option value="Hollywood Burbank Airport">BUR - Hollywood Burbank Airport</option>
+                        <option value="Long Beach Airport">LGB - Long Beach Airport</option>
+                        <option value="Fresno Yosemite International Airport">FAT - Fresno Yosemite International Airport</option>
                         <option value="Las Vegas Harry Reid International Airport">LAS - Las Vegas Harry Reid International Airport</option>
                     </optgroup>
                     
                     <!-- UNITED STATES - MOUNTAIN -->
-                    <optgroup label="🇺🇸 US - Mountain Region">
+                    <optgroup label="🇺🇸 Mountain Region">
                         <option value="Denver International Airport">DEN - Denver International Airport</option>
+                        <option value="Colorado Springs Airport, 7770 Milton E Proby Pkwy, Colorado Springs, CO 80916">COS - Colorado Springs Airport</option>
                         <option value="Phoenix Sky Harbor International Airport">PHX - Phoenix Sky Harbor International Airport</option>
                         <option value="Salt Lake City International Airport">SLC - Salt Lake City International Airport</option>
+                        <option value="Albuquerque International Sunport">ABQ - Albuquerque International Sunport</option>
+                        <option value="Santa Fe Regional Airport">SAF - Santa Fe Regional Airport</option>
+                        <option value="Boise Airport">BOI - Boise Airport</option>
                     </optgroup>
                     
                     <!-- UNITED STATES - MIDWEST -->
-                    <optgroup label="🇺🇸 US - Midwest">
+                    <optgroup label="🇺🇸 Midwest">
                         <option value="Chicago O'Hare International Airport">ORD - Chicago O'Hare International Airport</option>
+                        <option value="Chicago Midway International Airport">MDW - Chicago Midway International Airport</option>
                         <option value="Minneapolis-St. Paul International Airport">MSP - Minneapolis-St. Paul International Airport</option>
                         <option value="Detroit Metropolitan Wayne County Airport">DTW - Detroit Metropolitan Airport</option>
+                        <option value="Indianapolis International Airport">IND - Indianapolis International Airport</option>
+                        <option value="Kansas City International Airport">MCI - Kansas City International Airport</option>
+                        <option value="Dane County Regional Airport">MSN - Dane County Regional Airport (Madison)</option>
                     </optgroup>
                     
                     <!-- UNITED STATES - SOUTH -->
-                    <optgroup label="🇺🇸 US - South">
+                    <optgroup label="🇺🇸 South">
                         <option value="Hartsfield-Jackson Atlanta International Airport">ATL - Hartsfield-Jackson Atlanta International Airport</option>
                         <option value="Dallas/Fort Worth International Airport">DFW - Dallas/Fort Worth International Airport</option>
                         <option value="George Bush Intercontinental Airport">IAH - Houston George Bush Intercontinental</option>
                         <option value="Austin-Bergstrom International Airport">AUS - Austin-Bergstrom International Airport</option>
                         <option value="Nashville International Airport">BNA - Nashville International Airport</option>
                         <option value="Charlotte Douglas International Airport">CLT - Charlotte Douglas International Airport</option>
+                        <option value="Raleigh-Durham International Airport">RDU - Raleigh-Durham International Airport</option>
+                        <option value="Huntsville International Airport">HSV - Huntsville International Airport</option>
                     </optgroup>
                     
                     <!-- UNITED STATES - FLORIDA -->
-                    <optgroup label="🇺🇸 US - Florida">
+                    <optgroup label="🇺🇸 Florida">
                         <option value="Miami International Airport">MIA - Miami International Airport</option>
                         <option value="Fort Lauderdale-Hollywood International Airport">FLL - Fort Lauderdale-Hollywood International</option>
                         <option value="Orlando International Airport">MCO - Orlando International Airport</option>
                         <option value="Tampa International Airport">TPA - Tampa International Airport</option>
+                        <option value="Jacksonville International Airport">JAX - Jacksonville International Airport</option>
+                        <option value="Southwest Florida International Airport">RSW - Southwest Florida International Airport (Fort Myers)</option>
                     </optgroup>
                     
                     <!-- UNITED STATES - NORTHEAST -->
-                    <optgroup label="🇺🇸 US - Northeast">
+                    <optgroup label="🇺🇸 Northeast">
                         <option value="John F. Kennedy International Airport">JFK - John F. Kennedy International Airport</option>
                         <option value="Newark Liberty International Airport">EWR - Newark Liberty International Airport</option>
                         <option value="LaGuardia Airport">LGA - LaGuardia Airport</option>
@@ -395,7 +411,7 @@
                     </optgroup>
                     
                     <!-- EUROPE - UK & IRELAND -->
-                    <optgroup label="🇬🇧 UK & Ireland">
+                    <optgroup label="🇬🇧 United Kingdom & Ireland">
                         <option value="London Heathrow Airport">LHR - London Heathrow Airport</option>
                         <option value="London Gatwick Airport">LGW - London Gatwick Airport</option>
                         <option value="Dublin Airport">DUB - Dublin Airport</option>
@@ -420,6 +436,25 @@
                         <option value="Seoul Incheon International Airport">ICN - Seoul Incheon International Airport</option>
                         <option value="Singapore Changi Airport">SIN - Singapore Changi Airport</option>
                         <option value="Hong Kong International Airport">HKG - Hong Kong International Airport</option>
+                    </optgroup>
+                    
+                    <!-- AUSTRALIA -->
+                    <optgroup label="🇦🇺 Australia">
+                        <option value="Sydney Kingsford Smith Airport">SYD - Sydney Kingsford Smith Airport</option>
+                        <option value="Melbourne Airport">MEL - Melbourne Airport</option>
+                        <option value="Brisbane Airport">BNE - Brisbane Airport</option>
+                        <option value="Perth Airport">PER - Perth Airport</option>
+                        <option value="Adelaide Airport">ADL - Adelaide Airport</option>
+                        <option value="Cairns Airport">CNS - Cairns Airport</option>
+                        <option value="Gold Coast Airport">OOL - Gold Coast Airport</option>
+                    </optgroup>
+                    
+                    <!-- NEW ZEALAND -->
+                    <optgroup label="🇳🇿 New Zealand">
+                        <option value="Auckland Airport">AKL - Auckland Airport</option>
+                        <option value="Wellington International Airport">WLG - Wellington International Airport</option>
+                        <option value="Christchurch International Airport">CHC - Christchurch International Airport</option>
+                        <option value="Queenstown Airport">ZQN - Queenstown Airport</option>
                     </optgroup>
                 </select>
                 <small class="info-text">Quick-select major airports worldwide</small>
@@ -446,14 +481,22 @@
                         <option value="Seattle-Tacoma International Airport, Seattle, WA 98158">SEA - Seattle-Tacoma International Airport</option>
                         <option value="Portland International Airport, Portland, OR 97218">PDX - Portland International Airport</option>
                         <option value="San Diego International Airport, San Diego, CA 92101">SAN - San Diego International Airport</option>
+                        <option value="Norman Y. Mineta San Jose International Airport, San Jose, CA 95110">SJC - San Jose International Airport</option>
+                        <option value="Hollywood Burbank Airport, Burbank, CA 91505">BUR - Hollywood Burbank Airport</option>
+                        <option value="Long Beach Airport, Long Beach, CA 90806">LGB - Long Beach Airport</option>
+                        <option value="Fresno Yosemite International Airport, Fresno, CA 93727">FAT - Fresno Yosemite International Airport</option>
                         <option value="Las Vegas Harry Reid International Airport, Las Vegas, NV 89111">LAS - Las Vegas Harry Reid International Airport</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US MOUNTAIN -->
                     <optgroup label="✈️ Airports - Mountain Region">
                         <option value="Denver International Airport, 8500 Pena Blvd, Denver, CO 80249">DEN - Denver International Airport</option>
+                        <option value="Colorado Springs Airport, 7770 Milton E Proby Pkwy, Colorado Springs, CO 80916">COS - Colorado Springs Airport</option>
                         <option value="Phoenix Sky Harbor International Airport, Phoenix, AZ 85034">PHX - Phoenix Sky Harbor International Airport</option>
                         <option value="Salt Lake City International Airport, Salt Lake City, UT 84122">SLC - Salt Lake City International Airport</option>
+                        <option value="Albuquerque International Sunport, Albuquerque, NM 87106">ABQ - Albuquerque International Sunport</option>
+                        <option value="Santa Fe Regional Airport, Santa Fe, NM 87507">SAF - Santa Fe Regional Airport</option>
+                        <option value="Boise Airport, Boise, ID 83705">BOI - Boise Airport</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US MIDWEST -->
@@ -461,6 +504,10 @@
                         <option value="Chicago O'Hare International Airport, Chicago, IL 60666">ORD - Chicago O'Hare International Airport</option>
                         <option value="Minneapolis-St. Paul International Airport, Minneapolis, MN 55111">MSP - Minneapolis-St. Paul International Airport</option>
                         <option value="Detroit Metropolitan Wayne County Airport, Detroit, MI 48242">DTW - Detroit Metropolitan Airport</option>
+                        <option value="Chicago Midway International Airport, Chicago, IL 60638">MDW - Chicago Midway International Airport</option>
+                        <option value="Indianapolis International Airport, Indianapolis, IN 46241">IND - Indianapolis International Airport</option>
+                        <option value="Kansas City International Airport, Kansas City, MO 64153">MCI - Kansas City International Airport</option>
+                        <option value="Dane County Regional Airport, Madison, WI 53704">MSN - Dane County Regional Airport (Madison)</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US SOUTH -->
@@ -471,6 +518,9 @@
                         <option value="Austin-Bergstrom International Airport, Austin, TX 78719">AUS - Austin-Bergstrom International Airport</option>
                         <option value="Nashville International Airport, Nashville, TN 37214">BNA - Nashville International Airport</option>
                         <option value="Charlotte Douglas International Airport, Charlotte, NC 28208">CLT - Charlotte Douglas International Airport</option>
+                        <option value="Raleigh-Durham International Airport, Morrisville, NC 27560">RDU - Raleigh-Durham International Airport</option>
+                        <option value="Raleigh-Durham International Airport">RDU - Raleigh-Durham International Airport</option>
+                        <option value="Huntsville International Airport, Huntsville, AL 35824">HSV - Huntsville International Airport</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US FLORIDA -->
@@ -479,6 +529,8 @@
                         <option value="Fort Lauderdale-Hollywood International Airport, Fort Lauderdale, FL 33315">FLL - Fort Lauderdale-Hollywood International</option>
                         <option value="Orlando International Airport, Orlando, FL 32827">MCO - Orlando International Airport</option>
                         <option value="Tampa International Airport, Tampa, FL 33607">TPA - Tampa International Airport</option>
+                        <option value="Jacksonville International Airport, Jacksonville, FL 32229">JAX - Jacksonville International Airport</option>
+                        <option value="Southwest Florida International Airport, Fort Myers, FL 33913">RSW - Southwest Florida International Airport (Fort Myers)</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US NORTHEAST -->
@@ -506,6 +558,17 @@
                         <option value="Frankfurt Airport, 60547 Frankfurt, Germany">FRA - Frankfurt Airport</option>
                         <option value="Dubai International Airport, Dubai, UAE">DXB - Dubai International Airport</option>
                         <option value="Tokyo Narita International Airport, Narita, Chiba 282-0004, Japan">NRT - Tokyo Narita International Airport</option>
+                        <option value="Sydney Kingsford Smith Airport, Sydney NSW 2020, Australia">SYD - Sydney Kingsford Smith Airport</option>
+                        <option value="Melbourne Airport, Melbourne VIC 3045, Australia">MEL - Melbourne Airport</option>
+                        <option value="Brisbane Airport, Brisbane QLD 4008, Australia">BNE - Brisbane Airport</option>
+                        <option value="Perth Airport, Perth WA 6105, Australia">PER - Perth Airport</option>
+                        <option value="Adelaide Airport, Adelaide SA 5950, Australia">ADL - Adelaide Airport</option>
+                        <option value="Cairns Airport, Cairns QLD 4870, Australia">CNS - Cairns Airport</option>
+                        <option value="Gold Coast Airport, Coolangatta QLD 4225, Australia">OOL - Gold Coast Airport</option>
+                        <option value="Auckland Airport, Auckland 2022, New Zealand">AKL - Auckland Airport</option>
+                        <option value="Wellington International Airport, Wellington 6022, New Zealand">WLG - Wellington International Airport</option>
+                        <option value="Christchurch International Airport, Christchurch 8053, New Zealand">CHC - Christchurch International Airport</option>
+                        <option value="Queenstown Airport, Queenstown 9371, New Zealand">ZQN - Queenstown Airport</option>
                     </optgroup>
                     
                     <!-- DENVER CRASHPADS -->
@@ -545,14 +608,22 @@
                         <option value="Seattle-Tacoma International Airport, Seattle, WA 98158">SEA - Seattle-Tacoma International Airport</option>
                         <option value="Portland International Airport, Portland, OR 97218">PDX - Portland International Airport</option>
                         <option value="San Diego International Airport, San Diego, CA 92101">SAN - San Diego International Airport</option>
+                        <option value="Norman Y. Mineta San Jose International Airport, San Jose, CA 95110">SJC - San Jose International Airport</option>
+                        <option value="Hollywood Burbank Airport, Burbank, CA 91505">BUR - Hollywood Burbank Airport</option>
+                        <option value="Long Beach Airport, Long Beach, CA 90806">LGB - Long Beach Airport</option>
+                        <option value="Fresno Yosemite International Airport, Fresno, CA 93727">FAT - Fresno Yosemite International Airport</option>
                         <option value="Las Vegas Harry Reid International Airport, Las Vegas, NV 89111">LAS - Las Vegas Harry Reid International Airport</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US MOUNTAIN -->
                     <optgroup label="✈️ Airports - Mountain Region">
                         <option value="Denver International Airport, 8500 Pena Blvd, Denver, CO 80249">DEN - Denver International Airport</option>
+                        <option value="Colorado Springs Airport, 7770 Milton E Proby Pkwy, Colorado Springs, CO 80916">COS - Colorado Springs Airport</option>
                         <option value="Phoenix Sky Harbor International Airport, Phoenix, AZ 85034">PHX - Phoenix Sky Harbor International Airport</option>
                         <option value="Salt Lake City International Airport, Salt Lake City, UT 84122">SLC - Salt Lake City International Airport</option>
+                        <option value="Albuquerque International Sunport, Albuquerque, NM 87106">ABQ - Albuquerque International Sunport</option>
+                        <option value="Santa Fe Regional Airport, Santa Fe, NM 87507">SAF - Santa Fe Regional Airport</option>
+                        <option value="Boise Airport, Boise, ID 83705">BOI - Boise Airport</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US MIDWEST -->
@@ -560,6 +631,10 @@
                         <option value="Chicago O'Hare International Airport, Chicago, IL 60666">ORD - Chicago O'Hare International Airport</option>
                         <option value="Minneapolis-St. Paul International Airport, Minneapolis, MN 55111">MSP - Minneapolis-St. Paul International Airport</option>
                         <option value="Detroit Metropolitan Wayne County Airport, Detroit, MI 48242">DTW - Detroit Metropolitan Airport</option>
+                        <option value="Chicago Midway International Airport, Chicago, IL 60638">MDW - Chicago Midway International Airport</option>
+                        <option value="Indianapolis International Airport, Indianapolis, IN 46241">IND - Indianapolis International Airport</option>
+                        <option value="Kansas City International Airport, Kansas City, MO 64153">MCI - Kansas City International Airport</option>
+                        <option value="Dane County Regional Airport, Madison, WI 53704">MSN - Dane County Regional Airport (Madison)</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US SOUTH -->
@@ -570,6 +645,9 @@
                         <option value="Austin-Bergstrom International Airport, Austin, TX 78719">AUS - Austin-Bergstrom International Airport</option>
                         <option value="Nashville International Airport, Nashville, TN 37214">BNA - Nashville International Airport</option>
                         <option value="Charlotte Douglas International Airport, Charlotte, NC 28208">CLT - Charlotte Douglas International Airport</option>
+                        <option value="Raleigh-Durham International Airport, Morrisville, NC 27560">RDU - Raleigh-Durham International Airport</option>
+                        <option value="Raleigh-Durham International Airport">RDU - Raleigh-Durham International Airport</option>
+                        <option value="Huntsville International Airport, Huntsville, AL 35824">HSV - Huntsville International Airport</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US FLORIDA -->
@@ -578,6 +656,8 @@
                         <option value="Fort Lauderdale-Hollywood International Airport, Fort Lauderdale, FL 33315">FLL - Fort Lauderdale-Hollywood International</option>
                         <option value="Orlando International Airport, Orlando, FL 32827">MCO - Orlando International Airport</option>
                         <option value="Tampa International Airport, Tampa, FL 33607">TPA - Tampa International Airport</option>
+                        <option value="Jacksonville International Airport, Jacksonville, FL 32229">JAX - Jacksonville International Airport</option>
+                        <option value="Southwest Florida International Airport, Fort Myers, FL 33913">RSW - Southwest Florida International Airport (Fort Myers)</option>
                     </optgroup>
                     
                     <!-- AIRPORTS - US NORTHEAST -->
@@ -605,6 +685,17 @@
                         <option value="Frankfurt Airport, 60547 Frankfurt, Germany">FRA - Frankfurt Airport</option>
                         <option value="Dubai International Airport, Dubai, UAE">DXB - Dubai International Airport</option>
                         <option value="Tokyo Narita International Airport, Narita, Chiba 282-0004, Japan">NRT - Tokyo Narita International Airport</option>
+                        <option value="Sydney Kingsford Smith Airport, Sydney NSW 2020, Australia">SYD - Sydney Kingsford Smith Airport</option>
+                        <option value="Melbourne Airport, Melbourne VIC 3045, Australia">MEL - Melbourne Airport</option>
+                        <option value="Brisbane Airport, Brisbane QLD 4008, Australia">BNE - Brisbane Airport</option>
+                        <option value="Perth Airport, Perth WA 6105, Australia">PER - Perth Airport</option>
+                        <option value="Adelaide Airport, Adelaide SA 5950, Australia">ADL - Adelaide Airport</option>
+                        <option value="Cairns Airport, Cairns QLD 4870, Australia">CNS - Cairns Airport</option>
+                        <option value="Gold Coast Airport, Coolangatta QLD 4225, Australia">OOL - Gold Coast Airport</option>
+                        <option value="Auckland Airport, Auckland 2022, New Zealand">AKL - Auckland Airport</option>
+                        <option value="Wellington International Airport, Wellington 6022, New Zealand">WLG - Wellington International Airport</option>
+                        <option value="Christchurch International Airport, Christchurch 8053, New Zealand">CHC - Christchurch International Airport</option>
+                        <option value="Queenstown Airport, Queenstown 9371, New Zealand">ZQN - Queenstown Airport</option>
                     </optgroup>
                     
                     <!-- DENVER CRASHPADS -->
