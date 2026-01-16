@@ -28,9 +28,9 @@ input,select,textarea{width:100%;padding:12px;border:2px solid var(--line);borde
 input:focus,select:focus,textarea:focus{outline:none;border-color:#667eea}
 textarea{min-height:90px}
 .req{color:#ef4444;font-weight:900}
-.btn{width:100%;padding:14px;border-radius:14px;border:0;font-weight:900;cursor:pointer}
+.btn{display:block;text-align:center;text-decoration:none;width:100%;padding:14px;border-radius:14px;border:0;font-weight:900;cursor:pointer}
 .btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.btn.secondary{background:#fff;border:1px solid var(--line)}
+.btn.secondary{background:#fff;border:1px solid var(--line);color:#111}
 .msg{display:none;padding:12px;border-radius:12px;margin-bottom:12px;font-weight:800;text-align:center}
 .msg.ok{display:block;background:var(--okbg);border:1px solid var(--okbd);color:var(--oktx)}
 .msg.err{display:block;background:var(--erbg);border:1px solid var(--erbd);color:var(--ertx);white-space:pre-wrap}
@@ -54,7 +54,7 @@ textarea{min-height:90px}
 
     <div class="note">
       Driver will contact you via <strong>WhatsApp</strong> once your trip is claimed.
-      <div class="small">If Google Maps is down, use WhatsApp Backup below.</div>
+      <div class="small">If Google Maps is down, use WhatsApp Backup below to request pickup.</div>
     </div>
 
     <form id="crewForm">
@@ -159,7 +159,7 @@ textarea{min-height:90px}
 const API_BASE = "https://travylway-api.benterpryzes2084.workers.dev";
 const WHATSAPP_NUMBER = "17204748851";
 
-/* Put your REAL Google key here */
+/* Google key */
 const GOOGLE_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
 
 /* pricing */
@@ -183,15 +183,16 @@ function showErr(msg){
 function buildWhatsApp(){
   const msg=[
     "🚖 Travylway Air Crew Request",
-    `Name: ${el("name").value}`,
-    `Phone: ${el("phone").value}`,
-    `Pickup: ${el("pickupAddress").value}`,
-    `Drop-off: ${el("dropoffAddress").value}`,
-    `Airport: ${el("airportCode").value}`,
-    `Date/Time: ${el("date").value} ${el("time").value}`,
-    `Airline: ${el("airline").value}`,
-    `Flight: ${el("flightNumber").value}`,
-    `Notes: ${el("notes").value}`
+    `Name: ${el("name").value || ""}`,
+    `Phone: ${el("phone").value || ""}`,
+    `Pickup: ${el("pickupAddress").value || ""}`,
+    `Drop-off: ${el("dropoffAddress").value || ""}`,
+    `Airport: ${el("airportCode").value || ""}`,
+    `Service: ${el("serviceType").value || ""}`,
+    `Date/Time: ${el("date").value || ""} ${el("time").value || ""}`,
+    `Airline: ${el("airline").value || ""}`,
+    `Flight: ${el("flightNumber").value || ""}`,
+    `Notes: ${el("notes").value || ""}`
   ].join("\n");
 
   el("waBackupBtn").href =
@@ -200,7 +201,7 @@ function buildWhatsApp(){
 document.addEventListener("input", buildWhatsApp, true);
 document.addEventListener("change", buildWhatsApp, true);
 
-/* Google maps loader (manual, reliable) */
+/* Google maps loader */
 function loadGoogle(){
   return new Promise((resolve, reject) => {
     if (window.google && google.maps && google.maps.places) return resolve();
@@ -224,7 +225,10 @@ function calculatePrice(){
     unitSystem:google.maps.UnitSystem.IMPERIAL
   }, (r,s)=>{
     if(s!=="OK") return;
-    const miles = r.rows[0].elements[0].distance.value/1609.34;
+    const elem = r?.rows?.[0]?.elements?.[0];
+    if (!elem || elem.status !== "OK") return;
+
+    const miles = elem.distance.value/1609.34;
     let price = BASE + Math.max(0, miles-FREE)*PER;
     price = Math.max(MIN, Math.min(MAX, price));
     el("distanceDisplay").textContent = `${miles.toFixed(1)} mi`;
@@ -257,41 +261,52 @@ function initAutocomplete(){
 /* Submit handler */
 el("crewForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  showErr(""); // clear
-  showOk("");  // clear
+  el("ok").style.display = "none";
+  el("err").style.display = "none";
 
   const btn = el("submitBtn");
   btn.disabled = true;
   btn.textContent = "Submitting…";
 
   try {
-    // Basic validation
     const airport = el("airportCode").value.trim().toUpperCase();
     if (!/^[A-Z0-9]{3,4}$/.test(airport)) throw new Error("Airport code must look like DEN, LAX, JFK, etc.");
 
-    // Turnstile token (Turnstile injects hidden input)
+    const serviceType = el("serviceType").value;
+    if (!serviceType) throw new Error("Select a service type.");
+
+    const direction = serviceType === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT";
+    const pickup_time_utc = new Date(`${el("date").value}T${el("time").value}:00`).toISOString();
+
+    // Turnstile token field name MUST match Worker expectations
     const ts = document.querySelector('input[name="cf-turnstile-response"]')?.value || "";
     if (!ts) throw new Error("Turnstile not ready. Wait 10 seconds and submit again.");
 
-    const direction = el("serviceType").value === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT";
-
-    const pickup_time_utc = new Date(`${el("date").value}T${el("time").value}:00`).toISOString();
-
+    // Worker requires trip_type + rider_type
     const payload = {
       created_by: (el("email").value || el("phone").value || "").trim(),
+      rider_phone: el("phone").value.trim(),     // helps Telegram/WhatsApp linking
+      rider_type: "CREW",
+      trip_type: "AIRPORT",
+
       direction,
       airport_code: airport,
+
       pickup_text: el("pickupAddress").value.trim(),
       dropoff_text: el("dropoffAddress").value.trim(),
       pickup_time_utc,
+
       airline: el("airline").value.trim() || null,
       flight_number: el("flightNumber").value.trim() || null,
+
       notes: [
         `Name: ${el("name").value.trim()}`,
         `Phone: ${el("phone").value.trim()}`,
         el("notes").value.trim() ? `Notes: ${el("notes").value.trim()}` : null
       ].filter(Boolean).join(" • "),
-      turnstile_token: ts
+
+      // IMPORTANT: Worker reads this exact key:
+      "cf-turnstile-response": ts
     };
 
     const res = await fetch(`${API_BASE}/api/trips`, {
@@ -305,11 +320,18 @@ el("crewForm").addEventListener("submit", async (e) => {
       throw new Error(data.error || `API error (HTTP ${res.status})`);
     }
 
-    showOk(`Submitted ✅ Request ID: ${data.id || data.trip_id || "OK"}`);
+    showOk(`Submitted ✅ Request ID: ${data.id || "OK"}`);
+
+    // Optional: reset form & Turnstile after success
+    el("crewForm").reset();
+    pickupLoc = null; dropLoc = null;
+    el("priceEstimate").style.display = "none";
+    buildWhatsApp();
+    if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
+
   } catch (err) {
     showErr(`Not submitted:\n${err.message}\n\nUse the WhatsApp Backup button below if needed.`);
-    // Reset Turnstile so user can retry
-    if (window.turnstile) { try { turnstile.reset(); } catch {} }
+    if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
   } finally {
     btn.disabled = false;
     btn.textContent = "Submit Request";
