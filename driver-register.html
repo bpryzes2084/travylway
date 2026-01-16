@@ -127,7 +127,7 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        button:hover {
+        button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
@@ -178,6 +178,21 @@
         .veteran-badge p {
             color: #666;
             font-size: 13px;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
         }
         
         @media (max-width: 600px) {
@@ -261,6 +276,7 @@
                 <!-- Cloudflare Turnstile Widget -->
                 <div class="turnstile-container">
                     <div class="cf-turnstile" 
+                         id="registerTurnstile"
                          data-sitekey="0x4AAAAAACMeY92R9MqzCQJc"
                          data-theme="light"
                          data-size="normal"
@@ -268,7 +284,7 @@
                     </div>
                 </div>
                 
-                <button type="submit" id="registerBtn">Complete Registration</button>
+                <button type="submit" id="registerBtn" disabled>Complete Registration</button>
             </form>
         </div>
         
@@ -290,6 +306,7 @@
                 <!-- Cloudflare Turnstile Widget -->
                 <div class="turnstile-container">
                     <div class="cf-turnstile" 
+                         id="loginTurnstile"
                          data-sitekey="0x4AAAAAACMeY92R9MqzCQJc"
                          data-theme="light"
                          data-size="normal"
@@ -297,14 +314,18 @@
                     </div>
                 </div>
                 
-                <button type="submit" id="loginBtn">Driver Login</button>
+                <button type="submit" id="loginBtn" disabled>Driver Login</button>
             </form>
+        </div>
+        
+        <div class="back-link">
+            <a href="/">← Back to Home</a>
         </div>
     </div>
     
     <script>
-        let registerVerified = false;
-        let loginVerified = false;
+        let registerToken = null;
+        let loginToken = null;
         
         // Tab switching
         function switchTab(tab) {
@@ -326,12 +347,14 @@
         
         // Turnstile callbacks
         function onRegisterVerified(token) {
-            registerVerified = true;
+            registerToken = token;
+            document.getElementById('registerBtn').disabled = false;
             console.log('Registration verified');
         }
         
         function onLoginVerified(token) {
-            loginVerified = true;
+            loginToken = token;
+            document.getElementById('loginBtn').disabled = false;
             console.log('Login verified');
         }
         
@@ -339,10 +362,7 @@
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const formData = new FormData(e.target);
-            const token = formData.get('cf-turnstile-response');
-            
-            if (!token) {
+            if (!registerToken) {
                 showMessage('registerMessage', 'Please complete the security verification', 'error');
                 return;
             }
@@ -351,25 +371,42 @@
             btn.disabled = true;
             btn.textContent = 'Processing...';
             
+            const formData = new FormData(e.target);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                vehicle: formData.get('vehicle'),
+                veteran: formData.get('veteran'),
+                rideshare: formData.get('rideshare'),
+                turnstileToken: registerToken
+            };
+            
             try {
-                const response = await fetch('/api/driver-register', {
+                const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/driver-register', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
                 });
                 
                 const result = await response.json();
                 
-                if (result.success) {
-                    showMessage('registerMessage', 'Registration successful! Redirecting to dashboard...', 'success');
+                if (response.ok && result.success) {
+                    showMessage('registerMessage', 'Registration successful! Check your phone for verification code.', 'success');
                     setTimeout(() => {
-                        window.location.href = '/driver-dashboard.html';
+                        window.location.href = '/driver-verify.html?phone=' + encodeURIComponent(data.phone);
                     }, 2000);
                 } else {
                     showMessage('registerMessage', result.error || 'Registration failed. Please try again.', 'error');
                     btn.disabled = false;
                     btn.textContent = 'Complete Registration';
                     // Reset Turnstile
-                    turnstile.reset();
+                    if (typeof turnstile !== 'undefined') {
+                        turnstile.reset();
+                    }
+                    registerToken = null;
                 }
             } catch (error) {
                 console.error('Registration error:', error);
@@ -383,10 +420,7 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const formData = new FormData(e.target);
-            const token = formData.get('cf-turnstile-response');
-            
-            if (!token) {
+            if (!loginToken) {
                 showMessage('loginMessage', 'Please complete the security verification', 'error');
                 return;
             }
@@ -395,24 +429,37 @@
             btn.disabled = true;
             btn.textContent = 'Logging in...';
             
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                turnstileToken: loginToken
+            };
+            
             try {
-                const response = await fetch('/api/driver-login', {
+                const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/driver-login', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
                 });
                 
                 const result = await response.json();
                 
-                if (result.success) {
-                    showMessage('loginMessage', 'Login successful! Redirecting...', 'success');
+                if (response.ok && result.success) {
+                    showMessage('loginMessage', 'Login successful! Check your phone for verification code.', 'success');
                     setTimeout(() => {
-                        window.location.href = '/driver-dashboard.html';
+                        window.location.href = '/driver-verify.html?phone=' + encodeURIComponent(data.phone);
                     }, 1500);
                 } else {
                     showMessage('loginMessage', result.error || 'Login failed. Please check your credentials.', 'error');
                     btn.disabled = false;
                     btn.textContent = 'Driver Login';
-                    turnstile.reset();
+                    if (typeof turnstile !== 'undefined') {
+                        turnstile.reset();
+                    }
+                    loginToken = null;
                 }
             } catch (error) {
                 console.error('Login error:', error);
@@ -433,13 +480,6 @@
             const msg = document.getElementById(id);
             msg.className = 'message';
         }
-        
-        // Auto-refresh Turnstile tokens after 4 minutes (before 5-minute expiry)
-        setInterval(() => {
-            if (typeof turnstile !== 'undefined') {
-                turnstile.reset();
-            }
-        }, 4 * 60 * 1000);
     </script>
 </body>
 </html>
