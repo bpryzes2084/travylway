@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Air Crew Pickup Request — Travylway</title>
-<meta name="description" content="Request airport pickup/drop-off transportation for airline crew members.">
+<meta name="description" content="Request airport pickup or drop-off transportation for airline crew.">
 
 <style>
 :root{
@@ -32,7 +32,6 @@ body{
   border-radius:22px;
   padding:26px;
   box-shadow:0 22px 70px rgba(0,0,0,.28);
-  border:1px solid rgba(0,0,0,.04);
 }
 .header{text-align:center;margin-bottom:18px}
 .header h1{margin:0 0 6px;font-size:1.85rem}
@@ -43,493 +42,256 @@ body{
   padding:12px 14px;
   border-radius:12px;
   margin:16px 0 18px;
-  color:#1F2937;
 }
-.note strong{color:#0f5132}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:720px){.grid{grid-template-columns:1fr}}
 .group{margin:0 0 14px}
 label{display:block;font-weight:800;margin:0 0 6px}
 input,select,textarea{
   width:100%;
-  padding:12px 12px;
+  padding:12px;
   border:2px solid var(--line);
   border-radius:12px;
   font-size:1rem;
-  font-family:inherit;
-  background:#fff;
 }
 input:focus,select:focus,textarea:focus{outline:none;border-color:#667eea}
-small{display:block;margin-top:6px;color:var(--muted);font-size:.86rem}
-textarea{min-height:92px;resize:vertical}
+textarea{min-height:90px}
 .req{color:#ef4444;font-weight:900}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .btn{
   width:100%;
-  padding:14px 14px;
+  padding:14px;
   border-radius:14px;
   border:0;
-  cursor:pointer;
   font-weight:900;
-  letter-spacing:.3px;
-  text-transform:uppercase;
+  cursor:pointer;
 }
-.btn.primary{
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  color:#fff;
-}
-.btn.primary:hover{transform:translateY(-1px);filter:brightness(1.02)}
-.btn.secondary{
-  background:#fff;
-  border:1px solid var(--line);
-  color:#111;
-}
-.msg{display:none;padding:12px 14px;border-radius:12px;margin:0 0 14px;font-weight:800;text-align:center}
+.btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.btn.secondary{background:#fff;border:1px solid var(--line)}
+.msg{display:none;padding:12px;border-radius:12px;margin-bottom:12px;font-weight:800;text-align:center}
 .msg.ok{display:block;background:var(--okbg);border:1px solid var(--okbd);color:var(--oktx)}
 .msg.err{display:block;background:var(--erbg);border:1px solid var(--erbd);color:var(--ertx)}
-.back{display:inline-block;margin-top:14px;color:#667eea;text-decoration:none;font-weight:800}
-.back:hover{text-decoration:underline}
-
-/* Make Google Places dropdown appear above card */
-.pac-container{z-index:99999 !important;}
-
-/* PRICE ESTIMATE (added) */
 .price-estimate{
   display:none;
   background:#E3F2FD;
   border-left:4px solid #2196F3;
-  padding:14px 14px;
+  padding:14px;
   border-radius:12px;
-  margin:8px 0 14px;
 }
-.price-estimate h3{
-  margin:0 0 8px;
-  font-size:1.05rem;
-  color:#0d47a1;
-}
-.price-details{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:baseline;
-}
-.distance{
-  color:#1976d2;
-  font-weight:800;
-  font-size:.95rem;
-}
-.price{
-  font-size:1.65rem;
-  font-weight:950;
-  color:#0b3a82;
-}
+.price-details{display:flex;justify-content:space-between;font-weight:900}
+.pac-container{z-index:99999!important}
 </style>
 </head>
 
 <body>
 <div class="container">
-  <div class="card">
-    <div class="header">
-      <h1>✈️ Air Crew Pickup Request</h1>
-      <p>Discounted crew rates. Fast dispatch. Simple request.</p>
-      <p style="margin-top:6px;color:var(--muted);font-size:.92rem;">
-        Only <strong>Name</strong>, <strong>Phone</strong>, <strong>Pickup Address</strong>, <strong>Airport Code</strong>, and <strong>Pickup Time</strong> are required.
-      </p>
-    </div>
-
-    <div id="ok" class="msg ok">Submitted ✅</div>
-    <div id="err" class="msg err">Not submitted. Please try again or use WhatsApp.</div>
-
-    <div class="note">
-      <strong>WhatsApp contact:</strong>
-      When a driver claims your trip, you’ll be contacted via <strong>WhatsApp</strong> to confirm details.
-    </div>
-
-    <form id="crewForm">
-      <!-- Personal -->
-      <div class="group">
-        <label for="name">Name <span class="req">*</span></label>
-        <input id="name" type="text" placeholder="John Doe" required>
-      </div>
-
-      <div class="grid">
-        <div class="group">
-          <label for="phone">Phone <span class="req">*</span></label>
-          <input id="phone" type="tel" placeholder="(555) 123-4567" required>
-        </div>
-        <div class="group">
-          <label for="email">Email (optional)</label>
-          <input id="email" type="email" placeholder="you@airline.com">
-        </div>
-      </div>
-
-      <!-- Pickup -->
-      <div class="group">
-        <label for="pickupAddress">Pickup Address <span class="req">*</span></label>
-        <input id="pickupAddress" type="text" placeholder="Start typing your pickup address…" required>
-        <small>Use the address suggestions for faster routing.</small>
-      </div>
-
-      <!-- Service -->
-      <div class="grid">
-        <div class="group">
-          <label for="serviceType">Service Type <span class="req">*</span></label>
-          <select id="serviceType" required>
-            <option value="">-- Select --</option>
-            <option value="pickup">Airport Pickup (arriving flight)</option>
-            <option value="dropoff">Airport Drop-off (departing flight)</option>
-          </select>
-          <small>Pickup = FROM airport. Drop-off = TO airport.</small>
-        </div>
-
-        <div class="group">
-          <label for="airportCode">Airport Code (IATA) <span class="req">*</span></label>
-          <input id="airportCode" type="text" placeholder="DEN, LAX, JFK" maxlength="4" required>
-          <small>Type the airport code. (Example: DEN)</small>
-        </div>
-      </div>
-
-      <!-- Destination (Denver crashpads/hotels dropdown) -->
-      <div class="group">
-        <label for="dropoffPreset">Denver Crashpad / Hotel (Drop-off) <span class="req">*</span></label>
-        <select id="dropoffPreset" required>
-          <option value="">-- Select destination --</option>
-
-     
-      <div class="group" id="dropoffOtherWrap" style="display:none;">
-        <label for="dropoffOther">Other Drop-off Address</label>
-        <input id="dropoffOther" type="text" placeholder="Type destination address">
-      </div>
-
-      <!-- Flight + timing -->
-      <div class="grid">
-        <div class="group">
-          <label for="airline">Airline (optional)</label>
-          <input id="airline" type="text" placeholder="United, Delta, etc.">
-        </div>
-        <div class="group">
-          <label for="flightNumber">Flight Number (optional)</label>
-          <input id="flightNumber" type="text" placeholder="UA1234">
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="group">
-          <label for="date">Pickup Date <span class="req">*</span></label>
-          <input id="date" type="date" required>
-        </div>
-        <div class="group">
-          <label for="time">Pickup Time <span class="req">*</span></label>
-          <input id="time" type="time" required>
-          <small>Use local time. The system stores UTC.</small>
-        </div>
-      </div>
-
-      <div class="group">
-        <label for="notes">Special Instructions (optional)</label>
-        <textarea id="notes" placeholder="Luggage count, gate info, crashpad notes, etc."></textarea>
-      </div>
-
-      <!-- PRICE ESTIMATE UI (added) -->
-      <div id="priceEstimate" class="price-estimate">
-        <h3>💰 Estimated Price</h3>
-        <div class="price-details">
-          <span class="distance" id="distanceDisplay">Distance: —</span>
-          <span class="price" id="priceDisplay">$—</span>
-        </div>
-        <small style="margin-top:6px;">
-          Estimate uses Google Maps distance + crew pricing rules. Final price confirmed by driver.
-        </small>
-      </div>
-
-      <!-- Cloudflare Turnstile -->
-      <div class="group">
-        <!-- Replace with your real Turnstile Site Key -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"></div>
-        <small>This helps block spam and fake trip requests.</small>
-      </div>
-
-      <button class="btn primary" id="submitBtn" type="submit">Submit Request</button>
-
-      <div class="actions">
-        <a class="btn secondary" style="text-decoration:none;text-align:center;display:block"
-           href="https://wa.me/17204748851?text=Request%20Trips"
-           target="_blank" rel="noopener">
-          Request Trips via WhatsApp (temporary)
-        </a>
-      </div>
-    </form>
-
-    <a class="back" href="/">← Back to Home</a>
+<div class="card">
+  <div class="header">
+    <h1>✈️ Air Crew Pickup Request</h1>
+    <p>Discounted crew rates · Reliable airport transportation</p>
   </div>
+
+  <div id="ok" class="msg ok"></div>
+  <div id="err" class="msg err"></div>
+
+  <div class="note">
+    Drivers will contact you via <strong>WhatsApp</strong> once your trip is claimed.
+  </div>
+
+<form id="crewForm">
+
+<div class="group">
+<label>Name <span class="req">*</span></label>
+<input id="name" required>
+</div>
+
+<div class="grid">
+<div class="group">
+<label>Phone <span class="req">*</span></label>
+<input id="phone" required>
+</div>
+<div class="group">
+<label>Email</label>
+<input id="email">
+</div>
+</div>
+
+<div class="group">
+<label>Pickup Address <span class="req">*</span></label>
+<input id="pickupAddress" placeholder="Start typing address…" required>
+</div>
+
+<div class="group">
+<label>Drop-off Address <span class="req">*</span></label>
+<input id="dropoffAddress" placeholder="Start typing address…" required>
+</div>
+
+<div class="grid">
+<div class="group">
+<label>Service Type <span class="req">*</span></label>
+<select id="serviceType" required>
+<option value="">Select</option>
+<option value="pickup">Airport Pickup</option>
+<option value="dropoff">Airport Drop-off</option>
+</select>
+</div>
+
+<div class="group">
+<label>Airport Code <span class="req">*</span></label>
+<input id="airportCode" maxlength="4" placeholder="DEN" required>
+</div>
+</div>
+
+<div class="grid">
+<div class="group">
+<label>Date <span class="req">*</span></label>
+<input id="date" type="date" required>
+</div>
+<div class="group">
+<label>Time <span class="req">*</span></label>
+<input id="time" type="time" required>
+</div>
+</div>
+
+<div class="group">
+<label>Airline</label>
+<input id="airline">
+</div>
+
+<div class="group">
+<label>Flight Number</label>
+<input id="flightNumber">
+</div>
+
+<div class="group">
+<label>Notes</label>
+<textarea id="notes"></textarea>
+</div>
+
+<div id="priceEstimate" class="price-estimate">
+  <div class="price-details">
+    <span id="distanceDisplay"></span>
+    <span id="priceDisplay"></span>
+  </div>
+</div>
+
+<div class="group">
+  <div class="cf-turnstile" data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"></div>
+</div>
+
+<button class="btn primary" type="submit">Submit Request</button>
+
+<div style="margin-top:12px">
+  <a id="waBackupBtn" class="btn secondary" target="_blank">
+    Send via WhatsApp (Backup)
+  </a>
+</div>
+
+</form>
+</div>
 </div>
 
 <!-- Cloudflare Turnstile -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-<!-- Google Maps JavaScript API (Places) -->
-<!-- Replace with your real Maps key (and keep referrer restrictions set to travylway.com/*) -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo" async defer></script>
 
 <script>
-  // -------------------------
-  // CONFIG (set these)
-  // -------------------------
-  const API_BASE = "https://travylway-api.benterpryzes2084.workers.dev";
+const API_BASE="https://travylway-api.benterpryzes2084.workers.dev";
+const WHATSAPP_NUMBER="17204748851";
 
-  // -------------------------
-  // PRICING CONFIG (added back)
-  // -------------------------
-  const BASE_FARE = 2.50;
-  const PER_MILE_RATE = 1.25;
-  const MINIMUM_FARE = 10;
-  const MAXIMUM_FARE = 120;
-  const FREE_MILES = 0;
+/* pricing */
+const BASE=2.50, PER=1.25, FREE=0, MIN=18, MAX=120;
 
-  // -------------------------
-  // Pricing state (added)
-  // -------------------------
-  let pickupLocation = null;  // google.maps.LatLng
-  let airportLocation = null; // google.maps.LatLng
-  let lastEstimate = null;    // { miles, price }
+const el=id=>document.getElementById(id);
+let pickupLoc=null, dropLoc=null;
 
-  // -------------------------
-  // UI helpers
-  // -------------------------
-  const el = (id) => document.getElementById(id);
-  function showOk(msg) {
-    el("ok").textContent = msg;
-    el("ok").style.display = "block";
-    el("err").style.display = "none";
-  }
-  function showErr(msg) {
-    el("err").textContent = msg;
-    el("err").style.display = "block";
-    el("ok").style.display = "none";
-  }
+/* price calculation */
+function calculatePrice(){
+ if(!pickupLoc||!dropLoc)return;
+ new google.maps.DistanceMatrixService().getDistanceMatrix({
+  origins:[pickupLoc],
+  destinations:[dropLoc],
+  travelMode:"DRIVING",
+  unitSystem:google.maps.UnitSystem.IMPERIAL
+ },(r,s)=>{
+  if(s!=="OK")return;
+  const miles=r.rows[0].elements[0].distance.value/1609.34;
+  let price=BASE+Math.max(0,miles-FREE)*PER;
+  price=Math.max(MIN,Math.min(MAX,price));
+  el("distanceDisplay").textContent=`${miles.toFixed(1)} mi`;
+  el("priceDisplay").textContent=`$${price.toFixed(2)}`;
+  el("priceEstimate").style.display="block";
+ });
+}
 
-  // Crashpad/Hotel dropdown: show Other field
-  (function () {
-    const preset = el("dropoffPreset");
-    const wrap = el("dropoffOtherWrap");
-    const other = el("dropoffOther");
-
-    preset.addEventListener("change", () => {
-      const isOther = preset.value === "OTHER";
-      wrap.style.display = isOther ? "block" : "none";
-      if (!isOther) other.value = "";
-    });
-  })();
-
-  // -------------------------
-  // PRICE ESTIMATE FUNCTIONS (added)
-  // -------------------------
-
-  function setPriceUI(miles, price) {
-    el("distanceDisplay").textContent = `Distance: ${miles.toFixed(1)} miles`;
-    el("priceDisplay").textContent = `$${price.toFixed(2)}`;
-    el("priceEstimate").style.display = "block";
-  }
-
-  function clearPriceUI() {
-    el("distanceDisplay").textContent = "Distance: —";
-    el("priceDisplay").textContent = "$—";
-    el("priceEstimate").style.display = "none";
-    lastEstimate = null;
-  }
-
-  function calculatePrice() {
-    if (!pickupLocation || !airportLocation) return;
-
-    const svc = new google.maps.DistanceMatrixService();
-    svc.getDistanceMatrix(
-      {
-        origins: [pickupLocation],
-        destinations: [airportLocation],
-        travelMode: "DRIVING",
-        unitSystem: google.maps.UnitSystem.IMPERIAL
-      },
-      (response, status) => {
-        if (status !== "OK" || !response?.rows?.[0]?.elements?.[0]) return;
-
-        const element = response.rows[0].elements[0];
-        if (element.status !== "OK") return;
-
-        const meters = element.distance.value;
-        const miles = meters / 1609.34;
-
-        let price = BASE_FARE;
-        const billable = Math.max(0, miles - FREE_MILES);
-        price += billable * PER_MILE_RATE;
-
-        price = Math.max(MINIMUM_FARE, Math.min(price, MAXIMUM_FARE));
-
-        lastEstimate = { miles, price };
-        setPriceUI(miles, price);
-      }
-    );
-  }
-
-  // Resolve an IATA code (DEN/LAX/JFK) into a LatLng using Places Text Search.
-  // This keeps airport_code manual (good for filtering) while still enabling pricing.
-  function resolveAirportFromCode(code) {
-    if (!code || !window.google?.maps?.places) return;
-    const cleaned = String(code).trim().toUpperCase();
-    if (!/^[A-Z0-9]{3,4}$/.test(cleaned)) return;
-
-    const service = new google.maps.places.PlacesService(document.createElement("div"));
-    // Example query: "DEN airport" — Places will usually return the right airport.
-    service.textSearch({ query: `${cleaned} airport` }, (results, status) => {
-      if (status !== google.maps.places.PlacesServiceStatus.OK || !results?.length) return;
-      const first = results[0];
-      if (first?.geometry?.location) {
-        airportLocation = first.geometry.location;
-        calculatePrice();
-      }
-    });
-  }
-
-  // -------------------------
-  // Google Places autocomplete (pickup address only)
-  // Note: airport_code is manual to keep driver-board filtering reliable.
-  // -------------------------
-  function initPickupAutocomplete() {
-    if (!window.google || !google.maps || !google.maps.places) return;
-
-    // Pickup address autocomplete
-    const ac = new google.maps.places.Autocomplete(el("pickupAddress"), { types: ["address"] });
-    ac.addListener("place_changed", () => {
-      const place = ac.getPlace();
-      if (place?.geometry?.location) {
-        pickupLocation = place.geometry.location;
-        calculatePrice();
-      } else {
-        pickupLocation = null;
-        clearPriceUI();
-      }
-    });
-
-    // When airport code changes, try to resolve it to a location for pricing
-    el("airportCode").addEventListener("input", () => {
-      airportLocation = null;
-      clearPriceUI();
-      const code = el("airportCode").value;
-      // Only resolve once it looks complete (3-4 chars)
-      if (code && code.trim().length >= 3) resolveAirportFromCode(code);
-    });
-  }
-
-  // Because Maps script is async+defer, poll until google exists
-  (function waitForGoogle(){
-    if (window.google && google.maps && google.maps.places) {
-      initPickupAutocomplete();
-    } else {
-      setTimeout(waitForGoogle, 120);
-    }
-  })();
-
-  // Build ISO from local date+time, store as UTC ISO
-  function localDateTimeToUtcIso(dateStr, timeStr) {
-    const d = new Date(`${dateStr}T${timeStr}:00`);
-    return d.toISOString();
-  }
-
-  // -------------------------
-  // SUBMIT
-  // -------------------------
-  el("crewForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const submitBtn = el("submitBtn");
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Submitting…";
-
-    try {
-      const serviceType = el("serviceType").value;
-      if (!serviceType) throw new Error("Select a service type.");
-
-      const direction = serviceType === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT";
-      const airport_code = el("airportCode").value.trim().toUpperCase();
-
-      if (!/^[A-Z0-9]{3,4}$/.test(airport_code)) {
-        throw new Error("Airport Code must look like DEN, LAX, JFK, etc.");
-      }
-
-      const dropoffPreset = el("dropoffPreset").value;
-      const dropoffOther = el("dropoffOther").value.trim();
-      const dropoff_text = (dropoffPreset === "OTHER")
-        ? (dropoffOther || "Other destination (not provided)")
-        : dropoffPreset;
-
-      const pickup_time_utc = localDateTimeToUtcIso(el("date").value, el("time").value);
-
-      // Turnstile token (Turnstile injects this hidden field)
-      const turnstileToken =
-        document.querySelector('input[name="cf-turnstile-response"]')?.value || "";
-
-      if (!turnstileToken) {
-        throw new Error("Turnstile not ready. Please wait a moment and try again.");
-      }
-
-      // Add estimate text into notes (optional, but useful)
-      const estimateNote = lastEstimate
-        ? `Estimate: $${lastEstimate.price.toFixed(2)} • ${lastEstimate.miles.toFixed(1)}mi`
-        : null;
-
-      // Build payload to match Worker POST /api/trips
-      const payload = {
-        created_by: el("email").value.trim() || el("phone").value.trim(),
-        rider_type: "CREW",
-        trip_type: "AIRPORT",
-        direction,
-        airport_code,
-        pickup_text: el("pickupAddress").value.trim(),
-        dropoff_text,
-        pickup_time_utc,
-        flight_number: el("flightNumber").value.trim() || null,
-        airline: el("airline").value.trim() || null,
-        notes: [
-          `Name: ${el("name").value.trim()}`,
-          `Phone: ${el("phone").value.trim()}`,
-          estimateNote,
-          el("notes").value.trim() ? `Notes: ${el("notes").value.trim()}` : null
-        ].filter(Boolean).join(" • "),
-        turnstile_token: turnstileToken
-      };
-
-      const res = await fetch(`${API_BASE}/api/trips`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) {
-        throw new Error(data.error || `Submit failed (HTTP ${res.status})`);
-      }
-
-      showOk(`Submitted ✅ Request ID: ${data.id || data.trip_id || "OK"}`);
-      el("crewForm").reset();
-      el("dropoffOtherWrap").style.display = "none";
-      clearPriceUI();
-
-      // Reset Turnstile widget after successful submit (optional)
-      if (window.turnstile) {
-        try { window.turnstile.reset(); } catch {}
-      }
-
-    } catch (err) {
-      console.error(err);
-      showErr(`Not submitted: ${err.message}`);
-      // Reset Turnstile on error so user can re-try
-      if (window.turnstile) {
-        try { window.turnstile.reset(); } catch {}
-      }
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Request";
-    }
+/* maps init */
+function initMaps(){
+ new google.maps.places.Autocomplete(el("pickupAddress"))
+  .addListener("place_changed",function(){
+    pickupLoc=this.getPlace().geometry?.location;
+    calculatePrice();
   });
+
+ new google.maps.places.Autocomplete(el("dropoffAddress"))
+  .addListener("place_changed",function(){
+    dropLoc=this.getPlace().geometry?.location;
+    calculatePrice();
+  });
+}
+
+/* wait for google */
+(function wait(){
+ if(window.google&&google.maps){initMaps();}
+ else setTimeout(wait,120);
+})();
+
+/* WhatsApp backup builder */
+function buildWhatsApp(){
+ const msg=[
+  "🚖 Travylway Air Crew Request",
+  `Name: ${el("name").value}`,
+  `Phone: ${el("phone").value}`,
+  `Pickup: ${el("pickupAddress").value}`,
+  `Drop-off: ${el("dropoffAddress").value}`,
+  `Airport: ${el("airportCode").value}`,
+  `Date/Time: ${el("date").value} ${el("time").value}`,
+  `Airline: ${el("airline").value}`,
+  `Flight: ${el("flightNumber").value}`,
+  `Notes: ${el("notes").value}`
+ ].join("\n");
+ el("waBackupBtn").href=
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
+document.addEventListener("input",buildWhatsApp,true);
+
+/* submit */
+el("crewForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ try{
+  const res=await fetch(`${API_BASE}/api/trips`,{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({
+    created_by:el("email").value||el("phone").value,
+    direction:el("serviceType").value==="pickup"?"FROM_AIRPORT":"TO_AIRPORT",
+    airport_code:el("airportCode").value.toUpperCase(),
+    pickup_text:el("pickupAddress").value,
+    dropoff_text:el("dropoffAddress").value,
+    pickup_time_utc:new Date(`${el("date").value}T${el("time").value}`).toISOString(),
+    airline:el("airline").value,
+    flight_number:el("flightNumber").value,
+    notes:el("notes").value
+   })
+  });
+  if(!res.ok)throw new Error();
+  el("ok").textContent="Submitted ✅";
+  el("err").style.display="none";
+ }catch{
+  el("err").textContent="Not submitted. Use WhatsApp backup.";
+  el("err").style.display="block";
+ }
+});
 </script>
 </body>
 </html>
