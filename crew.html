@@ -1162,7 +1162,7 @@
             msg.className = 'message';
         }
         
-        // Auto-refresh Turnstile tokens after 4 minutes
+        // Auto-refresh Turnstile tokens after 1 minute
         setInterval(() => {
             if (typeof turnstile !== 'undefined') {
                 turnstile.reset();
