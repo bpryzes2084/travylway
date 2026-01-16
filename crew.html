@@ -8,290 +8,323 @@
 
 <style>
 :root{
-  --bg:#2B3A4A;
-  --card:#ffffff;
-  --accent:#2563EB;
-  --text:#0F172A;
-  --muted:#64748B;
-  --line:#E2E8F0;
+  --bg:#2B3A4A; --card:#fff; --text:#0F172A; --muted:#64748B; --line:#E2E8F0;
   --okbg:#ECFDF5; --okbd:#BBF7D0; --oktx:#166534;
   --erbg:#FFF1F2; --erbd:#FECDD3; --ertx:#9F1239;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:var(--bg);
-  color:#E5E7EB;
-  padding:28px 14px;
-}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:#E5E7EB;padding:28px 14px}
 .container{max-width:760px;margin:0 auto}
-.card{
-  background:var(--card);
-  color:var(--text);
-  border-radius:22px;
-  padding:26px;
-  box-shadow:0 22px 70px rgba(0,0,0,.28);
-}
+.card{background:var(--card);color:var(--text);border-radius:22px;padding:26px;box-shadow:0 22px 70px rgba(0,0,0,.28)}
 .header{text-align:center;margin-bottom:18px}
 .header h1{margin:0 0 6px;font-size:1.85rem}
 .header p{margin:0;color:var(--muted)}
-.note{
-  background:#E8F5E9;
-  border-left:4px solid #25D366;
-  padding:12px 14px;
-  border-radius:12px;
-  margin:16px 0 18px;
-}
+.note{background:#E8F5E9;border-left:4px solid #25D366;padding:12px 14px;border-radius:12px;margin:16px 0 18px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:720px){.grid{grid-template-columns:1fr}}
 .group{margin:0 0 14px}
 label{display:block;font-weight:800;margin:0 0 6px}
-input,select,textarea{
-  width:100%;
-  padding:12px;
-  border:2px solid var(--line);
-  border-radius:12px;
-  font-size:1rem;
-}
+input,select,textarea{width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;font-size:1rem}
 input:focus,select:focus,textarea:focus{outline:none;border-color:#667eea}
 textarea{min-height:90px}
 .req{color:#ef4444;font-weight:900}
-.btn{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:0;
-  font-weight:900;
-  cursor:pointer;
-}
+.btn{width:100%;padding:14px;border-radius:14px;border:0;font-weight:900;cursor:pointer}
 .btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
 .btn.secondary{background:#fff;border:1px solid var(--line)}
 .msg{display:none;padding:12px;border-radius:12px;margin-bottom:12px;font-weight:800;text-align:center}
 .msg.ok{display:block;background:var(--okbg);border:1px solid var(--okbd);color:var(--oktx)}
-.msg.err{display:block;background:var(--erbg);border:1px solid var(--erbd);color:var(--ertx)}
-.price-estimate{
-  display:none;
-  background:#E3F2FD;
-  border-left:4px solid #2196F3;
-  padding:14px;
-  border-radius:12px;
-}
+.msg.err{display:block;background:var(--erbg);border:1px solid var(--erbd);color:var(--ertx);white-space:pre-wrap}
+.price-estimate{display:none;background:#E3F2FD;border-left:4px solid #2196F3;padding:14px;border-radius:12px}
 .price-details{display:flex;justify-content:space-between;font-weight:900}
 .pac-container{z-index:99999!important}
+.small{color:var(--muted);font-size:.9rem;margin-top:6px}
 </style>
 </head>
 
 <body>
 <div class="container">
-<div class="card">
-  <div class="header">
-    <h1>✈️ Air Crew Pickup Request</h1>
-    <p>Discounted crew rates · Reliable airport transportation</p>
+  <div class="card">
+    <div class="header">
+      <h1>✈️ Air Crew Pickup Request</h1>
+      <p>Discounted crew rates · Reliable airport transportation</p>
+    </div>
+
+    <div id="ok" class="msg ok"></div>
+    <div id="err" class="msg err"></div>
+
+    <div class="note">
+      Driver will contact you via <strong>WhatsApp</strong> once your trip is claimed.
+      <div class="small">If Google Maps is down, use WhatsApp Backup below.</div>
+    </div>
+
+    <form id="crewForm">
+      <div class="group">
+        <label>Name <span class="req">*</span></label>
+        <input id="name" required>
+      </div>
+
+      <div class="grid">
+        <div class="group">
+          <label>Phone <span class="req">*</span></label>
+          <input id="phone" required>
+        </div>
+        <div class="group">
+          <label>Email</label>
+          <input id="email">
+        </div>
+      </div>
+
+      <div class="group">
+        <label>Pickup Address <span class="req">*</span></label>
+        <input id="pickupAddress" placeholder="Start typing address…" required>
+        <div class="small" id="mapsStatus">Maps: loading…</div>
+      </div>
+
+      <div class="group">
+        <label>Drop-off Address <span class="req">*</span></label>
+        <input id="dropoffAddress" placeholder="Start typing address…" required>
+      </div>
+
+      <div class="grid">
+        <div class="group">
+          <label>Service Type <span class="req">*</span></label>
+          <select id="serviceType" required>
+            <option value="">Select</option>
+            <option value="pickup">Airport Pickup</option>
+            <option value="dropoff">Airport Drop-off</option>
+          </select>
+        </div>
+
+        <div class="group">
+          <label>Airport Code <span class="req">*</span></label>
+          <input id="airportCode" maxlength="4" placeholder="DEN" required>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="group">
+          <label>Date <span class="req">*</span></label>
+          <input id="date" type="date" required>
+        </div>
+        <div class="group">
+          <label>Time <span class="req">*</span></label>
+          <input id="time" type="time" required>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>Airline</label>
+        <input id="airline">
+      </div>
+
+      <div class="group">
+        <label>Flight Number</label>
+        <input id="flightNumber">
+      </div>
+
+      <div class="group">
+        <label>Notes</label>
+        <textarea id="notes"></textarea>
+      </div>
+
+      <div id="priceEstimate" class="price-estimate">
+        <div class="price-details">
+          <span id="distanceDisplay"></span>
+          <span id="priceDisplay"></span>
+        </div>
+      </div>
+
+      <!-- Turnstile (kept) -->
+      <div class="group">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"></div>
+        <div class="small">Spam protection enabled.</div>
+      </div>
+
+      <button class="btn primary" id="submitBtn" type="submit">Submit Request</button>
+
+      <div style="margin-top:12px">
+        <a id="waBackupBtn" class="btn secondary" target="_blank" rel="noopener">
+          Send via WhatsApp (Backup)
+        </a>
+      </div>
+    </form>
   </div>
-
-  <div id="ok" class="msg ok"></div>
-  <div id="err" class="msg err"></div>
-
-  <div class="note">
-    Drivers will contact you via <strong>WhatsApp</strong> once your trip is claimed.
-  </div>
-
-<form id="crewForm">
-
-<div class="group">
-<label>Name <span class="req">*</span></label>
-<input id="name" required>
 </div>
 
-<div class="grid">
-<div class="group">
-<label>Phone <span class="req">*</span></label>
-<input id="phone" required>
-</div>
-<div class="group">
-<label>Email</label>
-<input id="email">
-</div>
-</div>
-
-<div class="group">
-<label>Pickup Address <span class="req">*</span></label>
-<input id="pickupAddress" placeholder="Start typing address…" required>
-</div>
-
-<div class="group">
-<label>Drop-off Address <span class="req">*</span></label>
-<input id="dropoffAddress" placeholder="Start typing address…" required>
-</div>
-
-<div class="grid">
-<div class="group">
-<label>Service Type <span class="req">*</span></label>
-<select id="serviceType" required>
-<option value="">Select</option>
-<option value="pickup">Airport Pickup</option>
-<option value="dropoff">Airport Drop-off</option>
-</select>
-</div>
-
-<div class="group">
-<label>Airport Code <span class="req">*</span></label>
-<input id="airportCode" maxlength="4" placeholder="DEN" required>
-</div>
-</div>
-
-<div class="grid">
-<div class="group">
-<label>Date <span class="req">*</span></label>
-<input id="date" type="date" required>
-</div>
-<div class="group">
-<label>Time <span class="req">*</span></label>
-<input id="time" type="time" required>
-</div>
-</div>
-
-<div class="group">
-<label>Airline</label>
-<input id="airline">
-</div>
-
-<div class="group">
-<label>Flight Number</label>
-<input id="flightNumber">
-</div>
-
-<div class="group">
-<label>Notes</label>
-<textarea id="notes"></textarea>
-</div>
-
-<div id="priceEstimate" class="price-estimate">
-  <div class="price-details">
-    <span id="distanceDisplay"></span>
-    <span id="priceDisplay"></span>
-  </div>
-</div>
-
-<div class="group">
-  <div class="cf-turnstile" data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"></div>
-</div>
-
-<button class="btn primary" type="submit">Submit Request</button>
-
-<div style="margin-top:12px">
-  <a id="waBackupBtn" class="btn secondary" target="_blank">
-    Send via WhatsApp (Backup)
-  </a>
-</div>
-
-</form>
-</div>
-</div>
-
-<!-- Cloudflare Turnstile -->
+<!-- Turnstile -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo" async defer></script>
-
 <script>
-const API_BASE="https://travylway-api.benterpryzes2084.workers.dev";
-const WHATSAPP_NUMBER="17204748851";
+/* CONFIG */
+const API_BASE = "https://travylway-api.benterpryzes2084.workers.dev";
+const WHATSAPP_NUMBER = "17204748851";
+
+/* Put your REAL Google key here */
+const GOOGLE_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
 
 /* pricing */
-const BASE=2.50, PER=1.25, FREE=0, MIN=18, MAX=120;
+const BASE=2.5, PER=1.25, FREE=3, MIN=18, MAX=120;
 
 const el=id=>document.getElementById(id);
 let pickupLoc=null, dropLoc=null;
 
-/* price calculation */
-function calculatePrice(){
- if(!pickupLoc||!dropLoc)return;
- new google.maps.DistanceMatrixService().getDistanceMatrix({
-  origins:[pickupLoc],
-  destinations:[dropLoc],
-  travelMode:"DRIVING",
-  unitSystem:google.maps.UnitSystem.IMPERIAL
- },(r,s)=>{
-  if(s!=="OK")return;
-  const miles=r.rows[0].elements[0].distance.value/1609.34;
-  let price=BASE+Math.max(0,miles-FREE)*PER;
-  price=Math.max(MIN,Math.min(MAX,price));
-  el("distanceDisplay").textContent=`${miles.toFixed(1)} mi`;
-  el("priceDisplay").textContent=`$${price.toFixed(2)}`;
-  el("priceEstimate").style.display="block";
- });
+function showOk(msg){
+  el("ok").textContent = msg;
+  el("ok").style.display = "block";
+  el("err").style.display = "none";
 }
-
-/* maps init */
-function initMaps(){
- new google.maps.places.Autocomplete(el("pickupAddress"))
-  .addListener("place_changed",function(){
-    pickupLoc=this.getPlace().geometry?.location;
-    calculatePrice();
-  });
-
- new google.maps.places.Autocomplete(el("dropoffAddress"))
-  .addListener("place_changed",function(){
-    dropLoc=this.getPlace().geometry?.location;
-    calculatePrice();
-  });
+function showErr(msg){
+  el("err").textContent = msg;
+  el("err").style.display = "block";
+  el("ok").style.display = "none";
 }
-
-/* wait for google */
-(function wait(){
- if(window.google&&google.maps){initMaps();}
- else setTimeout(wait,120);
-})();
 
 /* WhatsApp backup builder */
 function buildWhatsApp(){
- const msg=[
-  "🚖 Travylway Air Crew Request",
-  `Name: ${el("name").value}`,
-  `Phone: ${el("phone").value}`,
-  `Pickup: ${el("pickupAddress").value}`,
-  `Drop-off: ${el("dropoffAddress").value}`,
-  `Airport: ${el("airportCode").value}`,
-  `Date/Time: ${el("date").value} ${el("time").value}`,
-  `Airline: ${el("airline").value}`,
-  `Flight: ${el("flightNumber").value}`,
-  `Notes: ${el("notes").value}`
- ].join("\n");
- el("waBackupBtn").href=
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-}
-document.addEventListener("input",buildWhatsApp,true);
+  const msg=[
+    "🚖 Travylway Air Crew Request",
+    `Name: ${el("name").value}`,
+    `Phone: ${el("phone").value}`,
+    `Pickup: ${el("pickupAddress").value}`,
+    `Drop-off: ${el("dropoffAddress").value}`,
+    `Airport: ${el("airportCode").value}`,
+    `Date/Time: ${el("date").value} ${el("time").value}`,
+    `Airline: ${el("airline").value}`,
+    `Flight: ${el("flightNumber").value}`,
+    `Notes: ${el("notes").value}`
+  ].join("\n");
 
-/* submit */
-el("crewForm").addEventListener("submit",async e=>{
- e.preventDefault();
- try{
-  const res=await fetch(`${API_BASE}/api/trips`,{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({
-    created_by:el("email").value||el("phone").value,
-    direction:el("serviceType").value==="pickup"?"FROM_AIRPORT":"TO_AIRPORT",
-    airport_code:el("airportCode").value.toUpperCase(),
-    pickup_text:el("pickupAddress").value,
-    dropoff_text:el("dropoffAddress").value,
-    pickup_time_utc:new Date(`${el("date").value}T${el("time").value}`).toISOString(),
-    airline:el("airline").value,
-    flight_number:el("flightNumber").value,
-    notes:el("notes").value
-   })
+  el("waBackupBtn").href =
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
+document.addEventListener("input", buildWhatsApp, true);
+document.addEventListener("change", buildWhatsApp, true);
+
+/* Google maps loader (manual, reliable) */
+function loadGoogle(){
+  return new Promise((resolve, reject) => {
+    if (window.google && google.maps && google.maps.places) return resolve();
+    const s = document.createElement("script");
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_KEY)}&libraries=places`;
+    s.async = true;
+    s.defer = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("Google Maps script failed to load"));
+    document.head.appendChild(s);
   });
-  if(!res.ok)throw new Error();
-  el("ok").textContent="Submitted ✅";
-  el("err").style.display="none";
- }catch{
-  el("err").textContent="Not submitted. Use WhatsApp backup.";
-  el("err").style.display="block";
- }
+}
+
+function calculatePrice(){
+  if(!pickupLoc || !dropLoc) return;
+  const svc = new google.maps.DistanceMatrixService();
+  svc.getDistanceMatrix({
+    origins:[pickupLoc],
+    destinations:[dropLoc],
+    travelMode:"DRIVING",
+    unitSystem:google.maps.UnitSystem.IMPERIAL
+  }, (r,s)=>{
+    if(s!=="OK") return;
+    const miles = r.rows[0].elements[0].distance.value/1609.34;
+    let price = BASE + Math.max(0, miles-FREE)*PER;
+    price = Math.max(MIN, Math.min(MAX, price));
+    el("distanceDisplay").textContent = `${miles.toFixed(1)} mi`;
+    el("priceDisplay").textContent = `$${price.toFixed(2)}`;
+    el("priceEstimate").style.display = "block";
+  });
+}
+
+function initAutocomplete(){
+  const pickupInput = el("pickupAddress");
+  const dropInput = el("dropoffAddress");
+
+  const ac1 = new google.maps.places.Autocomplete(pickupInput, { types:["address"] });
+  ac1.addListener("place_changed", ()=>{
+    const p = ac1.getPlace();
+    pickupLoc = p.geometry?.location || null;
+    calculatePrice();
+  });
+
+  const ac2 = new google.maps.places.Autocomplete(dropInput, { types:["address"] });
+  ac2.addListener("place_changed", ()=>{
+    const p = ac2.getPlace();
+    dropLoc = p.geometry?.location || null;
+    calculatePrice();
+  });
+
+  el("mapsStatus").textContent = "Maps: ready ✅";
+}
+
+/* Submit handler */
+el("crewForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  showErr(""); // clear
+  showOk("");  // clear
+
+  const btn = el("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "Submitting…";
+
+  try {
+    // Basic validation
+    const airport = el("airportCode").value.trim().toUpperCase();
+    if (!/^[A-Z0-9]{3,4}$/.test(airport)) throw new Error("Airport code must look like DEN, LAX, JFK, etc.");
+
+    // Turnstile token (Turnstile injects hidden input)
+    const ts = document.querySelector('input[name="cf-turnstile-response"]')?.value || "";
+    if (!ts) throw new Error("Turnstile not ready. Wait 10 seconds and submit again.");
+
+    const direction = el("serviceType").value === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT";
+
+    const pickup_time_utc = new Date(`${el("date").value}T${el("time").value}:00`).toISOString();
+
+    const payload = {
+      created_by: (el("email").value || el("phone").value || "").trim(),
+      direction,
+      airport_code: airport,
+      pickup_text: el("pickupAddress").value.trim(),
+      dropoff_text: el("dropoffAddress").value.trim(),
+      pickup_time_utc,
+      airline: el("airline").value.trim() || null,
+      flight_number: el("flightNumber").value.trim() || null,
+      notes: [
+        `Name: ${el("name").value.trim()}`,
+        `Phone: ${el("phone").value.trim()}`,
+        el("notes").value.trim() ? `Notes: ${el("notes").value.trim()}` : null
+      ].filter(Boolean).join(" • "),
+      turnstile_token: ts
+    };
+
+    const res = await fetch(`${API_BASE}/api/trips`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json().catch(()=> ({}));
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.error || `API error (HTTP ${res.status})`);
+    }
+
+    showOk(`Submitted ✅ Request ID: ${data.id || data.trip_id || "OK"}`);
+  } catch (err) {
+    showErr(`Not submitted:\n${err.message}\n\nUse the WhatsApp Backup button below if needed.`);
+    // Reset Turnstile so user can retry
+    if (window.turnstile) { try { turnstile.reset(); } catch {} }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Submit Request";
+  }
 });
+
+/* Boot */
+buildWhatsApp();
+loadGoogle()
+  .then(() => initAutocomplete())
+  .catch((e) => {
+    el("mapsStatus").textContent = "Maps: failed ❌ (use WhatsApp Backup)";
+    console.error(e);
+  });
 </script>
+
 </body>
 </html>
