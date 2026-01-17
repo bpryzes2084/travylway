@@ -38,6 +38,7 @@ textarea{min-height:90px}
 .price-details{display:flex;justify-content:space-between;font-weight:900}
 .pac-container{z-index:99999!important}
 .small{color:var(--muted);font-size:.9rem;margin-top:6px}
+.timezone{color:#2196f3;font-weight:700;font-size:.85rem;margin-top:6px;display:block}
 </style>
 </head>
 
@@ -49,6 +50,8 @@ textarea{min-height:90px}
       <p>Discounted crew rates · Reliable airport transportation</p>
     </div>
 
+    <div id="ok" class="msg ok"></div>
+    <div id="err" class="msg err"></div>
 
     <div class="note">
       Driver will contact you via <strong>WhatsApp</strong> once your trip is claimed.
@@ -107,6 +110,7 @@ textarea{min-height:90px}
         <div class="group">
           <label>Time <span class="req">*</span></label>
           <input id="time" type="time" required>
+          <span class="timezone">🕐 Mountain Time (Denver/Aurora)</span>
         </div>
       </div>
 
@@ -161,7 +165,7 @@ const WHATSAPP_NUMBER = "17204748851";
 const GOOGLE_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
 
 /* pricing */
-const BASE=2.25, PER=1.25, FREE=3, MIN=10, MAX=120;
+const BASE=2.30, PER=1.30, FREE=0, MIN=11, MAX=120;
 
 const el=id=>document.getElementById(id);
 let pickupLoc=null, dropLoc=null;
@@ -177,8 +181,26 @@ function showErr(msg){
   el("ok").style.display = "none";
 }
 
+/* Format datetime for display */
+function formatMountainTime(dateStr, timeStr) {
+  const dt = new Date(`${dateStr}T${timeStr}:00`);
+  return dt.toLocaleString('en-US', {
+    timeZone: 'America/Denver',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  }) + ' MT';
+}
+
 /* WhatsApp backup builder */
 function buildWhatsApp(){
+  const dateVal = el("date").value || "";
+  const timeVal = el("time").value || "";
+  const displayTime = (dateVal && timeVal) ? formatMountainTime(dateVal, timeVal) : `${dateVal} ${timeVal}`;
+  
   const msg=[
     "🚖 Travylway Air Crew Request",
     `Name: ${el("name").value || ""}`,
@@ -187,7 +209,7 @@ function buildWhatsApp(){
     `Drop-off: ${el("dropoffAddress").value || ""}`,
     `Airport: ${el("airportCode").value || ""}`,
     `Service: ${el("serviceType").value || ""}`,
-    `Date/Time: ${el("date").value || ""} ${el("time").value || ""}`,
+    `Date/Time: ${displayTime}`,
     `Airline: ${el("airline").value || ""}`,
     `Flight: ${el("flightNumber").value || ""}`,
     `Notes: ${el("notes").value || ""}`
@@ -274,7 +296,17 @@ el("crewForm").addEventListener("submit", async (e) => {
     if (!serviceType) throw new Error("Select a service type.");
 
     const direction = serviceType === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT";
-    const pickup_time_utc = new Date(`${el("date").value}T${el("time").value}:00`).toISOString();
+    
+    // Build local datetime string
+    const dateVal = el("date").value;
+    const timeVal = el("time").value;
+    const localDateTime = `${dateVal}T${timeVal}:00`;
+    
+    // Convert to UTC for backend storage
+    const pickup_time_utc = new Date(localDateTime).toISOString();
+    
+    // Create display-friendly time for notifications
+    const pickup_time_display = formatMountainTime(dateVal, timeVal);
 
     // Turnstile token field name MUST match Worker expectations
     const ts = document.querySelector('input[name="cf-turnstile-response"]')?.value || "";
@@ -293,6 +325,8 @@ el("crewForm").addEventListener("submit", async (e) => {
       pickup_text: el("pickupAddress").value.trim(),
       dropoff_text: el("dropoffAddress").value.trim(),
       pickup_time_utc,
+      pickup_time_local: localDateTime,
+      pickup_time_display: pickup_time_display,
 
       airline: el("airline").value.trim() || null,
       flight_number: el("flightNumber").value.trim() || null,
