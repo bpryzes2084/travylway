@@ -3,602 +3,316 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>General Transportation - Travylway</title>
+<title>General Transportation — Travylway</title>
 <meta name="description" content="Point-to-point transportation service with Travylway.">
- 
+
 <style>
 :root{
-  --bg:#2B3A4A;
-  --accent:#2563EB;
-  --text:#0F172A;
-  --light:#E5E7EB;
-  --muted:rgba(229,231,235,.82);
-  --line:rgba(255,255,255,.10);
+  --bg:#2B3A4A; --card:#fff; --text:#0F172A; --muted:#64748B; --line:#E2E8F0;
+  --okbg:#ECFDF5; --okbd:#BBF7D0; --oktx:#166534;
+  --erbg:#FFF1F2; --erbd:#FECDD3; --ertx:#9F1239;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:var(--bg);
-  color:var(--light);
-  padding:2rem 1rem;
-}
-
-.container{
-  max-width:700px;
-  margin:0 auto;
-}
-
-.form-card{
-  background:white;
-  border-radius:20px;
-  padding:2.5rem;
-  box-shadow:0 20px 60px rgba(0,0,0,.3);
-  color:var(--text);
-}
-
-.form-header{
-  text-align:center;
-  margin-bottom:2rem;
-}
-
-.form-header h1{
-  font-size:2rem;
-  margin-bottom:0.5rem;
-  color:#333;
-}
-
-.form-header p{
-  color:#666;
-  font-size:1rem;
-}
-
-.form-group{
-  margin-bottom:1.5rem;
-}
-
-.form-group label{
-  display:block;
-  font-weight:700;
-  margin-bottom:0.5rem;
-  color:#333;
-  font-size:0.95rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-  width:100%;
-  padding:0.75rem;
-  border:2px solid #e0e0e0;
-  border-radius:10px;
-  font-size:1rem;
-  font-family:inherit;
-  transition:border-color 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-  outline:none;
-  border-color:#667eea;
-}
-
-.form-group textarea{
-  resize:vertical;
-  min-height:100px;
-}
-
-.form-group small{
-  color:#666;
-  font-size:0.85rem;
-  display:block;
-  margin-top:0.25rem;
-  font-weight:400;
-}
-
-.form-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1rem;
-}
-
-.required{
-  color:#ff6b6b;
-}
-
-.submit-btn{
-  width:100%;
-  padding:1rem;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  color:white;
-  border:none;
-  border-radius:12px;
-  font-size:1.1rem;
-  font-weight:900;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-}
-
-.submit-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 30px rgba(102,126,234,0.4);
-}
-
-.submit-btn:disabled{
-  background:#ccc;
-  cursor:not-allowed;
-  transform:none;
-}
-
-.success-message,
-.error-message{
-  padding:1rem;
-  border-radius:10px;
-  margin-bottom:1.5rem;
-  text-align:center;
-  font-weight:600;
-  display:none;
-}
-
-.success-message{
-  background:#d4edda;
-  color:#155724;
-  border:1px solid #c3e6cb;
-}
-
-.error-message{
-  background:#f8d7da;
-  color:#721c24;
-  border:1px solid #f5c6cb;
-}
-
-.back-link{
-  display:inline-block;
-  margin-top:1.5rem;
-  color:#667eea;
-  text-decoration:none;
-  font-weight:600;
-}
-
-.back-link:hover{
-  text-decoration:underline;
-}
-
-.optional-note{
-  font-size:0.85rem;
-  color:#666;
-  font-style:italic;
-  margin-bottom:1.5rem;
-  text-align:center;
-}
-
-.info-box{
-  background:#e8f5e9;
-  padding:1rem 1.25rem;
-  border-radius:10px;
-  margin-bottom:1.5rem;
-  border-left:4px solid #25D366;
-}
-
-.info-box strong{
-  color:#1b5e20;
-  font-size:1rem;
-}
-
-.info-box p{
-  margin:0.5rem 0 0;
-  line-height:1.6;
-  color:#2e7d32;
-}
-
-.price-estimate{
-  background:#e3f2fd;
-  padding:1.5rem;
-  border-radius:10px;
-  margin:1.5rem 0;
-  border-left:4px solid #2196f3;
-  display:none;
-}
-
-.price-estimate h3{
-  margin:0 0 0.5rem 0;
-  color:#1565c0;
-  font-size:1.1rem;
-}
-
-.price-details{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:0.75rem;
-}
-
-.distance{
-  color:#1976d2;
-  font-size:0.95rem;
-}
-
-.price{
-  font-size:1.8rem;
-  font-weight:900;
-  color:#0d47a1;
-}
-
-.calc-btn{
-  background:#2196f3;
-  color:white;
-  border:none;
-  padding:0.75rem 1.5rem;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:700;
-  margin:1rem 0;
-  width:100%;
-  font-size:1rem;
-}
-
-.calc-btn:hover{
-  background:#1976d2;
-}
-
-@media(max-width:768px){
-  .form-row{
-    grid-template-columns:1fr;
-  }
-  
-  .form-card{
-    padding:1.5rem;
-  }
-  
-  .form-header h1{
-    font-size:1.5rem;
-  }
-}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:#E5E7EB;padding:28px 14px}
+.container{max-width:760px;margin:0 auto}
+.card{background:var(--card);color:var(--text);border-radius:22px;padding:26px;box-shadow:0 22px 70px rgba(0,0,0,.28)}
+.header{text-align:center;margin-bottom:18px}
+.header h1{margin:0 0 6px;font-size:1.85rem}
+.header p{margin:0;color:var(--muted)}
+.note{background:#E8F5E9;border-left:4px solid #25D366;padding:12px 14px;border-radius:12px;margin:16px 0 18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.grid{grid-template-columns:1fr}}
+.group{margin:0 0 14px}
+label{display:block;font-weight:800;margin:0 0 6px}
+input,select,textarea{width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;font-size:1rem}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#667eea}
+textarea{min-height:90px}
+.req{color:#ef4444;font-weight:900}
+.btn{display:block;text-align:center;text-decoration:none;width:100%;padding:14px;border-radius:14px;border:0;font-weight:900;cursor:pointer}
+.btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.btn.secondary{background:#fff;border:1px solid var(--line);color:#111}
+.msg{display:none;padding:12px;border-radius:12px;margin-bottom:12px;font-weight:800;text-align:center}
+.msg.ok{display:block;background:var(--okbg);border:1px solid var(--okbd);color:var(--oktx)}
+.msg.err{display:block;background:var(--erbg);border:1px solid var(--erbd);color:var(--ertx);white-space:pre-wrap}
+.price-estimate{display:none;background:#E3F2FD;border-left:4px solid #2196F3;padding:14px;border-radius:12px}
+.price-details{display:flex;justify-content:space-between;font-weight:900}
+.pac-container{z-index:99999!important}
+.small{color:var(--muted);font-size:.9rem;margin-top:6px}
+.timezone{color:#2196f3;font-weight:700;font-size:.85rem;margin-top:6px;display:block}
 </style>
 </head>
 
 <body>
 <div class="container">
-  <div class="form-card">
-    <div class="form-header">
+  <div class="card">
+    <div class="header">
       <h1>🚗 General Transportation</h1>
-      <p>Point-to-point rides anywhere in the metro area</p>
-      <p class="optional-note">Only name and phone number are required</p>
+      <p>Point-to-point rides · Simple request</p>
     </div>
 
-    <div id="successMessage" class="success-message">
-      ✓ Request submitted successfully!
+    <div id="ok" class="msg ok"></div>
+    <div id="err" class="msg err"></div>
+
+    <div class="note">
+      Driver will contact you via <strong>WhatsApp</strong> once your trip is claimed.
+      <div class="small">If Google Maps is down, use WhatsApp Backup below.</div>
     </div>
 
-    <div id="errorMessage" class="error-message">
-      ✗ Something went wrong. Please try again.
-    </div>
-
-    <!-- WhatsApp Notification Info -->
-    <div class="info-box">
-      <strong>📱 How You'll Be Contacted:</strong>
-      <p>
-        When a driver claims your trip, they'll contact you via <strong>WhatsApp</strong> 
-        to confirm pickup details.
-      </p>
-    </div>
-
-    <form id="pickupForm">
-      <!-- Personal Information -->
-      <div class="form-group">
-        <label for="name">Name <span class="required">*</span></label>
-        <input type="text" id="name" name="name" placeholder="John Doe" required>
+    <form id="generalForm">
+      <div class="group">
+        <label>Name <span class="req">*</span></label>
+        <input id="name" required>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="phone">Phone Number <span class="required">*</span></label>
-          <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+      <div class="grid">
+        <div class="group">
+          <label>Phone <span class="req">*</span></label>
+          <input id="phone" required>
         </div>
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="you@example.com">
+        <div class="group">
+          <label>Email (optional)</label>
+          <input id="email">
         </div>
       </div>
 
-      <!-- Pickup Address -->
-      <div class="form-group">
-        <label for="address">Pickup Address <span class="required">*</span></label>
-        <input type="text" id="address" name="address" placeholder="123 Main St, City, State ZIP" required>
-        <small>Include street, city, state, and zip code</small>
+      <div class="group">
+        <label>Pickup Address <span class="req">*</span></label>
+        <input id="pickupAddress" placeholder="Start typing address…" required>
+        <div class="small" id="mapsStatus">Maps: loading…</div>
       </div>
 
-      <!-- Destination Address -->
-      <div class="form-group">
-        <label for="destination">Destination Address <span class="required">*</span></label>
-        <input type="text" id="destination" name="destination" placeholder="456 Oak Ave, City, State ZIP" required>
-        <small>Include street, city, state, and zip code</small>
+      <div class="group">
+        <label>Destination Address <span class="req">*</span></label>
+        <input id="dropoffAddress" placeholder="Start typing address…" required>
       </div>
 
-      <!-- Calculate Price Button -->
-      <button type="button" class="calc-btn" id="calcBtn">📍 Calculate Distance & Price</button>
+      <div class="grid">
+        <div class="group">
+          <label>Date <span class="req">*</span></label>
+          <input id="date" type="date" required>
+        </div>
+        <div class="group">
+          <label>Time <span class="req">*</span></label>
+          <input id="time" type="time" required>
+          <span class="timezone">🕐 Mountain Time (Denver/Aurora)</span>
+        </div>
+      </div>
 
-      <!-- Price Estimate -->
+      <div class="group">
+        <label>Notes (optional)</label>
+        <textarea id="notes"></textarea>
+      </div>
+
       <div id="priceEstimate" class="price-estimate">
-        <h3>💰 Estimated Price</h3>
         <div class="price-details">
-          <span class="distance" id="distanceDisplay">Distance: -- miles</span>
-          <span class="price" id="priceDisplay">$--</span>
+          <span id="distanceDisplay"></span>
+          <span id="priceDisplay"></span>
         </div>
-        <small style="color:#1565c0; margin-top:0.5rem; display:block;">Standard Rate</small>
+        <div class="small">Estimate shown before approval.</div>
       </div>
 
-      <!-- Date and Time -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="pickupDate">Pickup Date <span class="required">*</span></label>
-          <input type="date" id="pickupDate" name="pickupDate" required>
-        </div>
-        <div class="form-group">
-          <label for="pickupTime">Pickup Time <span class="required">*</span></label>
-          <input type="time" id="pickupTime" name="pickupTime" required>
-        </div>
+      <!-- Turnstile -->
+      <div class="group">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"></div>
+        <div class="small">Spam protection enabled.</div>
       </div>
 
-      <!-- Number of Passengers -->
-      <div class="form-group">
-        <label for="passengers">Number of Passengers</label>
-        <input type="number" id="passengers" name="passengers" min="1" max="10" placeholder="1" value="1">
-      </div>
+      <button class="btn primary" id="submitBtn" type="submit">Submit Request</button>
 
-      <!-- Additional Notes -->
-      <div class="form-group">
-        <label for="notes">Special Instructions</label>
-        <textarea id="notes" name="notes" placeholder="Any special requests, luggage details, or other information..."></textarea>
+      <div style="margin-top:12px">
+        <a id="waBackupBtn" class="btn secondary" target="_blank" rel="noopener">
+          Send via WhatsApp (Backup)
+        </a>
       </div>
-
-      <button type="submit" class="submit-btn" id="submitBtn">
-        Submit Request
-      </button>
     </form>
 
-    <a href="/" class="back-link">← Back to Home</a>
+    <a class="small" href="/" style="display:inline-block;margin-top:14px;text-decoration:none;color:#667eea;font-weight:800;">← Back to Home</a>
   </div>
 </div>
 
+<!-- Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <script>
-// ========================================
-// PRICING CONFIGURATION - GENERAL PUBLIC RATES
-// ========================================
-const BASE_FARE = 4.89;
-const PER_MILE_RATE = 1.50;
-const MINIMUM_FARE = 12;
-const MAXIMUM_FARE = 100;
-const FREE_MILES = 0;
+/* CONFIG */
+const API_BASE = "https://travylway-api.benterpryzes2084.workers.dev";
+const WHATSAPP_NUMBER = "17204748851";
+const GOOGLE_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
 
-var map;
-var placesService;
+/* GENERAL pricing (adjust if needed) */
+const BASE=4.89, PER=1.50, FREE=0, MIN=12, MAX=100;
 
-function initMap() {
-  console.log('Google Maps loaded');
-  map = new google.maps.Map(document.createElement('div'));
-  placesService = new google.maps.places.PlacesService(map);
+const el=id=>document.getElementById(id);
+let pickupLoc=null, dropLoc=null;
+
+function showOk(msg){ el("ok").textContent=msg; el("ok").style.display="block"; el("err").style.display="none"; }
+function showErr(msg){ el("err").textContent=msg; el("err").style.display="block"; el("ok").style.display="none"; }
+
+function formatMountainTime(dateStr, timeStr) {
+  const dt = new Date(`${dateStr}T${timeStr}:00`);
+  return dt.toLocaleString('en-US', {
+    timeZone: 'America/Denver',
+    month: 'short', day: 'numeric', year: 'numeric',
+    hour: 'numeric', minute: '2-digit', hour12: true
+  }) + ' MT';
 }
 
-// ========================================
-// PRICE CALCULATION
-// ========================================
-function calculatePrice() {
-  var address = document.getElementById('address').value;
-  var destination = document.getElementById('destination').value;
+/* WhatsApp backup builder */
+function buildWhatsApp(){
+  const dateVal = el("date").value || "";
+  const timeVal = el("time").value || "";
+  const displayTime = (dateVal && timeVal) ? formatMountainTime(dateVal, timeVal) : `${dateVal} ${timeVal}`;
 
-  if (!address || !destination) {
-    alert('Please enter both pickup and destination addresses');
-    return;
-  }
+  const msg=[
+    "🚖 Travylway General Ride Request",
+    `Name: ${el("name").value || ""}`,
+    `Phone: ${el("phone").value || ""}`,
+    `Pickup: ${el("pickupAddress").value || ""}`,
+    `Destination: ${el("dropoffAddress").value || ""}`,
+    `Date/Time: ${displayTime}`,
+    `Notes: ${el("notes").value || ""}`
+  ].join("\n");
 
-  if (typeof google === 'undefined' || !placesService) {
-    alert('Google Maps is still loading. Please wait a moment and try again.');
-    return;
-  }
+  el("waBackupBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
+document.addEventListener("input", buildWhatsApp, true);
+document.addEventListener("change", buildWhatsApp, true);
 
-  var calcBtn = document.getElementById('calcBtn');
-  calcBtn.disabled = true;
-  calcBtn.textContent = 'Calculating...';
-
-  var addressRequest = {
-    query: address + ', USA',
-    fields: ['geometry', 'formatted_address']
-  };
-
-  placesService.findPlaceFromQuery(addressRequest, function(results1, status1) {
-    if (status1 === google.maps.places.PlacesServiceStatus.OK && results1 && results1[0]) {
-      var pickupLoc = results1[0].geometry.location;
-
-      var destRequest = {
-        query: destination + ', USA',
-        fields: ['geometry', 'formatted_address']
-      };
-
-      placesService.findPlaceFromQuery(destRequest, function(results2, status2) {
-        if (status2 === google.maps.places.PlacesServiceStatus.OK && results2 && results2[0]) {
-          var destLoc = results2[0].geometry.location;
-
-          var distanceService = new google.maps.DistanceMatrixService();
-          distanceService.getDistanceMatrix({
-            origins: [pickupLoc],
-            destinations: [destLoc],
-            travelMode: 'DRIVING',
-            unitSystem: google.maps.UnitSystem.IMPERIAL
-          }, function(response, status) {
-            if (status === 'OK') {
-              var result = response.rows[0].elements[0];
-
-              if (result.status === 'OK') {
-                var distanceInMeters = result.distance.value;
-                var distanceInMiles = (distanceInMeters / 1609.34).toFixed(1);
-
-                var price = BASE_FARE;
-                var chargeableMiles = Math.max(0, distanceInMiles - FREE_MILES);
-                price += chargeableMiles * PER_MILE_RATE;
-                price = Math.max(MINIMUM_FARE, Math.min(MAXIMUM_FARE, price));
-                price = Math.round(price);
-
-                document.getElementById('distanceDisplay').textContent = 'Distance: ' + distanceInMiles + ' miles';
-                document.getElementById('priceDisplay').textContent = '$' + price;
-                document.getElementById('priceEstimate').style.display = 'block';
-                document.getElementById('calculatedDistance').value = distanceInMiles;
-                document.getElementById('calculatedPrice').value = price;
-
-                // Auto-populate payment info in notes
-                var paymentInfo = '💰 ESTIMATED FARE: $' + price + '\n\n';
-                paymentInfo += '📱 PAYMENT METHODS:\n';
-                paymentInfo += '• CashApp: $tway66gworld\n';
-                paymentInfo += '• Venmo: @Tway2084\n';
-                paymentInfo += '• PayPal: paypal.me/benterpryzes\n';
-                paymentInfo += '• Square: bit.ly/4snVxsl\n';
-                paymentInfo += '• Cash accepted\n\n';
-                
-                var notesField = document.getElementById('notes');
-                var currentNotes = notesField.value.trim();
-                if (currentNotes) {
-                  notesField.value = paymentInfo + '---\n' + currentNotes;
-                } else {
-                  notesField.value = paymentInfo;
-                }
-
-                calcBtn.disabled = false;
-                calcBtn.textContent = '✓ Price Calculated';
-              } else {
-                alert('Could not calculate distance: ' + result.status);
-                calcBtn.disabled = false;
-                calcBtn.textContent = '📍 Calculate Distance & Price';
-              }
-            } else {
-              alert('Distance calculation failed: ' + status);
-              calcBtn.disabled = false;
-              calcBtn.textContent = '📍 Calculate Distance & Price';
-            }
-          });
-        } else {
-          alert('Could not find destination address.\n\nPlease include:\n- Street number and name\n- City, State, Zip');
-          calcBtn.disabled = false;
-          calcBtn.textContent = '📍 Calculate Distance & Price';
-        }
-      });
-    } else {
-      alert('Could not find pickup address.\n\nPlease include:\n- Street number and name\n- City, State, Zip\n\nExample: "123 Main St, Denver, CO 80012"');
-      calcBtn.disabled = false;
-      calcBtn.textContent = '📍 Calculate Distance & Price';
-    }
+/* Load Google */
+function loadGoogle(){
+  return new Promise((resolve, reject) => {
+    if (window.google && google.maps && google.maps.places) return resolve();
+    const s = document.createElement("script");
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_KEY)}&libraries=places`;
+    s.async = true; s.defer = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("Google Maps script failed to load"));
+    document.head.appendChild(s);
   });
 }
 
-document.getElementById('calcBtn').addEventListener('click', calculatePrice);
+function calculatePrice(){
+  if(!pickupLoc || !dropLoc) return;
+  const svc = new google.maps.DistanceMatrixService();
+  svc.getDistanceMatrix({
+    origins:[pickupLoc],
+    destinations:[dropLoc],
+    travelMode:"DRIVING",
+    unitSystem:google.maps.UnitSystem.IMPERIAL
+  }, (r,s)=>{
+    if(s!=="OK") return;
+    const elem = r?.rows?.[0]?.elements?.[0];
+    if (!elem || elem.status !== "OK") return;
 
-// ========================================
-// FORM SETUP
-// ========================================
-const form = document.getElementById('pickupForm');
+    const miles = elem.distance.value/1609.34;
+    let price = BASE + Math.max(0, miles-FREE)*PER;
+    price = Math.max(MIN, Math.min(MAX, price));
+    el("distanceDisplay").textContent = `${miles.toFixed(1)} mi`;
+    el("priceDisplay").textContent = `$${price.toFixed(0)}`;
+    el("priceEstimate").style.display = "block";
+  });
+}
 
-// Hidden fields
-const distanceField = document.createElement('input');
-distanceField.type = 'hidden';
-distanceField.id = 'calculatedDistance';
-distanceField.name = 'calculatedDistance';
-form.appendChild(distanceField);
+function initAutocomplete(){
+  const ac1 = new google.maps.places.Autocomplete(el("pickupAddress"), { types:["address"] });
+  ac1.addListener("place_changed", ()=>{
+    const p = ac1.getPlace();
+    pickupLoc = p.geometry?.location || null;
+    calculatePrice();
+  });
 
-const priceField = document.createElement('input');
-priceField.type = 'hidden';
-priceField.id = 'calculatedPrice';
-priceField.name = 'calculatedPrice';
-form.appendChild(priceField);
+  const ac2 = new google.maps.places.Autocomplete(el("dropoffAddress"), { types:["address"] });
+  ac2.addListener("place_changed", ()=>{
+    const p = ac2.getPlace();
+    dropLoc = p.geometry?.location || null;
+    calculatePrice();
+  });
 
-const serviceTierField = document.createElement('input');
-serviceTierField.type = 'hidden';
-serviceTierField.name = 'serviceTier';
-serviceTierField.value = 'general';
-form.appendChild(serviceTierField);
+  el("mapsStatus").textContent = "Maps: ready ✅";
+}
 
-// Set minimum date to today
-const today = new Date().toISOString().split('T')[0];
-document.getElementById('pickupDate').setAttribute('min', today);
-
-// ========================================
-// FORM SUBMISSION
-// ========================================
-document.getElementById('pickupForm').addEventListener('submit', async (e) => {
+/* Submit */
+el("generalForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
-  
-  const submitBtn = document.getElementById('submitBtn');
-  const successMsg = document.getElementById('successMessage');
-  const errorMsg = document.getElementById('errorMessage');
-  
-  successMsg.style.display = 'none';
-  errorMsg.style.display = 'none';
-  errorMsg.textContent = '';
-  
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting...';
-  
-  const formData = new FormData(e.target);
-  const data = {};
-  formData.forEach(function(value, key) { data[key] = value; });
+  el("ok").style.display="none";
+  el("err").style.display="none";
 
-  // Combine date and time for pickup_time_utc
-  const pickupDateTime = new Date(data.pickupDate + 'T' + data.pickupTime);
-  
-  const payload = {
-    created_by: data.name || 'general',
-    rider_phone: data.phone || '',
-    pickup_text: data.address || '',
-    dropoff_text: data.destination || '',
-    pickup_time_utc: pickupDateTime.toISOString(),
-    trip_type: 'POINT_TO_POINT',
-    rider_type: 'GENERAL',
-    direction: null,
-    airport_code: null,
-    flight_number: null,
-    airline: null,
-    notes: data.notes || null
-  };
-  
-  try {
-    const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/api/trips', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+  const btn = el("submitBtn");
+  btn.disabled=true;
+  btn.textContent="Submitting…";
+
+  try{
+    const ts = document.querySelector('input[name="cf-turnstile-response"]')?.value || "";
+    if (!ts) throw new Error("Turnstile not ready. Wait 10 seconds and submit again.");
+
+    const dateVal = el("date").value;
+    const timeVal = el("time").value;
+    const localDateTime = `${dateVal}T${timeVal}:00`;
+    const pickup_time_utc = new Date(localDateTime).toISOString();
+    const pickup_time_display = formatMountainTime(dateVal, timeVal);
+
+    const payload = {
+      created_by: (el("email").value || el("phone").value || "").trim(),
+      rider_phone: el("phone").value.trim(),
+      rider_type: "GENERAL",
+      trip_type: "POINT_TO_POINT",
+
+      direction: null,
+      airport_code: null,
+
+      pickup_text: el("pickupAddress").value.trim(),
+      dropoff_text: el("dropoffAddress").value.trim(),
+      pickup_time_utc,
+      pickup_time_local: localDateTime,
+      pickup_time_display,
+
+      flight_number: null,
+      airline: null,
+
+      notes: [
+        `Name: ${el("name").value.trim()}`,
+        `Phone: ${el("phone").value.trim()}`,
+        el("notes").value.trim() ? `Notes: ${el("notes").value.trim()}` : null
+      ].filter(Boolean).join(" • "),
+
+      "cf-turnstile-response": ts
+    };
+
+    const res = await fetch(`${API_BASE}/api/trips`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
       body: JSON.stringify(payload)
     });
-    
-    const text = await response.text();
-    let resp;
-    try { resp = JSON.parse(text); } catch { resp = { raw: text }; }
-    
-    if (response.ok) {
-      successMsg.style.display = 'block';
-      e.target.reset();
-      document.getElementById('priceEstimate').style.display = 'none';
-      
-      successMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
-    } else {
-      errorMsg.textContent = '✗ ' + (resp.error || resp.detail || resp.raw || ('Request failed (' + response.status + ')'));
-      errorMsg.style.display = 'block';
-      errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
-    }
-  } catch (error) {
-    errorMsg.textContent = '✗ ' + (error.message || 'Something went wrong. Please try again.');
-    errorMsg.style.display = 'block';
-    errorMsg.scrollIntoView({behavior: 'smooth', block: 'center'});
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit Request';
+
+    const data = await res.json().catch(()=> ({}));
+    if (!res.ok || data.ok === false) throw new Error(data.error || `API error (HTTP ${res.status})`);
+
+    showOk(`Submitted ✅ Request ID: ${data.id || "OK"}`);
+
+    el("generalForm").reset();
+    pickupLoc=null; dropLoc=null;
+    el("priceEstimate").style.display="none";
+    buildWhatsApp();
+    if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
+
+  }catch(err){
+    showErr(`Not submitted:\n${err.message}\n\nUse the WhatsApp Backup button below if needed.`);
+    if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
+  }finally{
+    btn.disabled=false;
+    btn.textContent="Submit Request";
   }
 });
 
-// Initialize Google Maps when loaded
-window.addEventListener('load', initMap);
+/* Boot */
+buildWhatsApp();
+loadGoogle()
+  .then(()=>initAutocomplete())
+  .catch((e)=>{
+    el("mapsStatus").textContent = "Maps: failed ❌ (use WhatsApp Backup)";
+    console.error(e);
+  });
 </script>
-
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initMap" async defer></script>
 
 </body>
 </html>
