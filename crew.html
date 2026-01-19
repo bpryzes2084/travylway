@@ -6,14 +6,6 @@
 <title>Air Crew Pickup Request — Travylway</title>
 <meta name="description" content="Request airport pickup or drop-off transportation for airline crew.">
 
-
-<div class="note">
-  Driver will contact you via WhatsApp once your trip is claimed.
-  <div class="small">We'll track your flight...</div>
-</div>
-
-
-  
 <style>
 :root{
   --bg:#2B3A4A; --card:#fff; --text:#0F172A; --muted:#64748B; --line:#E2E8F0;
@@ -48,6 +40,7 @@ textarea{min-height:90px}
 .price-row{display:flex;justify-content:space-between;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.2)}
 .price-row:last-child{border:0;margin:0;padding:0}
 .driver-split{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.3);font-size:.9rem;opacity:.95}
+.pac-container{z-index:99999!important}
 .small{color:var(--muted);font-size:.9rem;margin-top:6px}
 .timezone{color:#2196f3;font-weight:700;font-size:.85rem;margin-top:6px;display:block}
 .loading{text-align:center;padding:16px;color:#667eea;display:none}
@@ -165,7 +158,7 @@ textarea{min-height:90px}
         <div class="price-breakdown">
           <div class="price-row">
             <span>Base fare</span>
-            <span>$<span id="fareBase">0.00</span></span>
+            <span>$<span id="fareBase">2.50</span></span>
           </div>
           <div class="price-row">
             <span>Distance</span>
@@ -203,6 +196,9 @@ textarea{min-height:90px}
 /* CONFIG */
 const API_BASE = "https://travylway-api.benterpryzes2084.workers.dev";
 
+/* Google Maps API Key - REPLACE WITH YOUR KEY */
+const GOOGLE_MAPS_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
+
 const el = id => document.getElementById(id);
 
 let fareCalculated = false;
@@ -218,6 +214,43 @@ function showErr(msg){
   el("err").textContent = msg;
   el("err").style.display = "block";
   el("ok").style.display = "none";
+}
+
+/* Load Google Maps */
+function loadGoogleMaps() {
+  return new Promise((resolve, reject) => {
+    if (window.google && google.maps && google.maps.places) {
+      return resolve();
+    }
+    
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Google Maps failed to load"));
+    document.head.appendChild(script);
+  });
+}
+
+/* Initialize address autocomplete */
+function initAutocomplete() {
+  const pickupInput = el("pickupAddress");
+  const dropoffInput = el("dropoffAddress");
+  
+  if (!pickupInput || !dropoffInput) return;
+  
+  // Initialize autocomplete for pickup
+  const pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, {
+    types: ["address"]
+  });
+  
+  // Initialize autocomplete for dropoff
+  const dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, {
+    types: ["address"]
+  });
+  
+  console.log("✅ Google Maps autocomplete ready");
 }
 
 /* Calculate fare using worker's API */
@@ -410,6 +443,14 @@ el("crewForm").addEventListener("submit", async (e) => {
 });
 
 /* Boot */
+loadGoogleMaps()
+  .then(() => {
+    initAutocomplete();
+  })
+  .catch((error) => {
+    console.error("Google Maps error:", error);
+    showErr("Address autocomplete unavailable. You can still type addresses manually.");
+  });
 
 </script>
 
