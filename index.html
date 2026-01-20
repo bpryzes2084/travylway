@@ -724,9 +724,410 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 
 
-<!-- Translation System -->
-<script src="travylway-i18n.js"></script>
-<script src="translations-index.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Policies | BSM Enterpryzes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .policy-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .policy-section h2 {
+            color: #1e3a8a;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #3b82f6;
+        }
+
+        .policy-section h3 {
+            color: #2563eb;
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .policy-section p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .emphasis {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+
+        .emphasis p {
+            margin-bottom: 0;
+            font-weight: 500;
+            color: #92400e;
+        }
+
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #dc2626;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+
+        .warning p {
+            margin-bottom: 0;
+            font-weight: 500;
+            color: #991b1b;
+        }
+
+        .note {
+            background: #dbeafe;
+            border-left: 4px solid #2563eb;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+            font-style: italic;
+        }
+
+        .note p {
+            margin-bottom: 0;
+            color: #1e40af;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .footer strong {
+            color: #1e3a8a;
+            font-size: 1.05rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .policy-section {
+                padding: 1.5rem;
+            }
+
+            .policy-section h2 {
+                font-size: 1.6rem;
+            }
+
+            .policy-section h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Business Policies</h1>
+        <p>Professional Airport Transportation Services</p>
+    </div>
+
+    <div class="container">
+        <!-- Payment Policy -->
+        <div class="policy-section" id="payment-policy">
+            <h2>Payment Policy - Immediate Payment Required</h2>
+
+            <h3>Payment Deadline</h3>
+            <p>All payments must be completed within 24 hours of ride completion, regardless of payment method selected.</p>
+
+            <h3>Policy Details</h3>
+            <p>Payment is due within 24 hours of drop-off time. This applies to all payment methods including credit/debit card, Venmo, PayPal, and Apple Pay. Cash payments are not accepted. No exceptions will be made, and this policy applies to all riders including airline crew members and general travelers. Business is business.</p>
+
+            <h3>Final Notice Process</h3>
+            <p>When payment is not received within the required timeframe, you will receive a final notice regarding your unpaid ride. Per Travylway's payment policy, all payments must be completed within 24 hours of ride completion. A payment reminder will be sent, and if payment has still not been received, you will be given until 11:59 PM of the following day to complete payment. If payment is not received by this deadline, enforcement actions will be taken immediately as outlined below.</p>
+
+            <h3>Consequences of Non-Payment After Services Rendered</h3>
+            <div class="warning">
+                <p>If payment is not received by the final deadline, the following actions will be taken immediately. Your Venmo or CashApp username will be blocked from future transactions. Your contact information will be blocked. Your IP address will be blocked from accessing the Travylway website. You will be permanently banned from using Travylway services. Service restoration requires full payment of outstanding balance. Repeated payment issues will result in permanent ban from the platform.</p>
+            </div>
+
+            <h3>Why This Policy Exists</h3>
+            <p>Travylway operates on a model that ensures our drivers receive their earnings promptly. Unlike traditional rideshare services, we don't hold driver payments. When passengers delay or fail to pay, drivers lose income they've already earned, it creates uncertainty in driver compensation, and it damages the trust-based relationship we've built with our driver partners. Our 75% driver compensation model only works when payments are processed immediately. This policy protects both our drivers and maintains the reliability airline crew members depend on.</p>
+
+            <h3>Your Responsibility</h3>
+            <p>By booking with Travylway, you agree to have a valid payment method available at the time of your ride, pay immediately upon ride completion, and not schedule or delay payment requests beyond the ride completion time. Ignoring CashApp or Venmo payment requests, scheduled Venmo payment requests for future dates, or failing to respond to payment requests will be treated as non-payment and subject to the consequences outlined above. Travylway is not a credit service. Payment is expected at time of service.</p>
+
+            <div class="note">
+                <p>If you're experiencing a legitimate payment issue such as a card decline or app error, contact Travylway immediately. Good-faith payment problems will be handled on a case-by-case basis, but intentional payment delays will result in immediate blocking from the platform.</p>
+            </div>
+        </div>
+
+        <!-- Passenger Etiquette Policy -->
+        <div class="policy-section" id="etiquette-policy">
+            <h2>Passenger Etiquette Policy</h2>
+
+            <h3>Policy Overview</h3>
+            <p>Travylway expects all passengers to conduct themselves with professionalism, respect, and consideration during all interactions with drivers and throughout the ride. This policy outlines the standards of behavior required for using Travylway services.</p>
+
+            <h3>Core Principles</h3>
+            <p>All passenger conduct must be built on three fundamental principles: respect for the driver and vehicle, restraint in behavior and communication, and responsibility for one's actions and belongings.</p>
+
+            <h3>Required Behaviors</h3>
+            <p><strong>Respectful Communication.</strong> Address drivers by name only. Use please and thank you. Practice active listening when drivers provide information about the route or ride details. Communicate clearly and professionally regarding pickup location, destination, and any special requirements.</p>
+
+            <p><strong>Punctuality.</strong> Be ready at the designated pickup location at the scheduled time. Respect the driver's time and schedule. If running late, communicate immediately through the established communication channel.</p>
+
+            <p><strong>Professional Conduct.</strong> Maintain appropriate behavior throughout the ride. Keep conversations respectful and professional. Avoid controversial topics, gossip, or inappropriate comments. Respect the driver's personal space and professional boundaries.</p>
+
+            <p><strong>Vehicle Respect.</strong> Treat the vehicle as you would want your own property treated. Do not eat or drink without driver permission. Dispose of any trash properly. Keep belongings contained and organized. Do not damage or soil the vehicle interior.</p>
+
+            <p><strong>Technology Management.</strong> Keep phone conversations brief and at reasonable volume. Use headphones for music or videos. Silence notifications and ringtones. Avoid distracting the driver with device screens or sounds. Minimize digital distractions to maintain awareness of the ride.</p>
+
+            <p><strong>Positive Environment.</strong> Maintain a calm, respectful atmosphere. Avoid loud or disruptive behavior. Keep music or entertainment at appropriate levels if permitted. Be mindful of the driver's working environment and concentration needs.</p>
+
+            <h3>Prohibited Behaviors</h3>
+            <div class="warning">
+                <p>The following behaviors are strictly prohibited and will result in immediate ride termination and permanent ban from Travylway services: verbal abuse, harassment, or threatening language toward the driver; physical contact or invasion of the driver's personal space; intoxication or impairment that creates safety concerns; smoking, vaping, or use of controlled substances in the vehicle; intentional damage to the vehicle; refusing to wear a seatbelt; interfering with the driver's operation of the vehicle; and any behavior that creates an unsafe or unprofessional environment.</p>
+            </div>
+
+            <h3>Consequences for Policy Violations</h3>
+            <p>Minor violations will result in a warning and documentation in the passenger's account. Repeated violations will result in suspension of Travylway services. Serious violations including harassment, threats, property damage, or safety concerns will result in immediate permanent ban from the platform. No refunds will be issued for rides terminated due to passenger misconduct.</p>
+
+            <h3>Driver Authority</h3>
+            <p>Drivers have full authority to enforce this etiquette policy. If a driver determines that a passenger's behavior violates this policy, the driver may terminate the ride immediately. The passenger will still be responsible for payment and may face additional consequences as outlined above.</p>
+
+            <h3>Your Responsibility</h3>
+            <div class="emphasis">
+                <p>By booking with Travylway, you agree to conduct yourself professionally and respectfully at all times. You are responsible for your behavior, your belongings, and any guests traveling with you. Business is business. Respectful conduct is non-negotiable.</p>
+            </div>
+        </div>
+
+        <!-- Unaccompanied Minor Policy -->
+        <div class="policy-section" id="minor-policy">
+            <h2>Unaccompanied Minor Policy</h2>
+
+            <h3>Policy Statement</h3>
+            <p>Travylway strictly prohibits transportation of unaccompanied minors. All passengers must be 18 years of age or older to use Travylway services. This is a zero-tolerance policy with no exceptions.</p>
+
+            <h3>Who Can Ride</h3>
+            <p>To book or ride with Travylway, you must be at least 18 years of age. Passengers under 18 years of age are not permitted to ride, even if the ride is requested or paid for by a parent, guardian, or other adult.</p>
+
+            <h3>Why This Policy Exists</h3>
+            <p>This policy protects both drivers and passengers. Transportation of unaccompanied minors creates legal liability issues, voids insurance coverage, and places drivers in potentially compromising situations. Travylway will not expose our drivers or our business to these risks under any circumstances.</p>
+
+            <h3>Driver Instructions</h3>
+            <p>Drivers must verify passenger age before allowing anyone into the vehicle. If a passenger appears to be under 18 years of age, the driver must request identification. If the passenger is under 18 or refuses to provide identification proving they are 18 or older, the driver must refuse the ride immediately.</p>
+
+            <p>Drivers will not face penalties or loss of compensation for refusing rides involving passengers under 18 years of age. This is the correct action and is fully supported by Travylway management.</p>
+
+            <h3>Consequences for Violations</h3>
+            <div class="warning">
+                <p>Any driver who knowingly transports a passenger under 18 years of age will face immediate termination from the Travylway platform. Any adult who attempts to book a ride for a minor will be permanently banned from using Travylway services.</p>
+            </div>
+
+            <h3>No Exceptions</h3>
+            <div class="emphasis">
+                <p>This policy applies regardless of circumstances including but not limited to: distance of travel, presence of siblings or friends, parental consent, emergency situations, or any other reason. Business is business. Safety and legal compliance are non-negotiable.</p>
+            </div>
+        </div>
+
+        <!-- Driver No-Cancellation Policy -->
+        <div class="policy-section" id="driver-policy">
+            <h2>Driver No-Cancellation Policy</h2>
+
+            <h3>Policy Overview</h3>
+            <p>Drivers are not allowed to cancel airport rides once accepted. This is a zero-tolerance policy with immediate consequences for violations.</p>
+
+            <h3>Why This Policy Exists</h3>
+            <p>The nature of airline operations requires absolute reliability. Flight attendants, pilots, and airline crew members must report to work on time. A cancelled ride can result in missed flights, disciplinary action against crew members, and disruption to airline operations affecting hundreds of passengers.</p>
+
+            <p>Travylway has built its reputation on reliability. When a driver accepts an airport pickup, especially for airline crew, they are making a commitment that cannot be broken.</p>
+
+            <h3>Policy Details</h3>
+            <p>Once a driver accepts an airport ride, cancellation is not permitted under any circumstances. This applies to all airport pickups including rides for airline crew members, general travelers, and passengers with flight connections.</p>
+
+            <h3>Consequences for Driver Cancellation</h3>
+            <div class="warning">
+                <p>Any driver who cancels an accepted airport ride will face immediate termination from the Travylway platform. There are no warnings. There are no second chances. Account will be permanently deactivated and the driver will be banned from future work with Travylway.</p>
+            </div>
+
+            <h3>Driver Responsibility</h3>
+            <p>Before accepting any airport ride, drivers must ensure they can complete the assignment. This includes verifying vehicle condition, fuel level, traffic conditions, and personal availability. If there is any doubt about ability to complete the ride, do not accept it.</p>
+
+            <div class="emphasis">
+                <p>Business is business. Reliability is non-negotiable.</p>
+            </div>
+        </div>
+
+        <!-- On-Time Policy -->
+        <div class="policy-section" id="ontime-policy">
+            <h2>On-Time Policy</h2>
+
+            <h3>Policy Overview</h3>
+            <p>Travylway is committed to ensuring all passengers arrive at their destinations on time. This policy outlines our commitment to punctuality and the shared responsibilities between Travylway, drivers, and passengers to maintain on-time performance.</p>
+
+            <h3>Why Punctuality Matters</h3>
+            <p>Airlines operate on strict schedules. Flight attendants, pilots, and airline crew members must report to work on time or face disciplinary action. Travelers must arrive at the airport with sufficient time for check-in, security screening, and boarding. Missing a flight due to late arrival creates significant financial and logistical consequences. Travylway understands that punctuality is not optional in air travel.</p>
+
+            <h3>Travylway's Commitment</h3>
+            <p>Travylway commits to providing reliable, on-time transportation service. Our drivers are instructed to arrive at pickup locations on time and to operate with sufficient time buffers to account for normal traffic conditions. We monitor flight schedules through FlightAware integration to ensure airport pickups align with actual arrival times. We plan routes to minimize travel time while maintaining safety.</p>
+
+            <h3>Pickup Time Standards</h3>
+            <p>For airport drop-offs, passengers should be picked up with sufficient time to arrive at the airport according to TSA and airline recommendations. For domestic flights, this typically means arrival at the airport two hours before departure. For international flights, this typically means arrival at the airport three hours before departure. For airline crew members reporting to work, pickup times will be coordinated to ensure arrival according to crew check-in requirements, typically 60-90 minutes before departure.</p>
+
+            <h3>No-Cancellation Within 48 Hours</h3>
+            <div class="warning">
+                <p>No driver is permitted to cancel on any airline crew member or traveler going to the airport within 48 hours of the scheduled pickup time. Once a ride is accepted and the pickup time is within 48 hours, the driver has made an absolute commitment that cannot be broken. This ensures passengers can rely on their transportation and eliminates the risk of last-minute cancellations that could cause missed flights or disciplinary action for crew members.</p>
+            </div>
+
+            <h3>Passenger Responsibility for On-Time Service</h3>
+            <p>Passengers must be ready at the designated pickup location at the scheduled pickup time. Delays caused by passengers not being ready will impact on-time arrival and may result in missed flights. Passengers must provide accurate flight information and pickup addresses. Passengers should account for building exit time, elevator delays, and walking distance to pickup point when determining their ready time. Passengers traveling during peak traffic hours or severe weather should book earlier pickup times to ensure adequate buffer time.</p>
+
+            <h3>Driver Responsibility for On-Time Service</h3>
+            <p>Drivers must arrive at pickup locations on time. Drivers must communicate immediately if any delay is anticipated. Drivers must operate vehicles safely while maintaining efficient travel times. Drivers must be familiar with airport layouts, traffic patterns, and optimal routes. Drivers must monitor real-time traffic conditions and adjust routes as necessary to maintain on-time arrival.</p>
+
+            <h3>Traffic and Delays</h3>
+            <p>Travylway plans routes with reasonable time buffers for normal traffic conditions. However, Travylway cannot control or predict extraordinary traffic events including accidents, road closures, severe weather, or other unforeseen circumstances. Passengers are advised to book rides with additional time buffers during peak travel periods, holidays, special events, or adverse weather conditions.</p>
+
+            <h3>Consequences of Lateness</h3>
+            <p>If a passenger misses their flight due to late arrival caused by the passenger not being ready at pickup time, Travylway is not responsible and no refund will be issued. If a passenger misses their flight due to driver lateness or driver error, Travylway will work with the passenger to address the situation on a case-by-case basis. Drivers who demonstrate a pattern of lateness or poor time management will be removed from the Travylway platform. Any driver who cancels on an airline crew member or traveler within 48 hours of pickup time will face immediate termination from the Travylway platform.</p>
+
+            <h3>Communication During Transit</h3>
+            <p>Drivers will communicate with passengers if unexpected delays occur during transit. Passengers should have their phones available to receive updates. If arrival time is threatened, the driver will inform the passenger immediately so alternative arrangements can be considered if necessary.</p>
+
+            <h3>Your Responsibility</h3>
+            <div class="emphasis">
+                <p>By booking with Travylway, you acknowledge that airline travel requires punctuality and that you share responsibility for ensuring adequate time is allocated for your journey. You agree to be ready at the pickup time, provide accurate information, and book your ride with appropriate time buffers for your specific travel needs.</p>
+            </div>
+        </div>
+
+        <!-- Terms of Service -->
+        <div class="policy-section" id="terms-of-service">
+            <h2>Terms of Service</h2>
+
+            <h3>Acceptance of Terms</h3>
+            <p>By booking, accessing, or using Travylway services, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not use Travylway services. These terms constitute a legally binding agreement between you and BSM Enterpryzes.</p>
+
+            <h3>Service Description</h3>
+            <p>Travylway is a division of BSM Enterpryzes providing airport transportation services. Travylway connects passengers with independent contract drivers for pre-arranged transportation to and from airports and related destinations.</p>
+
+            <h3>Eligibility</h3>
+            <p>You must be at least 18 years of age to use Travylway services. By using our services, you represent and warrant that you are at least 18 years old and have the legal capacity to enter into this agreement. Users under 18 years of age are strictly prohibited from using Travylway services under any circumstances.</p>
+
+            <h3>Booking and Reservations</h3>
+            <p>All ride requests are subject to driver availability and acceptance. Travylway reserves the right to refuse service to any passenger for any reason including but not limited to policy violations, safety concerns, or previous misconduct. Confirmation of a booking does not guarantee service if circumstances change or policy violations are discovered.</p>
+
+            <h3>Pricing and Payment</h3>
+            <p>All prices are quoted in US dollars and are subject to change based on distance, time, traffic conditions, and other factors. Final pricing will be communicated prior to ride confirmation. Payment is due within 24 hours of ride completion as outlined in the Payment Policy. Travylway accepts credit/debit cards, Venmo, PayPal, and Apple Pay. Cash payments are not accepted. All sales are final and non-refundable except as expressly provided in these terms.</p>
+
+            <h3>Cancellation Policy</h3>
+            <p>Passengers may cancel rides according to the cancellation timeframes and fees specified at the time of booking. Late cancellations or no-shows may result in full charge for the reserved service. Drivers are not permitted to cancel accepted airport rides under the Driver No-Cancellation Policy.</p>
+
+            <h3>Passenger Responsibilities</h3>
+            <p>Passengers are responsible for providing accurate pickup and destination information, being ready at the designated pickup time and location, conducting themselves professionally and respectfully as outlined in the Passenger Etiquette Policy, ensuring all passengers in their party comply with all Travylway policies, and paying for services rendered within the specified timeframe.</p>
+
+            <h3>Liability and Insurance</h3>
+            <p>Travylway maintains appropriate commercial insurance coverage for transportation services. Passengers acknowledge that they use Travylway services at their own risk. Travylway is not liable for indirect, incidental, special, consequential, or punitive damages including but not limited to loss of profits, data, or goodwill, service interruption, or cost of substitute services. Travylway's total liability for any claim arising out of or relating to these terms or use of services shall not exceed the amount paid by the passenger for the specific ride giving rise to the claim.</p>
+
+            <h3>Indemnification</h3>
+            <p>You agree to indemnify, defend, and hold harmless BSM Enterpryzes, Travylway, and their officers, directors, employees, contractors, and agents from and against any claims, liabilities, damages, losses, costs, expenses, or fees including reasonable attorneys' fees arising from your use of services, violation of these terms, violation of any rights of another party, or your conduct in connection with the services.</p>
+
+            <h3>Limitation of Liability</h3>
+            <p>In no event shall Travylway or BSM Enterpryzes be liable for any injury, death, property damage, or loss arising from use of services except where caused by gross negligence or willful misconduct. Travylway is not responsible for delays caused by traffic, weather, airport operations, or other factors beyond our control. Missing a flight or appointment due to traffic or unforeseen delays is not grounds for refund or liability.</p>
+
+            <h3>Privacy and Data Usage</h3>
+            <p>Travylway collects and uses personal information including name, contact information, payment information, and ride details to provide transportation services. This information may be shared with drivers as necessary to complete rides. We do not sell personal information to third parties. By using our services, you consent to the collection and use of information as described.</p>
+
+            <h3>User Conduct</h3>
+            <p>Users agree not to engage in any conduct that violates laws, regulations, or these terms, harasses, abuses, or harms drivers or other users, interferes with or disrupts the services or servers, attempts to gain unauthorized access to any portion of the services, uses the services for any fraudulent or illegal purpose, or violates any applicable local, state, national, or international law.</p>
+
+            <h3>Intellectual Property</h3>
+            <p>All content, features, and functionality of Travylway services including but not limited to text, graphics, logos, and software are the exclusive property of BSM Enterpryzes and are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, or create derivative works without express written permission.</p>
+
+            <h3>Dispute Resolution</h3>
+            <p>Any dispute arising out of or relating to these terms or use of Travylway services shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association. Arbitration shall take place in Denver, Colorado. You waive your right to participate in a class action lawsuit or class-wide arbitration.</p>
+
+            <h3>Governing Law</h3>
+            <p>These terms shall be governed by and construed in accordance with the laws of the State of Colorado, United States, without regard to its conflict of law provisions.</p>
+
+            <h3>Modifications to Terms</h3>
+            <p>Travylway reserves the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting to the Travylway website. Your continued use of services after changes are posted constitutes acceptance of the modified terms. It is your responsibility to review these terms periodically.</p>
+
+            <h3>Service Modifications and Termination</h3>
+            <p>Travylway reserves the right to modify, suspend, or discontinue services at any time without notice or liability. Travylway may terminate or suspend your access to services immediately, without prior notice or liability, for any reason including breach of these terms.</p>
+
+            <h3>Severability</h3>
+            <p>If any provision of these terms is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary so that these terms shall otherwise remain in full force and effect and enforceable.</p>
+
+            <h3>Entire Agreement</h3>
+            <p>These Terms of Service, together with the Payment Policy, Passenger Etiquette Policy, Unaccompanied Minor Policy, and Driver No-Cancellation Policy, constitute the entire agreement between you and BSM Enterpryzes regarding use of Travylway services and supersede all prior agreements and understandings.</p>
+
+            <h3>Contact Information</h3>
+            <p>For questions about these Terms of Service or Travylway services, contact BSM Enterpryzes through the communication channels provided on the Travylway website.</p>
+
+            <h3>Acknowledgment</h3>
+            <div class="emphasis">
+                <p>By using Travylway services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and all referenced policies.</p>
+            </div>
+
+            <div class="note">
+                <p><strong>Effective Date: January 1, 2026</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Travylway is a division of BSM Enterpryzes</strong></p>
+        <p>© 2026 BSM Enterpryzes. All rights reserved.</p>
+    </div>
 </body>
 </html>
