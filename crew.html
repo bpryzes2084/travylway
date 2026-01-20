@@ -335,15 +335,6 @@ el("crewForm").addEventListener("submit", async (e) => {
   el("ok").style.display = "none";
   el("err").style.display = "none";
 
-  // Calculate fare if not already done
-  if (!fareCalculated) {
-    await calculateFare();
-    if (!fareCalculated) {
-      showErr("Please wait for fare calculation to complete.");
-      return;
-    }
-  }
-
   const btn = el("submitBtn");
   btn.disabled = true;
   btn.textContent = "Submitting…";
@@ -391,16 +382,18 @@ el("crewForm").addEventListener("submit", async (e) => {
       
       notes: el("notes").value.trim() || null,
       
-      // Include fare data from calculation
-      estimated_fare: fareData.fare.total,
-      distance_miles: fareData.distance.miles,
-      duration_minutes: fareData.duration.minutes,
-      driver_payout: fareData.fare.driverPayout,
-      platform_fee: fareData.fare.platformFee,
-      
       // Turnstile token
       "cf-turnstile-response": ts
     };
+    
+    // Only include fare data if it was calculated
+    if (fareCalculated && fareData && fareData.fare) {
+      payload.estimated_fare = fareData.fare.total;
+      payload.distance_miles = fareData.distance.miles;
+      payload.duration_minutes = fareData.duration.minutes;
+      payload.driver_payout = fareData.fare.driverPayout;
+      payload.platform_fee = fareData.fare.platformFee;
+    }
 
     const res = await fetch(`${API_BASE}/api/trips`, {
       method: "POST",
@@ -411,7 +404,11 @@ el("crewForm").addEventListener("submit", async (e) => {
     const data = await res.json().catch(() => ({}));
     
     if (!res.ok || data.ok === false) {
-      throw new Error(data.error || `Server error (HTTP ${res.status})`);
+      // Show detailed error for debugging
+      const errorDetails = data.detail || data.error || `HTTP ${res.status}`;
+      console.error('Full error response:', data);
+      console.error('Payload sent:', payload);
+      throw new Error(`${errorDetails}`);
     }
 
     showOk(`✅ Booking Confirmed! Request ID: ${data.id.substring(0, 8)}\n\nYou'll receive flight tracking updates via WhatsApp.`);
