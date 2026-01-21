@@ -319,8 +319,12 @@ el("pickupAddress").addEventListener('blur', calculateFare);
 el("dropoffAddress").addEventListener('blur', calculateFare);
 el("serviceType").addEventListener('change', calculateFare);
 
-/* Set minimum date to today */
-el("date").min = new Date().toISOString().split('T')[0];
+/* Set minimum date to today (no advance booking required) */
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, '0');
+const day = String(today.getDate()).padStart(2, '0');
+el("date").min = `${year}-${month}-${day}`;
 
 /* Get user's timezone */
 const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
