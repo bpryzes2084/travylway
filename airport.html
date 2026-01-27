@@ -69,13 +69,6 @@ body{
 #calculator h3{color:#1e3a8a;margin-bottom:1rem;}
 .calc-row{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #ddd;}
 .calc-row:last-child{border-bottom:none;font-weight:700;font-size:1.2rem;color:#1e3a8a;margin-top:0.5rem;padding-top:1rem;border-top:2px solid #3b82f6;}
-.waiting-notice{
-  background:#fef3c7;padding:1rem;border-radius:6px;margin-top:1rem;
-  border-left:4px solid #f59e0b;
-}
-.waiting-notice p{margin:0;color:#92400e;line-height:1.6;}
-.waiting-notice strong{color:#92400e;}
-.waiting-notice a{color:#3b82f6;text-decoration:underline;}
 .whatsapp-box{
   background:#d1fae5;border:2px solid #10b981;border-radius:8px;padding:1.5rem;margin-top:1.5rem;
 }
@@ -94,7 +87,7 @@ small{display:block;color:var(--muted);margin-top:0.25rem;font-size:0.9rem;}
 <div class="hero">
   <a href="/" class="back-link">← Home</a>
   <h1>✈️ Airport Transportation</h1>
-  <p>Reliable rides between your home and the airport</p>
+  <p>Reliable rides between your location and any airport</p>
 </div>
 
 <div class="container">
@@ -130,17 +123,6 @@ small{display:block;color:var(--muted);margin-top:0.25rem;font-size:0.9rem;}
         <small>Choose whether you're going to or coming from the airport</small>
       </div>
 
-      <!-- Airport Selection -->
-      <div class="group">
-        <label>Airport <span class="req">*</span></label>
-        <select id="airportCode" required>
-          <option value="">-- Select Airport --</option>
-          <option value="DEN">DEN - Denver International Airport</option>
-          <option value="APA">APA - Centennial Airport</option>
-          <option value="BJC">BJC - Rocky Mountain Metropolitan Airport</option>
-        </select>
-      </div>
-
       <!-- Flight Information -->
       <div class="row">
         <div class="group">
@@ -153,17 +135,17 @@ small{display:block;color:var(--muted);margin-top:0.25rem;font-size:0.9rem;}
         </div>
       </div>
 
-      <!-- Addresses (Smart Auto-fill) -->
+      <!-- Addresses -->
       <div class="group">
         <label>Pickup Address <span class="req">*</span></label>
         <input type="text" id="pickupAddress" required placeholder="Where should we pick you up?">
-        <small id="pickupHint">Select service type and airport first</small>
+        <small id="pickupHint">Select service type first</small>
       </div>
 
       <div class="group">
         <label>Drop-off Address <span class="req">*</span></label>
         <input type="text" id="dropoffAddress" required placeholder="Where are you going?">
-        <small id="dropoffHint">Select service type and airport first</small>
+        <small id="dropoffHint">Select service type first</small>
       </div>
 
       <!-- Date & Time -->
@@ -175,7 +157,7 @@ small{display:block;color:var(--muted);margin-top:0.25rem;font-size:0.9rem;}
         <div class="group">
           <label>Pickup Time <span class="req">*</span></label>
           <input type="time" id="pickupTime" required>
-          <span class="timezone">🕐 Mountain Time (Denver/Aurora)</span>
+          <span class="timezone">🕐 Enter time in your local timezone</span>
         </div>
       </div>
 
@@ -197,23 +179,8 @@ small{display:block;color:var(--muted);margin-top:0.25rem;font-size:0.9rem;}
           <span id="distanceFare">Enter addresses to calculate</span>
         </div>
         <div class="calc-row">
-          <span><strong>Subtotal (Base + Distance):</strong></span>
+          <span><strong>Estimated Total:</strong></span>
           <span id="totalFare">$4.89</span>
-        </div>
-        
-        <!-- Waiting Time Notice -->
-        <div class="waiting-notice">
-          <p style="margin:0 0 0.5rem 0;font-weight:600;font-size:1.05rem;">
-            ⏱️ Waiting Time Charges May Apply
-          </p>
-          <p style="margin:0;font-size:0.95rem;">
-            <strong>Rate:</strong> $0.60 per minute ($0.01/second)<br>
-            <strong>Departure pickups:</strong> 1-minute grace period<br>
-            <strong>Arrival pickups:</strong> 20-minute grace period<br>
-            <br>
-            Final charges will include any waiting time that exceeds grace periods. 
-            See our <a href="/waiting-time-policy.html" target="_blank">Waiting Time Policy</a> for complete details.
-          </p>
         </div>
       </div>
 
@@ -251,112 +218,144 @@ small{display:block;color:var(--muted);margin-top:0.25rem;font-size:0.9rem;}
 </div>
 
 <script>
-// Airport coordinates
-const AIRPORTS = {
-  'DEN': { 
-    name: 'Denver International Airport', 
-    address: 'Denver International Airport, Denver, CO 80249',
-    lat: 39.8561, 
-    lng: -104.6737 
-  },
-  'APA': { 
-    name: 'Centennial Airport', 
-    address: 'Centennial Airport, Englewood, CO 80112',
-    lat: 39.5701, 
-    lng: -104.8492 
-  },
-  'BJC': { 
-    name: 'Rocky Mountain Metropolitan Airport', 
-    address: 'Rocky Mountain Metropolitan Airport, Broomfield, CO 80021',
-    lat: 39.9088, 
-    lng: -105.1170 
-  }
-};
-
 // Pricing constants
 const BASE_FARE = 4.89;
 const PRICE_PER_MILE = 1.50;
-const WAITING_TIME_PER_SECOND = 0.01;
-const WAITING_TIME_PER_MINUTE = 0.60;
 
 // Global variables
 let pickupAutocomplete, dropoffAutocomplete;
-let directionsService, distanceMatrixService;
+let distanceMatrixService;
 let turnstileVerified = false;
 
 // Initialize Google Maps services
 function initMap() {
-  directionsService = new google.maps.DirectionsService();
   distanceMatrixService = new google.maps.DistanceMatrixService();
   
-  // Initialize autocomplete for both fields
-  pickupAutocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('pickupAddress'),
-    { types: ['address'], componentRestrictions: { country: 'us' } }
-  );
-  
-  dropoffAutocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('dropoffAddress'),
-    { types: ['address'], componentRestrictions: { country: 'us' } }
-  );
-  
-  // Listen for place changes
-  pickupAutocomplete.addListener('place_changed', calculateFare);
-  dropoffAutocomplete.addListener('place_changed', calculateFare);
+  // Wait a bit before initializing autocomplete
+  setTimeout(() => {
+    const pickupInput = document.getElementById('pickupAddress');
+    const dropoffInput = document.getElementById('dropoffAddress');
+    
+    if (pickupInput) {
+      pickupAutocomplete = new google.maps.places.Autocomplete(
+        pickupInput,
+        { types: ['address'] }
+      );
+      pickupAutocomplete.addListener('place_changed', () => {
+        calculateFare();
+        updateWhatsApp();
+      });
+    }
+    
+    if (dropoffInput) {
+      dropoffAutocomplete = new google.maps.places.Autocomplete(
+        dropoffInput,
+        { types: ['address'] }
+      );
+      dropoffAutocomplete.addListener('place_changed', () => {
+        calculateFare();
+        updateWhatsApp();
+      });
+    }
+  }, 100);
 }
 
-// Handle service type and airport selection
+// Handle service type selection
 document.getElementById('direction').addEventListener('change', updateAddressFields);
-document.getElementById('airportCode').addEventListener('change', updateAddressFields);
 
 function updateAddressFields() {
   const direction = document.getElementById('direction').value;
-  const airportCode = document.getElementById('airportCode').value;
   
   const pickupField = document.getElementById('pickupAddress');
   const dropoffField = document.getElementById('dropoffAddress');
   const pickupHint = document.getElementById('pickupHint');
   const dropoffHint = document.getElementById('dropoffHint');
   
-  if (!direction || !airportCode) {
-    // Reset if incomplete
-    pickupField.disabled = false;
-    dropoffField.disabled = false;
-    pickupField.value = '';
-    dropoffField.value = '';
-    pickupHint.textContent = 'Select service type and airport first';
-    dropoffHint.textContent = 'Select service type and airport first';
+  if (!direction) {
+    pickupField.placeholder = 'Where should we pick you up?';
+    dropoffField.placeholder = 'Where are you going?';
+    pickupHint.textContent = 'Select service type first';
+    dropoffHint.textContent = 'Select service type first';
     return;
   }
   
-  const airport = AIRPORTS[airportCode];
-  
   if (direction === 'TO_AIRPORT') {
-    // Going TO airport: user enters pickup, dropoff is airport
-    pickupField.disabled = false;
-    pickupField.value = '';
-    pickupField.placeholder = 'Enter your home/residence address';
+    // Going TO airport: user enters both addresses
+    pickupField.placeholder = 'Enter your home or business address';
     pickupHint.textContent = 'Enter the address where we should pick you up';
     
-    dropoffField.disabled = true;
-    dropoffField.value = airport.address;
-    dropoffHint.textContent = '✈️ Locked to selected airport';
+    dropoffField.placeholder = 'Enter airport name or address';
+    dropoffHint.textContent = 'Enter the destination airport';
     
   } else if (direction === 'FROM_AIRPORT') {
-    // Coming FROM airport: pickup is airport, user enters dropoff
-    pickupField.disabled = true;
-    pickupField.value = airport.address;
-    pickupHint.textContent = '✈️ Locked to selected airport';
+    // Coming FROM airport: user enters both addresses
+    pickupField.placeholder = 'Enter airport name or address';
+    pickupHint.textContent = 'Enter the airport where we should pick you up';
     
-    dropoffField.disabled = false;
-    dropoffField.value = '';
-    dropoffField.placeholder = 'Enter your home/residence address';
+    dropoffField.placeholder = 'Enter your home or business address';
     dropoffHint.textContent = 'Enter the address where we should drop you off';
   }
   
-  // Recalculate fare
-  calculateFare();
   updateWhatsApp();
+}
+
+// Validate that one address is airport and one is residential/business
+function validateAddresses() {
+  const pickupAddr = document.getElementById('pickupAddress').value.toLowerCase();
+  const dropoffAddr = document.getElementById('dropoffAddress').value.toLowerCase();
+  
+  if (!pickupAddr || !dropoffAddr) {
+    return { valid: false, error: 'Please enter both pickup and drop-off addresses.' };
+  }
+  
+  // Airport keywords for detection
+  const airportKeywords = [
+    'airport', 'international', 'regional', 'airfield', 'aerodrome',
+    'terminal', 'concourse', 'aviation'
+  ];
+  
+  // Check if address contains airport keywords
+  function isAirport(address) {
+    return airportKeywords.some(keyword => address.includes(keyword));
+  }
+  
+  const pickupIsAirport = isAirport(pickupAddr);
+  const dropoffIsAirport = isAirport(dropoffAddr);
+  
+  // CRITICAL VALIDATION: Both addresses are airports
+  if (pickupIsAirport && dropoffIsAirport) {
+    return {
+      valid: false,
+      error: 'Both addresses cannot be airports. One address must be your home or business location.'
+    };
+  }
+  
+  // CRITICAL VALIDATION: Neither address is an airport
+  if (!pickupIsAirport && !dropoffIsAirport) {
+    return {
+      valid: false,
+      error: 'One address must be an airport. This service is for airport transportation only (home ↔ airport).'
+    };
+  }
+  
+  // Validate direction matches addresses
+  const direction = document.getElementById('direction').value;
+  
+  if (direction === 'TO_AIRPORT' && !dropoffIsAirport) {
+    return {
+      valid: false,
+      error: 'You selected "To Airport" but the drop-off address does not appear to be an airport. Please verify your addresses.'
+    };
+  }
+  
+  if (direction === 'FROM_AIRPORT' && !pickupIsAirport) {
+    return {
+      valid: false,
+      error: 'You selected "From Airport" but the pickup address does not appear to be an airport. Please verify your addresses.'
+    };
+  }
+  
+  return { valid: true };
 }
 
 // Calculate fare using Google Distance Matrix API
@@ -394,26 +393,24 @@ function calculateFare() {
   });
 }
 
-// Format date/time for Mountain Time display
-function formatMountainTime(dateStr, timeStr) {
+// Format date/time for display
+function formatDateTime(dateStr, timeStr) {
   if (!dateStr || !timeStr) return '';
   const dt = new Date(`${dateStr}T${timeStr}`);
   return dt.toLocaleString('en-US', {
-    timeZone: 'America/Denver',
     month: 'short',
     day: 'numeric',
     year: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
     hour12: true
-  }) + ' MT';
+  });
 }
 
 // Update WhatsApp link
 function updateWhatsApp() {
   const name = document.getElementById('name').value || '[Name]';
   const direction = document.getElementById('direction').value;
-  const airportCode = document.getElementById('airportCode').value;
   const airline = document.getElementById('airline').value || 'N/A';
   const flightNumber = document.getElementById('flightNumber').value || 'N/A';
   const pickupAddr = document.getElementById('pickupAddress').value || '[Pickup Address]';
@@ -424,8 +421,7 @@ function updateWhatsApp() {
   
   const serviceType = direction === 'TO_AIRPORT' ? 'To Airport' : 
                       direction === 'FROM_AIRPORT' ? 'From Airport' : 'N/A';
-  const airportName = airportCode ? AIRPORTS[airportCode].name : 'N/A';
-  const pickupTimeDisplay = formatMountainTime(pickupDate, pickupTime) || 'Not set';
+  const pickupTimeDisplay = formatDateTime(pickupDate, pickupTime) || 'Not set';
   
   const totalFare = document.getElementById('totalFare').textContent;
   
@@ -433,7 +429,6 @@ function updateWhatsApp() {
 
 Name: ${name}
 Service: ${serviceType}
-Airport: ${airportName}
 
 Airline: ${airline}
 Flight: ${flightNumber}
@@ -445,7 +440,6 @@ Flight: ${flightNumber}
 💬 Notes: ${notes}
 
 💰 Estimated Fare: ${totalFare}
-(Plus any waiting time charges)
 
 Please confirm availability!`;
   
@@ -455,8 +449,21 @@ Please confirm availability!`;
 
 // Listen for form field changes
 document.querySelectorAll('input, select, textarea').forEach(field => {
-  field.addEventListener('input', updateWhatsApp);
-  field.addEventListener('change', updateWhatsApp);
+  if (field.id !== 'pickupAddress' && field.id !== 'dropoffAddress') {
+    field.addEventListener('input', updateWhatsApp);
+    field.addEventListener('change', updateWhatsApp);
+  }
+});
+
+// Manual input listener for address fields
+document.getElementById('pickupAddress').addEventListener('blur', () => {
+  calculateFare();
+  updateWhatsApp();
+});
+
+document.getElementById('dropoffAddress').addEventListener('blur', () => {
+  calculateFare();
+  updateWhatsApp();
 });
 
 // Turnstile callback
@@ -474,12 +481,19 @@ function showMsg(text, type) {
   msgBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// Form submission
+// Form submission with validation
 document.getElementById('airportForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
   if (!turnstileVerified) {
-    showMsg('Please complete the security verification', 'err');
+    showMsg('❌ Please complete the security verification', 'err');
+    return;
+  }
+  
+  // CRITICAL: Validate addresses before submission
+  const validation = validateAddresses();
+  if (!validation.valid) {
+    showMsg(`❌ ${validation.error}`, 'err');
     return;
   }
   
@@ -493,7 +507,7 @@ document.getElementById('airportForm').addEventListener('submit', async (e) => {
   const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
   const pickupTimeUTC = pickupDateTime.toISOString();
   const pickupTimeLocal = `${pickupDate}T${pickupTime}`;
-  const pickupTimeDisplay = formatMountainTime(pickupDate, pickupTime);
+  const pickupTimeDisplay = formatDateTime(pickupDate, pickupTime);
   
   const formData = {
     'cf-turnstile-response': turnstile.getResponse(),
@@ -503,7 +517,6 @@ document.getElementById('airportForm').addEventListener('submit', async (e) => {
     rider_type: 'GENERAL',
     trip_type: 'AIRPORT',
     direction: document.getElementById('direction').value,
-    airport_code: document.getElementById('airportCode').value,
     airline: document.getElementById('airline').value || null,
     flight_number: document.getElementById('flightNumber').value || null,
     pickup_text: document.getElementById('pickupAddress').value,
@@ -529,6 +542,8 @@ document.getElementById('airportForm').addEventListener('submit', async (e) => {
       turnstileVerified = false;
       document.getElementById('totalFare').textContent = `$${BASE_FARE.toFixed(2)}`;
       document.getElementById('distanceFare').textContent = 'Enter addresses to calculate';
+      document.getElementById('pickupHint').textContent = 'Select service type first';
+      document.getElementById('dropoffHint').textContent = 'Select service type first';
     } else {
       showMsg(`❌ Error: ${result.error || 'Failed to submit request. Please try again.'}`, 'err');
     }
