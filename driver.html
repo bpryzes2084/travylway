@@ -254,7 +254,7 @@ body{
   background:var(--success);
   color:white;
   flex:1;
-  min-width:120px;
+  min-width:160px;
 }
 .btn-claim:hover{
   background:#059669;
@@ -264,7 +264,10 @@ body{
   background:#e5e7eb;
   color:var(--text);
   flex:1;
-  min-width:120px;
+  min-width:160px;
+}
+.btn-details:hover{
+  background:#d1d5db;
 }
 
 .empty-state{
@@ -351,7 +354,7 @@ body{
       <div class="filter-group">
         <label>Trip Status</label>
         <select id="filterStatus">
-          <option value="APPROVED">Available (Approved)</option>
+          <option value="APPROVED" selected>Available (Approved)</option>
           <option value="PENDING">Pending Approval</option>
           <option value="CLAIMED">Claimed</option>
           <option value="COMPLETED">Completed</option>
@@ -370,8 +373,8 @@ body{
     </div>
 
     <div class="filter-actions">
-      <button class="btn btn-primary" onclick="applyFilters()">🔍 Apply Filters</button>
-      <button class="btn btn-secondary" onclick="clearFilters()">🔄 Clear All</button>
+      <button class="btn btn-primary" id="applyBtn">🔍 Apply Filters</button>
+      <button class="btn btn-secondary" id="clearBtn">🔄 Clear All</button>
     </div>
 
     <div style="margin-top:1rem;padding:1rem;background:#f0f9ff;border-radius:8px;border-left:4px solid #0284c7;">
@@ -410,24 +413,26 @@ body{
 </div>
 
 <script>
-// ✅ same origin; avoids DNS issues + www/non-www problems
+// ✅ Same-origin by default (travylway.com), avoids DNS/www issues.
 const API_BASE = "";
+
+// If you ever want to override to a worker.dev URL, set it here, e.g.:
+// const API_BASE = "https://your-worker.youracct.workers.dev";
 
 let allTrips = [];
 let filteredTrips = [];
 
 function normStatus(s) {
   const v = String(s || "").toUpperCase();
+  // Legacy mapping (if your DB ever stores OPEN)
   if (v === "OPEN") return "APPROVED";
-  if (v === "PENDING") return "PENDING";
-  if (v === "CLAIMED") return "CLAIMED";
-  if (v === "COMPLETED") return "COMPLETED";
   return v || "APPROVED";
 }
 
 function pickupLocalString(isoUtc) {
   const d = new Date(isoUtc);
   if (isNaN(d.getTime())) return "Invalid time";
+  // Driver device local time:
   return d.toLocaleString(undefined, {
     weekday: "short",
     month: "short",
@@ -437,9 +442,17 @@ function pickupLocalString(isoUtc) {
   });
 }
 
+// 🔥 FIX: fetch based on the dropdown-selected status (defaults to APPROVED)
 async function loadTrips() {
   try {
-    const response = await fetch(`${API_BASE}/api/trips?status=OPEN`, { cache: "no-store" });
+    const selectedStatus = (document.getElementById("filterStatus")?.value || "APPROVED").toUpperCase();
+
+    const qs = new URLSearchParams();
+    // If blank (All Statuses), don't send status param -> fetch all (if your API supports it)
+    if (selectedStatus) qs.set("status", selectedStatus);
+
+    const url = `${API_BASE}/api/trips?${qs.toString()}`;
+    const response = await fetch(url, { cache: "no-store" });
     const data = await response.json();
 
     if (data.ok) {
@@ -449,7 +462,7 @@ async function loadTrips() {
         rider_type: String(t.rider_type || "").toUpperCase(),
         airport_code: String(t.airport_code || "").toUpperCase()
       }));
-      applyFilters();
+      applyFilters(false); // don't refetch, just filter locally
     } else {
       showError(data.error || "Failed to load trips");
     }
@@ -459,7 +472,13 @@ async function loadTrips() {
   }
 }
 
-function applyFilters() {
+function applyFilters(refetch = false) {
+  if (refetch) {
+    // If status changed, we re-fetch so we don't miss server-side filtered results
+    loadTrips();
+    return;
+  }
+
   const country = document.getElementById("filterCountry").value.toUpperCase();
   const state = document.getElementById("filterState").value.toLowerCase();
   const city = document.getElementById("filterCity").value.toLowerCase();
@@ -474,9 +493,9 @@ function applyFilters() {
 
     if (airport) {
       const code = (trip.airport_code || "").toUpperCase();
-      if (code && code !== airport) {
-        if (!addressContains(trip, airport.toLowerCase())) return false;
-      } else if (!code) {
+      if (code) {
+        if (code !== airport) return false;
+      } else {
         if (!addressContains(trip, airport.toLowerCase())) return false;
       }
     }
@@ -533,7 +552,8 @@ function clearFilters() {
   document.getElementById("filterAirport").value = "";
   document.getElementById("filterStatus").value = "APPROVED";
   document.getElementById("filterRiderType").value = "";
-  applyFilters();
+  // refetch approved from server and then render
+  loadTrips();
 }
 
 function updateStats() {
@@ -559,7 +579,7 @@ function renderTrips() {
 
   container.innerHTML = filteredTrips.map(trip => {
     const pickupTime = pickupLocalString(trip.pickup_time_utc);
-    const statusClass = `status-${trip.status.toLowerCase()}`;
+    const statusClass = `status-${String(trip.status || "APPROVED").toLowerCase()}`;
 
     const fare = Number(trip.estimated_fare || 0);
     const driverPayout = Number(trip.driver_payout || (fare ? fare * 0.75 : 0));
@@ -601,8 +621,8 @@ function renderTrips() {
         `}
 
         <div class="trip-header">
-          <span class="trip-id">ID: ${String(trip.id).substring(0, 8)}</span>
-          <span class="trip-status ${statusClass}">${trip.status}</span>
+          <span class="trip-id">ID: ${String(trip.id || "").substring(0, 8)}</span>
+          <span class="trip-status ${statusClass}">${trip.status || "APPROVED"}</span>
         </div>
 
         <div class="trip-info">
@@ -666,10 +686,10 @@ function renderTrips() {
         <div class="trip-actions">
           ${trip.status === "APPROVED" ? `
             <button class="btn btn-claim" onclick="claimTrip('${trip.id}')">
-              ✓ Claim This Trip${fare ? ` - Earn $${driverPayout.toFixed(2)}` : ""}
+              ✓ Claim This Trip${fare ? ` — Earn $${driverPayout.toFixed(2)}` : ""}
             </button>
           ` : trip.status === "CLAIMED" ? `
-            <div style="background:#dbeafe;border-radius:8px;padding:1rem;margin-bottom:1rem;border-left:4px solid #2563eb;">
+            <div style="background:#dbeafe;border-radius:8px;padding:1rem;margin-bottom:1rem;border-left:4px solid #2563eb;flex:1;">
               <div style="font-weight:700;color:#1e40af;margin-bottom:0.5rem;">✓ CLAIMED by ${trip.driver_name || "Driver"}</div>
               <div style="font-size:0.85rem;color:#475569;">
                 Claimed: ${trip.claimed_at ? new Date(trip.claimed_at).toLocaleString() : "Recently"}
@@ -682,22 +702,16 @@ function renderTrips() {
             </div>
 
             ${canUnclaim ? `
-              <button class="btn" style="background:#f59e0b;color:white;" onclick="unclaimTrip('${trip.id}')">
+              <button class="btn" style="background:#f59e0b;color:white;min-width:160px;" onclick="unclaimTrip('${trip.id}')">
                 ↩️ Unclaim Trip
               </button>
-              <div style="font-size:0.75rem;color:#64748b;text-align:center;margin-top:0.5rem;">
-                ✓ Can unclaim (${Math.round(hoursUntilPickup)}h until pickup)
-              </div>
             ` : `
-              <button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;" disabled title="Cannot unclaim within 48 hours of pickup">
+              <button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;min-width:160px;" disabled title="Cannot unclaim within 48 hours of pickup">
                 🔒 Cannot Unclaim
               </button>
-              <div style="font-size:0.75rem;color:#dc2626;text-align:center;margin-top:0.5rem;font-weight:700;">
-                ⚠️ Within 48-hour window (${Math.round(hoursUntilPickup)}h until pickup)
-              </div>
             `}
           ` : `
-            <button class="btn" style="background:#fbbf24;color:#78350f;cursor:not-allowed;" disabled>
+            <button class="btn" style="background:#fbbf24;color:#78350f;cursor:not-allowed;flex:1;" disabled>
               ⏳ Pending Approval
             </button>
           `}
@@ -736,6 +750,7 @@ async function claimTrip(tripId) {
       if (data.whatsapp_link && confirm("Open WhatsApp to message customer?")) {
         window.open(data.whatsapp_link, "_blank");
       }
+      // after claiming, re-fetch based on current status filter
       loadTrips();
     } else {
       alert(`❌ Failed to claim trip:\n${data.error}`);
@@ -801,10 +816,28 @@ function showError(message) {
   `;
 }
 
-document.getElementById("filterAirport").addEventListener("input", function(e) {
+// --- UI event wiring ---
+document.getElementById("filterAirport").addEventListener("input", (e) => {
   e.target.value = e.target.value.toUpperCase();
 });
 
+// Apply Filters button (no refetch)
+document.getElementById("applyBtn").addEventListener("click", () => applyFilters(false));
+
+// Clear Filters button (refetch)
+document.getElementById("clearBtn").addEventListener("click", clearFilters);
+
+// When status changes, refetch from server for that status
+document.getElementById("filterStatus").addEventListener("change", () => applyFilters(true));
+
+// Other filters can stay client-side
+document.getElementById("filterCountry").addEventListener("change", () => applyFilters(false));
+document.getElementById("filterRiderType").addEventListener("change", () => applyFilters(false));
+document.getElementById("filterState").addEventListener("input", () => applyFilters(false));
+document.getElementById("filterCity").addEventListener("input", () => applyFilters(false));
+document.getElementById("filterAirport").addEventListener("input", () => applyFilters(false));
+
+// Initial load + auto refresh
 loadTrips();
 setInterval(loadTrips, 30000);
 </script>
