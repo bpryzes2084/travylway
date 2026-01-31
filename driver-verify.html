@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verify Driver Login — Travylway</title>
+  <meta name="description" content="Verify 2FA code to access the Driver Board." />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.12);
+      --text:#e5e7eb;
+      --muted:rgba(229,231,235,.75);
+      --accent:#2563eb;
+      --ok:#10b981;
+      --err:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:radial-gradient(1200px 600px at 20% 0%, rgba(37,99,235,.35), transparent 60%),
+                 radial-gradient(900px 500px at 90% 10%, rgba(124,58,237,.28), transparent 55%),
+                 var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .wrap{
+      width:100%;
+      max-width:520px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 18px 60px rgba(0,0,0,.45);
+    }
+    h1{margin:0 0 8px;font-size:22px}
+    p{margin:0 0 14px;color:var(--muted);line-height:1.35}
+    label{display:block;font-size:12px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;margin:10px 0 6px;color:var(--muted)}
+    input{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      outline:none;
+      font-size:16px;
+    }
+    input:focus{border-color:rgba(37,99,235,.8);box-shadow:0 0 0 3px rgba(37,99,235,.25)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{
+      flex:1;
+      min-width:160px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:0;
+      font-weight:900;
+      cursor:pointer;
+      background:var(--accent);
+      color:#fff;
+    }
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .ghost{
+      background:rgba(255,255,255,.12);
+      color:var(--text);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:1;
+      min-width:160px;
+      padding:12px 16px;
+      border-radius:999px;
+      font-weight:900;
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .msg{margin-top:12px;padding:12px;border-radius:14px;font-weight:900}
+    .ok{background:rgba(16,185,129,.18);border:1px solid rgba(16,185,129,.35)}
+    .err{background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.35)}
+    code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px}
+    .small{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Driver Verification</h1>
+    <p>Enter the 6-digit code you received to access the Driver Board.</p>
+
+    <div class="small" id="phoneHint"></div>
+
+    <label for="phone">Phone</label>
+    <input id="phone" placeholder="7204748851" inputmode="tel" autocomplete="tel" />
+
+    <label for="code">6-digit code</label>
+    <input id="code" placeholder="123456" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+
+    <div class="row">
+      <button id="verifyBtn">Verify</button>
+      <a class="ghost" href="/driver-register.html">Back to Register</a>
+    </div>
+
+    <div id="msg"></div>
+
+    <p class="small" style="margin-top:14px;">
+      Having issues? Make sure you typed the same phone number you used during login. Codes expire.
+    </p>
+  </div>
+
+<script>
+  // Uses same origin so it works on travylway.com and www automatically.
+  // Your Worker endpoints from the code you pasted:
+  // POST /driver-verify-2fa  with JSON: { phone, code }
+  const VERIFY_ENDPOINT = "/driver-verify-2fa";
+
+  const el = (id) => document.getElementById(id);
+  const msg = el("msg");
+  const show = (text, kind) => {
+    msg.innerHTML = `<div class="msg ${kind}">${text}</div>`;
+  };
+
+  function getParam(name) {
+    const u = new URL(window.location.href);
+    return (u.searchParams.get(name) || "").trim();
+  }
+
+  // Prefill phone from URL
+  const phoneFromUrl = getParam("phone");
+  if (phoneFromUrl) {
+    el("phone").value = phoneFromUrl;
+    el("phoneHint").textContent = `Verifying phone: ${phoneFromUrl}`;
+  }
+
+  el("verifyBtn").addEventListener("click", async () => {
+    msg.innerHTML = "";
+    const phone = el("phone").value.trim();
+    const code = el("code").value.trim();
+
+    if (!phone) return show("Missing phone number.", "err");
+    if (!/^[0-9+() -]{7,20}$/.test(phone)) return show("Phone number looks invalid.", "err");
+    if (!/^[0-9]{6}$/.test(code)) return show("Code must be 6 digits.", "err");
+
+    el("verifyBtn").disabled = true;
+    el("verifyBtn").textContent = "Verifying…";
+
+    try {
+      const res = await fetch(VERIFY_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, code })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.success) {
+        const err = data.error || `Verify failed (HTTP ${res.status})`;
+        return show(err, "err");
+      }
+
+      // Save session-ish info for your driver board pages
+      localStorage.setItem("travylway_driverId", data.driverId || "");
+      localStorage.setItem("travylway_driverName", data.name || "");
+      localStorage.setItem("travylway_driverPhone", data.phone || phone);
+
+      show("Verified ✅ Redirecting to Driver Board…", "ok");
+
+      setTimeout(() => {
+        window.location.href = "/driver.html";
+      }, 700);
+
+    } catch (e) {
+      console.error(e);
+      show("Network error. If this keeps happening, your Worker route might not include this endpoint.", "err");
+    } finally {
+      el("verifyBtn").disabled = false;
+      el("verifyBtn").textContent = "Verify";
+    }
+  });
+
+  // UX: Enter key submits
+  el("code").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") el("verifyBtn").click();
+  });
+</script>
+</body>
+</html>
