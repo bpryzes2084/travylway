@@ -200,6 +200,7 @@ body{
 .status-pending{background:#fef3c7;color:#92400e}
 .status-approved{background:#d1fae5;color:#065f46}
 .status-claimed{background:#dbeafe;color:#1e40af}
+.status-completed{background:#e5e7eb;color:#334155}
 
 .trip-info{
   display:grid;
@@ -302,11 +303,11 @@ body{
 </div>
 
 <div class="container">
-  
+
   <!-- FILTER SECTION -->
   <div class="filter-section">
     <h2>🌍 Filter Trips by Location</h2>
-    
+
     <div class="filter-grid">
       <div class="filter-group">
         <label>Country</label>
@@ -353,6 +354,7 @@ body{
           <option value="APPROVED">Available (Approved)</option>
           <option value="PENDING">Pending Approval</option>
           <option value="CLAIMED">Claimed</option>
+          <option value="COMPLETED">Completed</option>
           <option value="">All Statuses</option>
         </select>
       </div>
@@ -408,68 +410,79 @@ body{
 </div>
 
 <script>
-const API_BASE = 'https://travylway.bsmenterpryzes.workers.dev';
+// ✅ same origin; avoids DNS issues + www/non-www problems
+const API_BASE = "";
 
 let allTrips = [];
 let filteredTrips = [];
 
-// Load trips on page load
+function normStatus(s) {
+  const v = String(s || "").toUpperCase();
+  if (v === "OPEN") return "APPROVED";
+  if (v === "PENDING") return "PENDING";
+  if (v === "CLAIMED") return "CLAIMED";
+  if (v === "COMPLETED") return "COMPLETED";
+  return v || "APPROVED";
+}
+
+function pickupLocalString(isoUtc) {
+  const d = new Date(isoUtc);
+  if (isNaN(d.getTime())) return "Invalid time";
+  return d.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
 async function loadTrips() {
   try {
-    const response = await fetch(`${API_BASE}/api/trips?status=`);
+    const response = await fetch(`${API_BASE}/api/trips?status=OPEN`, { cache: "no-store" });
     const data = await response.json();
-    
+
     if (data.ok) {
-      allTrips = data.trips || [];
+      allTrips = (data.trips || []).map(t => ({
+        ...t,
+        status: normStatus(t.status),
+        rider_type: String(t.rider_type || "").toUpperCase(),
+        airport_code: String(t.airport_code || "").toUpperCase()
+      }));
       applyFilters();
     } else {
-      showError('Failed to load trips');
+      showError(data.error || "Failed to load trips");
     }
   } catch (error) {
-    console.error('Error loading trips:', error);
-    showError('Network error loading trips');
+    console.error("Error loading trips:", error);
+    showError("Network/DNS error loading trips");
   }
 }
 
-// Apply filters
 function applyFilters() {
-  const country = document.getElementById('filterCountry').value.toUpperCase();
-  const state = document.getElementById('filterState').value.toLowerCase();
-  const city = document.getElementById('filterCity').value.toLowerCase();
-  const airport = document.getElementById('filterAirport').value.toUpperCase();
-  const status = document.getElementById('filterStatus').value.toUpperCase();
-  const riderType = document.getElementById('filterRiderType').value.toUpperCase();
+  const country = document.getElementById("filterCountry").value.toUpperCase();
+  const state = document.getElementById("filterState").value.toLowerCase();
+  const city = document.getElementById("filterCity").value.toLowerCase();
+  const airport = document.getElementById("filterAirport").value.toUpperCase();
+  const status = document.getElementById("filterStatus").value.toUpperCase();
+  const riderType = document.getElementById("filterRiderType").value.toUpperCase();
 
   filteredTrips = allTrips.filter(trip => {
-    // Country filter (check pickup and dropoff addresses)
-    if (country && !addressMatchesCountry(trip, country)) {
-      return false;
+    if (country && !addressMatchesCountry(trip, country)) return false;
+    if (state && !addressContains(trip, state)) return false;
+    if (city && !addressContains(trip, city)) return false;
+
+    if (airport) {
+      const code = (trip.airport_code || "").toUpperCase();
+      if (code && code !== airport) {
+        if (!addressContains(trip, airport.toLowerCase())) return false;
+      } else if (!code) {
+        if (!addressContains(trip, airport.toLowerCase())) return false;
+      }
     }
 
-    // State filter
-    if (state && !addressContains(trip, state)) {
-      return false;
-    }
-
-    // City filter
-    if (city && !addressContains(trip, city)) {
-      return false;
-    }
-
-    // Airport code filter
-    if (airport && !addressContains(trip, airport)) {
-      return false;
-    }
-
-    // Status filter
-    if (status && trip.status !== status) {
-      return false;
-    }
-
-    // Rider type filter
-    if (riderType && trip.rider_type !== riderType) {
-      return false;
-    }
+    if (status && trip.status !== status) return false;
+    if (riderType && trip.rider_type !== riderType) return false;
 
     return true;
   });
@@ -478,74 +491,61 @@ function applyFilters() {
   renderTrips();
 }
 
-// Check if address contains search term
 function addressContains(trip, term) {
-  const pickup = (trip.pickup_text || '').toLowerCase();
-  const dropoff = (trip.dropoff_text || '').toLowerCase();
-  const airportCode = (trip.airport_code || '').toLowerCase();
-  
-  return pickup.includes(term) || 
-         dropoff.includes(term) || 
-         airportCode.includes(term);
+  const pickup = (trip.pickup_text || "").toLowerCase();
+  const dropoff = (trip.dropoff_text || "").toLowerCase();
+  const airportCode = (trip.airport_code || "").toLowerCase();
+  return pickup.includes(term) || dropoff.includes(term) || airportCode.includes(term);
 }
 
-// Check if address matches country
 function addressMatchesCountry(trip, countryCode) {
-  const pickup = (trip.pickup_text || '').toUpperCase();
-  const dropoff = (trip.dropoff_text || '').toUpperCase();
-  
+  const pickup = (trip.pickup_text || "").toUpperCase();
+  const dropoff = (trip.dropoff_text || "").toUpperCase();
+
   const countryMap = {
-    'USA': ['USA', 'US', 'UNITED STATES', ', CO', ', CA', ', NY', ', TX', ', FL'],
-    'CAN': ['CANADA', 'TORONTO', 'VANCOUVER', 'MONTREAL', 'CALGARY'],
-    'MEX': ['MEXICO', 'CANCUN', 'CABO'],
-    'UK': ['UNITED KINGDOM', 'LONDON', 'MANCHESTER', 'EDINBURGH', 'UK'],
-    'FRA': ['FRANCE', 'PARIS', 'LYON'],
-    'GER': ['GERMANY', 'FRANKFURT', 'MUNICH', 'BERLIN'],
-    'ITA': ['ITALY', 'ROME', 'MILAN', 'VENICE'],
-    'ESP': ['SPAIN', 'MADRID', 'BARCELONA'],
-    'AUS': ['AUSTRALIA', 'SYDNEY', 'MELBOURNE', 'BRISBANE'],
-    'CHN': ['CHINA', 'BEIJING', 'SHANGHAI'],
-    'JPN': ['JAPAN', 'TOKYO', 'OSAKA'],
-    'KOR': ['KOREA', 'SEOUL', 'INCHEON'],
-    'IND': ['INDIA', 'DELHI', 'MUMBAI', 'BANGALORE'],
-    'UAE': ['DUBAI', 'ABU DHABI', 'UAE'],
-    'SAU': ['SAUDI', 'RIYADH', 'JEDDAH'],
-    'THA': ['THAILAND', 'BANGKOK'],
-    'SGP': ['SINGAPORE']
+    "USA": ["USA","US","UNITED STATES",", CO",", CA",", NY",", TX",", FL"],
+    "CAN": ["CANADA","TORONTO","VANCOUVER","MONTREAL","CALGARY"],
+    "MEX": ["MEXICO","CANCUN","CABO"],
+    "UK": ["UNITED KINGDOM","LONDON","MANCHESTER","EDINBURGH","UK"],
+    "FRA": ["FRANCE","PARIS","LYON"],
+    "GER": ["GERMANY","FRANKFURT","MUNICH","BERLIN"],
+    "ITA": ["ITALY","ROME","MILAN","VENICE"],
+    "ESP": ["SPAIN","MADRID","BARCELONA"],
+    "AUS": ["AUSTRALIA","SYDNEY","MELBOURNE","BRISBANE"],
+    "CHN": ["CHINA","BEIJING","SHANGHAI"],
+    "JPN": ["JAPAN","TOKYO","OSAKA"],
+    "KOR": ["KOREA","SEOUL","INCHEON"],
+    "IND": ["INDIA","DELHI","MUMBAI","BANGALORE"],
+    "UAE": ["DUBAI","ABU DHABI","UAE"],
+    "SAU": ["SAUDI","RIYADH","JEDDAH"],
+    "THA": ["THAILAND","BANGKOK"],
+    "SGP": ["SINGAPORE"]
   };
 
   const keywords = countryMap[countryCode] || [countryCode];
-  return keywords.some(keyword => 
-    pickup.includes(keyword) || dropoff.includes(keyword)
-  );
+  return keywords.some(k => pickup.includes(k) || dropoff.includes(k));
 }
 
-// Clear all filters
 function clearFilters() {
-  document.getElementById('filterCountry').value = '';
-  document.getElementById('filterState').value = '';
-  document.getElementById('filterCity').value = '';
-  document.getElementById('filterAirport').value = '';
-  document.getElementById('filterStatus').value = 'APPROVED';
-  document.getElementById('filterRiderType').value = '';
+  document.getElementById("filterCountry").value = "";
+  document.getElementById("filterState").value = "";
+  document.getElementById("filterCity").value = "";
+  document.getElementById("filterAirport").value = "";
+  document.getElementById("filterStatus").value = "APPROVED";
+  document.getElementById("filterRiderType").value = "";
   applyFilters();
 }
 
-// Update statistics
 function updateStats() {
-  document.getElementById('statTotal').textContent = filteredTrips.length;
-  document.getElementById('statAvailable').textContent = 
-    filteredTrips.filter(t => t.status === 'APPROVED').length;
-  document.getElementById('statCrew').textContent = 
-    filteredTrips.filter(t => t.rider_type === 'CREW').length;
-  document.getElementById('statGeneral').textContent = 
-    filteredTrips.filter(t => t.rider_type === 'GENERAL').length;
+  document.getElementById("statTotal").textContent = filteredTrips.length;
+  document.getElementById("statAvailable").textContent = filteredTrips.filter(t => t.status === "APPROVED").length;
+  document.getElementById("statCrew").textContent = filteredTrips.filter(t => t.rider_type === "CREW").length;
+  document.getElementById("statGeneral").textContent = filteredTrips.filter(t => t.rider_type === "GENERAL").length;
 }
 
-// Render trips
 function renderTrips() {
-  const container = document.getElementById('tripsContainer');
-  
+  const container = document.getElementById("tripsContainer");
+
   if (filteredTrips.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
@@ -558,21 +558,13 @@ function renderTrips() {
   }
 
   container.innerHTML = filteredTrips.map(trip => {
-    const pickupTime = new Date(trip.pickup_time_utc).toLocaleString('en-US', {
-      timeZone: trip.pickup_timezone || 'America/Denver',
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit'
-    });
-
+    const pickupTime = pickupLocalString(trip.pickup_time_utc);
     const statusClass = `status-${trip.status.toLowerCase()}`;
-    const fare = trip.estimated_fare || 0;
-    const driverPayout = trip.driver_payout || (fare * 0.75);
-    const platformFee = (fare - driverPayout);
 
-    // Calculate hours until pickup
+    const fare = Number(trip.estimated_fare || 0);
+    const driverPayout = Number(trip.driver_payout || (fare ? fare * 0.75 : 0));
+    const platformFee = fare ? (fare - driverPayout) : 0;
+
     const pickupTimeDate = new Date(trip.pickup_time_utc);
     const now = new Date();
     const hoursUntilPickup = (pickupTimeDate - now) / (1000 * 60 * 60);
@@ -580,36 +572,26 @@ function renderTrips() {
 
     return `
       <div class="trip-card">
-        <!-- FARE HIGHLIGHT BOX -->
         ${fare > 0 ? `
           <div style="background:linear-gradient(135deg,#10b981,#059669);color:white;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:center;box-shadow:0 4px 15px rgba(16,185,129,0.3);">
             <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;max-width:600px;margin:0 auto;">
-              
-              <!-- Total Trip Cost -->
               <div style="text-align:center;">
                 <div style="font-size:0.8rem;opacity:0.9;margin-bottom:0.25rem;font-weight:600;">TRIP TOTAL</div>
                 <div style="font-size:2rem;font-weight:900;line-height:1;">$${fare.toFixed(2)}</div>
-                <div style="font-size:0.75rem;opacity:0.8;margin-top:0.25rem;">${trip.distance_miles ? trip.distance_miles.toFixed(1) + ' miles' : ''}</div>
+                <div style="font-size:0.75rem;opacity:0.8;margin-top:0.25rem;">${trip.distance_miles ? Number(trip.distance_miles).toFixed(1) + " miles" : ""}</div>
               </div>
-
-              <!-- Arrow -->
               <div style="font-size:2rem;opacity:0.7;">→</div>
-
-              <!-- Driver Payout -->
               <div style="text-align:center;border-left:2px solid rgba(255,255,255,0.3);padding-left:1rem;">
                 <div style="font-size:0.8rem;opacity:0.9;margin-bottom:0.25rem;font-weight:600;">YOU EARN</div>
                 <div style="font-size:2.5rem;font-weight:900;line-height:1;">$${driverPayout.toFixed(2)}</div>
                 <div style="font-size:0.75rem;opacity:0.8;margin-top:0.25rem;">75% of fare</div>
               </div>
-
             </div>
-
-            <!-- Duration -->
             ${trip.duration_minutes ? `
               <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.3);font-size:0.85rem;opacity:0.9;">
-                ⏱️ Estimated Duration: ${Math.round(trip.duration_minutes)} minutes
+                ⏱️ Estimated Duration: ${Math.round(Number(trip.duration_minutes))} minutes
               </div>
-            ` : ''}
+            ` : ""}
           </div>
         ` : `
           <div style="background:#fef3c7;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:center;border:2px dashed #f59e0b;">
@@ -619,37 +601,37 @@ function renderTrips() {
         `}
 
         <div class="trip-header">
-          <span class="trip-id">ID: ${trip.id.substring(0, 8)}</span>
+          <span class="trip-id">ID: ${String(trip.id).substring(0, 8)}</span>
           <span class="trip-status ${statusClass}">${trip.status}</span>
         </div>
 
         <div class="trip-info">
           <div class="info-item">
             <div class="info-label">Customer</div>
-            <div class="info-value">${trip.created_by}</div>
+            <div class="info-value">${trip.created_by || "N/A"}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Type</div>
-            <div class="info-value">${trip.rider_type === 'CREW' ? '✈️ Airline Crew' : '🚗 General Traveler'}</div>
+            <div class="info-value">${trip.rider_type === "CREW" ? "✈️ Airline Crew" : "🚗 General Traveler"}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Pickup Time</div>
+            <div class="info-label">Pickup Time (Your Local)</div>
             <div class="info-value">${pickupTime}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Phone</div>
-            <div class="info-value">${trip.rider_phone || 'N/A'}</div>
+            <div class="info-value">${trip.rider_phone || "N/A"}</div>
           </div>
         </div>
 
         <div class="trip-route">
           <div class="route-label">📍 Pickup</div>
-          <div class="route-text">${trip.pickup_text}</div>
+          <div class="route-text">${trip.pickup_text || "N/A"}</div>
         </div>
 
         <div class="trip-route">
           <div class="route-label">🎯 Dropoff</div>
-          <div class="route-text">${trip.dropoff_text}</div>
+          <div class="route-text">${trip.dropoff_text || "N/A"}</div>
         </div>
 
         ${trip.notes ? `
@@ -657,9 +639,8 @@ function renderTrips() {
             <div style="font-size:0.75rem;color:#92400e;font-weight:700;margin-bottom:0.25rem;">📝 CUSTOMER NOTES</div>
             <div style="color:#78350f;">${trip.notes}</div>
           </div>
-        ` : ''}
+        ` : ""}
 
-        <!-- EARNINGS BREAKDOWN -->
         ${fare > 0 ? `
           <details style="margin-bottom:1rem;">
             <summary style="cursor:pointer;padding:1rem;background:#f8fafc;border-radius:8px;font-weight:700;color:#475569;">
@@ -667,7 +648,7 @@ function renderTrips() {
             </summary>
             <div style="padding:1rem;background:white;border:1px solid #e5e7eb;border-radius:8px;margin-top:0.5rem;">
               <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb;">
-                <span style="color:#64748b;">Base Fare + Distance</span>
+                <span style="color:#64748b;">Fare</span>
                 <span style="font-weight:700;">$${fare.toFixed(2)}</span>
               </div>
               <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb;">
@@ -680,26 +661,26 @@ function renderTrips() {
               </div>
             </div>
           </details>
-        ` : ''}
+        ` : ""}
 
         <div class="trip-actions">
-          ${trip.status === 'APPROVED' ? `
+          ${trip.status === "APPROVED" ? `
             <button class="btn btn-claim" onclick="claimTrip('${trip.id}')">
-              ✓ Claim This Trip - Earn $${driverPayout.toFixed(2)}
+              ✓ Claim This Trip${fare ? ` - Earn $${driverPayout.toFixed(2)}` : ""}
             </button>
-          ` : trip.status === 'CLAIMED' ? `
+          ` : trip.status === "CLAIMED" ? `
             <div style="background:#dbeafe;border-radius:8px;padding:1rem;margin-bottom:1rem;border-left:4px solid #2563eb;">
-              <div style="font-weight:700;color:#1e40af;margin-bottom:0.5rem;">✓ CLAIMED by ${trip.driver_name}</div>
+              <div style="font-weight:700;color:#1e40af;margin-bottom:0.5rem;">✓ CLAIMED by ${trip.driver_name || "Driver"}</div>
               <div style="font-size:0.85rem;color:#475569;">
-                Claimed: ${trip.claimed_at ? new Date(trip.claimed_at).toLocaleString() : 'Recently'}
+                Claimed: ${trip.claimed_at ? new Date(trip.claimed_at).toLocaleString() : "Recently"}
               </div>
               ${hoursUntilPickup > 0 ? `
                 <div style="font-size:0.85rem;color:#475569;margin-top:0.25rem;">
                   Pickup in: ${Math.round(hoursUntilPickup)} hours
                 </div>
-              ` : ''}
+              ` : ""}
             </div>
-            
+
             ${canUnclaim ? `
               <button class="btn" style="background:#f59e0b;color:white;" onclick="unclaimTrip('${trip.id}')">
                 ↩️ Unclaim Trip
@@ -726,23 +707,22 @@ function renderTrips() {
         </div>
       </div>
     `;
-  }).join('');
+  }).join("");
 }
 
-// Claim trip
 async function claimTrip(tripId) {
-  const driverName = prompt('Enter your name:');
-  if (!driverName || driverName.trim() === '') {
-    alert('Driver name is required');
+  const driverName = prompt("Enter your name:");
+  if (!driverName || driverName.trim() === "") {
+    alert("Driver name is required");
     return;
   }
 
-  const driverPhone = prompt('Enter your phone number (optional, for customer contact):');
+  const driverPhone = prompt("Enter your phone number (optional, for customer contact):");
 
   try {
     const response = await fetch(`${API_BASE}/api/trips/${tripId}/claim`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
       body: JSON.stringify({
         driver_name: driverName.trim(),
         driver_phone: driverPhone ? driverPhone.trim() : null
@@ -752,56 +732,45 @@ async function claimTrip(tripId) {
     const data = await response.json();
 
     if (data.ok) {
-      alert('✅ Trip claimed successfully!\n\nContact the customer via WhatsApp to confirm pickup details.');
-      
-      // Open WhatsApp if link available
-      if (data.whatsapp_link) {
-        if (confirm('Open WhatsApp to message customer?')) {
-          window.open(data.whatsapp_link, '_blank');
-        }
+      alert("✅ Trip claimed successfully!");
+      if (data.whatsapp_link && confirm("Open WhatsApp to message customer?")) {
+        window.open(data.whatsapp_link, "_blank");
       }
-      
       loadTrips();
     } else {
       alert(`❌ Failed to claim trip:\n${data.error}`);
     }
   } catch (error) {
-    console.error('Error claiming trip:', error);
-    alert('❌ Network error. Please try again.');
+    console.error("Error claiming trip:", error);
+    alert("❌ Network error. Please try again.");
   }
 }
 
-// Unclaim trip
 async function unclaimTrip(tripId) {
-  if (!confirm('Are you sure you want to unclaim this trip?\n\nNote: You cannot unclaim trips within 48 hours of pickup time.')) {
+  if (!confirm("Are you sure you want to unclaim this trip?\n\nNote: You cannot unclaim trips within 48 hours of pickup time.")) {
     return;
   }
 
   try {
     const response = await fetch(`${API_BASE}/api/trips/${tripId}/unclaim`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'}
+      method: "POST",
+      headers: {"Content-Type":"application/json"}
     });
 
     const data = await response.json();
 
     if (data.ok) {
-      alert(`✅ Trip unclaimed successfully!\n\nThe trip is now available for other drivers to claim.\n\nTime until pickup: ${data.hours_until_pickup} hours`);
+      alert("✅ Trip unclaimed successfully!");
       loadTrips();
     } else {
-      if (data.hours_until_pickup !== undefined) {
-        alert(`❌ Cannot unclaim trip:\n\n${data.error}\n\nTime until pickup: ${data.hours_until_pickup} hours\n\n${data.policy || ''}`);
-      } else {
-        alert(`❌ Failed to unclaim trip:\n${data.error}`);
-      }
+      alert(`❌ Failed to unclaim trip:\n${data.error}`);
     }
   } catch (error) {
-    console.error('Error unclaiming trip:', error);
-    alert('❌ Network error. Please try again.');
+    console.error("Error unclaiming trip:", error);
+    alert("❌ Network error. Please try again.");
   }
 }
 
-// View details
 function viewDetails(tripId) {
   const trip = allTrips.find(t => t.id === tripId);
   if (!trip) return;
@@ -809,22 +778,20 @@ function viewDetails(tripId) {
   alert(`
 Trip Details:
 ID: ${trip.id}
-Customer: ${trip.created_by}
-Phone: ${trip.rider_phone || 'N/A'}
-Type: ${trip.rider_type}
-Status: ${trip.status}
-Pickup: ${trip.pickup_text}
-Dropoff: ${trip.dropoff_text}
-Time: ${new Date(trip.pickup_time_utc).toLocaleString()}
-Fare: $${(trip.estimated_fare || 0).toFixed(2)}
-You Receive: $${(trip.driver_payout || 0).toFixed(2)}
-Notes: ${trip.notes || 'None'}
+Customer: ${trip.created_by || "N/A"}
+Phone: ${trip.rider_phone || "N/A"}
+Type: ${trip.rider_type || "N/A"}
+Status: ${trip.status || "N/A"}
+Pickup: ${trip.pickup_text || "N/A"}
+Dropoff: ${trip.dropoff_text || "N/A"}
+Time (Local): ${pickupLocalString(trip.pickup_time_utc)}
+Fare: $${Number(trip.estimated_fare || 0).toFixed(2)}
+Notes: ${trip.notes || "None"}
   `);
 }
 
-// Show error
 function showError(message) {
-  document.getElementById('tripsContainer').innerHTML = `
+  document.getElementById("tripsContainer").innerHTML = `
     <div class="empty-state">
       <div class="empty-state-icon">⚠️</div>
       <h3>Error Loading Trips</h3>
@@ -834,15 +801,11 @@ function showError(message) {
   `;
 }
 
-// Auto-uppercase airport code input
-document.getElementById('filterAirport').addEventListener('input', function(e) {
+document.getElementById("filterAirport").addEventListener("input", function(e) {
   e.target.value = e.target.value.toUpperCase();
 });
 
-// Initial load
 loadTrips();
-
-// Auto-refresh every 30 seconds
 setInterval(loadTrips, 30000);
 </script>
 
