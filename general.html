@@ -496,7 +496,7 @@
             }
             
             try {
-                const proxyUrl = `https://travylway.bsmenterpryzes.workers.dev/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
+                const proxyUrl = `https://api.travylway.com/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
                 
                 console.log('📍 Calculating fare:', cleanPickup, '→', cleanDropoff);
                 
@@ -626,7 +626,7 @@
             console.log(JSON.stringify(tripData, null, 2));
             
             try {
-                const apiUrl = 'https://travylway.bsmenterpryzes.workers.dev/api/trips';
+                const apiUrl = 'https://api.travylway.com/api/trips'; ```  ---  ## 🎯 **OR - Here's the Quick Fix:**  Use Find & Replace:  1. **Press Ctrl+H** (or Cmd+H on Mac) 2. **Find:** `https://travylway.bsmenterpryzes.workers.dev` 3. **Replace with:** `https://api.travylway.com` 4. **Replace All**  ---  ## ✅ **Test It:**  1. **Save general.html** with the corrected URLs 2. **Refresh the page** 3. **Submit a booking** 4. **Should work now!**  ---  ## 🧪 **Quick Verification:**  Visit this in your browser: ``` https://api.travylway.com/
                 console.log('=== SENDING TO ===');
                 console.log(apiUrl);
                 
