@@ -1,773 +1,739 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book a Ride - TravylWay</title>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>General Traveler Pickup Request — Travylway</title>
+  <meta name="description" content="Request airport pickup or drop-off transportation for general travelers worldwide." />
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+  <style>
+    :root{
+      --bg:#2B3A4A;
+      --card:#fff;
+      --text:#0F172A;
+      --muted:#64748B;
+      --line:#E2E8F0;
+      --accent:#2563EB;
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            padding: 40px;
-        }
+      --okbg:#ECFDF5; --okbd:#BBF7D0; --oktx:#166534;
+      --warnbg:#FFFBEB; --warnbd:#FDE68A; --warntx:#92400E;
+      --badbg:#FEF2F2; --badbd:#FECACA; --badtx:#991B1B;
 
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 32px;
-        }
+      --shadow:0 18px 55px rgba(2,6,23,.22);
+      --radius:18px;
+    }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(37,99,235,.25), transparent 55%),
+                  radial-gradient(900px 600px at 85% 25%, rgba(34,197,94,.18), transparent 50%),
+                  var(--bg);
+      color:var(--text);
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    .wrap{
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 14px 56px;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-            font-size: 14px;
-        }
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+    }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            font-family: inherit;
-        }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .brand h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:.2px;
+      color:#fff;
+      line-height:1.2;
+    }
+    .brand p{
+      margin:0;
+      color: rgba(226,232,240,.9);
+      font-size: 14px;
+      line-height:1.35;
+      max-width: 60ch;
+    }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+    .status-pill{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.35);
+      border: 1px solid rgba(226,232,240,.20);
+      color: rgba(226,232,240,.95);
+      font-size: 13px;
+      white-space:nowrap;
+      margin-top: 2px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;background:#94A3B8;
+      box-shadow: 0 0 0 3px rgba(148,163,184,.18);
+      flex:0 0 auto;
+    }
+    .dot.ok{background:#22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,.18);}
+    .dot.bad{background:#EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,.18);}
+    .dot.warn{background:#F59E0B; box-shadow: 0 0 0 3px rgba(245,158,11,.18);}
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+    .card{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
 
-        small {
-            display: block;
-            margin-top: 5px;
-            color: #666;
-            font-size: 13px;
-        }
+    .card-head{
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
 
-        .fare-summary {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 25px;
-            border-radius: 12px;
-            margin: 25px 0;
-        }
+    .head-grid{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
 
-        .fare-summary h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
+    .headline{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .headline .title{
+      font-size: 18px;
+      font-weight: 750;
+      letter-spacing:.2px;
+      margin:0;
+      color: var(--text);
+    }
+    .headline .sub{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.3;
+    }
 
-        .fare-line {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            color: #555;
-        }
+    .rules{
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(37,99,235,.06);
+      border: 1px solid rgba(37,99,235,.18);
+      color: #1E3A8A;
+      font-size: 13px;
+      line-height:1.35;
+    }
 
-        .fare-line.total {
-            border-top: 2px solid #667eea;
-            padding-top: 15px;
-            margin-top: 10px;
-            font-size: 20px;
-            color: #333;
-        }
+    .card-body{
+      padding: 18px;
+    }
 
-        .fare-note {
-            margin-top: 15px;
-            font-size: 13px;
-            color: #666;
-            font-style: italic;
-        }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 740px){
+      .grid{grid-template-columns: 1fr}
+      .topbar{flex-direction:column}
+      .status-pill{align-self:flex-start}
+    }
 
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 20px;
-        }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    label{
+      font-size: 13px;
+      color: rgba(15,23,42,.92);
+      font-weight: 650;
+    }
+    input, textarea, select{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 12px;
+      font-size: 15px;
+      outline: none;
+      background:#fff;
+      color: var(--text);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(37,99,235,.55);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+    textarea{min-height: 92px; resize: vertical}
 
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
+    .help{
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height:1.35;
+    }
 
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
+    .section{
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .section-title{
+      margin:0 0 10px 0;
+      font-size: 14px;
+      font-weight: 800;
+      color: rgba(15,23,42,.9);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
 
-        #statusMessage {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 500;
-            display: none;
-        }
+    .fare{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(226,232,240,.35), rgba(226,232,240,.08));
+    }
+    .fare-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size: 14px;
+      color: rgba(15,23,42,.85);
+    }
+    .fare-row strong{font-size: 16px}
+    .fare-row.total{
+      border-top: 1px solid rgba(148,163,184,.35);
+      padding-top: 10px;
+      margin-top: 2px;
+      font-size: 15px;
+    }
 
-        #statusMessage.show {
-            display: block;
-        }
+    .actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top: 14px;
+    }
 
-        #statusMessage.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+    .btn{
+      appearance:none;
+      border:0;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor:pointer;
+      transition: transform .12s ease, opacity .12s ease, box-shadow .12s ease;
+      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(29,78,216,1));
+      color:#fff;
+      box-shadow: 0 12px 28px rgba(37,99,235,.26);
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
 
-        #statusMessage.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+    .msg{
+      display:none;
+      padding: 12px 12px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height:1.35;
+      border: 1px solid transparent;
+    }
+    .msg.show{display:block}
+    .msg.ok{background: var(--okbg); border-color: var(--okbd); color: var(--oktx);}
+    .msg.bad{background: var(--badbg); border-color: var(--badbd); color: var(--badtx);}
+    .msg.warn{background: var(--warnbg); border-color: var(--warnbd); color: var(--warntx);}
 
-        .turnstile-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
+    .turnstile{
+      display:flex;
+      justify-content:center;
+      padding-top: 8px;
+    }
 
-        .trip-type-info {
-            background: #e8f4f8;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 14px;
-            color: #0c5460;
-        }
+    .footer-note{
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: rgba(226,232,240,.85);
+      text-align:center;
+    }
+  </style>
 
-        .flight-fields {
-            background: #fff3cd;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border-left: 4px solid #ffc107;
-        }
-
-        .flight-fields h4 {
-            color: #856404;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-        }
-    </style>
-    
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
+  <!-- Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <!-- Google Places (FRONTEND KEY) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
 </head>
+
 <body>
-    <div class="container">
-        <h1>🚗 Book Your Ride</h1>
-        <p class="subtitle">Airport transportation for travelers worldwide</p>
-        
-        <form id="bookingForm">
-            <div class="form-group">
-                <label for="tripType">Trip Type: *</label>
-                <select id="tripType" name="tripType" required>
-                    <option value="AIRPORT">Airport Transportation</option>
-                </select>
-                <div class="trip-type-info">
-                    ✈️ Airport transportation only. One address must be an airport.
-                </div>
-            </div>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <h1>Travylway</h1>
+        <p>Airport rides only. One address must be an airport (pickup <em>or</em> drop-off).</p>
+      </div>
 
-            <div class="form-group">
-                <label for="pickupAddress">Pickup Address: *</label>
-                <input 
-                    type="text" 
-                    id="pickupAddress" 
-                    name="pickupAddress" 
-                    placeholder="Enter pickup address"
-                    required
-                    autocomplete="off">
-            </div>
-
-            <div class="form-group">
-                <label for="dropoffAddress">Dropoff Address: *</label>
-                <input 
-                    type="text" 
-                    id="dropoffAddress" 
-                    name="dropoffAddress" 
-                    placeholder="Enter dropoff address"
-                    required
-                    autocomplete="off">
-            </div>
-
-            <div class="form-group">
-                <label for="passengerName">Your Name: *</label>
-                <input 
-                    type="text" 
-                    id="passengerName" 
-                    name="passengerName" 
-                    placeholder="Full name"
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label for="phoneNumber">Phone Number: *</label>
-                <input 
-                    type="tel" 
-                    id="phoneNumber" 
-                    name="phoneNumber" 
-                    placeholder="+1 (720) 555-1234"
-                    required>
-                <small>We'll use WhatsApp to coordinate your ride</small>
-            </div>
-
-            <div class="form-group">
-                <label for="pickupDate">Pickup Date: *</label>
-                <input 
-                    type="date" 
-                    id="pickupDate" 
-                    name="pickupDate" 
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label for="pickupTime">Pickup Time: *</label>
-                <input 
-                    type="time" 
-                    id="pickupTime" 
-                    name="pickupTime" 
-                    required>
-                <small id="timezoneInfo">Enter time in your local timezone</small>
-            </div>
-
-            <div class="flight-fields">
-                <h4>✈️ Flight Information (Optional)</h4>
-                
-                <div class="form-group">
-                    <label for="flightNumber">Flight Number:</label>
-                    <input 
-                        type="text" 
-                        id="flightNumber" 
-                        name="flightNumber" 
-                        placeholder="e.g., UA1234, AA567">
-                    <small>Helpful for tracking arrivals</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="airline">Airline:</label>
-                    <input 
-                        type="text" 
-                        id="airline" 
-                        name="airline" 
-                        placeholder="e.g., United Airlines, American Airlines">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="notes">Additional Notes:</label>
-                <textarea 
-                    id="notes" 
-                    name="notes" 
-                    placeholder="Any special requests, wheelchair accessibility, extra luggage, etc..."></textarea>
-            </div>
-
-            <div class="fare-summary">
-                <h3>💵 Estimated Fare</h3>
-                <div class="fare-breakdown">
-                    <div class="fare-line">
-                        <span>Base Fare:</span>
-                        <span>$5.89</span>
-                    </div>
-                    <div class="fare-line">
-                        <span id="distanceFare">Enter addresses to calculate</span>
-                    </div>
-                    <div class="fare-line total">
-                        <strong>Total:</strong>
-                        <strong id="totalFare">$3.50</strong>
-                    </div>
-                </div>
-                <p class="fare-note">💡 Driver receives 75% of fare. Final fare calculated after route confirmation.</p>
-            </div>
-
-            <div class="turnstile-container">
-                <div class="cf-turnstile" 
-                     data-sitekey="0x4AAAAAACMebvxe_6kPGUnO" 
-                     data-callback="onTurnstileSuccess"></div>
-            </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn" disabled>
-                🚀 Request Ride
-            </button>
-            
-            <div id="statusMessage"></div>
-        </form>
+      <div class="status-pill" id="mapsStatusPill" aria-live="polite">
+        <span class="dot warn" id="mapsDot"></span>
+        <span id="mapsStatusText">Maps status: loading…</span>
+      </div>
     </div>
 
-    <script>
-        let pickupAutocomplete, dropoffAutocomplete;
-        let turnstileToken = null;
-        let fareAmount = 0;
-        let distanceMiles = 0;
-        let durationMinutes = 0;
-        let fareCalculated = false;
-        
-        const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        document.getElementById('timezoneInfo').textContent = `Enter time in your local timezone (${userTimezone})`;
-        
-        function onTurnstileSuccess(token) {
-            turnstileToken = token;
-            document.getElementById('submitBtn').disabled = false;
-            console.log('✅ Turnstile verified');
-        }
-        
-        function preventExclamationMarks(input) {
-            input.addEventListener('input', function(e) {
-                if (this.value.includes('!')) {
-                    this.value = this.value.replace(/!/g, '');
-                }
-            });
-            
-            input.addEventListener('keydown', function(e) {
-                if (this.value.includes('!')) {
-                    this.value = this.value.replace(/!/g, '');
-                }
-            });
-            
-            input.addEventListener('focus', function(e) {
-                if (this.value.includes('!')) {
-                    this.value = '';
-                }
-            });
-            
-            setInterval(function() {
-                if (input.value.includes('!')) {
-                    input.value = input.value.replace(/!/g, '');
-                }
-            }, 50);
-        }
-        
-        function initAutocomplete() {
-            const pickupInput = document.getElementById('pickupAddress');
-            const dropoffInput = document.getElementById('dropoffAddress');
-            
-            if (!pickupInput || !dropoffInput) {
-                console.error('❌ Address input fields not found');
-                return;
-            }
-            
-            console.log('🚀 Initializing autocomplete...');
-            
-            pickupInput.value = '';
-            dropoffInput.value = '';
-            
-            preventExclamationMarks(pickupInput);
-            preventExclamationMarks(dropoffInput);
-            
-            setTimeout(() => {
-                try {
-                    pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput);
-                    dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput);
-                    
-                    pickupInput.value = '';
-                    dropoffInput.value = '';
-                    
-                    console.log('✅ Autocomplete objects created');
-                    
-                    pickupAutocomplete.addListener('place_changed', () => {
-                        const place = pickupAutocomplete.getPlace();
-                        if (place && place.formatted_address) {
-                            pickupInput.value = place.formatted_address;
-                            console.log('📍 Pickup selected:', place.formatted_address);
-                            calculateFare();
-                        }
-                    });
-                    
-                    dropoffAutocomplete.addListener('place_changed', () => {
-                        const place = dropoffAutocomplete.getPlace();
-                        if (place && place.formatted_address) {
-                            dropoffInput.value = place.formatted_address;
-                            console.log('📍 Dropoff selected:', place.formatted_address);
-                            calculateFare();
-                        }
-                    });
-                    
-                    // Also calculate fare when user types manually
-                    pickupInput.addEventListener('input', debounce(calculateFare, 500));
-                    dropoffInput.addEventListener('input', debounce(calculateFare, 500));
-                    
-                    setTimeout(() => {
-                        if (pickupInput.value.includes('!')) pickupInput.value = '';
-                        if (dropoffInput.value.includes('!')) dropoffInput.value = '';
-                    }, 100);
-                    
-                    console.log('✅ Autocomplete initialized successfully');
-                    
-                } catch (error) {
-                    console.error('❌ Error initializing autocomplete:', error);
-                }
-            }, 200);
-        }
-        
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-        
-        async function calculateFare() {
-            const pickupAddr = document.getElementById('pickupAddress').value;
-            const dropoffAddr = document.getElementById('dropoffAddress').value;
-            
-            const cleanPickup = pickupAddr.replace(/!/g, '').trim();
-            const cleanDropoff = dropoffAddr.replace(/!/g, '').trim();
-            
-            if (!cleanPickup || !cleanDropoff) {
-                document.getElementById('distanceFare').textContent = 'Enter addresses to calculate';
-                document.getElementById('totalFare').textContent = '$5.89';
-                fareAmount = 5.89;
-                distanceMiles = 0;
-                durationMinutes = 0;
-                fareCalculated = false;
-                return;
-            }
-            
-            if (pickupAddr !== cleanPickup) {
-                document.getElementById('pickupAddress').value = cleanPickup;
-            }
-            if (dropoffAddr !== cleanDropoff) {
-                document.getElementById('dropoffAddress').value = cleanDropoff;
-            }
-            
-            try {
-                // ✅ CORRECTED URL: Using your actual worker URL
-                const proxyUrl = `https://api.travylway.com/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
-                
-                console.log('📍 Calculating fare:', cleanPickup, '→', cleanDropoff);
-                console.log('🔗 API URL:', proxyUrl);
-                
-                const response = await fetch(proxyUrl);
-                const data = await response.json();
-                
-                console.log('📥 API Response:', data);
-                
-                if (data.status === 'OK' && data.fare) {
-                    fareAmount = data.fare.total;
-                    distanceMiles = data.distance.miles;
-                    durationMinutes = data.duration.minutes;
-                    fareCalculated = true;
-                    
-                    document.getElementById('distanceFare').textContent = 
-                        `${distanceMiles.toFixed(1)} miles × $${data.fare.perMile.toFixed(2)}/mile = $${data.fare.distanceCost.toFixed(2)}`;
-                    document.getElementById('totalFare').textContent = `$${fareAmount.toFixed(2)}`;
-                    
-                    console.log('✅ Fare calculated:', {
-                        distance: distanceMiles.toFixed(1) + ' miles',
-                        duration: durationMinutes + ' minutes',
-                        total: '$' + fareAmount.toFixed(2),
-                        calculated: fareCalculated
-                    });
-                } else {
-                    console.error('❌ Failed to calculate fare:', data);
-                    console.error('❌ Response status:', data.status);
-                    console.error('❌ Response error:', data.error);
-                    document.getElementById('distanceFare').textContent = 'Unable to calculate distance';
-                    document.getElementById('totalFare').textContent = '$5.89';
-                    fareAmount = 3.50;
-                    distanceMiles = 0;
-                    durationMinutes = 0;
-                    fareCalculated = false;
-                }
-            } catch (error) {
-                console.error('❌ Distance calculation error:', error);
-                console.error('❌ Error details:', error.message);
-                document.getElementById('distanceFare').textContent = 'Error calculating distance';
-                document.getElementById('totalFare').textContent = '$5.89';
-                fareAmount = 5.89;
-                distanceMiles = 0;
-                durationMinutes = 0;
-                fareCalculated = false;
-            }
-        }
-        
-        async function validateAndCalculateFare() {
-            const pickupAddr = document.getElementById('pickupAddress').value.trim();
-            const dropoffAddr = document.getElementById('dropoffAddress').value.trim();
-            
-            if (!pickupAddr || !dropoffAddr) {
-                showMessage('❌ Please enter both pickup and dropoff addresses', 'error');
-                return false;
-            }
-            
-            // If fare wasn't calculated yet, calculate it now
-            if (!fareCalculated || fareAmount <= 5.89) {
-                console.log('🔄 Calculating fare before submission...');
-                await calculateFare();
-                
-                // Check if calculation was successful
-                if (!fareCalculated || fareAmount <= 5.89) {
-                    showMessage('❌ Could not calculate fare. Please check addresses and try again.', 'error');
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-        
-        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            console.log('=== FORM SUBMISSION STARTED ===');
-            
-            if (!turnstileToken) {
-                showMessage('❌ Please complete the security verification', 'error');
-                return;
-            }
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const statusMessage = document.getElementById('statusMessage');
-            
-            // Step 1: Validate addresses and calculate fare
-            const isValid = await validateAndCalculateFare();
-            if (!isValid) {
-                return;
-            }
-            
-            const name = document.getElementById('passengerName').value.trim();
-            const phone = document.getElementById('phoneNumber').value.trim();
-            const pickupAddr = document.getElementById('pickupAddress').value.replace(/!/g, '').trim();
-            const dropoffAddr = document.getElementById('dropoffAddress').value.replace(/!/g, '').trim();
-            const pickupDate = document.getElementById('pickupDate').value;
-            const pickupTime = document.getElementById('pickupTime').value;
-            
-            console.log('=== FORM VALIDATION ===');
-            console.log('Name:', name);
-            console.log('Phone:', phone);
-            console.log('Pickup:', pickupAddr);
-            console.log('Dropoff:', dropoffAddr);
-            console.log('Date:', pickupDate);
-            console.log('Time:', pickupTime);
-            console.log('Fare Calculated:', fareCalculated);
-            console.log('Fare Amount:', fareAmount);
-            console.log('Distance Miles:', distanceMiles);
-            console.log('Duration Minutes:', durationMinutes);
-            
-            if (!name) {
-                showMessage('❌ Name is required', 'error');
-                return;
-            }
-            if (!phone) {
-                showMessage('❌ Phone number is required', 'error');
-                return;
-            }
-            if (!pickupAddr) {
-                showMessage('❌ Pickup address is required', 'error');
-                return;
-            }
-            if (!dropoffAddr) {
-                showMessage('❌ Dropoff address is required', 'error');
-                return;
-            }
-            if (!pickupDate || !pickupTime) {
-                showMessage('❌ Pickup date and time are required', 'error');
-                return;
-            }
-            
-            submitBtn.disabled = true;
-            submitBtn.textContent = '⏳ Submitting...';
-            statusMessage.style.display = 'none';
-            
-            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
-            const pickupTimeUTC = pickupDateTime.toISOString();
-            
-            console.log('=== DATETIME CONVERSION ===');
-            console.log('Local Time:', `${pickupDate}T${pickupTime}`);
-            console.log('UTC Time:', pickupTimeUTC);
-            console.log('Timezone:', timezone);
-            
-            // IMPORTANT: Make sure fare was calculated
-            if (!fareCalculated || fareAmount <= 5.89) {
-                showMessage('❌ Please wait for fare calculation to complete', 'error');
-                submitBtn.disabled = false;
-                submitBtn.textContent = '🚀 Request Ride';
-                return;
-            }
-            
-            const tripData = {
-                created_by: name,
-                rider_phone: phone,
-                rider_type: 'GENERAL',
-                trip_type: 'AIRPORT',
-                pickup_text: pickupAddr,
-                dropoff_text: dropoffAddr,
-                pickup_time_utc: pickupTimeUTC,
-                pickup_timezone: timezone,
-                airport_code: document.getElementById('flightNumber')?.value || '',
-                flight_number: document.getElementById('flightNumber')?.value || '',
-                airline: document.getElementById('airline')?.value || '',
-                notes: document.getElementById('notes')?.value || '',
-                estimated_fare: fareAmount,
-                distance_miles: distanceMiles,
-                duration_minutes: durationMinutes
-            };
-            
-            console.log('=== TRIP DATA TO SEND ===');
-            console.log(JSON.stringify(tripData, null, 2));
-            console.log('Estimated Fare:', tripData.estimated_fare);
-            console.log('Distance Miles:', tripData.distance_miles);
-            
-            try {
-                // ✅ CORRECTED URL: Using your actual worker URL
-                const apiUrl = 'https://api.travylway.com/api/trips';
-                console.log('=== SENDING TO ===');
-                console.log(apiUrl);
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(tripData)
-                });
-                
-                console.log('=== RESPONSE STATUS ===');
-                console.log('Status:', response.status);
-                console.log('Status Text:', response.statusText);
-                
-                const result = await response.json();
-                
-                console.log('=== RESPONSE DATA ===');
-                console.log(JSON.stringify(result, null, 2));
-                
-                if (result.ok) {
-                    console.log('✅ SUCCESS!');
-                    console.log('Trip ID:', result.trip_id);
-                    console.log('Fare Sent:', result.fare_details?.total || 'N/A');
-                    
-                    showMessage('✅ Ride request submitted successfully! You will receive confirmation via WhatsApp shortly.', 'success');
-                    
-                    // Reset form but keep calculated fare visible
-                    document.getElementById('bookingForm').reset();
-                    document.getElementById('pickupAddress').value = '';
-                    document.getElementById('dropoffAddress').value = '';
-                    
-                    // Keep fare summary visible with last calculation
-                    document.getElementById('distanceFare').textContent = 
-                        `${distanceMiles.toFixed(1)} miles × $1.50/mile = $${(distanceMiles * 1.50).toFixed(2)}`;
-                    document.getElementById('totalFare').textContent = `$${fareAmount.toFixed(2)}`;
-                    
-                    turnstileToken = null;
-                    
-                    if (typeof turnstile !== 'undefined') {
-                        turnstile.reset();
-                    }
-                    
-                    submitBtn.disabled = true;
-                } else {
-                    console.error('❌ SUBMISSION FAILED');
-                    console.error('Error:', result.error);
-                    console.error('Message:', result.message);
-                    showMessage('❌ Error: ' + (result.error || 'Unknown error') + '\n' + (result.message || ''), 'error');
-                }
-            } catch (error) {
-                console.error('❌ NETWORK ERROR');
-                console.error(error);
-                showMessage('❌ Network error. Please check your connection and try again.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = '🚀 Request Ride';
-            }
+    <div class="card">
+      <div class="card-head">
+        <div class="head-grid">
+          <div class="headline">
+            <p class="title">General Traveler Pickup Request</p>
+            <p class="sub" id="timezoneInfo">Enter pickup time in your local timezone</p>
+          </div>
+        </div>
+
+        <div class="rules">
+          ✈️ Airport rides only. No multi-stop runs, no detours. If neither address is an airport, the request will be rejected.
+        </div>
+      </div>
+
+      <div class="card-body">
+        <form id="bookingForm">
+          <div class="grid">
+            <div class="field">
+              <label for="pickupAddress">Pickup address *</label>
+              <input id="pickupAddress" name="pickupAddress" type="text" placeholder="Start typing an address…" autocomplete="off" required>
+              <div class="help">Tip: choose a suggestion from the dropdown for best results.</div>
+            </div>
+
+            <div class="field">
+              <label for="dropoffAddress">Drop-off address *</label>
+              <input id="dropoffAddress" name="dropoffAddress" type="text" placeholder="Start typing an address…" autocomplete="off" required>
+              <div class="help">At least one address must be an airport.</div>
+            </div>
+
+            <div class="field">
+              <label for="passengerName">Your name *</label>
+              <input id="passengerName" name="passengerName" type="text" placeholder="Full name" required>
+            </div>
+
+            <div class="field">
+              <label for="phoneNumber">Phone number *</label>
+              <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="+1 (720) 555-1234" required>
+              <div class="help">We’ll use WhatsApp to coordinate your ride.</div>
+            </div>
+
+            <div class="field">
+              <label for="pickupDate">Pickup date *</label>
+              <input id="pickupDate" name="pickupDate" type="date" required>
+            </div>
+
+            <div class="field">
+              <label for="pickupTime">Pickup time *</label>
+              <input id="pickupTime" name="pickupTime" type="time" required>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">✈️ Flight info (optional)</p>
+            <div class="grid">
+              <div class="field">
+                <label for="flightNumber">Flight number</label>
+                <input id="flightNumber" name="flightNumber" type="text" placeholder="e.g., UA1234, AA567">
+              </div>
+              <div class="field">
+                <label for="airline">Airline</label>
+                <input id="airline" name="airline" type="text" placeholder="e.g., United, American">
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">📝 Notes (optional)</p>
+            <div class="field">
+              <label for="notes" class="help" style="font-weight:700;color:rgba(15,23,42,.88)">
+                Anything we should know? (extra luggage, accessibility needs, etc.)
+              </label>
+              <textarea id="notes" name="notes" placeholder="Type details here…"></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">💵 Estimated fare</p>
+            <div class="fare" aria-live="polite">
+              <div class="fare-row">
+                <span>Base fare</span>
+                <span id="baseFare">$5.89</span>
+              </div>
+              <div class="fare-row">
+                <span id="distanceFare">Enter pickup + drop-off to calculate</span>
+                <span></span>
+              </div>
+              <div class="fare-row total">
+                <span><strong>Total</strong></span>
+                <span><strong id="totalFare">$5.89</strong></span>
+              </div>
+              <div class="help">Driver receives 75% of fare. Final fare may adjust after route confirmation.</div>
+            </div>
+          </div>
+
+          <div class="turnstile">
+            <div class="cf-turnstile"
+                 data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
+                 data-callback="onTurnstileSuccess"></div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn" id="submitBtn" disabled>Request ride</button>
+            <div id="statusMessage" class="msg"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Built for travelers who move different. Airport rides only. Reliability > chaos.
+    </div>
+  </div>
+
+  <script>
+    // ===============================
+    // CONFIG
+    // ===============================
+    const WORKER_BASE = "https://api.travylway.com";
+    const RIDER_TYPE = "GENERAL"; // this is general.html
+
+    // Fare model must match worker calculateFare()
+    const BASE_FARE = 5.89;
+    const PER_MILE = 1.50;
+
+    // ===============================
+    // STATE
+    // ===============================
+    let pickupAutocomplete, dropoffAutocomplete;
+    let turnstileToken = null;
+    let fareAmount = BASE_FARE;
+    let distanceMiles = 0;
+    let durationMinutes = 0;
+    let fareCalculated = false;
+
+    // Timezone label
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById("timezoneInfo").textContent = `Enter pickup time in your local timezone (${userTimezone})`;
+
+    // Date min
+    document.getElementById("pickupDate").setAttribute("min", new Date().toISOString().split("T")[0]);
+
+    // ===============================
+    // UI HELPERS
+    // ===============================
+    function setMapsStatus(state, text){
+      const dot = document.getElementById("mapsDot");
+      const label = document.getElementById("mapsStatusText");
+      dot.classList.remove("ok","bad","warn");
+      dot.classList.add(state);
+      label.textContent = text;
+    }
+
+    function showMessage(message, type){
+      const el = document.getElementById("statusMessage");
+      el.textContent = message;
+      el.className = "msg show " + (type === "success" ? "ok" : type === "warning" ? "warn" : "bad");
+      if (type === "success"){
+        setTimeout(() => { el.className = "msg"; el.style.display="none"; }, 5000);
+      } else {
+        el.style.display="block";
+      }
+      el.style.display="block";
+    }
+
+    function onTurnstileSuccess(token){
+      turnstileToken = token;
+      document.getElementById("submitBtn").disabled = false;
+    }
+
+    // stop people from breaking Places inputs with "!"
+    function preventExclamationMarks(input){
+      const scrub = () => { if (input.value.includes("!")) input.value = input.value.replace(/!/g,""); };
+      input.addEventListener("input", scrub);
+      input.addEventListener("keydown", scrub);
+      input.addEventListener("focus", scrub);
+      setInterval(scrub, 150);
+    }
+
+    function debounce(func, wait){
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+      };
+    }
+
+    // ===============================
+    // AUTOCOMPLETE
+    // ===============================
+    function initAutocomplete(){
+      const pickupInput = document.getElementById("pickupAddress");
+      const dropoffInput = document.getElementById("dropoffAddress");
+
+      preventExclamationMarks(pickupInput);
+      preventExclamationMarks(dropoffInput);
+
+      try{
+        pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput);
+        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput);
+
+        pickupAutocomplete.addListener("place_changed", () => {
+          const place = pickupAutocomplete.getPlace();
+          if (place && place.formatted_address){
+            pickupInput.value = place.formatted_address;
+            calculateFare();
+          }
         });
-        
-        function showMessage(message, type) {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.textContent = message;
-            statusMessage.className = 'show ' + type;
-            statusMessage.style.display = 'block';
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusMessage.style.display = 'none';
-                }, 5000);
-            }
-        }
-        
-        function waitForGoogleMaps() {
-            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-                console.log('✅ Google Maps API loaded');
-                initAutocomplete();
-            } else {
-                console.log('⏳ Waiting for Google Maps API...');
-                setTimeout(waitForGoogleMaps, 100);
-            }
-        }
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', waitForGoogleMaps);
+
+        dropoffAutocomplete.addListener("place_changed", () => {
+          const place = dropoffAutocomplete.getPlace();
+          if (place && place.formatted_address){
+            dropoffInput.value = place.formatted_address;
+            calculateFare();
+          }
+        });
+
+        pickupInput.addEventListener("input", debounce(calculateFare, 650));
+        dropoffInput.addEventListener("input", debounce(calculateFare, 650));
+
+        setMapsStatus("ok","Maps status: ready");
+      } catch (e){
+        console.error(e);
+        setMapsStatus("bad","Maps status: failed");
+      }
+    }
+
+    function waitForGoogleMaps(){
+      if (typeof google !== "undefined" && google.maps && google.maps.places){
+        initAutocomplete();
+      } else {
+        setMapsStatus("warn","Maps status: loading…");
+        setTimeout(waitForGoogleMaps, 120);
+      }
+    }
+
+    if (document.readyState === "loading"){
+      document.addEventListener("DOMContentLoaded", waitForGoogleMaps);
+    } else {
+      waitForGoogleMaps();
+    }
+
+    // ===============================
+    // FARE CALC
+    // ===============================
+    async function calculateFare(){
+      const pickupRaw = document.getElementById("pickupAddress").value || "";
+      const dropoffRaw = document.getElementById("dropoffAddress").value || "";
+      const pickup = pickupRaw.replace(/!/g,"").trim();
+      const dropoff = dropoffRaw.replace(/!/g,"").trim();
+
+      if (pickupRaw !== pickup) document.getElementById("pickupAddress").value = pickup;
+      if (dropoffRaw !== dropoff) document.getElementById("dropoffAddress").value = dropoff;
+
+      if (!pickup || !dropoff){
+        fareAmount = BASE_FARE;
+        distanceMiles = 0;
+        durationMinutes = 0;
+        fareCalculated = false;
+
+        document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+        document.getElementById("distanceFare").textContent = "Enter pickup + drop-off to calculate";
+        document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+        return;
+      }
+
+      try{
+        const proxyUrl = `${WORKER_BASE}/api/maps-distance?origins=${encodeURIComponent(pickup)}&destinations=${encodeURIComponent(dropoff)}&mode=driving&units=imperial&rider_type=${encodeURIComponent(RIDER_TYPE)}`;
+        const res = await fetch(proxyUrl);
+        const data = await res.json();
+
+        if (data.status === "OK" && data.fare){
+          fareAmount = Number(data.fare.total || BASE_FARE);
+          distanceMiles = Number(data.distance?.miles || 0);
+          durationMinutes = Number(data.duration?.minutes || 0);
+          fareCalculated = true;
+
+          document.getElementById("baseFare").textContent = `$${Number(data.fare.baseFare || BASE_FARE).toFixed(2)}`;
+          document.getElementById("distanceFare").textContent =
+            `${distanceMiles.toFixed(1)} miles × $${Number(data.fare.perMile || PER_MILE).toFixed(2)}/mile = $${Number(data.fare.distanceCost || (distanceMiles*PER_MILE)).toFixed(2)}`;
+          document.getElementById("totalFare").textContent = `$${fareAmount.toFixed(2)}`;
         } else {
-            waitForGoogleMaps();
+          console.warn("Distance calc failed:", data);
+          fareAmount = BASE_FARE;
+          distanceMiles = 0;
+          durationMinutes = 0;
+          fareCalculated = false;
+
+          document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+          document.getElementById("distanceFare").textContent = "Unable to calculate distance (check addresses)";
+          document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
         }
-        
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('pickupDate').setAttribute('min', today);
-        
-        // Also calculate fare when form loads addresses
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(calculateFare, 1000);
+      } catch (err){
+        console.error(err);
+        fareAmount = BASE_FARE;
+        distanceMiles = 0;
+        durationMinutes = 0;
+        fareCalculated = false;
+
+        document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+        document.getElementById("distanceFare").textContent = "Error calculating distance";
+        document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+      }
+    }
+
+    async function validateAndCalculateFare(){
+      const pickup = (document.getElementById("pickupAddress").value || "").trim();
+      const dropoff = (document.getElementById("dropoffAddress").value || "").trim();
+
+      if (!pickup || !dropoff){
+        showMessage("Please enter both pickup and drop-off addresses.", "error");
+        return false;
+      }
+
+      if (!fareCalculated){
+        await calculateFare();
+      }
+
+      // If still not calculated, don't let submission go through
+      if (!fareCalculated){
+        showMessage("Could not calculate fare. Pick from the dropdown suggestions and try again.", "error");
+        return false;
+      }
+
+      return true;
+    }
+
+    // ===============================
+    // SUBMIT
+    // ===============================
+    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!turnstileToken){
+        showMessage("Please complete the security verification.", "error");
+        return;
+      }
+
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      btn.textContent = "Submitting…";
+
+      const ok = await validateAndCalculateFare();
+      if (!ok){
+        btn.disabled = false;
+        btn.textContent = "Request ride";
+        return;
+      }
+
+      const name = (document.getElementById("passengerName").value || "").trim();
+      const phone = (document.getElementById("phoneNumber").value || "").trim();
+      const pickupAddr = (document.getElementById("pickupAddress").value || "").replace(/!/g,"").trim();
+      const dropoffAddr = (document.getElementById("dropoffAddress").value || "").replace(/!/g,"").trim();
+      const pickupDate = document.getElementById("pickupDate").value;
+      const pickupTime = document.getElementById("pickupTime").value;
+
+      if (!name || !phone || !pickupAddr || !dropoffAddr || !pickupDate || !pickupTime){
+        showMessage("Missing required fields. Please fill everything marked with *.", "error");
+        btn.disabled = false;
+        btn.textContent = "Request ride";
+        return;
+      }
+
+      // Convert local date+time to UTC ISO
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
+      const pickupTimeUTC = pickupDateTime.toISOString();
+
+      // IMPORTANT: send worker the same fields it expects
+      const tripData = {
+        created_by: name,
+        rider_phone: phone,
+        rider_type: RIDER_TYPE,
+        trip_type: "AIRPORT",
+        pickup_text: pickupAddr,
+        dropoff_text: dropoffAddr,
+        pickup_time_utc: pickupTimeUTC,
+        pickup_timezone: timezone,
+
+        // Optional flight fields
+        airport_code: "", // leave blank unless you explicitly collect this
+        flight_number: (document.getElementById("flightNumber").value || "").trim(),
+        airline: (document.getElementById("airline").value || "").trim(),
+        notes: (document.getElementById("notes").value || "").trim(),
+
+        // Fare fields worker uses for the fixed calc
+        estimated_fare: Number(fareAmount),
+        distance_miles: Number(distanceMiles),
+        duration_minutes: Number(durationMinutes)
+      };
+
+      try{
+        const res = await fetch(`${WORKER_BASE}/api/trips`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(tripData)
         });
-    </script>
+
+        const result = await res.json();
+
+        if (result.ok){
+          showMessage("Ride request submitted. You’ll get a WhatsApp confirmation shortly.", "success");
+
+          // reset form, keep fare display (last calc) visible
+          document.getElementById("bookingForm").reset();
+          document.getElementById("pickupAddress").value = "";
+          document.getElementById("dropoffAddress").value = "";
+
+          // keep last totals visible (don’t zero out)
+          document.getElementById("totalFare").textContent = `$${fareAmount.toFixed(2)}`;
+          document.getElementById("distanceFare").textContent =
+            `${distanceMiles.toFixed(1)} miles × $${PER_MILE.toFixed(2)}/mile = $${(distanceMiles*PER_MILE).toFixed(2)}`;
+
+          turnstileToken = null;
+          if (typeof turnstile !== "undefined") turnstile.reset();
+          btn.disabled = true; // requires new Turnstile
+        } else {
+          const extra = result.message ? `\n${result.message}` : "";
+          showMessage(`Request failed: ${result.error || "Unknown error"}${extra}`, "error");
+        }
+      } catch (err){
+        console.error(err);
+        showMessage("Network error. Check your connection and try again.", "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Request ride";
+      }
+    });
+
+    // kick a calc shortly after load (harmless)
+    document.addEventListener("DOMContentLoaded", () => setTimeout(calculateFare, 900));
+  </script>
 </body>
 </html>
