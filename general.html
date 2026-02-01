@@ -479,9 +479,12 @@
                 const proxyUrl = `https://api.travylway.com/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
                 
                 console.log('📍 Calculating fare:', cleanPickup, '→', cleanDropoff);
+                console.log('🔗 API URL:', proxyUrl);
                 
                 const response = await fetch(proxyUrl);
                 const data = await response.json();
+                
+                console.log('📥 API Response:', data);
                 
                 if (data.status === 'OK' && data.fare) {
                     fareAmount = data.fare.total;
@@ -499,6 +502,8 @@
                     });
                 } else {
                     console.error('❌ Failed to calculate fare:', data);
+                    console.error('❌ Response status:', data.status);
+                    console.error('❌ Response error:', data.error);
                     document.getElementById('distanceFare').textContent = 'Unable to calculate distance';
                     document.getElementById('totalFare').textContent = '$3.50';
                     fareAmount = 0;
@@ -507,6 +512,7 @@
                 }
             } catch (error) {
                 console.error('❌ Distance calculation error:', error);
+                console.error('❌ Error details:', error.message);
                 document.getElementById('distanceFare').textContent = 'Error calculating distance';
                 document.getElementById('totalFare').textContent = '$3.50';
                 fareAmount = 0;
