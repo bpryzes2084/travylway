@@ -142,9 +142,7 @@
       line-height:1.35;
     }
 
-    .card-body{
-      padding: 18px;
-    }
+    .card-body{ padding: 18px; }
 
     .grid{
       display:grid;
@@ -501,7 +499,7 @@
     }
 
     // ===============================
-    // AUTOCOMPLETE (captures coords)
+    // AUTOCOMPLETE (captures place_id + coords)
     // ===============================
     function initAutocomplete(){
       const pickupInput = document.getElementById("pickupAddress");
@@ -510,16 +508,11 @@
       preventExclamationMarks(pickupInput);
       preventExclamationMarks(dropoffInput);
 
-      // If user edits after selecting, clear selection (forces dropdown again)
       pickupInput.addEventListener("input", () => {
-        if (pickupPlace.ok && pickupInput.value.trim() !== pickupPlace.addr) {
-          clearPickupSelection();
-        }
+        if (pickupPlace.ok && pickupInput.value.trim() !== pickupPlace.addr) clearPickupSelection();
       });
       dropoffInput.addEventListener("input", () => {
-        if (dropoffPlace.ok && dropoffInput.value.trim() !== dropoffPlace.addr) {
-          clearDropoffSelection();
-        }
+        if (dropoffPlace.ok && dropoffInput.value.trim() !== dropoffPlace.addr) clearDropoffSelection();
       });
 
       try{
@@ -591,7 +584,7 @@
     }
 
     // ===============================
-    // FARE CALC (uses lat,lng)
+    // FARE CALC (prefers place_id:)
     // ===============================
     async function calculateFare(){
       if (!pickupPlace.ok || !dropoffPlace.ok){
@@ -600,28 +593,31 @@
       }
 
       try{
-        // Most reliable input to Distance Matrix: coordinates
-        const origins = `${pickupPlace.lat},${pickupPlace.lng}`;
-        const destinations = `${dropoffPlace.lat},${dropoffPlace.lng}`;
+        const origins = pickupPlace.place_id
+          ? `place_id:${pickupPlace.place_id}`
+          : `${pickupPlace.lat},${pickupPlace.lng}`;
+
+        const destinations = dropoffPlace.place_id
+          ? `place_id:${dropoffPlace.place_id}`
+          : `${dropoffPlace.lat},${dropoffPlace.lng}`;
 
         const proxyUrl =
           `${WORKER_BASE}/api/maps-distance` +
           `?origins=${encodeURIComponent(origins)}` +
           `&destinations=${encodeURIComponent(destinations)}` +
-          `&mode=driving&units=imperial` +
           `&rider_type=${encodeURIComponent(RIDER_TYPE)}`;
 
         const res = await fetch(proxyUrl);
         const data = await res.json();
 
-        if (data.status === "OK" && data.fare){
+        if (data.ok && data.status === "OK" && data.fare){
           fareAmount = Number(data.fare.total || BASE_FARE);
           distanceMiles = Number(data.distance?.miles || 0);
           durationMinutes = Number(data.duration?.minutes || 0);
           fareCalculated = true;
 
           const base = Number(data.fare.baseFare ?? BASE_FARE);
-          const per = Number(data.fare.perMile ?? PER_MILE);
+          const per  = Number(data.fare.perMile ?? PER_MILE);
           const distCost = Number(data.fare.distanceCost ?? (distanceMiles * per));
 
           document.getElementById("baseFare").textContent = `$${base.toFixed(2)}`;
@@ -649,15 +645,12 @@
         return false;
       }
 
-      // Hard requirement: dropdown confirmed selections
       if (!pickupPlace.ok || !dropoffPlace.ok){
         showMessage("Could not calculate fare. Pick BOTH addresses from the dropdown suggestions.", "error");
         return false;
       }
 
-      if (!fareCalculated){
-        await calculateFare();
-      }
+      if (!fareCalculated) await calculateFare();
 
       if (!fareCalculated){
         showMessage("Could not calculate fare. Re-select both addresses from dropdown and try again.", "error");
@@ -703,12 +696,10 @@
         return;
       }
 
-      // Convert local date+time to UTC ISO
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
       const pickupTimeUTC = pickupDateTime.toISOString();
 
-      // IMPORTANT: include BOTH address text + confirmed coords (best of both worlds)
       const tripData = {
         created_by: name,
         rider_phone: phone,
@@ -719,18 +710,17 @@
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
 
-        // Optional
         airport_code: "",
         flight_number: (document.getElementById("flightNumber").value || "").trim(),
         airline: (document.getElementById("airline").value || "").trim(),
         notes: (document.getElementById("notes").value || "").trim(),
 
-        // Fare inputs worker expects
+        // UI values (worker should recalc anyway)
         estimated_fare: Number(fareAmount),
         distance_miles: Number(distanceMiles),
         duration_minutes: Number(durationMinutes),
 
-        // Extra reliability data (doesn't break worker)
+        // Extra reliability data
         pickup_place_id: pickupPlace.place_id,
         dropoff_place_id: dropoffPlace.place_id,
         pickup_lat: pickupPlace.lat,
@@ -751,19 +741,16 @@
         if (result.ok){
           showMessage("Ride request submitted. You’ll get a WhatsApp confirmation shortly.", "success");
 
-          // Reset form fields
           document.getElementById("bookingForm").reset();
           document.getElementById("pickupAddress").value = "";
           document.getElementById("dropoffAddress").value = "";
 
-          // Clear dropdown selections so next ride must re-select (prevents stale coords)
           clearPickupSelection();
           clearDropoffSelection();
 
-          // Reset Turnstile
           turnstileToken = null;
           if (typeof turnstile !== "undefined") turnstile.reset();
-          btn.disabled = true; // requires new Turnstile
+          btn.disabled = true;
         } else {
           const extra = result.message ? `\n${result.message}` : "";
           showMessage(`Request failed: ${result.error || "Unknown error"}${extra}`, "error");
@@ -777,8 +764,8 @@
       }
     });
 
-    // Start with base fare UI
     document.addEventListener("DOMContentLoaded", () => resetFareUI());
   </script>
 </body>
 </html>
+
