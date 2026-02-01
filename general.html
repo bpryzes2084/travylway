@@ -610,7 +610,7 @@
         const res = await fetch(proxyUrl);
         const data = await res.json();
 
-        if (data.ok && data.status === "OK" && data.fare){
+        if (data.status === "OK" && data.fare){
           fareAmount = Number(data.fare.total || BASE_FARE);
           distanceMiles = Number(data.distance?.miles || 0);
           durationMinutes = Number(data.duration?.minutes || 0);
