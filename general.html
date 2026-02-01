@@ -325,7 +325,7 @@
                 <div class="fare-breakdown">
                     <div class="fare-line">
                         <span>Base Fare:</span>
-                        <span>$3.50</span>
+                        <span>$5.89</span>
                     </div>
                     <div class="fare-line">
                         <span id="distanceFare">Enter addresses to calculate</span>
@@ -358,7 +358,7 @@
         let fareAmount = 0;
         let distanceMiles = 0;
         let durationMinutes = 0;
-        let fareCalculated = false; // NEW: Track if fare was calculated
+        let fareCalculated = false;
         
         const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         document.getElementById('timezoneInfo').textContent = `Enter time in your local timezone (${userTimezone})`;
@@ -478,8 +478,8 @@
             
             if (!cleanPickup || !cleanDropoff) {
                 document.getElementById('distanceFare').textContent = 'Enter addresses to calculate';
-                document.getElementById('totalFare').textContent = '$3.50';
-                fareAmount = 3.50;
+                document.getElementById('totalFare').textContent = '$5.89';
+                fareAmount = 5.89;
                 distanceMiles = 0;
                 durationMinutes = 0;
                 fareCalculated = false;
@@ -494,8 +494,8 @@
             }
             
             try {
-                // IMPORTANT: Make sure this URL is correct - point to YOUR worker
-                const proxyUrl = `https://YOUR-WORKER-NAME.YOUR-ACCOUNT.workers.dev/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
+                // ✅ CORRECTED URL: Using your actual worker URL
+                const proxyUrl = `https://api.travylway.com/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
                 
                 console.log('📍 Calculating fare:', cleanPickup, '→', cleanDropoff);
                 console.log('🔗 API URL:', proxyUrl);
@@ -509,7 +509,7 @@
                     fareAmount = data.fare.total;
                     distanceMiles = data.distance.miles;
                     durationMinutes = data.duration.minutes;
-                    fareCalculated = true; // Mark as calculated
+                    fareCalculated = true;
                     
                     document.getElementById('distanceFare').textContent = 
                         `${distanceMiles.toFixed(1)} miles × $${data.fare.perMile.toFixed(2)}/mile = $${data.fare.distanceCost.toFixed(2)}`;
@@ -526,7 +526,7 @@
                     console.error('❌ Response status:', data.status);
                     console.error('❌ Response error:', data.error);
                     document.getElementById('distanceFare').textContent = 'Unable to calculate distance';
-                    document.getElementById('totalFare').textContent = '$3.50';
+                    document.getElementById('totalFare').textContent = '$5.89';
                     fareAmount = 3.50;
                     distanceMiles = 0;
                     durationMinutes = 0;
@@ -536,15 +536,14 @@
                 console.error('❌ Distance calculation error:', error);
                 console.error('❌ Error details:', error.message);
                 document.getElementById('distanceFare').textContent = 'Error calculating distance';
-                document.getElementById('totalFare').textContent = '$3.50';
-                fareAmount = 3.50;
+                document.getElementById('totalFare').textContent = '$5.89';
+                fareAmount = 5.89;
                 distanceMiles = 0;
                 durationMinutes = 0;
                 fareCalculated = false;
             }
         }
         
-        // NEW: Validate that fare was calculated before submission
         async function validateAndCalculateFare() {
             const pickupAddr = document.getElementById('pickupAddress').value.trim();
             const dropoffAddr = document.getElementById('dropoffAddress').value.trim();
@@ -555,12 +554,12 @@
             }
             
             // If fare wasn't calculated yet, calculate it now
-            if (!fareCalculated || fareAmount <= 3.50) {
+            if (!fareCalculated || fareAmount <= 5.89) {
                 console.log('🔄 Calculating fare before submission...');
                 await calculateFare();
                 
                 // Check if calculation was successful
-                if (!fareCalculated || fareAmount <= 3.50) {
+                if (!fareCalculated || fareAmount <= 5.89) {
                     showMessage('❌ Could not calculate fare. Please check addresses and try again.', 'error');
                     return false;
                 }
@@ -642,7 +641,7 @@
             console.log('Timezone:', timezone);
             
             // IMPORTANT: Make sure fare was calculated
-            if (!fareCalculated || fareAmount <= 3.50) {
+            if (!fareCalculated || fareAmount <= 5.89) {
                 showMessage('❌ Please wait for fare calculation to complete', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = '🚀 Request Ride';
@@ -662,9 +661,9 @@
                 flight_number: document.getElementById('flightNumber')?.value || '',
                 airline: document.getElementById('airline')?.value || '',
                 notes: document.getElementById('notes')?.value || '',
-                estimated_fare: fareAmount, // THIS SHOULD BE THE CALCULATED FARE
-                distance_miles: distanceMiles, // THIS SHOULD BE THE CALCULATED DISTANCE
-                duration_minutes: durationMinutes // THIS SHOULD BE THE CALCULATED DURATION
+                estimated_fare: fareAmount,
+                distance_miles: distanceMiles,
+                duration_minutes: durationMinutes
             };
             
             console.log('=== TRIP DATA TO SEND ===');
@@ -673,8 +672,8 @@
             console.log('Distance Miles:', tripData.distance_miles);
             
             try {
-                // IMPORTANT: Make sure this URL is correct - point to YOUR worker
-                const apiUrl = 'https://api.travylway.com/';
+                // ✅ CORRECTED URL: Using your actual worker URL
+                const apiUrl = 'https://api.travylway.com/api/trips';
                 console.log('=== SENDING TO ===');
                 console.log(apiUrl);
                 
@@ -767,7 +766,7 @@
         
         // Also calculate fare when form loads addresses
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(calculateFare, 1000); // Initial calculation after 1 second
+            setTimeout(calculateFare, 1000);
         });
     </script>
 </body>
