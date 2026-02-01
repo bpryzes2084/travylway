@@ -286,7 +286,7 @@
 
   <!-- Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <!-- Google Places (FRONTEND KEY) -->
+  <!-- Google Places -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
 </head>
 
@@ -324,7 +324,7 @@
             <div class="field">
               <label for="pickupAddress">Pickup address *</label>
               <input id="pickupAddress" name="pickupAddress" type="text" placeholder="Start typing an address…" autocomplete="off" required>
-              <div class="help">Tip: choose a suggestion from the dropdown for best results.</div>
+              <div class="help">Choose a suggestion from the dropdown (required for fare calc).</div>
             </div>
 
             <div class="field">
@@ -387,7 +387,7 @@
                 <span id="baseFare">$5.89</span>
               </div>
               <div class="fare-row">
-                <span id="distanceFare">Enter pickup + drop-off to calculate</span>
+                <span id="distanceFare">Select pickup + drop-off from dropdown to calculate</span>
                 <span></span>
               </div>
               <div class="fare-row total">
@@ -422,32 +422,33 @@
     // CONFIG
     // ===============================
     const WORKER_BASE = "https://api.travylway.com";
-    const RIDER_TYPE = "GENERAL"; // this is general.html
+    const RIDER_TYPE = "GENERAL";
 
-    // Fare model must match worker calculateFare()
+    // Must match worker calculateFare() for GENERAL
     const BASE_FARE = 5.89;
-    const PER_MILE = 1.50;
+    const PER_MILE  = 1.50;
 
     // ===============================
-    // STATE
+    // STATE (dropdown-confirmed)
     // ===============================
     let pickupAutocomplete, dropoffAutocomplete;
     let turnstileToken = null;
+
+    let pickupPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
+    let dropoffPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
+
     let fareAmount = BASE_FARE;
     let distanceMiles = 0;
     let durationMinutes = 0;
     let fareCalculated = false;
 
-    // Timezone label
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    document.getElementById("timezoneInfo").textContent = `Enter pickup time in your local timezone (${userTimezone})`;
-
-    // Date min
-    document.getElementById("pickupDate").setAttribute("min", new Date().toISOString().split("T")[0]);
-
     // ===============================
     // UI HELPERS
     // ===============================
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById("timezoneInfo").textContent = `Enter pickup time in your local timezone (${tz})`;
+    document.getElementById("pickupDate").setAttribute("min", new Date().toISOString().split("T")[0]);
+
     function setMapsStatus(state, text){
       const dot = document.getElementById("mapsDot");
       const label = document.getElementById("mapsStatusText");
@@ -460,12 +461,10 @@
       const el = document.getElementById("statusMessage");
       el.textContent = message;
       el.className = "msg show " + (type === "success" ? "ok" : type === "warning" ? "warn" : "bad");
+      el.style.display = "block";
       if (type === "success"){
         setTimeout(() => { el.className = "msg"; el.style.display="none"; }, 5000);
-      } else {
-        el.style.display="block";
       }
-      el.style.display="block";
     }
 
     function onTurnstileSuccess(token){
@@ -473,7 +472,6 @@
       document.getElementById("submitBtn").disabled = false;
     }
 
-    // stop people from breaking Places inputs with "!"
     function preventExclamationMarks(input){
       const scrub = () => { if (input.value.includes("!")) input.value = input.value.replace(/!/g,""); };
       input.addEventListener("input", scrub);
@@ -482,16 +480,28 @@
       setInterval(scrub, 150);
     }
 
-    function debounce(func, wait){
-      let timeout;
-      return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-      };
+    function resetFareUI(msg){
+      fareAmount = BASE_FARE;
+      distanceMiles = 0;
+      durationMinutes = 0;
+      fareCalculated = false;
+
+      document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+      document.getElementById("distanceFare").textContent = msg || "Select pickup + drop-off from dropdown to calculate";
+      document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+    }
+
+    function clearPickupSelection(){
+      pickupPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
+      resetFareUI("Select pickup + drop-off from dropdown to calculate");
+    }
+    function clearDropoffSelection(){
+      dropoffPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
+      resetFareUI("Select pickup + drop-off from dropdown to calculate");
     }
 
     // ===============================
-    // AUTOCOMPLETE
+    // AUTOCOMPLETE (captures coords)
     // ===============================
     function initAutocomplete(){
       const pickupInput = document.getElementById("pickupAddress");
@@ -500,28 +510,63 @@
       preventExclamationMarks(pickupInput);
       preventExclamationMarks(dropoffInput);
 
+      // If user edits after selecting, clear selection (forces dropdown again)
+      pickupInput.addEventListener("input", () => {
+        if (pickupPlace.ok && pickupInput.value.trim() !== pickupPlace.addr) {
+          clearPickupSelection();
+        }
+      });
+      dropoffInput.addEventListener("input", () => {
+        if (dropoffPlace.ok && dropoffInput.value.trim() !== dropoffPlace.addr) {
+          clearDropoffSelection();
+        }
+      });
+
       try{
-        pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput);
-        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput);
+        pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, {
+          fields: ["place_id","formatted_address","geometry","name"]
+        });
+        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, {
+          fields: ["place_id","formatted_address","geometry","name"]
+        });
 
         pickupAutocomplete.addListener("place_changed", () => {
           const place = pickupAutocomplete.getPlace();
-          if (place && place.formatted_address){
-            pickupInput.value = place.formatted_address;
-            calculateFare();
+          if (!place || !place.place_id || !place.geometry || !place.geometry.location) {
+            clearPickupSelection();
+            return;
           }
+          const addr = place.formatted_address || place.name || pickupInput.value.trim();
+          pickupInput.value = addr;
+
+          pickupPlace = {
+            ok: true,
+            place_id: place.place_id,
+            addr,
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          };
+          calculateFare();
         });
 
         dropoffAutocomplete.addListener("place_changed", () => {
           const place = dropoffAutocomplete.getPlace();
-          if (place && place.formatted_address){
-            dropoffInput.value = place.formatted_address;
-            calculateFare();
+          if (!place || !place.place_id || !place.geometry || !place.geometry.location) {
+            clearDropoffSelection();
+            return;
           }
-        });
+          const addr = place.formatted_address || place.name || dropoffInput.value.trim();
+          dropoffInput.value = addr;
 
-        pickupInput.addEventListener("input", debounce(calculateFare, 650));
-        dropoffInput.addEventListener("input", debounce(calculateFare, 650));
+          dropoffPlace = {
+            ok: true,
+            place_id: place.place_id,
+            addr,
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          };
+          calculateFare();
+        });
 
         setMapsStatus("ok","Maps status: ready");
       } catch (e){
@@ -546,31 +591,26 @@
     }
 
     // ===============================
-    // FARE CALC
+    // FARE CALC (uses lat,lng)
     // ===============================
     async function calculateFare(){
-      const pickupRaw = document.getElementById("pickupAddress").value || "";
-      const dropoffRaw = document.getElementById("dropoffAddress").value || "";
-      const pickup = pickupRaw.replace(/!/g,"").trim();
-      const dropoff = dropoffRaw.replace(/!/g,"").trim();
-
-      if (pickupRaw !== pickup) document.getElementById("pickupAddress").value = pickup;
-      if (dropoffRaw !== dropoff) document.getElementById("dropoffAddress").value = dropoff;
-
-      if (!pickup || !dropoff){
-        fareAmount = BASE_FARE;
-        distanceMiles = 0;
-        durationMinutes = 0;
-        fareCalculated = false;
-
-        document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
-        document.getElementById("distanceFare").textContent = "Enter pickup + drop-off to calculate";
-        document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+      if (!pickupPlace.ok || !dropoffPlace.ok){
+        resetFareUI("Select pickup + drop-off from dropdown to calculate");
         return;
       }
 
       try{
-        const proxyUrl = `${WORKER_BASE}/api/maps-distance?origins=${encodeURIComponent(pickup)}&destinations=${encodeURIComponent(dropoff)}&mode=driving&units=imperial&rider_type=${encodeURIComponent(RIDER_TYPE)}`;
+        // Most reliable input to Distance Matrix: coordinates
+        const origins = `${pickupPlace.lat},${pickupPlace.lng}`;
+        const destinations = `${dropoffPlace.lat},${dropoffPlace.lng}`;
+
+        const proxyUrl =
+          `${WORKER_BASE}/api/maps-distance` +
+          `?origins=${encodeURIComponent(origins)}` +
+          `&destinations=${encodeURIComponent(destinations)}` +
+          `&mode=driving&units=imperial` +
+          `&rider_type=${encodeURIComponent(RIDER_TYPE)}`;
+
         const res = await fetch(proxyUrl);
         const data = await res.json();
 
@@ -580,40 +620,38 @@
           durationMinutes = Number(data.duration?.minutes || 0);
           fareCalculated = true;
 
-          document.getElementById("baseFare").textContent = `$${Number(data.fare.baseFare || BASE_FARE).toFixed(2)}`;
+          const base = Number(data.fare.baseFare ?? BASE_FARE);
+          const per = Number(data.fare.perMile ?? PER_MILE);
+          const distCost = Number(data.fare.distanceCost ?? (distanceMiles * per));
+
+          document.getElementById("baseFare").textContent = `$${base.toFixed(2)}`;
           document.getElementById("distanceFare").textContent =
-            `${distanceMiles.toFixed(1)} miles × $${Number(data.fare.perMile || PER_MILE).toFixed(2)}/mile = $${Number(data.fare.distanceCost || (distanceMiles*PER_MILE)).toFixed(2)}`;
+            `${distanceMiles.toFixed(1)} miles × $${per.toFixed(2)}/mile = $${distCost.toFixed(2)}`;
           document.getElementById("totalFare").textContent = `$${fareAmount.toFixed(2)}`;
         } else {
           console.warn("Distance calc failed:", data);
-          fareAmount = BASE_FARE;
-          distanceMiles = 0;
-          durationMinutes = 0;
           fareCalculated = false;
-
-          document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
-          document.getElementById("distanceFare").textContent = "Unable to calculate distance (check addresses)";
-          document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+          resetFareUI("Unable to calculate distance. Re-select both addresses from dropdown.");
         }
       } catch (err){
         console.error(err);
-        fareAmount = BASE_FARE;
-        distanceMiles = 0;
-        durationMinutes = 0;
         fareCalculated = false;
-
-        document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
-        document.getElementById("distanceFare").textContent = "Error calculating distance";
-        document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
+        resetFareUI("Error calculating distance. Re-select both addresses from dropdown.");
       }
     }
 
     async function validateAndCalculateFare(){
-      const pickup = (document.getElementById("pickupAddress").value || "").trim();
-      const dropoff = (document.getElementById("dropoffAddress").value || "").trim();
+      const pickupText = (document.getElementById("pickupAddress").value || "").trim();
+      const dropoffText = (document.getElementById("dropoffAddress").value || "").trim();
 
-      if (!pickup || !dropoff){
+      if (!pickupText || !dropoffText){
         showMessage("Please enter both pickup and drop-off addresses.", "error");
+        return false;
+      }
+
+      // Hard requirement: dropdown confirmed selections
+      if (!pickupPlace.ok || !dropoffPlace.ok){
+        showMessage("Could not calculate fare. Pick BOTH addresses from the dropdown suggestions.", "error");
         return false;
       }
 
@@ -621,9 +659,8 @@
         await calculateFare();
       }
 
-      // If still not calculated, don't let submission go through
       if (!fareCalculated){
-        showMessage("Could not calculate fare. Pick from the dropdown suggestions and try again.", "error");
+        showMessage("Could not calculate fare. Re-select both addresses from dropdown and try again.", "error");
         return false;
       }
 
@@ -671,7 +708,7 @@
       const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
       const pickupTimeUTC = pickupDateTime.toISOString();
 
-      // IMPORTANT: send worker the same fields it expects
+      // IMPORTANT: include BOTH address text + confirmed coords (best of both worlds)
       const tripData = {
         created_by: name,
         rider_phone: phone,
@@ -682,16 +719,24 @@
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
 
-        // Optional flight fields
-        airport_code: "", // leave blank unless you explicitly collect this
+        // Optional
+        airport_code: "",
         flight_number: (document.getElementById("flightNumber").value || "").trim(),
         airline: (document.getElementById("airline").value || "").trim(),
         notes: (document.getElementById("notes").value || "").trim(),
 
-        // Fare fields worker uses for the fixed calc
+        // Fare inputs worker expects
         estimated_fare: Number(fareAmount),
         distance_miles: Number(distanceMiles),
-        duration_minutes: Number(durationMinutes)
+        duration_minutes: Number(durationMinutes),
+
+        // Extra reliability data (doesn't break worker)
+        pickup_place_id: pickupPlace.place_id,
+        dropoff_place_id: dropoffPlace.place_id,
+        pickup_lat: pickupPlace.lat,
+        pickup_lng: pickupPlace.lng,
+        dropoff_lat: dropoffPlace.lat,
+        dropoff_lng: dropoffPlace.lng
       };
 
       try{
@@ -706,16 +751,16 @@
         if (result.ok){
           showMessage("Ride request submitted. You’ll get a WhatsApp confirmation shortly.", "success");
 
-          // reset form, keep fare display (last calc) visible
+          // Reset form fields
           document.getElementById("bookingForm").reset();
           document.getElementById("pickupAddress").value = "";
           document.getElementById("dropoffAddress").value = "";
 
-          // keep last totals visible (don’t zero out)
-          document.getElementById("totalFare").textContent = `$${fareAmount.toFixed(2)}`;
-          document.getElementById("distanceFare").textContent =
-            `${distanceMiles.toFixed(1)} miles × $${PER_MILE.toFixed(2)}/mile = $${(distanceMiles*PER_MILE).toFixed(2)}`;
+          // Clear dropdown selections so next ride must re-select (prevents stale coords)
+          clearPickupSelection();
+          clearDropoffSelection();
 
+          // Reset Turnstile
           turnstileToken = null;
           if (typeof turnstile !== "undefined") turnstile.reset();
           btn.disabled = true; // requires new Turnstile
@@ -732,8 +777,8 @@
       }
     });
 
-    // kick a calc shortly after load (harmless)
-    document.addEventListener("DOMContentLoaded", () => setTimeout(calculateFare, 900));
+    // Start with base fare UI
+    document.addEventListener("DOMContentLoaded", () => resetFareUI());
   </script>
 </body>
 </html>
