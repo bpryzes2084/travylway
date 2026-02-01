@@ -496,7 +496,6 @@
             }
             
             try {
-                // FIXED: Correct API URL
                 const proxyUrl = `https://travylway.bsmenterpryzes.workers.dev/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
                 
                 console.log('📍 Calculating fare:', cleanPickup, '→', cleanDropoff);
@@ -505,12 +504,10 @@
                 const data = await response.json();
                 
                 if (data.status === 'OK' && data.fare) {
-                    // Store fare data
                     fareAmount = data.fare.total;
                     distanceMiles = data.distance.miles;
                     durationMinutes = data.duration.minutes;
                     
-                    // Display fare
                     document.getElementById('distanceFare').textContent = 
                         `${distanceMiles.toFixed(1)} miles × $${data.fare.perMile.toFixed(2)} = $${data.fare.distanceCost.toFixed(2)}`;
                     document.getElementById('totalFare').textContent = `$${fareAmount.toFixed(2)}`;
@@ -538,7 +535,7 @@
             }
         }
         
-        // Handle form submission
+        // Handle form submission - ENHANCED DEBUG VERSION
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -550,6 +547,44 @@
             const submitBtn = document.getElementById('submitBtn');
             const statusMessage = document.getElementById('statusMessage');
             
+            // Validate all fields BEFORE submitting
+            const name = document.getElementById('passengerName').value.trim();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            const pickupAddr = document.getElementById('pickupAddress').value.replace(/!/g, '').trim();
+            const dropoffAddr = document.getElementById('dropoffAddress').value.replace(/!/g, '').trim();
+            const pickupDate = document.getElementById('pickupDate').value;
+            const pickupTime = document.getElementById('pickupTime').value;
+            
+            console.log('=== FORM VALIDATION ===');
+            console.log('Name:', name);
+            console.log('Phone:', phone);
+            console.log('Pickup:', pickupAddr);
+            console.log('Dropoff:', dropoffAddr);
+            console.log('Date:', pickupDate);
+            console.log('Time:', pickupTime);
+            
+            // Check for empty fields
+            if (!name) {
+                showMessage('❌ Name is required', 'error');
+                return;
+            }
+            if (!phone) {
+                showMessage('❌ Phone number is required', 'error');
+                return;
+            }
+            if (!pickupAddr) {
+                showMessage('❌ Pickup address is required', 'error');
+                return;
+            }
+            if (!dropoffAddr) {
+                showMessage('❌ Dropoff address is required', 'error');
+                return;
+            }
+            if (!pickupDate || !pickupTime) {
+                showMessage('❌ Pickup date and time are required', 'error');
+                return;
+            }
+            
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Submitting...';
             statusMessage.style.display = 'none';
@@ -557,27 +592,28 @@
             // Get timezone
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             
-            // Clean addresses
-            const pickupAddr = document.getElementById('pickupAddress').value.replace(/!/g, '').trim();
-            const dropoffAddr = document.getElementById('dropoffAddress').value.replace(/!/g, '').trim();
-            
-            // FIXED: Combine date and time into UTC timestamp
-            const pickupDate = document.getElementById('pickupDate').value;
-            const pickupTime = document.getElementById('pickupTime').value;
+            // Combine date and time into UTC timestamp
             const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
             const pickupTimeUTC = pickupDateTime.toISOString();
             
-            // FIXED: Include all required fields
+            console.log('=== DATETIME CONVERSION ===');
+            console.log('Input Date:', pickupDate);
+            console.log('Input Time:', pickupTime);
+            console.log('Combined:', `${pickupDate}T${pickupTime}`);
+            console.log('DateTime Object:', pickupDateTime);
+            console.log('UTC ISO String:', pickupTimeUTC);
+            
+            // Build trip data
             const tripData = {
-                created_by: document.getElementById('passengerName').value,
-                rider_phone: document.getElementById('phoneNumber').value,
+                created_by: name,
+                rider_phone: phone,
                 rider_type: 'GENERAL',
                 trip_type: 'AIRPORT',
                 pickup_text: pickupAddr,
                 dropoff_text: dropoffAddr,
                 pickup_time_utc: pickupTimeUTC,
                 pickup_timezone: timezone,
-                airport_code: document.getElementById('flightNumber')?.value?.split(/[0-9]/)[0] || '',
+                airport_code: document.getElementById('flightNumber')?.value || '',
                 flight_number: document.getElementById('flightNumber')?.value || '',
                 airline: document.getElementById('airline')?.value || '',
                 notes: document.getElementById('notes')?.value || '',
@@ -586,11 +622,15 @@
                 duration_minutes: durationMinutes || 0
             };
             
-            console.log('📤 Submitting trip:', tripData);
+            console.log('=== TRIP DATA TO SEND ===');
+            console.log(JSON.stringify(tripData, null, 2));
             
             try {
-                // FIXED: Correct API URL
-                const response = await fetch('https://travylway.bsmenterpryzes.workers.dev/api/trips', {
+                const apiUrl = 'https://travylway.bsmenterpryzes.workers.dev/api/trips';
+                console.log('=== SENDING TO ===');
+                console.log(apiUrl);
+                
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -598,12 +638,17 @@
                     body: JSON.stringify(tripData)
                 });
                 
+                console.log('=== RESPONSE STATUS ===');
+                console.log('Status:', response.status);
+                console.log('Status Text:', response.statusText);
+                
                 const result = await response.json();
                 
-                console.log('📥 Response:', result);
+                console.log('=== RESPONSE DATA ===');
+                console.log(JSON.stringify(result, null, 2));
                 
                 if (result.ok) {
-                    console.log('✅ Trip created:', result);
+                    console.log('✅ SUCCESS!');
                     showMessage('✅ Ride request submitted successfully! You will receive confirmation via WhatsApp shortly.', 'success');
                     
                     // Reset form
@@ -615,18 +660,20 @@
                     durationMinutes = 0;
                     turnstileToken = null;
                     
-                    // Reset Turnstile
                     if (typeof turnstile !== 'undefined') {
                         turnstile.reset();
                     }
                     
                     submitBtn.disabled = true;
                 } else {
-                    console.error('❌ Trip submission failed:', result);
-                    showMessage('❌ Error: ' + (result.error || 'Failed to submit request') + '\n' + (result.message || ''), 'error');
+                    console.error('❌ SUBMISSION FAILED');
+                    console.error('Error:', result.error);
+                    console.error('Message:', result.message);
+                    showMessage('❌ Error: ' + (result.error || 'Unknown error') + '\n' + (result.message || ''), 'error');
                 }
             } catch (error) {
-                console.error('❌ Submission error:', error);
+                console.error('❌ NETWORK ERROR');
+                console.error(error);
                 showMessage('❌ Network error. Please check your connection and try again.', 'error');
             } finally {
                 submitBtn.disabled = false;
@@ -641,7 +688,6 @@
             statusMessage.className = 'show ' + type;
             statusMessage.style.display = 'block';
             
-            // Auto-hide success messages after 5 seconds
             if (type === 'success') {
                 setTimeout(() => {
                     statusMessage.style.display = 'none';
@@ -673,3 +719,38 @@
     </script>
 </body>
 </html>
+```
+
+---
+
+## ✅ **This is the complete file - just save it as general.html**
+
+**Now when you submit the form, you'll see detailed console output like:**
+```
+=== FORM VALIDATION ===
+Name: John Doe
+Phone: 720-555-1234
+Pickup: Denver International Airport, CO
+Dropoff: 123 Main St, Denver, CO
+Date: 2026-02-01
+Time: 14:30
+
+=== DATETIME CONVERSION ===
+Input Date: 2026-02-01
+Input Time: 14:30
+Combined: 2026-02-01T14:30
+DateTime Object: ...
+UTC ISO String: 2026-02-01T21:30:00.000Z
+
+=== TRIP DATA TO SEND ===
+{
+  "created_by": "John Doe",
+  "rider_phone": "720-555-1234",
+  ...
+}
+
+=== RESPONSE DATA ===
+{
+  "ok": false,
+  "error": "Missing required fields"
+}
