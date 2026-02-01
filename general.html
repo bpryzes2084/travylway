@@ -661,7 +661,7 @@
     }
 
     // ===============================
-    // SUBMIT (UPDATED FIELD NAMES)
+    // SUBMIT (WITH DEBUG LOGGING)
     // ===============================
     document.getElementById("bookingForm").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -700,7 +700,21 @@
       const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
       const pickupTimeUTC = pickupDateTime.toISOString();
 
-      // UPDATED: Correct field names to match worker expectations
+      // DEBUG: Log what we're about to send
+      console.log("=== DEBUG: Form values collected ===");
+      console.log("customer_name:", name);
+      console.log("customer_phone:", phone);
+      console.log("pickup_text:", pickupAddr);
+      console.log("dropoff_text:", dropoffAddr);
+      console.log("pickup_time:", pickupTimeUTC);
+      console.log("passenger_count: 1");
+      console.log("rider_type:", RIDER_TYPE);
+      const notesValue = (document.getElementById("notes").value || "").trim();
+      console.log("notes:", notesValue);
+      console.log("pickup_timezone:", timezone);
+      console.log("=== END DEBUG ===");
+
+      // Correct field names to match worker expectations
       const tripData = {
         // REQUIRED FIELDS (must match worker exactly):
         customer_name: name,
@@ -710,7 +724,7 @@
         pickup_time: pickupTimeUTC,
         passenger_count: 1, // Default to 1 passenger
         rider_type: RIDER_TYPE,
-        notes: (document.getElementById("notes").value || "").trim(),
+        notes: notesValue,
         
         // OPTIONAL FIELDS:
         pickup_timezone: timezone,
@@ -729,14 +743,24 @@
         dropoff_lng: dropoffPlace.lng
       };
 
+      // DEBUG: Show the JSON being sent
+      console.log("=== DEBUG: tripData object ===");
+      console.log(JSON.stringify(tripData, null, 2));
+      console.log("=== END DEBUG ===");
+
       try{
+        console.log("DEBUG: Sending POST request to:", `${WORKER_BASE}/api/trips`);
+        
         const res = await fetch(`${WORKER_BASE}/api/trips`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(tripData)
         });
 
+        console.log("DEBUG: Response status:", res.status);
+        
         const result = await res.json();
+        console.log("DEBUG: Full response:", result);
 
         if (result.ok){
           showMessage("Ride request submitted. You'll get a WhatsApp confirmation shortly.", "success");
@@ -753,10 +777,12 @@
           btn.disabled = true;
         } else {
           const extra = result.message ? `\n${result.message}` : "";
-          showMessage(`Request failed: ${result.error || "Unknown error"}${extra}`, "error");
+          const missingFields = result.missing ? `\nMissing: ${result.missing.join(', ')}` : "";
+          const receivedFields = result.received_fields ? `\nReceived: ${result.received_fields.join(', ')}` : "";
+          showMessage(`Request failed: ${result.error || "Unknown error"}${extra}${missingFields}${receivedFields}`, "error");
         }
       } catch (err){
-        console.error(err);
+        console.error("DEBUG: Fetch error:", err);
         showMessage("Network error. Check your connection and try again.", "error");
       } finally {
         btn.disabled = false;
