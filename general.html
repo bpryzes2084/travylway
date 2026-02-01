@@ -339,7 +339,7 @@
             <div class="field">
               <label for="phoneNumber">Phone number *</label>
               <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="+1 (720) 555-1234" required>
-              <div class="help">We’ll use WhatsApp to coordinate your ride.</div>
+              <div class="help">We'll use WhatsApp to coordinate your ride.</div>
             </div>
 
             <div class="field">
@@ -661,7 +661,7 @@
     }
 
     // ===============================
-    // SUBMIT
+    // SUBMIT (UPDATED FIELD NAMES)
     // ===============================
     document.getElementById("bookingForm").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -700,27 +700,27 @@
       const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
       const pickupTimeUTC = pickupDateTime.toISOString();
 
+      // UPDATED: Correct field names to match worker expectations
       const tripData = {
-        created_by: name,
-        rider_phone: phone,
-        rider_type: RIDER_TYPE,
-        trip_type: "AIRPORT",
+        // REQUIRED FIELDS (must match worker exactly):
+        customer_name: name,
+        customer_phone: phone,
         pickup_text: pickupAddr,
         dropoff_text: dropoffAddr,
-        pickup_time_utc: pickupTimeUTC,
+        pickup_time: pickupTimeUTC,
+        passenger_count: 1, // Default to 1 passenger
+        rider_type: RIDER_TYPE,
+        notes: (document.getElementById("notes").value || "").trim(),
+        
+        // OPTIONAL FIELDS:
         pickup_timezone: timezone,
-
-        airport_code: "",
         flight_number: (document.getElementById("flightNumber").value || "").trim(),
         airline: (document.getElementById("airline").value || "").trim(),
-        notes: (document.getElementById("notes").value || "").trim(),
-
-        // UI values (worker should recalc anyway)
+        
+        // Extra data (optional):
         estimated_fare: Number(fareAmount),
         distance_miles: Number(distanceMiles),
         duration_minutes: Number(durationMinutes),
-
-        // Extra reliability data
         pickup_place_id: pickupPlace.place_id,
         dropoff_place_id: dropoffPlace.place_id,
         pickup_lat: pickupPlace.lat,
@@ -739,7 +739,7 @@
         const result = await res.json();
 
         if (result.ok){
-          showMessage("Ride request submitted. You’ll get a WhatsApp confirmation shortly.", "success");
+          showMessage("Ride request submitted. You'll get a WhatsApp confirmation shortly.", "success");
 
           document.getElementById("bookingForm").reset();
           document.getElementById("pickupAddress").value = "";
@@ -768,4 +768,3 @@
   </script>
 </body>
 </html>
-
