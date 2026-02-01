@@ -358,6 +358,7 @@
         let fareAmount = 0;
         let distanceMiles = 0;
         let durationMinutes = 0;
+        let fareCalculated = false; // NEW: Track if fare was calculated
         
         const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         document.getElementById('timezoneInfo').textContent = `Enter time in your local timezone (${userTimezone})`;
@@ -439,6 +440,10 @@
                         }
                     });
                     
+                    // Also calculate fare when user types manually
+                    pickupInput.addEventListener('input', debounce(calculateFare, 500));
+                    dropoffInput.addEventListener('input', debounce(calculateFare, 500));
+                    
                     setTimeout(() => {
                         if (pickupInput.value.includes('!')) pickupInput.value = '';
                         if (dropoffInput.value.includes('!')) dropoffInput.value = '';
@@ -452,6 +457,18 @@
             }, 200);
         }
         
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
         async function calculateFare() {
             const pickupAddr = document.getElementById('pickupAddress').value;
             const dropoffAddr = document.getElementById('dropoffAddress').value;
@@ -462,9 +479,10 @@
             if (!cleanPickup || !cleanDropoff) {
                 document.getElementById('distanceFare').textContent = 'Enter addresses to calculate';
                 document.getElementById('totalFare').textContent = '$3.50';
-                fareAmount = 0;
+                fareAmount = 3.50;
                 distanceMiles = 0;
                 durationMinutes = 0;
+                fareCalculated = false;
                 return;
             }
             
@@ -476,7 +494,8 @@
             }
             
             try {
-                const proxyUrl = `https://api.travylway.com/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
+                // IMPORTANT: Make sure this URL is correct - point to YOUR worker
+                const proxyUrl = `https://YOUR-WORKER-NAME.YOUR-ACCOUNT.workers.dev/api/maps-distance?origins=${encodeURIComponent(cleanPickup)}&destinations=${encodeURIComponent(cleanDropoff)}&mode=driving&units=imperial&rider_type=GENERAL`;
                 
                 console.log('📍 Calculating fare:', cleanPickup, '→', cleanDropoff);
                 console.log('🔗 API URL:', proxyUrl);
@@ -490,15 +509,17 @@
                     fareAmount = data.fare.total;
                     distanceMiles = data.distance.miles;
                     durationMinutes = data.duration.minutes;
+                    fareCalculated = true; // Mark as calculated
                     
                     document.getElementById('distanceFare').textContent = 
-                        `${distanceMiles.toFixed(1)} miles × $${data.fare.perMile.toFixed(2)} = $${data.fare.distanceCost.toFixed(2)}`;
+                        `${distanceMiles.toFixed(1)} miles × $${data.fare.perMile.toFixed(2)}/mile = $${data.fare.distanceCost.toFixed(2)}`;
                     document.getElementById('totalFare').textContent = `$${fareAmount.toFixed(2)}`;
                     
                     console.log('✅ Fare calculated:', {
                         distance: distanceMiles.toFixed(1) + ' miles',
                         duration: durationMinutes + ' minutes',
-                        total: '$' + fareAmount.toFixed(2)
+                        total: '$' + fareAmount.toFixed(2),
+                        calculated: fareCalculated
                     });
                 } else {
                     console.error('❌ Failed to calculate fare:', data);
@@ -506,31 +527,66 @@
                     console.error('❌ Response error:', data.error);
                     document.getElementById('distanceFare').textContent = 'Unable to calculate distance';
                     document.getElementById('totalFare').textContent = '$3.50';
-                    fareAmount = 0;
+                    fareAmount = 3.50;
                     distanceMiles = 0;
                     durationMinutes = 0;
+                    fareCalculated = false;
                 }
             } catch (error) {
                 console.error('❌ Distance calculation error:', error);
                 console.error('❌ Error details:', error.message);
                 document.getElementById('distanceFare').textContent = 'Error calculating distance';
                 document.getElementById('totalFare').textContent = '$3.50';
-                fareAmount = 0;
+                fareAmount = 3.50;
                 distanceMiles = 0;
                 durationMinutes = 0;
+                fareCalculated = false;
             }
+        }
+        
+        // NEW: Validate that fare was calculated before submission
+        async function validateAndCalculateFare() {
+            const pickupAddr = document.getElementById('pickupAddress').value.trim();
+            const dropoffAddr = document.getElementById('dropoffAddress').value.trim();
+            
+            if (!pickupAddr || !dropoffAddr) {
+                showMessage('❌ Please enter both pickup and dropoff addresses', 'error');
+                return false;
+            }
+            
+            // If fare wasn't calculated yet, calculate it now
+            if (!fareCalculated || fareAmount <= 3.50) {
+                console.log('🔄 Calculating fare before submission...');
+                await calculateFare();
+                
+                // Check if calculation was successful
+                if (!fareCalculated || fareAmount <= 3.50) {
+                    showMessage('❌ Could not calculate fare. Please check addresses and try again.', 'error');
+                    return false;
+                }
+            }
+            
+            return true;
         }
         
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            console.log('=== FORM SUBMISSION STARTED ===');
+            
             if (!turnstileToken) {
-                showMessage('Please complete the security verification', 'error');
+                showMessage('❌ Please complete the security verification', 'error');
                 return;
             }
             
             const submitBtn = document.getElementById('submitBtn');
             const statusMessage = document.getElementById('statusMessage');
+            
+            // Step 1: Validate addresses and calculate fare
+            const isValid = await validateAndCalculateFare();
+            if (!isValid) {
+                return;
+            }
             
             const name = document.getElementById('passengerName').value.trim();
             const phone = document.getElementById('phoneNumber').value.trim();
@@ -546,6 +602,10 @@
             console.log('Dropoff:', dropoffAddr);
             console.log('Date:', pickupDate);
             console.log('Time:', pickupTime);
+            console.log('Fare Calculated:', fareCalculated);
+            console.log('Fare Amount:', fareAmount);
+            console.log('Distance Miles:', distanceMiles);
+            console.log('Duration Minutes:', durationMinutes);
             
             if (!name) {
                 showMessage('❌ Name is required', 'error');
@@ -577,11 +637,17 @@
             const pickupTimeUTC = pickupDateTime.toISOString();
             
             console.log('=== DATETIME CONVERSION ===');
-            console.log('Input Date:', pickupDate);
-            console.log('Input Time:', pickupTime);
-            console.log('Combined:', `${pickupDate}T${pickupTime}`);
-            console.log('DateTime Object:', pickupDateTime);
-            console.log('UTC ISO String:', pickupTimeUTC);
+            console.log('Local Time:', `${pickupDate}T${pickupTime}`);
+            console.log('UTC Time:', pickupTimeUTC);
+            console.log('Timezone:', timezone);
+            
+            // IMPORTANT: Make sure fare was calculated
+            if (!fareCalculated || fareAmount <= 3.50) {
+                showMessage('❌ Please wait for fare calculation to complete', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Request Ride';
+                return;
+            }
             
             const tripData = {
                 created_by: name,
@@ -596,16 +662,19 @@
                 flight_number: document.getElementById('flightNumber')?.value || '',
                 airline: document.getElementById('airline')?.value || '',
                 notes: document.getElementById('notes')?.value || '',
-                estimated_fare: fareAmount || 3.50,
-                distance_miles: distanceMiles || 0,
-                duration_minutes: durationMinutes || 0
+                estimated_fare: fareAmount, // THIS SHOULD BE THE CALCULATED FARE
+                distance_miles: distanceMiles, // THIS SHOULD BE THE CALCULATED DISTANCE
+                duration_minutes: durationMinutes // THIS SHOULD BE THE CALCULATED DURATION
             };
             
             console.log('=== TRIP DATA TO SEND ===');
             console.log(JSON.stringify(tripData, null, 2));
+            console.log('Estimated Fare:', tripData.estimated_fare);
+            console.log('Distance Miles:', tripData.distance_miles);
             
             try {
-                const apiUrl = 'https://api.travylway.com/api/trips';
+                // IMPORTANT: Make sure this URL is correct - point to YOUR worker
+                const apiUrl = 'https://api.travylway.com/';
                 console.log('=== SENDING TO ===');
                 console.log(apiUrl);
                 
@@ -626,14 +695,21 @@
                 
                 if (result.ok) {
                     console.log('✅ SUCCESS!');
+                    console.log('Trip ID:', result.trip_id);
+                    console.log('Fare Sent:', result.fare_details?.total || 'N/A');
+                    
                     showMessage('✅ Ride request submitted successfully! You will receive confirmation via WhatsApp shortly.', 'success');
                     
+                    // Reset form but keep calculated fare visible
                     document.getElementById('bookingForm').reset();
-                    document.getElementById('distanceFare').textContent = 'Enter addresses to calculate';
-                    document.getElementById('totalFare').textContent = '$3.50';
-                    fareAmount = 0;
-                    distanceMiles = 0;
-                    durationMinutes = 0;
+                    document.getElementById('pickupAddress').value = '';
+                    document.getElementById('dropoffAddress').value = '';
+                    
+                    // Keep fare summary visible with last calculation
+                    document.getElementById('distanceFare').textContent = 
+                        `${distanceMiles.toFixed(1)} miles × $1.50/mile = $${(distanceMiles * 1.50).toFixed(2)}`;
+                    document.getElementById('totalFare').textContent = `$${fareAmount.toFixed(2)}`;
+                    
                     turnstileToken = null;
                     
                     if (typeof turnstile !== 'undefined') {
@@ -688,6 +764,11 @@
         
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('pickupDate').setAttribute('min', today);
+        
+        // Also calculate fare when form loads addresses
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(calculateFare, 1000); // Initial calculation after 1 second
+        });
     </script>
 </body>
 </html>
