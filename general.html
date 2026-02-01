@@ -208,11 +208,8 @@
         }
     </style>
     
-    <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    
-    <!-- Google Maps -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&loading=async" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -220,7 +217,6 @@
         <p class="subtitle">Airport transportation for travelers worldwide</p>
         
         <form id="bookingForm">
-            <!-- Trip Type Selection -->
             <div class="form-group">
                 <label for="tripType">Trip Type: *</label>
                 <select id="tripType" name="tripType" required>
@@ -231,7 +227,6 @@
                 </div>
             </div>
 
-            <!-- Pickup Address -->
             <div class="form-group">
                 <label for="pickupAddress">Pickup Address: *</label>
                 <input 
@@ -243,7 +238,6 @@
                     autocomplete="off">
             </div>
 
-            <!-- Dropoff Address -->
             <div class="form-group">
                 <label for="dropoffAddress">Dropoff Address: *</label>
                 <input 
@@ -255,7 +249,6 @@
                     autocomplete="off">
             </div>
 
-            <!-- Passenger Name -->
             <div class="form-group">
                 <label for="passengerName">Your Name: *</label>
                 <input 
@@ -266,7 +259,6 @@
                     required>
             </div>
 
-            <!-- Phone Number -->
             <div class="form-group">
                 <label for="phoneNumber">Phone Number: *</label>
                 <input 
@@ -278,7 +270,6 @@
                 <small>We'll use WhatsApp to coordinate your ride</small>
             </div>
 
-            <!-- Pickup Date -->
             <div class="form-group">
                 <label for="pickupDate">Pickup Date: *</label>
                 <input 
@@ -288,7 +279,6 @@
                     required>
             </div>
 
-            <!-- Pickup Time -->
             <div class="form-group">
                 <label for="pickupTime">Pickup Time: *</label>
                 <input 
@@ -299,7 +289,6 @@
                 <small id="timezoneInfo">Enter time in your local timezone</small>
             </div>
 
-            <!-- Flight Information -->
             <div class="flight-fields">
                 <h4>✈️ Flight Information (Optional)</h4>
                 
@@ -323,7 +312,6 @@
                 </div>
             </div>
 
-            <!-- Notes -->
             <div class="form-group">
                 <label for="notes">Additional Notes:</label>
                 <textarea 
@@ -332,7 +320,6 @@
                     placeholder="Any special requests, wheelchair accessibility, extra luggage, etc..."></textarea>
             </div>
 
-            <!-- Fare Display -->
             <div class="fare-summary">
                 <h3>💵 Estimated Fare</h3>
                 <div class="fare-breakdown">
@@ -351,14 +338,12 @@
                 <p class="fare-note">💡 Driver receives 75% of fare. Final fare calculated after route confirmation.</p>
             </div>
 
-            <!-- Turnstile -->
             <div class="turnstile-container">
                 <div class="cf-turnstile" 
                      data-sitekey="0x4AAAAAACMebvxe_6kPGUnO" 
                      data-callback="onTurnstileSuccess"></div>
             </div>
 
-            <!-- Submit Button -->
             <button type="submit" class="submit-btn" id="submitBtn" disabled>
                 🚀 Request Ride
             </button>
@@ -374,18 +359,15 @@
         let distanceMiles = 0;
         let durationMinutes = 0;
         
-        // Detect user's timezone
         const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         document.getElementById('timezoneInfo').textContent = `Enter time in your local timezone (${userTimezone})`;
         
-        // Turnstile callback
         function onTurnstileSuccess(token) {
             turnstileToken = token;
             document.getElementById('submitBtn').disabled = false;
             console.log('✅ Turnstile verified');
         }
         
-        // Aggressively prevent exclamation marks
         function preventExclamationMarks(input) {
             input.addEventListener('input', function(e) {
                 if (this.value.includes('!')) {
@@ -412,7 +394,6 @@
             }, 50);
         }
         
-        // Initialize Google Maps Autocomplete
         function initAutocomplete() {
             const pickupInput = document.getElementById('pickupAddress');
             const dropoffInput = document.getElementById('dropoffAddress');
@@ -471,7 +452,6 @@
             }, 200);
         }
         
-        // Calculate fare using proxy
         async function calculateFare() {
             const pickupAddr = document.getElementById('pickupAddress').value;
             const dropoffAddr = document.getElementById('dropoffAddress').value;
@@ -535,7 +515,6 @@
             }
         }
         
-        // Handle form submission - ENHANCED DEBUG VERSION
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -547,7 +526,6 @@
             const submitBtn = document.getElementById('submitBtn');
             const statusMessage = document.getElementById('statusMessage');
             
-            // Validate all fields BEFORE submitting
             const name = document.getElementById('passengerName').value.trim();
             const phone = document.getElementById('phoneNumber').value.trim();
             const pickupAddr = document.getElementById('pickupAddress').value.replace(/!/g, '').trim();
@@ -563,7 +541,6 @@
             console.log('Date:', pickupDate);
             console.log('Time:', pickupTime);
             
-            // Check for empty fields
             if (!name) {
                 showMessage('❌ Name is required', 'error');
                 return;
@@ -589,10 +566,7 @@
             submitBtn.textContent = '⏳ Submitting...';
             statusMessage.style.display = 'none';
             
-            // Get timezone
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            
-            // Combine date and time into UTC timestamp
             const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
             const pickupTimeUTC = pickupDateTime.toISOString();
             
@@ -603,7 +577,6 @@
             console.log('DateTime Object:', pickupDateTime);
             console.log('UTC ISO String:', pickupTimeUTC);
             
-            // Build trip data
             const tripData = {
                 created_by: name,
                 rider_phone: phone,
@@ -626,15 +599,13 @@
             console.log(JSON.stringify(tripData, null, 2));
             
             try {
-                const apiUrl = 'https://api.travylway.com/api/trips'; ```  ---  ## 🎯 **OR - Here's the Quick Fix:**  Use Find & Replace:  1. **Press Ctrl+H** (or Cmd+H on Mac) 2. **Find:** `https://travylway.bsmenterpryzes.workers.dev` 3. **Replace with:** `https://api.travylway.com` 4. **Replace All**  ---  ## ✅ **Test It:**  1. **Save general.html** with the corrected URLs 2. **Refresh the page** 3. **Submit a booking** 4. **Should work now!**  ---  ## 🧪 **Quick Verification:**  Visit this in your browser: ``` https://api.travylway.com/
+                const apiUrl = 'https://api.travylway.com/api/trips';
                 console.log('=== SENDING TO ===');
                 console.log(apiUrl);
                 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(tripData)
                 });
                 
@@ -651,7 +622,6 @@
                     console.log('✅ SUCCESS!');
                     showMessage('✅ Ride request submitted successfully! You will receive confirmation via WhatsApp shortly.', 'success');
                     
-                    // Reset form
                     document.getElementById('bookingForm').reset();
                     document.getElementById('distanceFare').textContent = 'Enter addresses to calculate';
                     document.getElementById('totalFare').textContent = '$3.50';
@@ -681,7 +651,6 @@
             }
         });
         
-        // Show status message
         function showMessage(message, type) {
             const statusMessage = document.getElementById('statusMessage');
             statusMessage.textContent = message;
@@ -695,7 +664,6 @@
             }
         }
         
-        // Wait for Google Maps to load
         function waitForGoogleMaps() {
             if (typeof google !== 'undefined' && google.maps && google.maps.places) {
                 console.log('✅ Google Maps API loaded');
@@ -706,51 +674,14 @@
             }
         }
         
-        // Start initialization
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', waitForGoogleMaps);
         } else {
             waitForGoogleMaps();
         }
         
-        // Set minimum date to today
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('pickupDate').setAttribute('min', today);
     </script>
 </body>
 </html>
-```
-
----
-
-## ✅ **This is the complete file - just save it as general.html**
-
-**Now when you submit the form, you'll see detailed console output like:**
-```
-=== FORM VALIDATION ===
-Name: John Doe
-Phone: 720-555-1234
-Pickup: Denver International Airport, CO
-Dropoff: 123 Main St, Denver, CO
-Date: 2026-02-01
-Time: 14:30
-
-=== DATETIME CONVERSION ===
-Input Date: 2026-02-01
-Input Time: 14:30
-Combined: 2026-02-01T14:30
-DateTime Object: ...
-UTC ISO String: 2026-02-01T21:30:00.000Z
-
-=== TRIP DATA TO SEND ===
-{
-  "created_by": "John Doe",
-  "rider_phone": "720-555-1234",
-  ...
-}
-
-=== RESPONSE DATA ===
-{
-  "ok": false,
-  "error": "Missing required fields"
-}
