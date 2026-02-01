@@ -267,11 +267,13 @@ async function calculateFare() {
   el("err").style.display = 'none';
   
   try {
+    // Use the correct API endpoint for crew pricing
     const response = await fetch(
-      `${API_BASE}/api/fare-estimate?pickup=${encodeURIComponent(pickup)}&dropoff=${encodeURIComponent(dropoff)}&trip_type=${tripType}`
+      `${API_BASE}/api/maps-distance?origins=${encodeURIComponent(pickup)}&destinations=${encodeURIComponent(dropoff)}&rider_type=CREW`
     );
     
     const data = await response.json();
+    console.log("Fare calculation response:", data);
     
     if (data.ok && data.fare) {
       fareData = data;
@@ -283,16 +285,12 @@ async function calculateFare() {
       el("fareDuration").textContent = data.duration.text;
       el("fareBase").textContent = data.fare.baseFare.toFixed(2);
       el("fareDist").textContent = data.fare.distanceCost.toFixed(2);
-      el("fareTime").textContent = data.fare.timeCost.toFixed(2);
       el("driverPayout").textContent = data.fare.driverPayout.toFixed(2);
       
-      // Show airport fee if applicable
-      if (data.fare.airportFee > 0) {
-        el("airportFeeRow").style.display = 'flex';
-        el("fareAirport").textContent = data.fare.airportFee.toFixed(2);
-      } else {
-        el("airportFeeRow").style.display = 'none';
-      }
+      // Hide time and airport fee rows (not in crew pricing)
+      el("fareTime").textContent = "0.00";
+      el("fareAirport").textContent = "0.00";
+      el("airportFeeRow").style.display = 'none';
       
       // Show fare estimate
       el("priceEstimate").style.display = 'block';
@@ -333,7 +331,7 @@ if (timezoneEl) {
   timezoneEl.textContent = `🕐 ${userTimezone.replace('_', ' ')}`;
 }
 
-/* Submit handler */
+/* Submit handler - UPDATED WITH CORRECT FIELD NAMES */
 el("crewForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   el("ok").style.display = "none";
@@ -344,78 +342,76 @@ el("crewForm").addEventListener("submit", async (e) => {
   btn.textContent = "Submitting…";
 
   try {
+    // Validate required fields
+    const name = el("name").value.trim();
+    const phone = el("phone").value.trim();
+    const pickupAddr = el("pickupAddress").value.trim();
+    const dropoffAddr = el("dropoffAddress").value.trim();
+    const dateVal = el("date").value;
+    const timeVal = el("time").value;
     const airport = el("airportCode").value.trim().toUpperCase();
+    const serviceType = el("serviceType").value;
+
+    if (!name || !phone || !pickupAddr || !dropoffAddr || !dateVal || !timeVal || !airport || !serviceType) {
+      throw new Error("Please fill all required fields (*)");
+    }
+
     if (!/^[A-Z0-9]{3,4}$/.test(airport)) {
       throw new Error("Airport code must be 3-4 letters like DEN, LAX, JFK");
     }
 
-    const serviceType = el("serviceType").value;
-    if (!serviceType) throw new Error("Select a service type.");
-    
-    // Build local datetime
-    const dateVal = el("date").value;
-    const timeVal = el("time").value;
-    const localDateTime = `${dateVal}T${timeVal}:00`;
-    
-    // Turnstile token
-    const ts = document.querySelector('input[name="cf-turnstile-response"]')?.value || "";
-    if (!ts) {
-      throw new Error("Security verification not ready. Wait a moment and try again.");
-    }
+    // Build ISO datetime
+    const pickupDateTime = new Date(`${dateVal}T${timeVal}:00`);
+    const pickupTimeUTC = pickupDateTime.toISOString();
 
     // Build payload matching worker expectations
     const payload = {
-      created_by: el("name").value.trim(),
-      rider_phone: el("phone").value.trim(),
-      rider_type: "CREW",
-      trip_type: "AIRPORT",
-      trip_category: "CREW",
+      // REQUIRED FIELDS (must match worker exactly):
+      customer_name: name,
+      customer_phone: phone,
+      pickup_text: pickupAddr,
+      dropoff_text: dropoffAddr,
+      pickup_time: pickupTimeUTC,
+      passenger_count: 1, // Default to 1 for crew
+      rider_type: "CREW", // Must be "CREW" for discounted pricing
+      notes: el("notes").value.trim() || "",
       
-      airport_code: airport,
-      direction: serviceType === "AIRPORT" ? "FROM_AIRPORT" : "TO_AIRPORT",
-      
-      pickup_text: el("pickupAddress").value.trim(),
-      dropoff_text: el("dropoffAddress").value.trim(),
-      
-      pickup_date: dateVal,
-      pickup_time_local: timeVal,
+      // CREW-SPECIFIC FIELDS (optional):
       pickup_timezone: userTimezone,
+      airport_code: airport,
+      airline: el("airline").value.trim() || "",
+      flight_number: el("flightNumber").value.trim() || "",
+      email: el("email").value.trim() || "",
       
-      airline: el("airline").value.trim() || null,
-      flight_number: el("flightNumber").value.trim() || null,
-      
-      notes: el("notes").value.trim() || null,
-      
-      // Turnstile token
-      "cf-turnstile-response": ts
+      // Service type as metadata:
+      service_type: serviceType,
+      direction: serviceType === "AIRPORT" ? "FROM_AIRPORT" : "TO_AIRPORT",
+      trip_category: "CREW"
     };
-    
-    // Only include fare data if it was calculated
-    if (fareCalculated && fareData && fareData.fare) {
-      payload.estimated_fare = fareData.fare.total;
-      payload.distance_miles = fareData.distance.miles;
-      payload.duration_minutes = fareData.duration.minutes;
-      payload.driver_payout = fareData.fare.driverPayout;
-      payload.platform_fee = fareData.fare.platformFee;
-    }
+
+    // DEBUG: Log what we're sending
+    console.log("CREW DEBUG: Payload being sent:", payload);
+    console.log("CREW DEBUG: JSON:", JSON.stringify(payload));
 
     const res = await fetch(`${API_BASE}/api/trips`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(payload)
     });
 
-    const data = await res.json().catch(() => ({}));
+    const data = await res.json();
+    console.log("CREW DEBUG: Response:", data);
     
     if (!res.ok || data.ok === false) {
-      // Show detailed error for debugging
-      const errorDetails = data.detail || data.error || `HTTP ${res.status}`;
-      console.error('Full error response:', data);
-      console.error('Payload sent:', payload);
-      throw new Error(`${errorDetails}`);
+      // Show detailed error
+      const errorMsg = data.error || `HTTP ${res.status}`;
+      const missingFields = data.missing ? `\nMissing: ${data.missing.join(', ')}` : '';
+      throw new Error(`${errorMsg}${missingFields}`);
     }
 
-    showOk(`✅ Booking Confirmed! Request ID: ${data.id.substring(0, 8)}\n\nYou'll receive flight tracking updates via WhatsApp.`);
+    showOk(`✅ Crew booking confirmed! Trip ID: ${data.trip_id || data.id}\n\nYou'll receive updates via WhatsApp.`);
 
     // Reset form
     el("crewForm").reset();
@@ -424,11 +420,13 @@ el("crewForm").addEventListener("submit", async (e) => {
     el("priceEstimate").style.display = "none";
     el("submitBtn").textContent = "Calculate Fare & Book";
     
+    // Reset Turnstile
     if (window.turnstile) {
       try { window.turnstile.reset(); } catch {}
     }
 
   } catch (err) {
+    console.error("CREW ERROR:", err);
     showErr(`Submission failed:\n${err.message}`);
     if (window.turnstile) {
       try { window.turnstile.reset(); } catch {}
