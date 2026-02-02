@@ -1,298 +1,5 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Air Crew Pickup Request — Travylway</title>
-<meta name="description" content="Request airport pickup or drop-off transportation for airline crew.">
-
-<style>
-:root{
-  --bg:#2B3A4A; --card:#fff; --text:#0F172A; --muted:#64748B; --line:#E2E8F0;
-  --okbg:#ECFDF5; --okbd:#BBF7D0; --oktx:#166534;
-  --erbg:#FFF1F2; --erbd:#FECDD3; --ertx:#9F1239;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:#E5E7EB;padding:28px 14px}
-.container{max-width:760px;margin:0 auto}
-.card{background:var(--card);color:var(--text);border-radius:22px;padding:26px;box-shadow:0 22px 70px rgba(0,0,0,.28)}
-.header{text-align:center;margin-bottom:18px}
-.header h1{margin:0 0 6px;font-size:1.85rem}
-.header p{margin:0;color:var(--muted)}
-.note{background:#E8F5E9;border-left:4px solid #25D366;padding:12px 14px;border-radius:12px;margin:16px 0 18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:720px){.grid{grid-template-columns:1fr}}
-.group{margin:0 0 14px}
-label{display:block;font-weight:800;margin:0 0 6px}
-input,select,textarea{width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;font-size:1rem;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#667eea}
-textarea{min-height:90px;resize:vertical}
-.req{color:#ef4444;font-weight:900}
-.btn{display:block;text-align:center;text-decoration:none;width:100%;padding:14px;border-radius:14px;border:0;font-weight:900;cursor:pointer}
-.btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.btn.secondary{background:#fff;border:1px solid var(--line);color:#111}
-.msg{display:none;padding:12px;border-radius:12px;margin-bottom:12px;font-weight:800;text-align:center}
-.msg.ok{display:block;background:var(--okbg);border:1px solid var(--okbd);color:var(--oktx)}
-.msg.err{display:block;background:var(--erbg);border:1px solid var(--erbd);color:var(--ertx);white-space:pre-wrap}
-.price-estimate{display:none;background:#E3F2FD;border-left:4px solid #2196F3;padding:14px;border-radius:12px}
-.price-details{display:flex;justify-content:space-between;font-weight:900}
-.pac-container{z-index:99999!important}
-.small{color:var(--muted);font-size:.9rem;margin-top:6px}
-.timezone{color:#2196f3;font-weight:800;font-size:.85rem;margin-top:6px;display:block}
-</style>
-</head>
-
-<body>
-<div class="container">
-  <div class="card">
-    <div class="header">
-      <h1>✈️ Air Crew Pickup Request</h1>
-      <p>Discounted crew rates · Reliable airport transportation</p>
-    </div>
-
-    <div id="ok" class="msg ok"></div>
-    <div id="err" class="msg err"></div>
-
-    <div class="note">
-      Driver will contact you via <strong>WhatsApp</strong> once your trip is claimed.
-      <div class="small">If Google Maps is down, use WhatsApp Backup below.</div>
-    </div>
-
-    <form id="crewForm">
-      <div class="group">
-        <label>Name <span class="req">*</span></label>
-        <input id="name" required placeholder="Jane Doe">
-      </div>
-
-      <div class="grid">
-        <div class="group">
-          <label>Phone <span class="req">*</span></label>
-          <input id="phone" required placeholder="(720) 555-1234">
-        </div>
-        <div class="group">
-          <label>Email (optional)</label>
-          <input id="email" placeholder="you@airline.com">
-        </div>
-      </div>
-
-      <div class="group">
-        <label>Pickup Address <span class="req">*</span></label>
-        <input id="pickupAddress" placeholder="Start typing address…" required>
-        <div class="small" id="mapsStatus">Maps: loading…</div>
-      </div>
-
-      <div class="group">
-        <label>Drop-off Address <span class="req">*</span></label>
-        <input id="dropoffAddress" placeholder="Start typing address…" required>
-      </div>
-
-      <div class="grid">
-        <div class="group">
-          <label>Service Type <span class="req">*</span></label>
-          <select id="serviceType" required>
-            <option value="">Select</option>
-            <option value="pickup">Airport Pickup</option>
-            <option value="dropoff">Airport Drop-off</option>
-          </select>
-        </div>
-
-        <div class="group">
-          <label>Airport Code (IATA) <span class="req">*</span></label>
-          <input id="airportCode" maxlength="4" placeholder="DEN" required>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="group">
-          <label>Date <span class="req">*</span></label>
-          <input id="date" type="date" required>
-        </div>
-        <div class="group">
-          <label>Time <span class="req">*</span></label>
-          <input id="time" type="time" required>
-          <span class="timezone">🕐 Mountain Time (Denver/Aurora)</span>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="group">
-          <label>Airline (optional)</label>
-          <input id="airline" placeholder="United, Delta, etc.">
-        </div>
-        <div class="group">
-          <label>Flight Number (optional)</label>
-          <input id="flightNumber" placeholder="UA1234">
-        </div>
-      </div>
-
-      <div class="group">
-        <label>Notes (optional)</label>
-        <textarea id="notes" placeholder="Gate info, luggage count, etc."></textarea>
-      </div>
-
-      <div id="priceEstimate" class="price-estimate">
-        <div class="price-details">
-          <span id="distanceDisplay">-- mi</span>
-          <span id="priceDisplay">$--</span>
-        </div>
-        <div class="small">Estimate only. Final fare confirmed after route/traffic.</div>
-      </div>
-
-      <!-- Turnstile -->
-      <div class="group">
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"></div>
-        <div class="small">Spam protection enabled.</div>
-      </div>
-
-      <button class="btn primary" id="submitBtn" type="submit">Submit Request</button>
-
-      <div style="margin-top:12px">
-        <a id="waBackupBtn" class="btn secondary" target="_blank" rel="noopener">
-          Send via WhatsApp (Backup)
-        </a>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Turnstile -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
-<script>
 /* =========================
-   CONFIG
-========================= */
-const API_BASE = "https://api.travylway.com";  // ✅ FIXED URL
-const WHATSAPP_NUMBER = "17204748851";
-const GOOGLE_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
-
-/* Crew pricing */
-const BASE=2.50, PER=1.25, FREE=0, MIN=11, MAX=120;
-
-/* =========================
-   Helpers
-========================= */
-const el = (id) => document.getElementById(id);
-
-function showOk(msg){
-  el("ok").textContent = msg;
-  el("ok").style.display = "block";
-  el("err").style.display = "none";
-}
-function showErr(msg){
-  el("err").textContent = msg;
-  el("err").style.display = "block";
-  el("ok").style.display = "none";
-}
-
-function formatMountainTime(dateStr, timeStr) {
-  const dt = new Date(`${dateStr}T${timeStr}:00`);
-  return dt.toLocaleString('en-US', {
-    timeZone: 'America/Denver',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  }) + ' MT';
-}
-
-/* =========================
-   WhatsApp Backup
-========================= */
-function buildWhatsApp(){
-  const dateVal = el("date").value || "";
-  const timeVal = el("time").value || "";
-  const displayTime = (dateVal && timeVal)
-    ? formatMountainTime(dateVal, timeVal)
-    : `${dateVal} ${timeVal}`;
-
-  const msg = [
-    "🚖 Travylway Air Crew Request",
-    `Name: ${el("name").value || ""}`,
-    `Phone: ${el("phone").value || ""}`,
-    `Pickup: ${el("pickupAddress").value || ""}`,
-    `Drop-off: ${el("dropoffAddress").value || ""}`,
-    `Airport: ${el("airportCode").value || ""}`,
-    `Service: ${el("serviceType").value || ""}`,
-    `Date/Time: ${displayTime}`,
-    `Airline: ${el("airline").value || ""}`,
-    `Flight: ${el("flightNumber").value || ""}`,
-    `Notes: ${el("notes").value || ""}`
-  ].join("\n");
-
-  el("waBackupBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-}
-document.addEventListener("input", buildWhatsApp, true);
-document.addEventListener("change", buildWhatsApp, true);
-
-/* =========================
-   Google Maps Loader + Autocomplete + Pricing
-========================= */
-let pickupLoc = null;
-let dropLoc = null;
-
-function loadGoogle(){
-  return new Promise((resolve, reject) => {
-    if (window.google && google.maps && google.maps.places) return resolve();
-    const s = document.createElement("script");
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_KEY)}&libraries=places`;
-    s.async = true;
-    s.defer = true;
-    s.onload = () => resolve();
-    s.onerror = () => reject(new Error("Google Maps script failed to load"));
-    document.head.appendChild(s);
-  });
-}
-
-function calculatePrice(){
-  if(!pickupLoc || !dropLoc) return;
-
-  const svc = new google.maps.DistanceMatrixService();
-  svc.getDistanceMatrix({
-    origins:[pickupLoc],
-    destinations:[dropLoc],
-    travelMode:"DRIVING",
-    unitSystem:google.maps.UnitSystem.IMPERIAL
-  }, (r,s)=>{
-    if(s!=="OK") return;
-    const elem = r?.rows?.[0]?.elements?.[0];
-    if (!elem || elem.status !== "OK") return;
-
-    const miles = elem.distance.value/1609.34;
-    let price = BASE + Math.max(0, miles-FREE)*PER;
-    price = Math.max(MIN, Math.min(MAX, price));
-
-    el("distanceDisplay").textContent = `${miles.toFixed(1)} mi`;
-    el("priceDisplay").textContent = `$${price.toFixed(2)}`;
-    el("priceEstimate").style.display = "block";
-  });
-}
-
-function initAutocomplete(){
-  const pickupInput = el("pickupAddress");
-  const dropInput = el("dropoffAddress");
-
-  const ac1 = new google.maps.places.Autocomplete(pickupInput, { types:["address"] });
-  ac1.addListener("place_changed", ()=>{
-    const p = ac1.getPlace();
-    pickupLoc = p?.geometry?.location || null;
-    calculatePrice();
-  });
-
-  const ac2 = new google.maps.places.Autocomplete(dropInput, { types:["address"] });
-  ac2.addListener("place_changed", ()=>{
-    const p = ac2.getPlace();
-    dropLoc = p?.geometry?.location || null;
-    calculatePrice();
-  });
-
-  el("mapsStatus").textContent = "Maps: ready ✅";
-}
-
-/* =========================
-   Submit
+   Submit (WITH DEBUGGING)
 ========================= */
 el("crewForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -307,6 +14,10 @@ el("crewForm").addEventListener("submit", async (e) => {
     const nameVal  = el("name").value.trim();
     const phoneVal = el("phone").value.trim();
 
+    console.log("=== FORM VALUES ===");
+    console.log("Name:", nameVal);
+    console.log("Phone:", phoneVal);
+
     if (!nameVal) throw new Error("Name is required.");
     if (!phoneVal) throw new Error("Phone is required.");
 
@@ -318,11 +29,19 @@ el("crewForm").addEventListener("submit", async (e) => {
 
     const pickupText = el("pickupAddress").value.trim();
     const dropText   = el("dropoffAddress").value.trim();
+    
+    console.log("Pickup:", pickupText);
+    console.log("Dropoff:", dropText);
+    
     if (!pickupText) throw new Error("Pickup address is required.");
     if (!dropText) throw new Error("Drop-off address is required.");
 
     const dateVal = el("date").value;
     const timeVal = el("time").value;
+    
+    console.log("Date:", dateVal);
+    console.log("Time:", timeVal);
+    
     if (!dateVal || !timeVal) throw new Error("Pickup date and time are required.");
 
     // Get timezone
@@ -330,6 +49,9 @@ el("crewForm").addEventListener("submit", async (e) => {
     const localDateTime = `${dateVal}T${timeVal}:00`;
     const pickupDateTime = new Date(localDateTime);
     const pickup_time_utc = pickupDateTime.toISOString();
+
+    console.log("Timezone:", timezone);
+    console.log("pickup_time_utc:", pickup_time_utc);
 
     // Calculate estimated fare if available
     let estimatedFare = 2.50;
@@ -347,7 +69,7 @@ el("crewForm").addEventListener("submit", async (e) => {
       }
     }
 
-    // ✅ FIXED PAYLOAD - matches worker expectations
+    // ✅ PAYLOAD - all required fields
     const payload = {
       created_by: nameVal,
       rider_phone: phoneVal,
@@ -369,7 +91,8 @@ el("crewForm").addEventListener("submit", async (e) => {
       duration_minutes: durationMinutes
     };
 
-    console.log("TRIP PAYLOAD", payload);
+    console.log("=== PAYLOAD TO SEND ===");
+    console.log(JSON.stringify(payload, null, 2));
 
     const res = await fetch(`${API_BASE}/api/trips`, {
       method:"POST",
@@ -377,8 +100,12 @@ el("crewForm").addEventListener("submit", async (e) => {
       body: JSON.stringify(payload)
     });
 
+    console.log("=== RESPONSE ===");
+    console.log("Status:", res.status);
+    console.log("Status Text:", res.statusText);
+
     const data = await res.json().catch(()=> ({}));
-    console.log("RESPONSE", data);
+    console.log("Response data:", JSON.stringify(data, null, 2));
     
     if (!res.ok || data.ok === false) {
       throw new Error(data.error || data.message || `API error (HTTP ${res.status})`);
@@ -396,24 +123,48 @@ el("crewForm").addEventListener("submit", async (e) => {
     if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
 
   } catch (err) {
+    console.error("=== ERROR ===");
+    console.error(err);
     showErr(`❌ Error: ${err.message}\n\nUse the WhatsApp Backup button below if needed.`);
-    console.error("Submit error:", err);
     if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
   } finally {
     btn.disabled = false;
     btn.textContent = "Submit Request";
   }
 });
+```
 
-/* Boot */
-buildWhatsApp();
-loadGoogle()
-  .then(() => initAutocomplete())
-  .catch((e) => {
-    el("mapsStatus").textContent = "Maps: failed ❌ (use WhatsApp Backup)";
-    console.error(e);
-  });
-</script>
+---
 
-</body>
-</html>
+## 🔍 **Now do this:**
+
+1. **Update the submit handler** with the code above
+2. **Refresh the page** (Ctrl+F5)
+3. **Open browser console** (F12)
+4. **Fill out the form completely**
+5. **Submit**
+6. **Copy EVERYTHING from the console** and paste it here
+
+**Look for these sections in console:**
+```
+=== FORM VALUES ===
+Name: ...
+Phone: ...
+Pickup: ...
+Dropoff: ...
+Date: ...
+Time: ...
+
+=== PAYLOAD TO SEND ===
+{
+  "created_by": "...",
+  "rider_phone": "...",
+  ...
+}
+
+=== RESPONSE ===
+Status: 400
+Response data: {
+  "ok": false,
+  "error": "Missing required fields"
+}
