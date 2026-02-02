@@ -162,12 +162,12 @@ textarea{min-height:90px;resize:vertical}
 /* =========================
    CONFIG
 ========================= */
-const API_BASE = "https://api.travylway,com";
+const API_BASE = "https://api.travylway.com";  // ✅ FIXED URL
 const WHATSAPP_NUMBER = "17204748851";
 const GOOGLE_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
 
-/* Crew pricing (same as your current crew.html) */
-const BASE=2.30, PER=1.30, FREE=0, MIN=11, MAX=120;
+/* Crew pricing */
+const BASE=2.50, PER=1.25, FREE=0, MIN=11, MAX=120;
 
 /* =========================
    Helpers
@@ -306,7 +306,6 @@ el("crewForm").addEventListener("submit", async (e) => {
   try {
     const nameVal  = el("name").value.trim();
     const phoneVal = el("phone").value.trim();
-    const emailVal = el("email").value.trim();
 
     if (!nameVal) throw new Error("Name is required.");
     if (!phoneVal) throw new Error("Phone is required.");
@@ -326,46 +325,50 @@ el("crewForm").addEventListener("submit", async (e) => {
     const timeVal = el("time").value;
     if (!dateVal || !timeVal) throw new Error("Pickup date and time are required.");
 
-    const direction = serviceType === "pickup" ? "FROM_AIRPORT" : "TO_AIRPORT";
+    // Get timezone
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const localDateTime = `${dateVal}T${timeVal}:00`;
-    const pickup_time_utc = new Date(localDateTime).toISOString();
-    const pickup_time_display = formatMountainTime(dateVal, timeVal);
+    const pickupDateTime = new Date(localDateTime);
+    const pickup_time_utc = pickupDateTime.toISOString();
 
-    // Worker expects this exact key:
-    const ts = document.querySelector('input[name="cf-turnstile-response"]')?.value || "";
-    if (!ts) throw new Error("Turnstile not ready. Wait a few seconds and submit again.");
+    // Calculate estimated fare if available
+    let estimatedFare = 2.50;
+    let distanceMiles = 0;
+    let durationMinutes = 0;
+    
+    if (pickupLoc && dropLoc) {
+      const priceText = el("priceDisplay").textContent;
+      const distText = el("distanceDisplay").textContent;
+      if (priceText.includes('$')) {
+        estimatedFare = parseFloat(priceText.replace('$', '')) || 2.50;
+      }
+      if (distText.includes('mi')) {
+        distanceMiles = parseFloat(distText.replace('mi', '')) || 0;
+      }
+    }
 
-    const createdBy = emailVal || phoneVal || nameVal || "crew";
-
+    // ✅ FIXED PAYLOAD - matches worker expectations
     const payload = {
-      created_by: createdBy,
+      created_by: nameVal,
       rider_phone: phoneVal,
       rider_type: "CREW",
       trip_type: "AIRPORT",
-
-      direction,
-      airport_code: airport,
-
+      
       pickup_text: pickupText,
       dropoff_text: dropText,
-      pickup_time_utc,
-
-      pickup_time_local: localDateTime,
-      pickup_time_display,
-
-      airline: el("airline").value.trim() || null,
-      flight_number: el("flightNumber").value.trim() || null,
-
-      notes: [
-        `Name: ${nameVal}`,
-        `Phone: ${phoneVal}`,
-        el("notes").value.trim() ? `Notes: ${el("notes").value.trim()}` : null
-      ].filter(Boolean).join(" • "),
-
-      "cf-turnstile-response": ts
+      pickup_time_utc: pickup_time_utc,
+      pickup_timezone: timezone,
+      
+      airport_code: airport,
+      airline: el("airline").value.trim() || '',
+      flight_number: el("flightNumber").value.trim() || '',
+      notes: el("notes").value.trim() || '',
+      
+      estimated_fare: estimatedFare,
+      distance_miles: distanceMiles,
+      duration_minutes: durationMinutes
     };
 
-    // Debug: you can see exactly what you’re sending
     console.log("TRIP PAYLOAD", payload);
 
     const res = await fetch(`${API_BASE}/api/trips`, {
@@ -375,11 +378,13 @@ el("crewForm").addEventListener("submit", async (e) => {
     });
 
     const data = await res.json().catch(()=> ({}));
+    console.log("RESPONSE", data);
+    
     if (!res.ok || data.ok === false) {
-      throw new Error(data.error || data.detail || `API error (HTTP ${res.status})`);
+      throw new Error(data.error || data.message || `API error (HTTP ${res.status})`);
     }
 
-    showOk(`Submitted ✅ Request ID: ${data.id || "OK"}`);
+    showOk(`✅ Submitted! Request ID: ${data.trip_id || "OK"}\n\nYou'll receive WhatsApp confirmation soon.`);
 
     // Reset after success
     el("crewForm").reset();
@@ -392,6 +397,7 @@ el("crewForm").addEventListener("submit", async (e) => {
 
   } catch (err) {
     showErr(`❌ Error: ${err.message}\n\nUse the WhatsApp Backup button below if needed.`);
+    console.error("Submit error:", err);
     if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
   } finally {
     btn.disabled = false;
