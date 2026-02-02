@@ -367,8 +367,20 @@
         const data = await res.json().catch(() => ({}));
 
         if (res.ok) {
-          showMessage('success', '✅ Crew booking submitted! You’ll get confirmation via WhatsApp/text.');
-          form.reset();
+  const confirmationId = data?.id || 'N/A';
+
+  showMessage(
+    if (res.ok) {
+  const confirmationId = data?.id || 'N/A';
+
+  showMessage(
+    'success',
+    `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. Dispatch will confirm shortly.`
+  );
+
+  form.reset();
+}
+
           dateEl.min = `${yyyy}-${mm}-${dd}`;
         } else {
           const msg = data.error || data.message || `HTTP ${res.status}: ${res.statusText}`;
