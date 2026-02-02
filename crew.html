@@ -331,7 +331,7 @@ if (timezoneEl) {
   timezoneEl.textContent = `🕐 ${userTimezone.replace('_', ' ')}`;
 }
 
-/* Submit handler - UPDATED WITH CORRECT FIELD NAMES */
+/* Submit handler - WITH FIXED NOTES FIELD */
 el("crewForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   el("ok").style.display = "none";
@@ -364,6 +364,11 @@ el("crewForm").addEventListener("submit", async (e) => {
     const pickupDateTime = new Date(`${dateVal}T${timeVal}:00`);
     const pickupTimeUTC = pickupDateTime.toISOString();
 
+    // FIX: Ensure notes is always a string, never undefined
+    const notesValue = String(el("notes").value || "").trim();
+    console.log("DEBUG: notes field value:", JSON.stringify(notesValue));
+    console.log("DEBUG: notes field type:", typeof notesValue);
+
     // Build payload matching worker expectations
     const payload = {
       // REQUIRED FIELDS (must match worker exactly):
@@ -374,7 +379,7 @@ el("crewForm").addEventListener("submit", async (e) => {
       pickup_time: pickupTimeUTC,
       passenger_count: 1, // Default to 1 for crew
       rider_type: "CREW", // Must be "CREW" for discounted pricing
-      notes: el("notes").value.trim() || "",
+      notes: notesValue, // CRITICAL: Always a string, even if empty
       
       // CREW-SPECIFIC FIELDS (optional):
       pickup_timezone: userTimezone,
@@ -389,9 +394,29 @@ el("crewForm").addEventListener("submit", async (e) => {
       trip_category: "CREW"
     };
 
-    // DEBUG: Log what we're sending
-    console.log("CREW DEBUG: Payload being sent:", payload);
-    console.log("CREW DEBUG: JSON:", JSON.stringify(payload));
+    // =========== DEBUG: Check each required field ===========
+    console.log("=== CREW DEBUG: Checking required fields ===");
+    const requiredFields = [
+      'customer_name', 'customer_phone', 'pickup_text', 'dropoff_text',
+      'pickup_time', 'passenger_count', 'rider_type', 'notes'
+    ];
+    
+    requiredFields.forEach(field => {
+      const value = payload[field];
+      const isPresent = value !== undefined && value !== null;
+      const isEmptyString = value === "";
+      const type = typeof value;
+      console.log(`  ${field}:`, 
+        isPresent ? "PRESENT" : "MISSING", 
+        "type:", type,
+        "value:", JSON.stringify(value),
+        isEmptyString ? "(EMPTY STRING)" : "",
+        !isPresent ? "← THIS IS THE PROBLEM!" : ""
+      );
+    });
+    
+    console.log("=== END DEBUG ===");
+    console.log("Full payload:", JSON.stringify(payload, null, 2));
 
     const res = await fetch(`${API_BASE}/api/trips`, {
       method: "POST",
@@ -402,13 +427,16 @@ el("crewForm").addEventListener("submit", async (e) => {
     });
 
     const data = await res.json();
-    console.log("CREW DEBUG: Response:", data);
+    console.log("CREW DEBUG: Response from worker:", data);
     
     if (!res.ok || data.ok === false) {
-      // Show detailed error
-      const errorMsg = data.error || `HTTP ${res.status}`;
-      const missingFields = data.missing ? `\nMissing: ${data.missing.join(', ')}` : '';
-      throw new Error(`${errorMsg}${missingFields}`);
+      // Show detailed error with all available info
+      let errorMsg = data.error || `HTTP ${res.status}`;
+      if (data.missing) errorMsg += `\nMissing: ${data.missing.join(', ')}`;
+      if (data.received_fields) errorMsg += `\nReceived: ${data.received_fields.join(', ')}`;
+      if (data.details) errorMsg += `\nDetails: ${data.details}`;
+      
+      throw new Error(errorMsg);
     }
 
     showOk(`✅ Crew booking confirmed! Trip ID: ${data.trip_id || data.id}\n\nYou'll receive updates via WhatsApp.`);
