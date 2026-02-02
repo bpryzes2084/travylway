@@ -1,423 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crew Booking - TravylWay</title>
-    <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        
-        .badge {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            color: #333;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-align: center;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        
-        h1 { 
-            text-align: center; 
-            color: #333; 
-            margin-bottom: 30px; 
-        }
-        
-        .form-group { 
-            margin-bottom: 20px; 
-            position: relative;
-        }
-        
-        label { 
-            display: block; 
-            font-weight: 600; 
-            margin-bottom: 5px; 
-            color: #333; 
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        textarea { 
-            min-height: 80px; 
-            resize: vertical; 
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .btn:disabled { 
-            background: #ccc; 
-            cursor: not-allowed; 
-        }
-        
-        .message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            text-align: center;
-            display: none;
-        }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .autocomplete-container {
-            position: relative;
-        }
-        
-        .suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .suggestion-item {
-            padding: 10px 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .suggestion-item:hover {
-            background: #f5f5f5;
-        }
-        
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crew Booking - TravylWay</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+
+    body{
+      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      min-height:100vh;
+      padding:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:640px;
+      background:#fff;
+      border-radius:16px;
+      padding:28px;
+      box-shadow:0 10px 40px rgba(0,0,0,.22);
+    }
+
+    .badge{
+      background: linear-gradient(135deg,#ffd700 0%,#ffed4e 100%);
+      color:#222;
+      padding:10px 18px;
+      border-radius:999px;
+      text-align:center;
+      font-weight:800;
+      margin-bottom:14px;
+      letter-spacing:.2px;
+    }
+
+    h1{
+      text-align:center;
+      color:#222;
+      margin-bottom:8px;
+      font-size:28px;
+    }
+
+    .subhead{
+      text-align:center;
+      color:#555;
+      margin-bottom:22px;
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    .form-group{ margin-bottom:16px; position:relative; }
+
+    label{
+      display:block;
+      font-weight:650;
+      margin-bottom:6px;
+      color:#222;
+      font-size:14px;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border:2px solid #ddd;
+      border-radius:10px;
+      font-size:16px;
+      transition: border-color .15s ease;
+    }
+
+    input:focus, textarea:focus{
+      outline:none;
+      border-color:#667eea;
+    }
+
+    textarea{ min-height:84px; resize:vertical; }
+
+    .hint{
+      margin-top:6px;
+      font-size:12px;
+      color:#666;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .btn{
+      width:100%;
+      padding:15px;
+      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:#fff;
+      border:none;
+      border-radius:10px;
+      font-size:18px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:10px;
+      transition: transform .2s ease, box-shadow .2s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+
+    .btn:hover:not(:disabled){
+      transform: translateY(-2px);
+      box-shadow:0 8px 18px rgba(0,0,0,.18);
+    }
+
+    .btn:disabled{ background:#cfcfcf; cursor:not-allowed; }
+
+    .message{
+      padding:14px;
+      border-radius:10px;
+      margin-top:14px;
+      text-align:center;
+      display:none;
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    .success{ background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+    .error{ background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+
+    .loading{
+      display:inline-block;
+      width:18px;
+      height:18px;
+      border:3px solid rgba(255,255,255,.35);
+      border-radius:50%;
+      border-top-color:#fff;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    /* Honeypot field: hidden from humans */
+    .hp{
+      position:absolute !important;
+      left:-9999px !important;
+      width:1px; height:1px;
+      overflow:hidden;
+    }
+
+    .footer-note{
+      margin-top:16px;
+      text-align:center;
+      color:#666;
+      font-size:12px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="badge">✈️ AIRLINE CREW DISCOUNT</div>
-        <h1>🚗 Book Crew Ride</h1>
-        
-        <form id="crewForm">
-            <div class="form-group">
-                <label>Your Name *</label>
-                <input type="text" id="name" required placeholder="Jane Doe">
-            </div>
+  <div class="container">
+    <div class="badge">✈️ AIRLINE CREW DISCOUNT</div>
 
-            <div class="form-group">
-                <label>Phone Number *</label>
-                <input type="tel" id="phone" required placeholder="+1 (720) 555-1234">
-            </div>
-
-            <div class="form-group autocomplete-container">
-                <label>Pickup Address *</label>
-                <input type="text" id="pickup" required placeholder="Denver International Airport">
-                <div class="suggestions" id="pickupSuggestions"></div>
-            </div>
-
-            <div class="form-group autocomplete-container">
-                <label>Dropoff Address *</label>
-                <input type="text" id="dropoff" required placeholder="1600 Broadway, Denver, CO">
-                <div class="suggestions" id="dropoffSuggestions"></div>
-            </div>
-
-            <div class="form-group">
-                <label>Pickup Date *</label>
-                <input type="date" id="date" required>
-            </div>
-
-            <div class="form-group">
-                <label>Pickup Time *</label>
-                <input type="time" id="time" required>
-            </div>
-
-            <div class="form-group">
-                <label>Flight Number *</label>
-                <input type="text" id="flight" required placeholder="UA1234">
-            </div>
-
-            <div class="form-group">
-                <label>Airline *</label>
-                <input type="text" id="airline" required placeholder="United Airlines">
-            </div>
-
-            <div class="form-group">
-                <label>Airport Code *</label>
-                <input type="text" id="airport" required placeholder="DEN" maxlength="4">
-            </div>
-
-            <div class="form-group">
-                <label>Notes (optional)</label>
-                <textarea id="notes" placeholder="Any special requests..."></textarea>
-            </div>
-
-            <button type="submit" class="btn" id="submitBtn">
-                <span id="submitText">Submit Crew Booking</span>
-                <span class="loading" id="loadingSpinner" style="display: none;"></span>
-            </button>
-        </form>
-
-        <div id="message" class="message"></div>
+    <h1>🚗 Book Crew Ride</h1>
+    <div class="subhead">
+      Crew-only requests. Airport ↔ hotel runs. Reliable timing beats “pretty apps.”
     </div>
 
-    <script>
-        // Google Maps API Configuration
-        const GOOGLE_MAPS_API_KEY = 'AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo'; // Replace with your actual API key
-        
-        // Cloudflare Worker endpoint
-        const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com/'; // Replace with your worker URL
-        
-        // DOM Elements
-        const form = document.getElementById('crewForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const submitText = document.getElementById('submitText');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const messageDiv = document.getElementById('message');
-        const pickupInput = document.getElementById('pickup');
-        const dropoffInput = document.getElementById('dropoff');
-        const pickupSuggestions = document.getElementById('pickupSuggestions');
-        const dropoffSuggestions = document.getElementById('dropoffSuggestions');
-        
-        // Set minimum date to today
-        document.getElementById('date').min = new Date().toISOString().split('T')[0];
-        
-        // Debounce function for API calls
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
+    <form id="crewForm" autocomplete="on">
+      <!-- Honeypot anti-bot -->
+      <div class="hp">
+        <label>Website</label>
+        <input type="text" id="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="name" required placeholder="Jane Doe" maxlength="80" />
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="phone" required placeholder="+1 (720) 555-1234" maxlength="24" />
+        <div class="hint">Used for confirmation + driver coordination.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Pickup Address *</label>
+        <input type="text" id="pickup" required placeholder="Denver International Airport (DEN)" maxlength="140" />
+        <div class="hint">Tip: include terminal/door if relevant.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Dropoff Address *</label>
+        <input type="text" id="dropoff" required placeholder="Hotel name + address" maxlength="140" />
+      </div>
+
+      <div class="grid">
+        <div class="form-group">
+          <label>Pickup Date *</label>
+          <input type="date" id="date" required />
+        </div>
+
+        <div class="form-group">
+          <label>Pickup Time (local) *</label>
+          <input type="time" id="time" required />
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="form-group">
+          <label>Flight Number *</label>
+          <input type="text" id="flight" required placeholder="UA1234" maxlength="10" />
+        </div>
+
+        <div class="form-group">
+          <label>Airport Code *</label>
+          <input type="text" id="airport" required placeholder="DEN" maxlength="4" />
+          <div class="hint">3–4 letters (IATA/ICAO). Example: DEN / KDEN</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Airline *</label>
+        <input type="text" id="airline" required placeholder="United Airlines" maxlength="60" />
+      </div>
+
+      <div class="form-group">
+        <label>Notes (optional)</label>
+        <textarea id="notes" placeholder="Crew count, bags, special pickup notes..."></textarea>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">
+        <span id="submitText">Submit Crew Booking</span>
+        <span class="loading" id="loadingSpinner" style="display:none;"></span>
+      </button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <div class="footer-note">
+      By submitting, you confirm you are airline crew and agree to crew-only verification if requested.
+    </div>
+  </div>
+
+  <script>
+    // Cloudflare Worker endpoint (no trailing slash)
+    const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
+
+    // DOM Elements
+    const form = document.getElementById('crewForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const messageDiv = document.getElementById('message');
+
+    const phoneEl = document.getElementById('phone');
+    const airportEl = document.getElementById('airport');
+    const flightEl = document.getElementById('flight');
+    const dateEl = document.getElementById('date');
+    const timeEl = document.getElementById('time');
+
+    // Min date = today (local)
+    const todayLocal = new Date();
+    const yyyy = todayLocal.getFullYear();
+    const mm = String(todayLocal.getMonth() + 1).padStart(2, '0');
+    const dd = String(todayLocal.getDate()).padStart(2, '0');
+    dateEl.min = `${yyyy}-${mm}-${dd}`;
+
+    // Helpers
+    function showMessage(type, text) {
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = text;
+      messageDiv.style.display = 'block';
+    }
+
+    // SAFER local -> UTC conversion
+    // This explicitly builds a local Date using numeric parts (avoids timezone parsing weirdness)
+    function toUtcIsoFromLocalDateAndTime(dateStr, timeStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const [hh, min] = timeStr.split(':').map(Number);
+      const localDate = new Date(y, (m - 1), d, hh, min, 0);
+      return localDate.toISOString();
+    }
+
+    function isValidAirportCode(code) {
+      // Accept 3-letter IATA or 4-letter ICAO (letters only)
+      return /^[A-Z]{3,4}$/.test(code);
+    }
+
+    // Input normalization
+    phoneEl.addEventListener('input', function() {
+      this.value = this.value.replace(/[^\d+()\s-]/g, '');
+    });
+
+    airportEl.addEventListener('input', function() {
+      this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
+    });
+
+    flightEl.addEventListener('input', function() {
+      this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+
+    // Form submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Honeypot trap
+      const hp = document.getElementById('website').value.trim();
+      if (hp) {
+        // bot detected
+        showMessage('error', '❌ Submission blocked.');
+        return;
+      }
+
+      // Basic validation
+      const airportCode = airportEl.value.trim().toUpperCase();
+      if (!isValidAirportCode(airportCode)) {
+        showMessage('error', '❌ Airport code must be 3–4 letters (DEN or KDEN).');
+        return;
+      }
+
+      const dateVal = dateEl.value;
+      const timeVal = timeEl.value;
+      if (!dateVal || !timeVal) {
+        showMessage('error', '❌ Pickup date and time are required.');
+        return;
+      }
+
+      // UI loading state
+      submitBtn.disabled = true;
+      submitText.style.display = 'none';
+      loadingSpinner.style.display = 'inline-block';
+      messageDiv.style.display = 'none';
+
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
+
+      // Payload
+      const payload = {
+        created_by: document.getElementById('name').value.trim(),
+        rider_phone: phoneEl.value.trim(),
+        rider_type: 'CREW',
+        pickup_text: document.getElementById('pickup').value.trim(),
+        dropoff_text: document.getElementById('dropoff').value.trim(),
+        pickup_time_utc: pickupTimeUTC,
+        pickup_timezone: timezone,
+        flight_number: flightEl.value.trim(),
+        airline: document.getElementById('airline').value.trim(),
+        airport_code: airportCode,
+        notes: document.getElementById('notes').value.trim(),
+        estimated_fare: 0,
+        timestamp: new Date().toISOString(),
+        source: 'crew.html'
+      };
+
+      try {
+        const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+            // If you use auth, add it here:
+            // 'X-API-Key': '...'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          showMessage('success', '✅ Crew booking submitted! You’ll get confirmation via WhatsApp/text.');
+          form.reset();
+          dateEl.min = `${yyyy}-${mm}-${dd}`;
+        } else {
+          const msg = data.error || data.message || `HTTP ${res.status}: ${res.statusText}`;
+          throw new Error(msg);
         }
-        
-        // Google Places Autocomplete
-        async function fetchPlaces(query, suggestionsElement) {
-            if (!query || query.length < 3) {
-                suggestionsElement.style.display = 'none';
-                return;
-            }
-            
-            try {
-                const response = await fetch(
-                    `https://maps.googleapis.com/maps/api/place/autocomplete/json?` +
-                    `input=${encodeURIComponent(query)}` +
-                    `&key=${GOOGLE_MAPS_API_KEY}` +
-                    `&types=address` +
-                    `&components=country:us`
-                );
-                
-                const data = await response.json();
-                
-                if (data.status === 'OK' && data.predictions.length > 0) {
-                    suggestionsElement.innerHTML = '';
-                    data.predictions.forEach(prediction => {
-                        const div = document.createElement('div');
-                        div.className = 'suggestion-item';
-                        div.textContent = prediction.description;
-                        div.addEventListener('click', () => {
-                            const inputField = suggestionsElement === pickupSuggestions ? pickupInput : dropoffInput;
-                            inputField.value = prediction.description;
-                            suggestionsElement.style.display = 'none';
-                        });
-                        suggestionsElement.appendChild(div);
-                    });
-                    suggestionsElement.style.display = 'block';
-                } else {
-                    suggestionsElement.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Places API error:', error);
-                suggestionsElement.style.display = 'none';
-            }
-        }
-        
-        // Debounced version of fetchPlaces
-        const debouncedFetchPickupPlaces = debounce((query) => fetchPlaces(query, pickupSuggestions), 300);
-        const debouncedFetchDropoffPlaces = debounce((query) => fetchPlaces(query, dropoffSuggestions), 300);
-        
-        // Event Listeners for autocomplete
-        pickupInput.addEventListener('input', (e) => {
-            debouncedFetchPickupPlaces(e.target.value);
-        });
-        
-        dropoffInput.addEventListener('input', (e) => {
-            debouncedFetchDropoffPlaces(e.target.value);
-        });
-        
-        // Hide suggestions when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!pickupInput.contains(e.target) && !pickupSuggestions.contains(e.target)) {
-                pickupSuggestions.style.display = 'none';
-            }
-            if (!dropoffInput.contains(e.target) && !dropoffSuggestions.contains(e.target)) {
-                dropoffSuggestions.style.display = 'none';
-            }
-        });
-        
-        // Form Submission
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            submitBtn.disabled = true;
-            submitText.style.display = 'none';
-            loadingSpinner.style.display = 'inline-block';
-            messageDiv.style.display = 'none';
-            
-            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const dateVal = document.getElementById('date').value;
-            const timeVal = document.getElementById('time').value;
-            const pickupTimeUTC = new Date(`${dateVal}T${timeVal}`).toISOString();
-            
-            // Prepare payload
-            const payload = {
-                created_by: document.getElementById('name').value.trim(),
-                rider_phone: document.getElementById('phone').value.trim(),
-                rider_type: 'CREW',
-                pickup_text: document.getElementById('pickup').value.trim(),
-                dropoff_text: document.getElementById('dropoff').value.trim(),
-                pickup_time_utc: pickupTimeUTC,
-                pickup_timezone: timezone,
-                flight_number: document.getElementById('flight').value.trim(),
-                airline: document.getElementById('airline').value.trim(),
-                airport_code: document.getElementById('airport').value.trim().toUpperCase(),
-                notes: document.getElementById('notes').value.trim(),
-                estimated_fare: 0,
-                timestamp: new Date().toISOString()
-            };
-            
-            console.log('Submitting payload:', JSON.stringify(payload, null, 2));
-            
-            try {
-                // Send to Cloudflare Worker
-                const response = await fetch(CLOUDFLARE_WORKER_URL + '/api/trips', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-API-Key': 'YOUR_API_KEY_HERE' // Optional: Add for authentication
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                const data = await response.json();
-                console.log('Cloudflare Worker response:', data);
-                
-                if (response.ok) {
-                    messageDiv.className = 'message success';
-                    messageDiv.textContent = '✅ Crew booking submitted successfully! Confirmation will be sent via WhatsApp.';
-                    messageDiv.style.display = 'block';
-                    form.reset();
-                    document.getElementById('date').min = new Date().toISOString().split('T')[0];
-                } else {
-                    throw new Error(data.error || data.message || `HTTP ${response.status}: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('Submission error:', error);
-                messageDiv.className = 'message error';
-                messageDiv.textContent = `❌ Error: ${error.message}`;
-                messageDiv.style.display = 'block';
-            } finally {
-                submitBtn.disabled = false;
-                submitText.style.display = 'inline';
-                loadingSpinner.style.display = 'none';
-            }
-        });
-        
-        // Input validation helpers
-        document.getElementById('phone').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^\d+()\s-]/g, '');
-        });
-        
-        document.getElementById('airport').addEventListener('input', function(e) {
-            this.value = this.value.toUpperCase();
-        });
-        
-        document.getElementById('flight').addEventListener('input', function(e) {
-            this.value = this.value.toUpperCase();
-        });
-        
-        // Auto-detect timezone on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            console.log('Detected timezone:', timezone);
-        });
-    </script>
+      } catch (err) {
+        showMessage('error', `❌ Error: ${err.message}`);
+      } finally {
+        submitBtn.disabled = false;
+        submitText.style.display = 'inline';
+        loadingSpinner.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
+
