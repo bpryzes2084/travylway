@@ -1,170 +1,208 @@
-/* =========================
-   Submit (WITH DEBUGGING)
-========================= */
-el("crewForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  el("ok").style.display = "none";
-  el("err").style.display = "none";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crew Booking - TravylWay</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; color: #333; }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">✈️ AIRLINE CREW DISCOUNT</div>
+        <h1>🚗 Book Crew Ride</h1>
+        
+        <form id="crewForm">
+            <div class="form-group">
+                <label>Your Name *</label>
+                <input type="text" id="name" required placeholder="Jane Doe">
+            </div>
 
-  const btn = el("submitBtn");
-  btn.disabled = true;
-  btn.textContent = "Submitting…";
+            <div class="form-group">
+                <label>Phone Number *</label>
+                <input type="tel" id="phone" required placeholder="+1 (720) 555-1234">
+            </div>
 
-  try {
-    const nameVal  = el("name").value.trim();
-    const phoneVal = el("phone").value.trim();
+            <div class="form-group">
+                <label>Pickup Address *</label>
+                <input type="text" id="pickup" required placeholder="Denver International Airport">
+            </div>
 
-    console.log("=== FORM VALUES ===");
-    console.log("Name:", nameVal);
-    console.log("Phone:", phoneVal);
+            <div class="form-group">
+                <label>Dropoff Address *</label>
+                <input type="text" id="dropoff" required placeholder="1600 Broadway, Denver, CO">
+            </div>
 
-    if (!nameVal) throw new Error("Name is required.");
-    if (!phoneVal) throw new Error("Phone is required.");
+            <div class="form-group">
+                <label>Pickup Date *</label>
+                <input type="date" id="date" required>
+            </div>
 
-    const airport = el("airportCode").value.trim().toUpperCase();
-    if (!/^[A-Z0-9]{3,4}$/.test(airport)) throw new Error("Airport code must look like DEN, LAX, JFK, etc.");
+            <div class="form-group">
+                <label>Pickup Time *</label>
+                <input type="time" id="time" required>
+            </div>
 
-    const serviceType = el("serviceType").value;
-    if (!serviceType) throw new Error("Select a service type.");
+            <div class="form-group">
+                <label>Flight Number *</label>
+                <input type="text" id="flight" required placeholder="UA1234">
+            </div>
 
-    const pickupText = el("pickupAddress").value.trim();
-    const dropText   = el("dropoffAddress").value.trim();
-    
-    console.log("Pickup:", pickupText);
-    console.log("Dropoff:", dropText);
-    
-    if (!pickupText) throw new Error("Pickup address is required.");
-    if (!dropText) throw new Error("Drop-off address is required.");
+            <div class="form-group">
+                <label>Airline *</label>
+                <input type="text" id="airline" required placeholder="United Airlines">
+            </div>
 
-    const dateVal = el("date").value;
-    const timeVal = el("time").value;
-    
-    console.log("Date:", dateVal);
-    console.log("Time:", timeVal);
-    
-    if (!dateVal || !timeVal) throw new Error("Pickup date and time are required.");
+            <div class="form-group">
+                <label>Airport Code *</label>
+                <input type="text" id="airport" required placeholder="DEN" maxlength="4">
+            </div>
 
-    // Get timezone
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const localDateTime = `${dateVal}T${timeVal}:00`;
-    const pickupDateTime = new Date(localDateTime);
-    const pickup_time_utc = pickupDateTime.toISOString();
+            <div class="form-group">
+                <label>Notes (optional)</label>
+                <textarea id="notes" placeholder="Any special requests..."></textarea>
+            </div>
 
-    console.log("Timezone:", timezone);
-    console.log("pickup_time_utc:", pickup_time_utc);
+            <button type="submit" class="btn" id="submitBtn">Submit Crew Booking</button>
+        </form>
 
-    // Calculate estimated fare if available
-    let estimatedFare = 2.50;
-    let distanceMiles = 0;
-    let durationMinutes = 0;
-    
-    if (pickupLoc && dropLoc) {
-      const priceText = el("priceDisplay").textContent;
-      const distText = el("distanceDisplay").textContent;
-      if (priceText.includes('$')) {
-        estimatedFare = parseFloat(priceText.replace('$', '')) || 2.50;
-      }
-      if (distText.includes('mi')) {
-        distanceMiles = parseFloat(distText.replace('mi', '')) || 0;
-      }
-    }
+        <div id="message" class="message"></div>
+    </div>
 
-    // ✅ PAYLOAD - all required fields
-    const payload = {
-      created_by: nameVal,
-      rider_phone: phoneVal,
-      rider_type: "CREW",
-      trip_type: "AIRPORT",
-      
-      pickup_text: pickupText,
-      dropoff_text: dropText,
-      pickup_time_utc: pickup_time_utc,
-      pickup_timezone: timezone,
-      
-      airport_code: airport,
-      airline: el("airline").value.trim() || '',
-      flight_number: el("flightNumber").value.trim() || '',
-      notes: el("notes").value.trim() || '',
-      
-      estimated_fare: estimatedFare,
-      distance_miles: distanceMiles,
-      duration_minutes: durationMinutes
-    };
+    <script>
+        const form = document.getElementById('crewForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('message');
 
-    console.log("=== PAYLOAD TO SEND ===");
-    console.log(JSON.stringify(payload, null, 2));
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
 
-    const res = await fetch(`${API_BASE}/api/trips`, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify(payload)
-    });
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            messageDiv.style.display = 'none';
 
-    console.log("=== RESPONSE ===");
-    console.log("Status:", res.status);
-    console.log("Status Text:", res.statusText);
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const dateVal = document.getElementById('date').value;
+            const timeVal = document.getElementById('time').value;
+            const pickupTimeUTC = new Date(`${dateVal}T${timeVal}`).toISOString();
 
-    const data = await res.json().catch(()=> ({}));
-    console.log("Response data:", JSON.stringify(data, null, 2));
-    
-    if (!res.ok || data.ok === false) {
-      throw new Error(data.error || data.message || `API error (HTTP ${res.status})`);
-    }
+            const payload = {
+                created_by: document.getElementById('name').value.trim(),
+                rider_phone: document.getElementById('phone').value.trim(),
+                rider_type: 'CREW',
+                pickup_text: document.getElementById('pickup').value.trim(),
+                dropoff_text: document.getElementById('dropoff').value.trim(),
+                pickup_time_utc: pickupTimeUTC,
+                pickup_timezone: timezone,
+                flight_number: document.getElementById('flight').value.trim(),
+                airline: document.getElementById('airline').value.trim(),
+                airport_code: document.getElementById('airport').value.trim().toUpperCase(),
+                notes: document.getElementById('notes').value.trim(),
+                estimated_fare: 0
+            };
 
-    showOk(`✅ Submitted! Request ID: ${data.trip_id || "OK"}\n\nYou'll receive WhatsApp confirmation soon.`);
+            console.log('Sending:', JSON.stringify(payload, null, 2));
 
-    // Reset after success
-    el("crewForm").reset();
-    pickupLoc = null;
-    dropLoc = null;
-    el("priceEstimate").style.display = "none";
-    buildWhatsApp();
+            try {
+                const response = await fetch('https://api.travylway.com/api/trips', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-    if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
+                const data = await response.json();
+                console.log('Response:', data);
 
-  } catch (err) {
-    console.error("=== ERROR ===");
-    console.error(err);
-    showErr(`❌ Error: ${err.message}\n\nUse the WhatsApp Backup button below if needed.`);
-    if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Submit Request";
-  }
-});
-```
-
----
-
-## 🔍 **Now do this:**
-
-1. **Update the submit handler** with the code above
-2. **Refresh the page** (Ctrl+F5)
-3. **Open browser console** (F12)
-4. **Fill out the form completely**
-5. **Submit**
-6. **Copy EVERYTHING from the console** and paste it here
-
-**Look for these sections in console:**
-```
-=== FORM VALUES ===
-Name: ...
-Phone: ...
-Pickup: ...
-Dropoff: ...
-Date: ...
-Time: ...
-
-=== PAYLOAD TO SEND ===
-{
-  "created_by": "...",
-  "rider_phone": "...",
-  ...
-}
-
-=== RESPONSE ===
-Status: 400
-Response data: {
-  "ok": false,
-  "error": "Missing required fields"
-}
+                if (data.ok) {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = '✅ Crew booking submitted! You will receive confirmation via WhatsApp.';
+                    messageDiv.style.display = 'block';
+                    form.reset();
+                } else {
+                    throw new Error(data.error || 'Submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.className = 'message error';
+                messageDiv.textContent = '❌ Error: ' + error.message;
+                messageDiv.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Crew Booking';
+            }
+        });
+    </script>
+</body>
+</html>
