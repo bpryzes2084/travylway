@@ -1,796 +1,192 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>General Traveler Pickup Request — Travylway</title>
-  <meta name="description" content="Request airport pickup or drop-off transportation for general travelers worldwide." />
-
-  <style>
-    :root{
-      --bg:#2B3A4A;
-      --card:#fff;
-      --text:#0F172A;
-      --muted:#64748B;
-      --line:#E2E8F0;
-      --accent:#2563EB;
-
-      --okbg:#ECFDF5; --okbd:#BBF7D0; --oktx:#166534;
-      --warnbg:#FFFBEB; --warnbd:#FDE68A; --warntx:#92400E;
-      --badbg:#FEF2F2; --badbd:#FECACA; --badtx:#991B1B;
-
-      --shadow:0 18px 55px rgba(2,6,23,.22);
-      --radius:18px;
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 700px at 20% 10%, rgba(37,99,235,.25), transparent 55%),
-                  radial-gradient(900px 600px at 85% 25%, rgba(34,197,94,.18), transparent 50%),
-                  var(--bg);
-      color:var(--text);
-    }
-
-    .wrap{
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 24px 14px 56px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 14px;
-    }
-
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .brand h1{
-      margin:0;
-      font-size: 22px;
-      letter-spacing:.2px;
-      color:#fff;
-      line-height:1.2;
-    }
-    .brand p{
-      margin:0;
-      color: rgba(226,232,240,.9);
-      font-size: 14px;
-      line-height:1.35;
-      max-width: 60ch;
-    }
-
-    .status-pill{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(15,23,42,.35);
-      border: 1px solid rgba(226,232,240,.20);
-      color: rgba(226,232,240,.95);
-      font-size: 13px;
-      white-space:nowrap;
-      margin-top: 2px;
-    }
-    .dot{
-      width:10px;height:10px;border-radius:999px;background:#94A3B8;
-      box-shadow: 0 0 0 3px rgba(148,163,184,.18);
-      flex:0 0 auto;
-    }
-    .dot.ok{background:#22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,.18);}
-    .dot.bad{background:#EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,.18);}
-    .dot.warn{background:#F59E0B; box-shadow: 0 0 0 3px rgba(245,158,11,.18);}
-
-    .card{
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-
-    .card-head{
-      padding: 18px 18px 14px;
-      border-bottom: 1px solid var(--line);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .head-grid{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .headline{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .headline .title{
-      font-size: 18px;
-      font-weight: 750;
-      letter-spacing:.2px;
-      margin:0;
-      color: var(--text);
-    }
-    .headline .sub{
-      margin:0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height:1.3;
-    }
-
-    .rules{
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(37,99,235,.06);
-      border: 1px solid rgba(37,99,235,.18);
-      color: #1E3A8A;
-      font-size: 13px;
-      line-height:1.35;
-    }
-
-    .card-body{ padding: 18px; }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    @media (max-width: 740px){
-      .grid{grid-template-columns: 1fr}
-      .topbar{flex-direction:column}
-      .status-pill{align-self:flex-start}
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    label{
-      font-size: 13px;
-      color: rgba(15,23,42,.92);
-      font-weight: 650;
-    }
-    input, textarea, select{
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px 12px;
-      font-size: 15px;
-      outline: none;
-      background:#fff;
-      color: var(--text);
-      transition: border-color .15s, box-shadow .15s;
-    }
-    input:focus, textarea:focus, select:focus{
-      border-color: rgba(37,99,235,.55);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
-    }
-    textarea{min-height: 92px; resize: vertical}
-
-    .help{
-      font-size: 12.5px;
-      color: var(--muted);
-      line-height:1.35;
-    }
-
-    .section{
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-    }
-    .section-title{
-      margin:0 0 10px 0;
-      font-size: 14px;
-      font-weight: 800;
-      color: rgba(15,23,42,.9);
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .fare{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(226,232,240,.35), rgba(226,232,240,.08));
-    }
-    .fare-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      font-size: 14px;
-      color: rgba(15,23,42,.85);
-    }
-    .fare-row strong{font-size: 16px}
-    .fare-row.total{
-      border-top: 1px solid rgba(148,163,184,.35);
-      padding-top: 10px;
-      margin-top: 2px;
-      font-size: 15px;
-    }
-
-    .actions{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top: 14px;
-    }
-
-    .btn{
-      appearance:none;
-      border:0;
-      border-radius: 14px;
-      padding: 14px 14px;
-      font-size: 15px;
-      font-weight: 800;
-      cursor:pointer;
-      transition: transform .12s ease, opacity .12s ease, box-shadow .12s ease;
-      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(29,78,216,1));
-      color:#fff;
-      box-shadow: 0 12px 28px rgba(37,99,235,.26);
-    }
-    .btn:hover{transform: translateY(-1px)}
-    .btn:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-      transform:none;
-      box-shadow:none;
-    }
-
-    .msg{
-      display:none;
-      padding: 12px 12px;
-      border-radius: 14px;
-      font-size: 14px;
-      line-height:1.35;
-      border: 1px solid transparent;
-    }
-    .msg.show{display:block}
-    .msg.ok{background: var(--okbg); border-color: var(--okbd); color: var(--oktx);}
-    .msg.bad{background: var(--badbg); border-color: var(--badbd); color: var(--badtx);}
-    .msg.warn{background: var(--warnbg); border-color: var(--warnbd); color: var(--warntx);}
-
-    .turnstile{
-      display:flex;
-      justify-content:center;
-      padding-top: 8px;
-    }
-
-    .footer-note{
-      margin-top: 10px;
-      font-size: 12.5px;
-      color: rgba(226,232,240,.85);
-      text-align:center;
-    }
-  </style>
-
-  <!-- Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <!-- Google Places -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places" async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Ride - TravylWay</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; color: #333; }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <h1>Travylway</h1>
-        <p>Airport rides only. One address must be an airport (pickup <em>or</em> drop-off).</p>
-      </div>
-
-      <div class="status-pill" id="mapsStatusPill" aria-live="polite">
-        <span class="dot warn" id="mapsDot"></span>
-        <span id="mapsStatusText">Maps status: loading…</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <div class="head-grid">
-          <div class="headline">
-            <p class="title">General Traveler Pickup Request</p>
-            <p class="sub" id="timezoneInfo">Enter pickup time in your local timezone</p>
-          </div>
-        </div>
-
-        <div class="rules">
-          ✈️ Airport rides only. No multi-stop runs, no detours. If neither address is an airport, the request will be rejected.
-        </div>
-      </div>
-
-      <div class="card-body">
+    <div class="container">
+        <h1>🚗 Book Your Ride</h1>
+        
         <form id="bookingForm">
-          <div class="grid">
-            <div class="field">
-              <label for="pickupAddress">Pickup address *</label>
-              <input id="pickupAddress" name="pickupAddress" type="text" placeholder="Start typing an address…" autocomplete="off" required>
-              <div class="help">Choose a suggestion from the dropdown (required for fare calc).</div>
+            <div class="form-group">
+                <label>Your Name *</label>
+                <input type="text" id="name" required placeholder="John Doe">
             </div>
 
-            <div class="field">
-              <label for="dropoffAddress">Drop-off address *</label>
-              <input id="dropoffAddress" name="dropoffAddress" type="text" placeholder="Start typing an address…" autocomplete="off" required>
-              <div class="help">At least one address must be an airport.</div>
+            <div class="form-group">
+                <label>Phone Number *</label>
+                <input type="tel" id="phone" required placeholder="+1 (720) 555-1234">
             </div>
 
-            <div class="field">
-              <label for="passengerName">Your name *</label>
-              <input id="passengerName" name="passengerName" type="text" placeholder="Full name" required>
+            <div class="form-group">
+                <label>Pickup Address *</label>
+                <input type="text" id="pickup" required placeholder="Denver International Airport">
             </div>
 
-            <div class="field">
-              <label for="phoneNumber">Phone number *</label>
-              <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="+1 (720) 555-1234" required>
-              <div class="help">We'll use WhatsApp to coordinate your ride.</div>
+            <div class="form-group">
+                <label>Dropoff Address *</label>
+                <input type="text" id="dropoff" required placeholder="1600 Broadway, Denver, CO">
             </div>
 
-            <div class="field">
-              <label for="pickupDate">Pickup date *</label>
-              <input id="pickupDate" name="pickupDate" type="date" required>
+            <div class="form-group">
+                <label>Pickup Date *</label>
+                <input type="date" id="date" required>
             </div>
 
-            <div class="field">
-              <label for="pickupTime">Pickup time *</label>
-              <input id="pickupTime" name="pickupTime" type="time" required>
+            <div class="form-group">
+                <label>Pickup Time *</label>
+                <input type="time" id="time" required>
             </div>
-          </div>
 
-          <div class="section">
-            <p class="section-title">✈️ Flight info (optional)</p>
-            <div class="grid">
-              <div class="field">
-                <label for="flightNumber">Flight number</label>
-                <input id="flightNumber" name="flightNumber" type="text" placeholder="e.g., UA1234, AA567">
-              </div>
-              <div class="field">
-                <label for="airline">Airline</label>
-                <input id="airline" name="airline" type="text" placeholder="e.g., United, American">
-              </div>
+            <div class="form-group">
+                <label>Flight Number (optional)</label>
+                <input type="text" id="flight" placeholder="UA1234">
             </div>
-          </div>
 
-          <div class="section">
-            <p class="section-title">📝 Notes (optional)</p>
-            <div class="field">
-              <label for="notes" class="help" style="font-weight:700;color:rgba(15,23,42,.88)">
-                Anything we should know? (extra luggage, accessibility needs, etc.)
-              </label>
-              <textarea id="notes" name="notes" placeholder="Type details here…"></textarea>
+            <div class="form-group">
+                <label>Airline (optional)</label>
+                <input type="text" id="airline" placeholder="United Airlines">
             </div>
-          </div>
 
-          <div class="section">
-            <p class="section-title">💵 Estimated fare</p>
-            <div class="fare" aria-live="polite">
-              <div class="fare-row">
-                <span>Base fare</span>
-                <span id="baseFare">$5.89</span>
-              </div>
-              <div class="fare-row">
-                <span id="distanceFare">Select pickup + drop-off from dropdown to calculate</span>
-                <span></span>
-              </div>
-              <div class="fare-row total">
-                <span><strong>Total</strong></span>
-                <span><strong id="totalFare">$5.89</strong></span>
-              </div>
-              <div class="help">Driver receives 75% of fare. Final fare may adjust after route confirmation.</div>
+            <div class="form-group">
+                <label>Notes (optional)</label>
+                <textarea id="notes" placeholder="Any special requests..."></textarea>
             </div>
-          </div>
 
-          <div class="turnstile">
-            <div class="cf-turnstile"
-                 data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
-                 data-callback="onTurnstileSuccess"></div>
-          </div>
-
-          <div class="actions">
-            <button type="submit" class="btn" id="submitBtn" disabled>Request ride</button>
-            <div id="statusMessage" class="msg"></div>
-          </div>
+            <button type="submit" class="btn" id="submitBtn">Submit Booking</button>
         </form>
-      </div>
+
+        <div id="message" class="message"></div>
     </div>
 
-    <div class="footer-note">
-      Built for travelers who move different. Airport rides only. Reliability > chaos.
-    </div>
-  </div>
+    <script>
+        const form = document.getElementById('bookingForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('message');
 
-  <script>
-    // ===============================
-    // CONFIG
-    // ===============================
-    const WORKER_BASE = "https://api.travylway.com";
-    const RIDER_TYPE = "GENERAL";
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
 
-    // Must match worker calculateFare() for GENERAL
-    const BASE_FARE = 5.89;
-    const PER_MILE  = 1.50;
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            messageDiv.style.display = 'none';
 
-    // ===============================
-    // STATE (dropdown-confirmed)
-    // ===============================
-    let pickupAutocomplete, dropoffAutocomplete;
-    let turnstileToken = null;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const dateVal = document.getElementById('date').value;
+            const timeVal = document.getElementById('time').value;
+            const pickupTimeUTC = new Date(`${dateVal}T${timeVal}`).toISOString();
 
-    let pickupPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
-    let dropoffPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
+            const payload = {
+                created_by: document.getElementById('name').value.trim(),
+                rider_phone: document.getElementById('phone').value.trim(),
+                rider_type: 'GENERAL',
+                pickup_text: document.getElementById('pickup').value.trim(),
+                dropoff_text: document.getElementById('dropoff').value.trim(),
+                pickup_time_utc: pickupTimeUTC,
+                pickup_timezone: timezone,
+                flight_number: document.getElementById('flight').value.trim(),
+                airline: document.getElementById('airline').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                estimated_fare: 0
+            };
 
-    let fareAmount = BASE_FARE;
-    let distanceMiles = 0;
-    let durationMinutes = 0;
-    let fareCalculated = false;
+            console.log('Sending:', JSON.stringify(payload, null, 2));
 
-    // ===============================
-    // UI HELPERS
-    // ===============================
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    document.getElementById("timezoneInfo").textContent = `Enter pickup time in your local timezone (${tz})`;
-    document.getElementById("pickupDate").setAttribute("min", new Date().toISOString().split("T")[0]);
+            try {
+                const response = await fetch('https://api.travylway.com/api/trips', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-    function setMapsStatus(state, text){
-      const dot = document.getElementById("mapsDot");
-      const label = document.getElementById("mapsStatusText");
-      dot.classList.remove("ok","bad","warn");
-      dot.classList.add(state);
-      label.textContent = text;
-    }
+                const data = await response.json();
+                console.log('Response:', data);
 
-    function showMessage(message, type){
-      const el = document.getElementById("statusMessage");
-      el.textContent = message;
-      el.className = "msg show " + (type === "success" ? "ok" : type === "warning" ? "warn" : "bad");
-      el.style.display = "block";
-      if (type === "success"){
-        setTimeout(() => { el.className = "msg"; el.style.display="none"; }, 5000);
-      }
-    }
-
-    function onTurnstileSuccess(token){
-      turnstileToken = token;
-      document.getElementById("submitBtn").disabled = false;
-    }
-
-    function preventExclamationMarks(input){
-      const scrub = () => { if (input.value.includes("!")) input.value = input.value.replace(/!/g,""); };
-      input.addEventListener("input", scrub);
-      input.addEventListener("keydown", scrub);
-      input.addEventListener("focus", scrub);
-      setInterval(scrub, 150);
-    }
-
-    function resetFareUI(msg){
-      fareAmount = BASE_FARE;
-      distanceMiles = 0;
-      durationMinutes = 0;
-      fareCalculated = false;
-
-      document.getElementById("baseFare").textContent = `$${BASE_FARE.toFixed(2)}`;
-      document.getElementById("distanceFare").textContent = msg || "Select pickup + drop-off from dropdown to calculate";
-      document.getElementById("totalFare").textContent = `$${BASE_FARE.toFixed(2)}`;
-    }
-
-    function clearPickupSelection(){
-      pickupPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
-      resetFareUI("Select pickup + drop-off from dropdown to calculate");
-    }
-    function clearDropoffSelection(){
-      dropoffPlace = { ok:false, place_id:null, addr:"", lat:null, lng:null };
-      resetFareUI("Select pickup + drop-off from dropdown to calculate");
-    }
-
-    // ===============================
-    // AUTOCOMPLETE (captures place_id + coords)
-    // ===============================
-    function initAutocomplete(){
-      const pickupInput = document.getElementById("pickupAddress");
-      const dropoffInput = document.getElementById("dropoffAddress");
-
-      preventExclamationMarks(pickupInput);
-      preventExclamationMarks(dropoffInput);
-
-      pickupInput.addEventListener("input", () => {
-        if (pickupPlace.ok && pickupInput.value.trim() !== pickupPlace.addr) clearPickupSelection();
-      });
-      dropoffInput.addEventListener("input", () => {
-        if (dropoffPlace.ok && dropoffInput.value.trim() !== dropoffPlace.addr) clearDropoffSelection();
-      });
-
-      try{
-        pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, {
-          fields: ["place_id","formatted_address","geometry","name"]
+                if (data.ok) {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = '✅ Booking submitted! You will receive confirmation via WhatsApp.';
+                    messageDiv.style.display = 'block';
+                    form.reset();
+                } else {
+                    throw new Error(data.error || 'Submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.className = 'message error';
+                messageDiv.textContent = '❌ Error: ' + error.message;
+                messageDiv.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Booking';
+            }
         });
-        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, {
-          fields: ["place_id","formatted_address","geometry","name"]
-        });
-
-        pickupAutocomplete.addListener("place_changed", () => {
-          const place = pickupAutocomplete.getPlace();
-          if (!place || !place.place_id || !place.geometry || !place.geometry.location) {
-            clearPickupSelection();
-            return;
-          }
-          const addr = place.formatted_address || place.name || pickupInput.value.trim();
-          pickupInput.value = addr;
-
-          pickupPlace = {
-            ok: true,
-            place_id: place.place_id,
-            addr,
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng()
-          };
-          calculateFare();
-        });
-
-        dropoffAutocomplete.addListener("place_changed", () => {
-          const place = dropoffAutocomplete.getPlace();
-          if (!place || !place.place_id || !place.geometry || !place.geometry.location) {
-            clearDropoffSelection();
-            return;
-          }
-          const addr = place.formatted_address || place.name || dropoffInput.value.trim();
-          dropoffInput.value = addr;
-
-          dropoffPlace = {
-            ok: true,
-            place_id: place.place_id,
-            addr,
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng()
-          };
-          calculateFare();
-        });
-
-        setMapsStatus("ok","Maps status: ready");
-      } catch (e){
-        console.error(e);
-        setMapsStatus("bad","Maps status: failed");
-      }
-    }
-
-    function waitForGoogleMaps(){
-      if (typeof google !== "undefined" && google.maps && google.maps.places){
-        initAutocomplete();
-      } else {
-        setMapsStatus("warn","Maps status: loading…");
-        setTimeout(waitForGoogleMaps, 120);
-      }
-    }
-
-    if (document.readyState === "loading"){
-      document.addEventListener("DOMContentLoaded", waitForGoogleMaps);
-    } else {
-      waitForGoogleMaps();
-    }
-
-    // ===============================
-    // FARE CALC (prefers place_id:)
-    // ===============================
-    async function calculateFare(){
-      if (!pickupPlace.ok || !dropoffPlace.ok){
-        resetFareUI("Select pickup + drop-off from dropdown to calculate");
-        return;
-      }
-
-      try{
-        const origins = pickupPlace.place_id
-          ? `place_id:${pickupPlace.place_id}`
-          : `${pickupPlace.lat},${pickupPlace.lng}`;
-
-        const destinations = dropoffPlace.place_id
-          ? `place_id:${dropoffPlace.place_id}`
-          : `${dropoffPlace.lat},${dropoffPlace.lng}`;
-
-        const proxyUrl =
-          `${WORKER_BASE}/api/maps-distance` +
-          `?origins=${encodeURIComponent(origins)}` +
-          `&destinations=${encodeURIComponent(destinations)}` +
-          `&rider_type=${encodeURIComponent(RIDER_TYPE)}`;
-
-        const res = await fetch(proxyUrl);
-        const data = await res.json();
-
-        if (data.status === "OK" && data.fare){
-          fareAmount = Number(data.fare.total || BASE_FARE);
-          distanceMiles = Number(data.distance?.miles || 0);
-          durationMinutes = Number(data.duration?.minutes || 0);
-          fareCalculated = true;
-
-          const base = Number(data.fare.baseFare ?? BASE_FARE);
-          const per  = Number(data.fare.perMile ?? PER_MILE);
-          const distCost = Number(data.fare.distanceCost ?? (distanceMiles * per));
-
-          document.getElementById("baseFare").textContent = `$${base.toFixed(2)}`;
-          document.getElementById("distanceFare").textContent =
-            `${distanceMiles.toFixed(1)} miles × $${per.toFixed(2)}/mile = $${distCost.toFixed(2)}`;
-          document.getElementById("totalFare").textContent = `$${fareAmount.toFixed(2)}`;
-        } else {
-          console.warn("Distance calc failed:", data);
-          fareCalculated = false;
-          resetFareUI("Unable to calculate distance. Re-select both addresses from dropdown.");
-        }
-      } catch (err){
-        console.error(err);
-        fareCalculated = false;
-        resetFareUI("Error calculating distance. Re-select both addresses from dropdown.");
-      }
-    }
-
-    async function validateAndCalculateFare(){
-      const pickupText = (document.getElementById("pickupAddress").value || "").trim();
-      const dropoffText = (document.getElementById("dropoffAddress").value || "").trim();
-
-      if (!pickupText || !dropoffText){
-        showMessage("Please enter both pickup and drop-off addresses.", "error");
-        return false;
-      }
-
-      if (!pickupPlace.ok || !dropoffPlace.ok){
-        showMessage("Could not calculate fare. Pick BOTH addresses from the dropdown suggestions.", "error");
-        return false;
-      }
-
-      if (!fareCalculated) await calculateFare();
-
-      if (!fareCalculated){
-        showMessage("Could not calculate fare. Re-select both addresses from dropdown and try again.", "error");
-        return false;
-      }
-
-      return true;
-    }
-
-    // ===============================
-    // SUBMIT (WITH DEBUG LOGGING)
-    // ===============================
-    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      if (!turnstileToken){
-        showMessage("Please complete the security verification.", "error");
-        return;
-      }
-
-      const btn = document.getElementById("submitBtn");
-      btn.disabled = true;
-      btn.textContent = "Submitting…";
-
-      const ok = await validateAndCalculateFare();
-      if (!ok){
-        btn.disabled = false;
-        btn.textContent = "Request ride";
-        return;
-      }
-
-      const name = (document.getElementById("passengerName").value || "").trim();
-      const phone = (document.getElementById("phoneNumber").value || "").trim();
-      const pickupAddr = (document.getElementById("pickupAddress").value || "").replace(/!/g,"").trim();
-      const dropoffAddr = (document.getElementById("dropoffAddress").value || "").replace(/!/g,"").trim();
-      const pickupDate = document.getElementById("pickupDate").value;
-      const pickupTime = document.getElementById("pickupTime").value;
-
-      if (!name || !phone || !pickupAddr || !dropoffAddr || !pickupDate || !pickupTime){
-        showMessage("Missing required fields. Please fill everything marked with *.", "error");
-        btn.disabled = false;
-        btn.textContent = "Request ride";
-        return;
-      }
-
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
-      const pickupTimeUTC = pickupDateTime.toISOString();
-
-      // DEBUG: Log what we're about to send
-      console.log("=== DEBUG: Form values collected ===");
-      console.log("customer_name:", name);
-      console.log("customer_phone:", phone);
-      console.log("pickup_text:", pickupAddr);
-      console.log("dropoff_text:", dropoffAddr);
-      console.log("pickup_time:", pickupTimeUTC);
-      console.log("passenger_count: 1");
-      console.log("rider_type:", RIDER_TYPE);
-      const notesValue = (document.getElementById("notes").value || "").trim();
-      console.log("notes:", notesValue);
-      console.log("pickup_timezone:", timezone);
-      console.log("=== END DEBUG ===");
-
-      // Correct field names to match worker expectations
-      const tripData = {
-        // REQUIRED FIELDS (must match worker exactly):
-        customer_name: name,
-        customer_phone: phone,
-        pickup_text: pickupAddr,
-        dropoff_text: dropoffAddr,
-        pickup_time: pickupTimeUTC,
-        passenger_count: 1, // Default to 1 passenger
-        rider_type: RIDER_TYPE,
-        notes: notesValue,
-        
-        // OPTIONAL FIELDS:
-        pickup_timezone: timezone,
-        flight_number: (document.getElementById("flightNumber").value || "").trim(),
-        airline: (document.getElementById("airline").value || "").trim(),
-        
-        // Extra data (optional):
-        estimated_fare: Number(fareAmount),
-        distance_miles: Number(distanceMiles),
-        duration_minutes: Number(durationMinutes),
-        pickup_place_id: pickupPlace.place_id,
-        dropoff_place_id: dropoffPlace.place_id,
-        pickup_lat: pickupPlace.lat,
-        pickup_lng: pickupPlace.lng,
-        dropoff_lat: dropoffPlace.lat,
-        dropoff_lng: dropoffPlace.lng
-      };
-
-      // DEBUG: Show the JSON being sent
-      console.log("=== DEBUG: tripData object ===");
-      console.log(JSON.stringify(tripData, null, 2));
-      console.log("=== END DEBUG ===");
-
-      try{
-        console.log("DEBUG: Sending POST request to:", `${WORKER_BASE}/api/trips`);
-        
-        const res = await fetch(`${WORKER_BASE}/api/trips`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(tripData)
-        });
-
-        console.log("DEBUG: Response status:", res.status);
-        
-        const result = await res.json();
-        console.log("DEBUG: Full response:", result);
-
-        if (result.ok){
-          showMessage("Ride request submitted. You'll get a WhatsApp confirmation shortly.", "success");
-
-          document.getElementById("bookingForm").reset();
-          document.getElementById("pickupAddress").value = "";
-          document.getElementById("dropoffAddress").value = "";
-
-          clearPickupSelection();
-          clearDropoffSelection();
-
-          turnstileToken = null;
-          if (typeof turnstile !== "undefined") turnstile.reset();
-          btn.disabled = true;
-        } else {
-          const extra = result.message ? `\n${result.message}` : "";
-          const missingFields = result.missing ? `\nMissing: ${result.missing.join(', ')}` : "";
-          const receivedFields = result.received_fields ? `\nReceived: ${result.received_fields.join(', ')}` : "";
-          showMessage(`Request failed: ${result.error || "Unknown error"}${extra}${missingFields}${receivedFields}`, "error");
-        }
-      } catch (err){
-        console.error("DEBUG: Fetch error:", err);
-        showMessage("Network error. Check your connection and try again.", "error");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Request ride";
-      }
-    });
-
-    document.addEventListener("DOMContentLoaded", () => resetFareUI());
-  </script>
+    </script>
 </body>
 </html>
