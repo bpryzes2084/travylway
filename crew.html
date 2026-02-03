@@ -90,6 +90,10 @@
       gap:12px;
     }
 
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
     .btn{
       width:100%;
       padding:15px;
@@ -115,33 +119,6 @@
 
     .btn:disabled{ background:#cfcfcf; cursor:not-allowed; }
 
-    .btn.secondary{
-      background:#111827;
-      font-size:16px;
-      padding:12px;
-      margin-top:0;
-    }
-
-    .quote-box{
-      margin-top:10px;
-      padding:12px;
-      border:2px solid #eee;
-      border-radius:12px;
-      background:#fafafa;
-      display:none;
-    }
-
-    .quote-row{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      font-size:14px;
-      color:#222;
-      margin-top:6px;
-    }
-
-    .quote-row strong{ font-size:16px; }
-
     .message{
       padding:14px;
       border-radius:10px;
@@ -152,8 +129,8 @@
       line-height:1.35;
     }
 
-    .success{ background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
-    .error{ background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+    .success{ background:#d4edda; color:#155724; border:1px solid #c3e6cb; display:block; }
+    .error{ background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; display:block; }
 
     .loading{
       display:inline-block;
@@ -179,41 +156,6 @@
       color:#666;
       font-size:12px;
     }
-
-    .places-host{
-      width:100%;
-      border:2px solid #ddd;
-      border-radius:10px;
-      padding:6px;
-      background:#fff;
-      transition: border-color .15s ease;
-      margin-top:10px;
-      display:none;
-    }
-    .places-host:focus-within{ border-color:#667eea; }
-
-    .mini-actions{
-      display:flex;
-      gap:10px;
-      margin-top:8px;
-    }
-
-    .mini-btn{
-      border:1px solid #e5e7eb;
-      background:#f9fafb;
-      color:#111827;
-      font-size:12px;
-      padding:8px 10px;
-      border-radius:999px;
-      cursor:pointer;
-      line-height:1;
-    }
-    .mini-btn:hover{ background:#f3f4f6; }
-    .mini-btn.on{
-      background:#111827;
-      color:#fff;
-      border-color:#111827;
-    }
   </style>
 </head>
 
@@ -227,6 +169,7 @@
     </div>
 
     <form id="crewForm" autocomplete="on">
+      <!-- Honeypot field -->
       <div class="hp">
         <label>Website</label>
         <input type="text" id="website" tabindex="-1" autocomplete="off" />
@@ -319,18 +262,14 @@
     const pickupEl = document.getElementById('pickup');
     const dropoffEl = document.getElementById('dropoff');
 
+    // Show message
     function showMessage(type, text) {
       messageDiv.className = `message ${type}`;
       messageDiv.textContent = text;
       messageDiv.style.display = 'block';
     }
 
-    function formatMoney(n) {
-      const x = Number(n);
-      if (!Number.isFinite(x)) return "—";
-      return `$${x.toFixed(2)}`;
-    }
-
+    // Convert local date/time to UTC ISO
     function toUtcIsoFromLocalDateAndTime(dateStr, timeStr) {
       const [y, m, d] = dateStr.split('-').map(Number);
       const [hh, min] = timeStr.split(':').map(Number);
@@ -338,11 +277,13 @@
       return localDate.toISOString();
     }
 
+    // Validate airport code
     function isValidAirportCodeOrBlank(code) {
       if (!code) return true;
       return /^[A-Z]{3,4}$/.test(code);
     }
 
+    // Get today's date in YYYY-MM-DD format
     function getLocalYMD() {
       const d = new Date();
       const y = d.getFullYear();
@@ -351,7 +292,8 @@
       return `${y}-${m}-${day}`;
     }
 
-    function lockDateToToday() {
+    // Set minimum date to today
+    function setMinDateToToday() {
       const today = getLocalYMD();
       dateEl.min = today;
       
@@ -361,9 +303,11 @@
       }
     }
 
-    lockDateToToday();
-    dateEl.addEventListener("change", lockDateToToday);
+    // Initialize date
+    setMinDateToToday();
+    dateEl.addEventListener("change", setMinDateToToday);
 
+    // Input formatting
     phoneEl.addEventListener('input', function() {
       this.value = this.value.replace(/[^\d+()\s-]/g, '');
     });
@@ -376,6 +320,7 @@
       this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     });
 
+    // Form submission
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -386,12 +331,14 @@
         return;
       }
 
+      // Validate airport code
       const airportCode = airportEl.value.trim().toUpperCase();
       if (!isValidAirportCodeOrBlank(airportCode)) {
         showMessage('error', '❌ Airport code must be blank or 3–4 letters (DEN or KDEN).');
         return;
       }
 
+      // Validate date and time
       const dateVal = dateEl.value;
       const timeVal = timeEl.value;
       if (!dateVal || !timeVal) {
@@ -399,16 +346,19 @@
         return;
       }
 
+      // Validate addresses
       if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
         showMessage('error', '❌ Pickup and dropoff addresses are required.');
         return;
       }
 
+      // Disable submit button
       submitBtn.disabled = true;
       submitText.style.display = 'none';
       loadingSpinner.style.display = 'inline-block';
       messageDiv.style.display = 'none';
 
+      // Prepare payload
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
 
@@ -430,6 +380,7 @@
       console.log('Submitting:', JSON.stringify(payload, null, 2));
 
       try {
+        // Submit to API
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -442,8 +393,15 @@
         if (res.ok && data?.ok) {
           const confirmationId = data?.trip_id || 'N/A';
           showMessage('success', `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. You'll receive WhatsApp confirmation soon.`);
+          
+          // Reset form
           form.reset();
-          lockDateToToday();
+          
+          // Set date back to today
+          const today = getLocalYMD();
+          dateEl.min = today;
+          dateEl.value = today;
+          
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
           throw new Error(msg);
@@ -451,6 +409,7 @@
       } catch (err) {
         showMessage('error', `❌ Error: ${err.message}`);
       } finally {
+        // Re-enable submit button
         submitBtn.disabled = false;
         submitText.style.display = 'inline';
         loadingSpinner.style.display = 'none';
