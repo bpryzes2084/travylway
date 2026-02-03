@@ -415,16 +415,25 @@
     pickupVisibleEl.addEventListener("input", syncHiddenFromVisible);
     dropoffVisibleEl.addEventListener("input", syncHiddenFromVisible);
 
-    function setMinDateToToday() {
-      const now = new Date();
-      const localYMD = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, 10);
-      dateEl.min = localYMD;
-    }
-    setMinDateToToday();
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) setMinDateToToday(); });
-    dateEl.addEventListener("focus", setMinDateToToday);
+   function getLocalYMD() {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 10);
+}
+
+function lockDateToToday() {
+  const today = getLocalYMD();
+  dateEl.min = today;
+  dateEl.max = today;
+  dateEl.value = today;      // auto-fill today
+  dateEl.readOnly = true;    // prevents typing in many browsers
+}
+
+lockDateToToday();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) lockDateToToday(); });
+dateEl.addEventListener("focus", lockDateToToday);
+
 
     phoneEl.addEventListener('input', function() {
       this.value = this.value.replace(/[^\d+()\s-]/g, '');
