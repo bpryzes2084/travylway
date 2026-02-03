@@ -231,24 +231,24 @@
       <div class="form-group">
         <label>Pickup Address *</label>
 
-        <!-- Keep your original input intact for submit + quote -->
-        <input type="text" id="pickup" required placeholder="Denver International Airport (DEN)" maxlength="140" />
+        <label>Pickup Address *</label>
 
-        <!-- Autocomplete widget (optional). We’ll inject gmp-place-autocomplete here if GOOGLE_BROWSER_KEY is set. -->
-        <div id="pickupAutocompleteMount" class="places-host" style="display:none; margin-top:10px;"></div>
+<!-- Hidden field used for submit + quote -->
+<input type="hidden" id="pickup" required />
 
-        <div class="hint">Tip: include terminal/door if relevant.</div>
-      </div>
+<!-- Google Places UI (this is the visible input now) -->
+<div id="pickupAutocompleteMount" class="places-host" style="margin-top:0;"></div>
+
+<div class="hint">Tip: include terminal/door if relevant.</div>
+
 
       <div class="form-group">
         <label>Dropoff Address *</label>
 
-        <!-- Keep your original input intact for submit + quote -->
-        <input type="text" id="dropoff" required placeholder="Hotel name + address" maxlength="140" />
+<input type="hidden" id="dropoff" required />
 
-        <!-- Autocomplete widget (optional). -->
-        <div id="dropoffAutocompleteMount" class="places-host" style="display:none; margin-top:10px;"></div>
-      </div>
+<div id="dropoffAutocompleteMount" class="places-host" style="margin-top:0;"></div>
+
 
       <div class="grid">
         <div class="form-group">
