@@ -355,11 +355,14 @@
     const quoteMinutesEl = document.getElementById("quoteMinutes");
 
     // Min date = today (local)
-    const todayLocal = new Date();
-    const yyyy = todayLocal.getFullYear();
-    const mm = String(todayLocal.getMonth() + 1).padStart(2, "0");
-    const dd = String(todayLocal.getDate()).padStart(2, "0");
-    dateEl.min = `${yyyy}-${mm}-${dd}`;
+    function setMinDateToToday() {
+  const now = new Date();
+  // Convert to local YYYY-MM-DD reliably
+  const localYMD = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 10);
+  dateEl.min = localYMD;
+}
 
     // Helpers
     function showMessage(type, text) {
