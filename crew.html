@@ -166,7 +166,6 @@
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
 
-    /* Honeypot field: hidden from humans */
     .hp{
       position:absolute !important;
       left:-9999px !important;
@@ -181,7 +180,7 @@
       font-size:12px;
     }
 
-    /* PlaceAutocompleteElement wrapper (best-effort styling) */
+    /* Places widget wrapper */
     .places-host{
       width:100%;
       border:2px solid #ddd;
@@ -189,12 +188,20 @@
       padding:6px;
       background:#fff;
       transition: border-color .15s ease;
+      margin-top:10px;
     }
     .places-host:focus-within{ border-color:#667eea; }
 
     gmp-place-autocomplete{
       width:100%;
       display:block;
+    }
+
+    /* Small helper text above the widget */
+    .places-label{
+      margin-top:8px;
+      font-size:12px;
+      color:#666;
     }
   </style>
 </head>
@@ -209,7 +216,6 @@
     </div>
 
     <form id="crewForm" autocomplete="on">
-      <!-- Honeypot anti-bot -->
       <div class="hp">
         <label>Website</label>
         <input type="text" id="website" tabindex="-1" autocomplete="off" />
@@ -230,11 +236,14 @@
       <div class="form-group">
         <label>Pickup Address *</label>
 
-        <!-- Hidden field used for submit + quote -->
-        <input type="hidden" id="pickup" required />
+        <!-- Visible typing field (NORMAL SIZE) -->
+        <input type="text" id="pickup_visible" required placeholder="Denver International Airport (DEN)" maxlength="140" />
 
-        <!-- Google Places UI (visible input) -->
-        <div id="pickupAutocompleteMount" class="places-host" style="margin-top:0;"></div>
+        <!-- Hidden field used for quote + submit (synced automatically) -->
+        <input type="hidden" id="pickup" />
+
+        <div class="places-label">Optional: use autocomplete</div>
+        <div id="pickupAutocompleteMount" class="places-host"></div>
 
         <div class="hint">Tip: include terminal/door if relevant.</div>
       </div>
@@ -243,11 +252,14 @@
       <div class="form-group">
         <label>Dropoff Address *</label>
 
-        <!-- Hidden field used for submit + quote -->
-        <input type="hidden" id="dropoff" required />
+        <!-- Visible typing field (NORMAL SIZE) -->
+        <input type="text" id="dropoff_visible" required placeholder="Hotel name + address" maxlength="140" />
 
-        <!-- Google Places UI (visible input) -->
-        <div id="dropoffAutocompleteMount" class="places-host" style="margin-top:0;"></div>
+        <!-- Hidden field used for quote + submit (synced automatically) -->
+        <input type="hidden" id="dropoff" />
+
+        <div class="places-label">Optional: use autocomplete</div>
+        <div id="dropoffAutocompleteMount" class="places-host"></div>
       </div>
 
       <div class="grid">
@@ -314,14 +326,9 @@
   </div>
 
   <script>
-    // Cloudflare Worker endpoint (no trailing slash)
     const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
 
-    /**
-     * ✅ OPTIONAL: Google Places Autocomplete (NEW)
-     * Use a browser-only key restricted by HTTP referrer to your domain.
-     * Enable Maps JavaScript API + Places API for this key.
-     */
+    // Browser-only key restricted by HTTP referrer
     const GOOGLE_BROWSER_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
 
     // DOM Elements
@@ -337,6 +344,11 @@
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
 
+    // Visible address inputs (typeable)
+    const pickupVisibleEl = document.getElementById('pickup_visible');
+    const dropoffVisibleEl = document.getElementById('dropoff_visible');
+
+    // Hidden address fields (used for quote + submit)
     const pickupEl = document.getElementById('pickup');
     const dropoffEl = document.getElementById('dropoff');
 
@@ -349,22 +361,8 @@
     const quoteDiscountEl = document.getElementById('quoteDiscount');
     const quoteTotalEl = document.getElementById('quoteTotal');
 
-    // Store quote total here so submit can send it
     let latestEstimatedFare = 0;
 
-    // Min date = today (local) — robust against timezone offsets
-    function setMinDateToToday() {
-      const now = new Date();
-      const localYMD = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, 10);
-      dateEl.min = localYMD;
-    }
-    setMinDateToToday();
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) setMinDateToToday(); });
-    dateEl.addEventListener("focus", setMinDateToToday);
-
-    // Helpers
     function showMessage(type, text) {
       messageDiv.className = `message ${type}`;
       messageDiv.textContent = text;
@@ -381,7 +379,6 @@
       return `$${x.toFixed(2)}`;
     }
 
-    // SAFER local -> UTC conversion
     function toUtcIsoFromLocalDateAndTime(dateStr, timeStr) {
       const [y, m, d] = dateStr.split('-').map(Number);
       const [hh, min] = timeStr.split(':').map(Number);
@@ -394,36 +391,50 @@
       return /^[A-Z]{3,4}$/.test(code);
     }
 
-    // Input normalization
+    // Keep hidden fields synced while typing (so quote works even without selecting dropdown)
+    function syncHiddenFromVisible() {
+      pickupEl.value = pickupVisibleEl.value.trim();
+      dropoffEl.value = dropoffVisibleEl.value.trim();
+    }
+    pickupVisibleEl.addEventListener("input", syncHiddenFromVisible);
+    dropoffVisibleEl.addEventListener("input", syncHiddenFromVisible);
+
+    // Min date = today (local)
+    function setMinDateToToday() {
+      const now = new Date();
+      const localYMD = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 10);
+      dateEl.min = localYMD;
+    }
+    setMinDateToToday();
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) setMinDateToToday(); });
+    dateEl.addEventListener("focus", setMinDateToToday);
+
+    // Normalize
     phoneEl.addEventListener('input', function() {
       this.value = this.value.replace(/[^\d+()\s-]/g, '');
     });
-
     airportEl.addEventListener('input', function() {
       this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
     });
-
     flightEl.addEventListener('input', function() {
       this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     });
 
-    // ---------- Quote (fare) ----------
+    // ---------- Quote ----------
     async function fetchQuote() {
+      // Ensure hidden fields are up-to-date
+      syncHiddenFromVisible();
+
       const pickup = pickupEl.value.trim();
       const dropoff = dropoffEl.value.trim();
-
-      if (!pickup || !dropoff) {
-        throw new Error("Pickup and dropoff are required to calculate fare.");
-      }
+      if (!pickup || !dropoff) throw new Error("Pickup and dropoff are required to calculate fare.");
 
       const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pickup_text: pickup,
-          dropoff_text: dropoff,
-          rider_type: "CREW",
-        }),
+        body: JSON.stringify({ pickup_text: pickup, dropoff_text: dropoff, rider_type: "CREW" }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -470,7 +481,7 @@
     // ---------- Places Autocomplete (NEW) ----------
     async function initPlacesNewWidget() {
       if (!GOOGLE_BROWSER_KEY || GOOGLE_BROWSER_KEY === "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo") {
-        console.warn("GOOGLE_BROWSER_KEY not set. Autocomplete disabled (manual entry only).");
+        console.warn("GOOGLE_BROWSER_KEY not set. Autocomplete disabled.");
         return;
       }
 
@@ -480,12 +491,11 @@
       const pickupMount = document.getElementById("pickupAutocompleteMount");
       const dropoffMount = document.getElementById("dropoffAutocompleteMount");
 
-      // Create PlaceAutocompleteElements
       const pickupAuto = new google.maps.places.PlaceAutocompleteElement({});
-      pickupAuto.placeholder = "Denver International Airport (DEN)";
+      pickupAuto.placeholder = "Search pickup…";
 
       const dropoffAuto = new google.maps.places.PlaceAutocompleteElement({});
-      dropoffAuto.placeholder = "Hotel name + address";
+      dropoffAuto.placeholder = "Search dropoff…";
 
       pickupAuto.includedRegionCodes = ['us'];
       dropoffAuto.includedRegionCodes = ['us'];
@@ -497,7 +507,11 @@
         try {
           const place = placePrediction.toPlace();
           await place.fetchFields({ fields: ['formattedAddress'] });
-          if (place.formattedAddress) pickupEl.value = place.formattedAddress;
+          const addr = place.formattedAddress || "";
+          if (addr) {
+            pickupVisibleEl.value = addr;
+            pickupEl.value = addr;
+          }
         } catch (e) {
           console.warn("Pickup place select failed:", e);
         }
@@ -507,7 +521,11 @@
         try {
           const place = placePrediction.toPlace();
           await place.fetchFields({ fields: ['formattedAddress'] });
-          if (place.formattedAddress) dropoffEl.value = place.formattedAddress;
+          const addr = place.formattedAddress || "";
+          if (addr) {
+            dropoffVisibleEl.value = addr;
+            dropoffEl.value = addr;
+          }
         } catch (e) {
           console.warn("Dropoff place select failed:", e);
         }
@@ -520,14 +538,12 @@
           resolve();
           return;
         }
-
         const existing = document.querySelector('script[data-gmaps="1"]');
         if (existing) {
           existing.addEventListener("load", () => resolve());
           existing.addEventListener("error", () => reject(new Error("Google Maps script failed to load")));
           return;
         }
-
         const s = document.createElement("script");
         s.dataset.gmaps = "1";
         s.async = true;
@@ -540,7 +556,7 @@
 
     initPlacesNewWidget().catch(err => console.warn("Places init failed:", err));
 
-    // ---------- Form submit ----------
+    // ---------- Submit ----------
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -549,6 +565,9 @@
         showMessage('error', '❌ Submission blocked.');
         return;
       }
+
+      // Keep hidden synced
+      syncHiddenFromVisible();
 
       const airportCode = airportEl.value.trim().toUpperCase();
       if (!isValidAirportCodeOrBlank(airportCode)) {
@@ -563,9 +582,8 @@
         return;
       }
 
-      // Pickup/dropoff come from hidden fields (filled by Google selection)
       if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
-        showMessage('error', '❌ Please select pickup and dropoff from the address dropdowns.');
+        showMessage('error', '❌ Pickup and dropoff addresses are required.');
         return;
       }
 
@@ -608,18 +626,15 @@
 
         if (res.ok && data?.ok) {
           const confirmationId = data?.id || 'N/A';
-
-          showMessage(
-            'success',
-            `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. Dispatch will confirm shortly.`
-          );
+          showMessage('success', `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. Dispatch will confirm shortly.`);
 
           form.reset();
           setMinDateToToday();
           latestEstimatedFare = 0;
           setQuoteUIVisible(false);
 
-          // NOTE: hidden pickup/dropoff fields will be empty after reset; that’s fine.
+          pickupEl.value = "";
+          dropoffEl.value = "";
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
           throw new Error(msg);
