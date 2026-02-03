@@ -180,7 +180,6 @@
       font-size:12px;
     }
 
-    /* Autocomplete mount (hidden unless toggled on) */
     .places-host{
       width:100%;
       border:2px solid #ddd;
@@ -224,7 +223,7 @@
 
     <h1>🚗 Book Crew Ride</h1>
     <div class="subhead">
-      Crew-only requests. Airport ↔ hotel runs. Reliable timing beats “pretty apps.”
+      Crew-only requests. Airport ↔ hotel runs. Reliable timing beats "pretty apps."
     </div>
 
     <form id="crewForm" autocomplete="on">
@@ -244,34 +243,15 @@
         <div class="hint">Used for confirmation + driver coordination.</div>
       </div>
 
-      <!-- PICKUP -->
       <div class="form-group">
         <label>Pickup Address *</label>
-
-        <input type="text" id="pickup_visible" required placeholder="Denver International Airport (DEN)" maxlength="140" />
-        <input type="hidden" id="pickup" />
-
-        <div class="mini-actions">
-          <button type="button" class="mini-btn" id="pickupToggle">Use autocomplete</button>
-        </div>
-
-        <div id="pickupAutocompleteMount" class="places-host"></div>
-
+        <input type="text" id="pickup" required placeholder="Denver International Airport (DEN)" maxlength="140" />
         <div class="hint">Tip: include terminal/door if relevant.</div>
       </div>
 
-      <!-- DROPOFF -->
       <div class="form-group">
         <label>Dropoff Address *</label>
-
-        <input type="text" id="dropoff_visible" required placeholder="Hotel name + address" maxlength="140" />
-        <input type="hidden" id="dropoff" />
-
-        <div class="mini-actions">
-          <button type="button" class="mini-btn" id="dropoffToggle">Use autocomplete</button>
-        </div>
-
-        <div id="dropoffAutocompleteMount" class="places-host"></div>
+        <input type="text" id="dropoff" required placeholder="Hotel name + address" maxlength="140" />
       </div>
 
       <div class="grid">
@@ -309,21 +289,6 @@
         <textarea id="notes" placeholder="Crew count, bags, special pickup notes..."></textarea>
       </div>
 
-      <!-- Quote controls -->
-      <div class="form-group">
-        <button type="button" class="btn secondary" id="quoteBtn">
-          <span id="quoteText">Calculate Fare</span>
-          <span class="loading" id="quoteSpinner" style="display:none;"></span>
-        </button>
-
-        <div id="quoteBox" class="quote-box">
-          <div class="quote-row"><span>Distance</span><span id="quoteMiles">—</span></div>
-          <div class="quote-row"><span>Duration</span><span id="quoteMinutes">—</span></div>
-          <div class="quote-row"><span>Discount</span><span id="quoteDiscount">—</span></div>
-          <div class="quote-row"><strong>Total</strong><strong id="quoteTotal">—</strong></div>
-        </div>
-      </div>
-
       <button type="submit" class="btn" id="submitBtn">
         <span id="submitText">Submit Crew Booking</span>
         <span class="loading" id="loadingSpinner" style="display:none;"></span>
@@ -340,13 +305,6 @@
   <script>
     const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
 
-    /**
-     * 🔐 DO NOT hardcode keys in HTML in production.
-     * Option A: Inject at build time (replace __GMAPS_KEY__).
-     * Option B: Leave blank to disable autocomplete safely.
-     */
-    const GOOGLE_BROWSER_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo"; // set to your real key during deploy
-
     const form = document.getElementById('crewForm');
     const submitBtn = document.getElementById('submitBtn');
     const submitText = document.getElementById('submitText');
@@ -358,36 +316,13 @@
     const flightEl = document.getElementById('flight');
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
-
-    const pickupVisibleEl = document.getElementById('pickup_visible');
-    const dropoffVisibleEl = document.getElementById('dropoff_visible');
     const pickupEl = document.getElementById('pickup');
     const dropoffEl = document.getElementById('dropoff');
-
-    const pickupMount = document.getElementById("pickupAutocompleteMount");
-    const dropoffMount = document.getElementById("dropoffAutocompleteMount");
-    const pickupToggle = document.getElementById("pickupToggle");
-    const dropoffToggle = document.getElementById("dropoffToggle");
-
-    const quoteBtn = document.getElementById('quoteBtn');
-    const quoteText = document.getElementById('quoteText');
-    const quoteSpinner = document.getElementById('quoteSpinner');
-    const quoteBox = document.getElementById('quoteBox');
-    const quoteMilesEl = document.getElementById('quoteMiles');
-    const quoteMinutesEl = document.getElementById('quoteMinutes');
-    const quoteDiscountEl = document.getElementById('quoteDiscount');
-    const quoteTotalEl = document.getElementById('quoteTotal');
-
-    let latestEstimatedFare = 0;
 
     function showMessage(type, text) {
       messageDiv.className = `message ${type}`;
       messageDiv.textContent = text;
       messageDiv.style.display = 'block';
-    }
-
-    function setQuoteUIVisible(visible) {
-      quoteBox.style.display = visible ? 'block' : 'none';
     }
 
     function formatMoney(n) {
@@ -408,236 +343,48 @@
       return /^[A-Z]{3,4}$/.test(code);
     }
 
-    function syncHiddenFromVisible() {
-      pickupEl.value = pickupVisibleEl.value.trim();
-      dropoffEl.value = dropoffVisibleEl.value.trim();
+    function getLocalYMD() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
     }
-    pickupVisibleEl.addEventListener("input", syncHiddenFromVisible);
-    dropoffVisibleEl.addEventListener("input", syncHiddenFromVisible);
 
-   function getLocalYMD() {
-  const now = new Date();
-  return new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-    .toISOString()
-    .slice(0, 10);
-}
+    function lockDateToToday() {
+      const today = getLocalYMD();
+      dateEl.min = today;
+      
+      // If blank or in the past, set to today
+      if (!dateEl.value || dateEl.value < today) {
+        dateEl.value = today;
+      }
+    }
 
-function getLocalYMD() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function lockDateToToday() {
-  const today = getLocalYMD();
-  dateEl.min = today;
-  dateEl.max = today;
-
-  // If blank or wrong (tampered), snap back to today
-  if (!dateEl.value || dateEl.value !== today) dateEl.value = today;
-}
-
-lockDateToToday();
-document.addEventListener("visibilitychange", () => { if (!document.hidden) lockDateToToday(); });
-dateEl.addEventListener("focus", lockDateToToday);
-dateEl.addEventListener("change", lockDateToToday);
-dateEl.addEventListener("input", lockDateToToday);
-
-
-
+    lockDateToToday();
+    dateEl.addEventListener("change", lockDateToToday);
 
     phoneEl.addEventListener('input', function() {
       this.value = this.value.replace(/[^\d+()\s-]/g, '');
     });
+    
     airportEl.addEventListener('input', function() {
       this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
     });
+    
     flightEl.addEventListener('input', function() {
       this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     });
 
-    async function fetchQuote() {
-      syncHiddenFromVisible();
-      const pickup = pickupEl.value.trim();
-      const dropoff = dropoffEl.value.trim();
-      if (!pickup || !dropoff) throw new Error("Pickup and dropoff are required to calculate fare.");
-
-      const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pickup_text: pickup, dropoff_text: dropoff, rider_type: "CREW" }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data?.ok) {
-        const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
-        throw new Error(msg);
-      }
-      return data;
-    }
-
-    quoteBtn.addEventListener("click", async () => {
-      try {
-        quoteBtn.disabled = true;
-        quoteText.style.display = "none";
-        quoteSpinner.style.display = "inline-block";
-        messageDiv.style.display = "none";
-
-        const q = await fetchQuote();
-
-        const miles = Number(q?.miles ?? 0);
-        const minutes = Number(q?.minutes ?? 0);
-        const discount = Number(q?.estimate?.discount ?? 0);
-        const total = Number(q?.estimate?.total ?? 0);
-
-        latestEstimatedFare = Number.isFinite(total) ? total : 0;
-
-        quoteMilesEl.textContent = `${miles.toFixed(2)} mi`;
-        quoteMinutesEl.textContent = `${minutes.toFixed(0)} min`;
-        quoteDiscountEl.textContent = formatMoney(discount);
-        quoteTotalEl.textContent = formatMoney(total);
-
-        setQuoteUIVisible(true);
-      } catch (err) {
-        setQuoteUIVisible(false);
-        latestEstimatedFare = 0;
-        showMessage('error', `❌ Fare quote error: ${err.message}`);
-      } finally {
-        quoteBtn.disabled = false;
-        quoteText.style.display = "inline";
-        quoteSpinner.style.display = "none";
-      }
-    });
-
-    function loadGoogleMapsJs(key) {
-      return new Promise((resolve, reject) => {
-        if (window.google && window.google.maps && window.google.maps.places) {
-          resolve();
-          return;
-        }
-        const existing = document.querySelector('script[data-gmaps="1"]');
-        if (existing) {
-          existing.addEventListener("load", () => resolve());
-          existing.addEventListener("error", () => reject(new Error("Google Maps script failed to load")));
-          return;
-        }
-        const s = document.createElement("script");
-        s.dataset.gmaps = "1";
-        s.async = true;
-        s.defer = true;
-        s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&libraries=places&v=weekly`;
-        s.onload = () => resolve();
-        s.onerror = () => reject(new Error("Google Maps script failed to load"));
-        document.head.appendChild(s);
-      });
-    }
-
-    let placesReady = false;
-    let pickupAutoInput, dropoffAutoInput;
-
-    function hasRealGoogleKey() {
-      const k = (GOOGLE_BROWSER_KEY || "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo").trim();
-      if (!k) return false;
-      if (k === "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo") return false;
-      // quick sanity check: Google API keys usually start with "AIza"
-      if (!k.startsWith("AIza")) return false;
-      return true;
-    }
-
-    async function ensurePlacesReady() {
-      if (placesReady) return true;
-
-      if (!hasRealGoogleKey()) {
-        showMessage("error", "❌ Autocomplete is OFF (no Google browser key injected).");
-        return false;
-      }
-
-      await loadGoogleMapsJs(GOOGLE_BROWSER_KEY);
-
-      // Create plain inputs inside the mount containers
-      pickupMount.innerHTML = `<input id="pickup_auto" type="text" placeholder="Search pickup…" />`;
-      dropoffMount.innerHTML = `<input id="dropoff_auto" type="text" placeholder="Search dropoff…" />`;
-
-      pickupAutoInput = document.getElementById("pickup_auto");
-      dropoffAutoInput = document.getElementById("dropoff_auto");
-
-      // Style match
-      [pickupAutoInput, dropoffAutoInput].forEach(el => {
-        el.style.width = "100%";
-        el.style.border = "0";
-        el.style.outline = "none";
-        el.style.fontSize = "16px";
-        el.style.padding = "8px 6px";
-      });
-
-      const pickupAC = new google.maps.places.Autocomplete(pickupAutoInput, {
-        fields: ["formatted_address"],
-        componentRestrictions: { country: "us" }
-      });
-
-      const dropoffAC = new google.maps.places.Autocomplete(dropoffAutoInput, {
-        fields: ["formatted_address"],
-        componentRestrictions: { country: "us" }
-      });
-
-      pickupAC.addListener("place_changed", () => {
-        const place = pickupAC.getPlace();
-        const addr = place?.formatted_address || pickupAutoInput.value || "";
-        if (addr) {
-          pickupVisibleEl.value = addr;
-          pickupEl.value = addr;
-          setQuoteUIVisible(false);
-        }
-      });
-
-      dropoffAC.addListener("place_changed", () => {
-        const place = dropoffAC.getPlace();
-        const addr = place?.formatted_address || dropoffAutoInput.value || "";
-        if (addr) {
-          dropoffVisibleEl.value = addr;
-          dropoffEl.value = addr;
-          setQuoteUIVisible(false);
-        }
-      });
-
-      placesReady = true;
-      return true;
-    }
-
-    async function toggleAutocomplete(which) {
-      const ok = await ensurePlacesReady();
-      if (!ok) return;
-
-      if (which === "pickup") {
-        const on = pickupMount.style.display !== "block";
-        pickupMount.style.display = on ? "block" : "none";
-        pickupToggle.classList.toggle("on", on);
-        pickupToggle.textContent = on ? "Hide autocomplete" : "Use autocomplete";
-        if (on && pickupAutoInput) pickupAutoInput.focus();
-      } else {
-        const on = dropoffMount.style.display !== "block";
-        dropoffMount.style.display = on ? "block" : "none";
-        dropoffToggle.classList.toggle("on", on);
-        dropoffToggle.textContent = on ? "Hide autocomplete" : "Use autocomplete";
-        if (on && dropoffAutoInput) dropoffAutoInput.focus();
-      }
-    }
-
-    pickupToggle.addEventListener("click", () => toggleAutocomplete("pickup"));
-    dropoffToggle.addEventListener("click", () => toggleAutocomplete("dropoff"));
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      // Honeypot check
       const hp = document.getElementById('website').value.trim();
       if (hp) {
         showMessage('error', '❌ Submission blocked.');
         return;
       }
-
-      syncHiddenFromVisible();
 
       const airportCode = airportEl.value.trim().toUpperCase();
       if (!isValidAirportCodeOrBlank(airportCode)) {
@@ -673,17 +420,14 @@ dateEl.addEventListener("input", lockDateToToday);
         dropoff_text: dropoffEl.value.trim(),
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
-
         flight_number: (flightEl.value || "").trim(),
         airline: (document.getElementById('airline').value || "").trim(),
         airport_code: airportCode,
-
         notes: document.getElementById('notes').value.trim(),
-        estimated_fare: Number(latestEstimatedFare || 0),
-
-        timestamp: new Date().toISOString(),
-        source: 'crew.html'
+        estimated_fare: 0
       };
+
+      console.log('Submitting:', JSON.stringify(payload, null, 2));
 
       try {
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, {
@@ -693,22 +437,13 @@ dateEl.addEventListener("input", lockDateToToday);
         });
 
         const data = await res.json().catch(() => ({}));
+        console.log('Response:', data);
 
         if (res.ok && data?.ok) {
-          const confirmationId = data?.id || 'N/A';
-          showMessage('success', `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. Dispatch will confirm shortly.`);
-
+          const confirmationId = data?.trip_id || 'N/A';
+          showMessage('success', `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. You'll receive WhatsApp confirmation soon.`);
           form.reset();
-          setMinDateToToday();
-
-          // Hard reset + sync so hidden fields are definitely empty
-          pickupVisibleEl.value = "";
-          dropoffVisibleEl.value = "";
-          pickupEl.value = "";
-          dropoffEl.value = "";
-
-          latestEstimatedFare = 0;
-          setQuoteUIVisible(false);
+          lockDateToToday();
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
           throw new Error(msg);
