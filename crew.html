@@ -119,6 +119,35 @@
 
     .btn:disabled{ background:#cfcfcf; cursor:not-allowed; }
 
+    .btn.secondary{
+      background:#111827;
+      font-size:16px;
+      padding:12px;
+      margin-top:0;
+    }
+
+    .quote-box{
+      margin-top:10px;
+      padding:14px;
+      border:2px solid #e5e7eb;
+      border-radius:12px;
+      background:#f9fafb;
+      display:none;
+    }
+
+    .quote-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size:14px;
+      color:#222;
+      margin-top:6px;
+    }
+
+    .quote-row:first-child{ margin-top:0; }
+
+    .quote-row strong{ font-size:16px; color:#667eea; }
+
     .message{
       padding:14px;
       border-radius:10px;
@@ -232,6 +261,21 @@
         <textarea id="notes" placeholder="Crew count, bags, special pickup notes..."></textarea>
       </div>
 
+      <!-- Calculate Fare Button -->
+      <div class="form-group">
+        <button type="button" class="btn secondary" id="quoteBtn">
+          <span id="quoteText">Calculate Fare</span>
+          <span class="loading" id="quoteSpinner" style="display:none;"></span>
+        </button>
+
+        <div id="quoteBox" class="quote-box">
+          <div class="quote-row"><span>Distance</span><span id="quoteMiles">—</span></div>
+          <div class="quote-row"><span>Duration</span><span id="quoteMinutes">—</span></div>
+          <div class="quote-row"><span>Crew Discount</span><span id="quoteDiscount">CREW RATE</span></div>
+          <div class="quote-row"><strong>Estimated Total</strong><strong id="quoteTotal">—</strong></div>
+        </div>
+      </div>
+
       <button type="submit" class="btn" id="submitBtn">
         <span id="submitText">Submit Crew Booking</span>
         <span class="loading" id="loadingSpinner" style="display:none;"></span>
@@ -262,14 +306,22 @@
     const pickupEl = document.getElementById('pickup');
     const dropoffEl = document.getElementById('dropoff');
 
-    // Show message
+    const quoteBtn = document.getElementById('quoteBtn');
+    const quoteText = document.getElementById('quoteText');
+    const quoteSpinner = document.getElementById('quoteSpinner');
+    const quoteBox = document.getElementById('quoteBox');
+    const quoteMilesEl = document.getElementById('quoteMiles');
+    const quoteMinutesEl = document.getElementById('quoteMinutes');
+    const quoteTotalEl = document.getElementById('quoteTotal');
+
+    let latestEstimatedFare = 0;
+
     function showMessage(type, text) {
       messageDiv.className = `message ${type}`;
       messageDiv.textContent = text;
       messageDiv.style.display = 'block';
     }
 
-    // Convert local date/time to UTC ISO
     function toUtcIsoFromLocalDateAndTime(dateStr, timeStr) {
       const [y, m, d] = dateStr.split('-').map(Number);
       const [hh, min] = timeStr.split(':').map(Number);
@@ -277,13 +329,11 @@
       return localDate.toISOString();
     }
 
-    // Validate airport code
     function isValidAirportCodeOrBlank(code) {
       if (!code) return true;
       return /^[A-Z]{3,4}$/.test(code);
     }
 
-    // Get today's date in YYYY-MM-DD format
     function getLocalYMD() {
       const d = new Date();
       const y = d.getFullYear();
@@ -292,22 +342,17 @@
       return `${y}-${m}-${day}`;
     }
 
-    // Set minimum date to today
     function setMinDateToToday() {
       const today = getLocalYMD();
       dateEl.min = today;
-      
-      // If blank or in the past, set to today
       if (!dateEl.value || dateEl.value < today) {
         dateEl.value = today;
       }
     }
 
-    // Initialize date
     setMinDateToToday();
     dateEl.addEventListener("change", setMinDateToToday);
 
-    // Input formatting
     phoneEl.addEventListener('input', function() {
       this.value = this.value.replace(/[^\d+()\s-]/g, '');
     });
@@ -320,25 +365,76 @@
       this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     });
 
+    // Calculate Fare
+    quoteBtn.addEventListener('click', async () => {
+      const pickup = pickupEl.value.trim();
+      const dropoff = dropoffEl.value.trim();
+
+      if (!pickup || !dropoff) {
+        showMessage('error', '❌ Please enter both pickup and dropoff addresses to calculate fare.');
+        return;
+      }
+
+      quoteBtn.disabled = true;
+      quoteText.style.display = 'none';
+      quoteSpinner.style.display = 'inline-block';
+      messageDiv.style.display = 'none';
+
+      try {
+        const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pickup_text: pickup,
+            dropoff_text: dropoff,
+            rider_type: 'CREW'
+          })
+        });
+
+        const data = await res.json();
+        console.log('Quote response:', data);
+
+        if (res.ok && data.ok) {
+          const miles = data.miles || 0;
+          const minutes = data.minutes || 0;
+          const total = data.estimate?.total || 0;
+
+          latestEstimatedFare = total;
+
+          quoteMilesEl.textContent = `${miles.toFixed(1)} mi`;
+          quoteMinutesEl.textContent = `${Math.round(minutes)} min`;
+          quoteTotalEl.textContent = `$${total.toFixed(2)}`;
+
+          quoteBox.style.display = 'block';
+        } else {
+          throw new Error(data.error || 'Failed to calculate fare');
+        }
+      } catch (err) {
+        showMessage('error', `❌ Fare calculation error: ${err.message}`);
+        quoteBox.style.display = 'none';
+      } finally {
+        quoteBtn.disabled = false;
+        quoteText.style.display = 'inline';
+        quoteSpinner.style.display = 'none';
+      }
+    });
+
     // Form submission
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Honeypot check
       const hp = document.getElementById('website').value.trim();
       if (hp) {
         showMessage('error', '❌ Submission blocked.');
         return;
       }
 
-      // Validate airport code
       const airportCode = airportEl.value.trim().toUpperCase();
       if (!isValidAirportCodeOrBlank(airportCode)) {
         showMessage('error', '❌ Airport code must be blank or 3–4 letters (DEN or KDEN).');
         return;
       }
 
-      // Validate date and time
       const dateVal = dateEl.value;
       const timeVal = timeEl.value;
       if (!dateVal || !timeVal) {
@@ -346,19 +442,16 @@
         return;
       }
 
-      // Validate addresses
       if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
         showMessage('error', '❌ Pickup and dropoff addresses are required.');
         return;
       }
 
-      // Disable submit button
       submitBtn.disabled = true;
       submitText.style.display = 'none';
       loadingSpinner.style.display = 'inline-block';
       messageDiv.style.display = 'none';
 
-      // Prepare payload
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
 
@@ -374,13 +467,12 @@
         airline: (document.getElementById('airline').value || "").trim(),
         airport_code: airportCode,
         notes: document.getElementById('notes').value.trim(),
-        estimated_fare: 0
+        estimated_fare: latestEstimatedFare
       };
 
       console.log('Submitting:', JSON.stringify(payload, null, 2));
 
       try {
-        // Submit to API
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -392,15 +484,15 @@
 
         if (res.ok && data?.ok) {
           const confirmationId = data?.trip_id || 'N/A';
-          showMessage('success', `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. You'll receive WhatsApp confirmation soon.`);
+          showMessage('success', `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. You'll receive confirmation via Telegram.`);
           
-          // Reset form
           form.reset();
-          
-          // Set date back to today
           const today = getLocalYMD();
           dateEl.min = today;
           dateEl.value = today;
+
+          latestEstimatedFare = 0;
+          quoteBox.style.display = 'none';
           
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
@@ -409,7 +501,6 @@
       } catch (err) {
         showMessage('error', `❌ Error: ${err.message}`);
       } finally {
-        // Re-enable submit button
         submitBtn.disabled = false;
         submitText.style.display = 'inline';
         loadingSpinner.style.display = 'none';
