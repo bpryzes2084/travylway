@@ -140,9 +140,7 @@
       margin-top:6px;
     }
 
-    .quote-row strong{
-      font-size:16px;
-    }
+    .quote-row strong{ font-size:16px; }
 
     .message{
       padding:14px;
@@ -228,27 +226,29 @@
         <div class="hint">Used for confirmation + driver coordination.</div>
       </div>
 
+      <!-- PICKUP -->
       <div class="form-group">
         <label>Pickup Address *</label>
 
-        <label>Pickup Address *</label>
+        <!-- Hidden field used for submit + quote -->
+        <input type="hidden" id="pickup" required />
 
-<!-- Hidden field used for submit + quote -->
-<input type="hidden" id="pickup" required />
+        <!-- Google Places UI (visible input) -->
+        <div id="pickupAutocompleteMount" class="places-host" style="margin-top:0;"></div>
 
-<!-- Google Places UI (this is the visible input now) -->
-<div id="pickupAutocompleteMount" class="places-host" style="margin-top:0;"></div>
+        <div class="hint">Tip: include terminal/door if relevant.</div>
+      </div>
 
-<div class="hint">Tip: include terminal/door if relevant.</div>
-
-
+      <!-- DROPOFF -->
       <div class="form-group">
         <label>Dropoff Address *</label>
 
-<input type="hidden" id="dropoff" required />
+        <!-- Hidden field used for submit + quote -->
+        <input type="hidden" id="dropoff" required />
 
-<div id="dropoffAutocompleteMount" class="places-host" style="margin-top:0;"></div>
-
+        <!-- Google Places UI (visible input) -->
+        <div id="dropoffAutocompleteMount" class="places-host" style="margin-top:0;"></div>
+      </div>
 
       <div class="grid">
         <div class="form-group">
@@ -319,14 +319,10 @@
 
     /**
      * ✅ OPTIONAL: Google Places Autocomplete (NEW)
-     * To enable address dropdown autocomplete:
-     *  - Create a separate *browser* key restricted by HTTP referrer to your domain
-     *  - Enable Maps JavaScript API + Places API (NEW) for that key's project
-     *  - Paste key between the quotes below
-     *
-     * If you do NOT set a browser key, the form still works; users type addresses manually.
+     * Use a browser-only key restricted by HTTP referrer to your domain.
+     * Enable Maps JavaScript API + Places API for this key.
      */
-    const GOOGLE_BROWSER_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo"; // <-- put your browser key here (optional)
+    const GOOGLE_BROWSER_KEY = "REPLACE_WITH_YOUR_BROWSER_KEY";
 
     // DOM Elements
     const form = document.getElementById('crewForm');
@@ -394,7 +390,6 @@
     }
 
     function isValidAirportCodeOrBlank(code) {
-      // Optional field: allow blank OR 3-4 letters
       if (!code) return true;
       return /^[A-Z]{3,4}$/.test(code);
     }
@@ -448,7 +443,6 @@
 
         const q = await fetchQuote();
 
-        // q.estimate.total is what we store + send
         const miles = q?.miles ?? 0;
         const minutes = q?.minutes ?? 0;
         const discount = q?.estimate?.discount ?? 0;
@@ -473,47 +467,38 @@
       }
     });
 
-    // ---------- OPTIONAL: Places Autocomplete (NEW) ----------
-    // Uses PlaceAutocompleteElement and copies selection into your existing inputs.
+    // ---------- Places Autocomplete (NEW) ----------
     async function initPlacesNewWidget() {
-      if (!GOOGLE_BROWSER_KEY) return;
+      if (!GOOGLE_BROWSER_KEY || GOOGLE_BROWSER_KEY === "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo") {
+        console.warn("GOOGLE_BROWSER_KEY not set. Autocomplete disabled (manual entry only).");
+        return;
+      }
 
-      // Load Maps JS API with async best-practice
       await loadGoogleMapsJs(GOOGLE_BROWSER_KEY);
-
-      // Import the places library (new pattern)
       await google.maps.importLibrary("places");
 
-      // Create & mount autocomplete elements
       const pickupMount = document.getElementById("pickupAutocompleteMount");
       const dropoffMount = document.getElementById("dropoffAutocompleteMount");
 
-      // Show mounts (they are hidden by default)
-      pickupMount.style.display = "block";
-      dropoffMount.style.display = "block";
-
       // Create PlaceAutocompleteElements
       const pickupAuto = new google.maps.places.PlaceAutocompleteElement({});
-      pickupAuto.placeholder = "Search pickup…";
+      pickupAuto.placeholder = "Denver International Airport (DEN)";
 
       const dropoffAuto = new google.maps.places.PlaceAutocompleteElement({});
-      dropoffAuto.placeholder = "Search dropoff…";
+      dropoffAuto.placeholder = "Hotel name + address";
 
-      // Optional: restrict to US results (you can remove this if you want global)
       pickupAuto.includedRegionCodes = ['us'];
       dropoffAuto.includedRegionCodes = ['us'];
 
       pickupMount.appendChild(pickupAuto);
       dropoffMount.appendChild(dropoffAuto);
 
-      // When user selects a place, copy formatted address into your existing inputs
       pickupAuto.addEventListener('gmp-select', async ({ placePrediction }) => {
         try {
           const place = placePrediction.toPlace();
           await place.fetchFields({ fields: ['formattedAddress'] });
           if (place.formattedAddress) pickupEl.value = place.formattedAddress;
         } catch (e) {
-          // If something fails, don’t block the form
           console.warn("Pickup place select failed:", e);
         }
       });
@@ -531,7 +516,6 @@
 
     function loadGoogleMapsJs(key) {
       return new Promise((resolve, reject) => {
-        // If already loaded, resolve
         if (window.google && window.google.maps && window.google.maps.importLibrary) {
           resolve();
           return;
@@ -547,33 +531,25 @@
         const s = document.createElement("script");
         s.dataset.gmaps = "1";
         s.async = true;
-
-        // Best-practice async loading flag (removes your console warning)
         s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&loading=async`;
-
         s.onload = () => resolve();
         s.onerror = () => reject(new Error("Google Maps script failed to load"));
         document.head.appendChild(s);
       });
     }
 
-    // Kick off Places widget if browser key provided
-    initPlacesNewWidget().catch(err => {
-      console.warn("Places init failed:", err);
-    });
+    initPlacesNewWidget().catch(err => console.warn("Places init failed:", err));
 
     // ---------- Form submit ----------
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Honeypot trap
       const hp = document.getElementById('website').value.trim();
       if (hp) {
         showMessage('error', '❌ Submission blocked.');
         return;
       }
 
-      // Optional airport validation
       const airportCode = airportEl.value.trim().toUpperCase();
       if (!isValidAirportCodeOrBlank(airportCode)) {
         showMessage('error', '❌ Airport code must be blank or 3–4 letters (DEN or KDEN).');
@@ -587,7 +563,12 @@
         return;
       }
 
-      // UI loading state
+      // Pickup/dropoff come from hidden fields (filled by Google selection)
+      if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
+        showMessage('error', '❌ Please select pickup and dropoff from the address dropdowns.');
+        return;
+      }
+
       submitBtn.disabled = true;
       submitText.style.display = 'none';
       loadingSpinner.style.display = 'inline-block';
@@ -596,7 +577,6 @@
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
 
-      // Payload
       const payload = {
         created_by: document.getElementById('name').value.trim(),
         rider_phone: phoneEl.value.trim(),
@@ -606,14 +586,11 @@
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
 
-        // Optional fields (send blank if not provided)
         flight_number: (flightEl.value || "").trim(),
         airline: (document.getElementById('airline').value || "").trim(),
         airport_code: airportCode,
 
         notes: document.getElementById('notes').value.trim(),
-
-        // Send latest quote if available; otherwise 0 and backend will floor to minFare
         estimated_fare: Number(latestEstimatedFare || 0),
 
         timestamp: new Date().toISOString(),
@@ -641,6 +618,8 @@
           setMinDateToToday();
           latestEstimatedFare = 0;
           setQuoteUIVisible(false);
+
+          // NOTE: hidden pickup/dropoff fields will be empty after reset; that’s fine.
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
           throw new Error(msg);
