@@ -434,8 +434,17 @@ function lockDateToToday() {
   const today = getLocalYMD();
   dateEl.min = today;
   dateEl.max = today;
-  dateEl.value = today;
-  }
+
+  // If blank or wrong (tampered), snap back to today
+  if (!dateEl.value || dateEl.value !== today) dateEl.value = today;
+}
+
+lockDateToToday();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) lockDateToToday(); });
+dateEl.addEventListener("focus", lockDateToToday);
+dateEl.addEventListener("change", lockDateToToday);
+dateEl.addEventListener("input", lockDateToToday);
+
 
 
 
