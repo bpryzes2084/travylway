@@ -180,7 +180,7 @@
       font-size:12px;
     }
 
-    /* Places widget wrapper */
+    /* Autocomplete mount (hidden unless toggled on) */
     .places-host{
       width:100%;
       border:2px solid #ddd;
@@ -189,6 +189,7 @@
       background:#fff;
       transition: border-color .15s ease;
       margin-top:10px;
+      display:none;
     }
     .places-host:focus-within{ border-color:#667eea; }
 
@@ -197,11 +198,27 @@
       display:block;
     }
 
-    /* Small helper text above the widget */
-    .places-label{
+    .mini-actions{
+      display:flex;
+      gap:10px;
       margin-top:8px;
+    }
+
+    .mini-btn{
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      color:#111827;
       font-size:12px;
-      color:#666;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      line-height:1;
+    }
+    .mini-btn:hover{ background:#f3f4f6; }
+    .mini-btn.on{
+      background:#111827;
+      color:#fff;
+      border-color:#111827;
     }
   </style>
 </head>
@@ -236,13 +253,13 @@
       <div class="form-group">
         <label>Pickup Address *</label>
 
-        <!-- Visible typing field (NORMAL SIZE) -->
         <input type="text" id="pickup_visible" required placeholder="Denver International Airport (DEN)" maxlength="140" />
-
-        <!-- Hidden field used for quote + submit (synced automatically) -->
         <input type="hidden" id="pickup" />
 
-        <div class="places-label">Optional: use autocomplete</div>
+        <div class="mini-actions">
+          <button type="button" class="mini-btn" id="pickupToggle">Use autocomplete</button>
+        </div>
+
         <div id="pickupAutocompleteMount" class="places-host"></div>
 
         <div class="hint">Tip: include terminal/door if relevant.</div>
@@ -252,13 +269,13 @@
       <div class="form-group">
         <label>Dropoff Address *</label>
 
-        <!-- Visible typing field (NORMAL SIZE) -->
         <input type="text" id="dropoff_visible" required placeholder="Hotel name + address" maxlength="140" />
-
-        <!-- Hidden field used for quote + submit (synced automatically) -->
         <input type="hidden" id="dropoff" />
 
-        <div class="places-label">Optional: use autocomplete</div>
+        <div class="mini-actions">
+          <button type="button" class="mini-btn" id="dropoffToggle">Use autocomplete</button>
+        </div>
+
         <div id="dropoffAutocompleteMount" class="places-host"></div>
       </div>
 
@@ -331,7 +348,6 @@
     // Browser-only key restricted by HTTP referrer
     const GOOGLE_BROWSER_KEY = "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo";
 
-    // DOM Elements
     const form = document.getElementById('crewForm');
     const submitBtn = document.getElementById('submitBtn');
     const submitText = document.getElementById('submitText');
@@ -344,13 +360,15 @@
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
 
-    // Visible address inputs (typeable)
     const pickupVisibleEl = document.getElementById('pickup_visible');
     const dropoffVisibleEl = document.getElementById('dropoff_visible');
-
-    // Hidden address fields (used for quote + submit)
     const pickupEl = document.getElementById('pickup');
     const dropoffEl = document.getElementById('dropoff');
+
+    const pickupMount = document.getElementById("pickupAutocompleteMount");
+    const dropoffMount = document.getElementById("dropoffAutocompleteMount");
+    const pickupToggle = document.getElementById("pickupToggle");
+    const dropoffToggle = document.getElementById("dropoffToggle");
 
     const quoteBtn = document.getElementById('quoteBtn');
     const quoteText = document.getElementById('quoteText');
@@ -391,7 +409,6 @@
       return /^[A-Z]{3,4}$/.test(code);
     }
 
-    // Keep hidden fields synced while typing (so quote works even without selecting dropdown)
     function syncHiddenFromVisible() {
       pickupEl.value = pickupVisibleEl.value.trim();
       dropoffEl.value = dropoffVisibleEl.value.trim();
@@ -399,7 +416,6 @@
     pickupVisibleEl.addEventListener("input", syncHiddenFromVisible);
     dropoffVisibleEl.addEventListener("input", syncHiddenFromVisible);
 
-    // Min date = today (local)
     function setMinDateToToday() {
       const now = new Date();
       const localYMD = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
@@ -411,7 +427,6 @@
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setMinDateToToday(); });
     dateEl.addEventListener("focus", setMinDateToToday);
 
-    // Normalize
     phoneEl.addEventListener('input', function() {
       this.value = this.value.replace(/[^\d+()\s-]/g, '');
     });
@@ -422,11 +437,8 @@
       this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     });
 
-    // ---------- Quote ----------
     async function fetchQuote() {
-      // Ensure hidden fields are up-to-date
       syncHiddenFromVisible();
-
       const pickup = pickupEl.value.trim();
       const dropoff = dropoffEl.value.trim();
       if (!pickup || !dropoff) throw new Error("Pickup and dropoff are required to calculate fare.");
@@ -478,60 +490,6 @@
       }
     });
 
-    // ---------- Places Autocomplete (NEW) ----------
-    async function initPlacesNewWidget() {
-      if (!GOOGLE_BROWSER_KEY || GOOGLE_BROWSER_KEY === "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo") {
-        console.warn("GOOGLE_BROWSER_KEY not set. Autocomplete disabled.");
-        return;
-      }
-
-      await loadGoogleMapsJs(GOOGLE_BROWSER_KEY);
-      await google.maps.importLibrary("places");
-
-      const pickupMount = document.getElementById("pickupAutocompleteMount");
-      const dropoffMount = document.getElementById("dropoffAutocompleteMount");
-
-      const pickupAuto = new google.maps.places.PlaceAutocompleteElement({});
-      pickupAuto.placeholder = "Search pickup…";
-
-      const dropoffAuto = new google.maps.places.PlaceAutocompleteElement({});
-      dropoffAuto.placeholder = "Search dropoff…";
-
-      pickupAuto.includedRegionCodes = ['us'];
-      dropoffAuto.includedRegionCodes = ['us'];
-
-      pickupMount.appendChild(pickupAuto);
-      dropoffMount.appendChild(dropoffAuto);
-
-      pickupAuto.addEventListener('gmp-select', async ({ placePrediction }) => {
-        try {
-          const place = placePrediction.toPlace();
-          await place.fetchFields({ fields: ['formattedAddress'] });
-          const addr = place.formattedAddress || "";
-          if (addr) {
-            pickupVisibleEl.value = addr;
-            pickupEl.value = addr;
-          }
-        } catch (e) {
-          console.warn("Pickup place select failed:", e);
-        }
-      });
-
-      dropoffAuto.addEventListener('gmp-select', async ({ placePrediction }) => {
-        try {
-          const place = placePrediction.toPlace();
-          await place.fetchFields({ fields: ['formattedAddress'] });
-          const addr = place.formattedAddress || "";
-          if (addr) {
-            dropoffVisibleEl.value = addr;
-            dropoffEl.value = addr;
-          }
-        } catch (e) {
-          console.warn("Dropoff place select failed:", e);
-        }
-      });
-    }
-
     function loadGoogleMapsJs(key) {
       return new Promise((resolve, reject) => {
         if (window.google && window.google.maps && window.google.maps.importLibrary) {
@@ -554,9 +512,77 @@
       });
     }
 
-    initPlacesNewWidget().catch(err => console.warn("Places init failed:", err));
+    let placesReady = false;
+    let pickupAuto, dropoffAuto;
 
-    // ---------- Submit ----------
+    async function ensurePlacesReady() {
+      if (placesReady) return true;
+      if (!GOOGLE_BROWSER_KEY || GOOGLE_BROWSER_KEY === "AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo") {
+        showMessage("error", "❌ Autocomplete not enabled (missing browser key).");
+        return false;
+      }
+      await loadGoogleMapsJs(GOOGLE_BROWSER_KEY);
+      await google.maps.importLibrary("places");
+
+      pickupAuto = new google.maps.places.PlaceAutocompleteElement({});
+      pickupAuto.placeholder = "Search pickup…";
+      pickupAuto.includedRegionCodes = ['us'];
+
+      dropoffAuto = new google.maps.places.PlaceAutocompleteElement({});
+      dropoffAuto.placeholder = "Search dropoff…";
+      dropoffAuto.includedRegionCodes = ['us'];
+
+      pickupMount.appendChild(pickupAuto);
+      dropoffMount.appendChild(dropoffAuto);
+
+      pickupAuto.addEventListener('gmp-select', async ({ placePrediction }) => {
+        try {
+          const place = placePrediction.toPlace();
+          await place.fetchFields({ fields: ['formattedAddress'] });
+          const addr = place.formattedAddress || "";
+          if (addr) {
+            pickupVisibleEl.value = addr;
+            pickupEl.value = addr;
+          }
+        } catch (e) { console.warn(e); }
+      });
+
+      dropoffAuto.addEventListener('gmp-select', async ({ placePrediction }) => {
+        try {
+          const place = placePrediction.toPlace();
+          await place.fetchFields({ fields: ['formattedAddress'] });
+          const addr = place.formattedAddress || "";
+          if (addr) {
+            dropoffVisibleEl.value = addr;
+            dropoffEl.value = addr;
+          }
+        } catch (e) { console.warn(e); }
+      });
+
+      placesReady = true;
+      return true;
+    }
+
+    async function toggleAutocomplete(which) {
+      const ok = await ensurePlacesReady();
+      if (!ok) return;
+
+      if (which === "pickup") {
+        const on = pickupMount.style.display !== "block";
+        pickupMount.style.display = on ? "block" : "none";
+        pickupToggle.classList.toggle("on", on);
+        pickupToggle.textContent = on ? "Hide autocomplete" : "Use autocomplete";
+      } else {
+        const on = dropoffMount.style.display !== "block";
+        dropoffMount.style.display = on ? "block" : "none";
+        dropoffToggle.classList.toggle("on", on);
+        dropoffToggle.textContent = on ? "Hide autocomplete" : "Use autocomplete";
+      }
+    }
+
+    pickupToggle.addEventListener("click", () => toggleAutocomplete("pickup"));
+    dropoffToggle.addEventListener("click", () => toggleAutocomplete("dropoff"));
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -566,7 +592,6 @@
         return;
       }
 
-      // Keep hidden synced
       syncHiddenFromVisible();
 
       const airportCode = airportEl.value.trim().toUpperCase();
