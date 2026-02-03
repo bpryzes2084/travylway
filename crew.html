@@ -422,17 +422,21 @@
     .slice(0, 10);
 }
 
+function getLocalYMD() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function lockDateToToday() {
   const today = getLocalYMD();
   dateEl.min = today;
   dateEl.max = today;
-  dateEl.value = today;      // auto-fill today
-  dateEl.readOnly = true;    // prevents typing in many browsers
-}
+  dateEl.value = today;
+  }
 
-lockDateToToday();
-document.addEventListener("visibilitychange", () => { if (!document.hidden) lockDateToToday(); });
-dateEl.addEventListener("focus", lockDateToToday);
 
 
     phoneEl.addEventListener('input', function() {
