@@ -62,7 +62,7 @@
       font-size:14px;
     }
 
-    input, textarea{
+    input, textarea, select{
       width:100%;
       padding:12px 12px;
       border:2px solid #ddd;
@@ -71,7 +71,7 @@
       transition: border-color .15s ease;
     }
 
-    input:focus, textarea:focus{
+    input:focus, textarea:focus, select:focus{
       outline:none;
       border-color:#667eea;
     }
@@ -82,6 +82,13 @@
       margin-top:6px;
       font-size:12px;
       color:#666;
+    }
+
+    .warning{
+      margin-top:6px;
+      font-size:12px;
+      color:#dc2626;
+      font-weight:600;
     }
 
     .grid{
@@ -185,30 +192,54 @@
       font-size:12px;
     }
 
-    /* Google Maps Autocomplete dropdown styling */
     .pac-container {
       z-index: 9999 !important;
       border-radius: 8px;
       margin-top: 4px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+
+    .alert-box{
+      background:#fef2f2;
+      border-left:4px solid #dc2626;
+      padding:12px 14px;
+      border-radius:8px;
+      margin:16px 0;
+      color:#991b1b;
+      font-size:14px;
+      line-height:1.5;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="badge">✈️ AIRLINE CREW DISCOUNT</div>
+    <div class="badge">✈️ AIRLINE CREW ONLY - AIRPORT TRANSPORTATION</div>
 
-    <h1>🚗 Book Crew Ride</h1>
+    <h1>🚗 Crew Airport Transport</h1>
     <div class="subhead">
-      Crew-only requests. Airport ↔ hotel runs. Reliable timing beats "pretty apps."
+      Airport ↔ Hotel/Home. Crew discount applies ONLY to airport trips.
+    </div>
+
+    <div class="alert-box">
+      <strong>⚠️ CREW RATES ARE FOR AIRPORT TRIPS ONLY</strong><br>
+      One end of your trip MUST be an airport. Non-airport trips will be charged general rates.
     </div>
 
     <form id="crewForm" autocomplete="on">
-      <!-- Honeypot field -->
       <div class="hp">
         <label>Website</label>
         <input type="text" id="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label>Service Type *</label>
+        <select id="serviceType" required>
+          <option value="">Select service type</option>
+          <option value="pickup">Airport Pickup (arriving at airport → going to hotel/home)</option>
+          <option value="dropoff">Airport Drop-off (going from hotel/home → to airport)</option>
+        </select>
+        <div class="hint">This determines which field expects an airport address.</div>
       </div>
 
       <div class="form-group">
@@ -223,15 +254,15 @@
       </div>
 
       <div class="form-group">
-        <label>Pickup Address *</label>
-        <input type="text" id="pickup" required placeholder="Denver International Airport (DEN)" maxlength="200" autocomplete="off" />
-        <div class="hint">Start typing to see suggestions. Include terminal/door if relevant.</div>
+        <label id="pickupLabel">Pickup Address *</label>
+        <input type="text" id="pickup" required placeholder="Select service type first" maxlength="200" autocomplete="off" />
+        <div class="hint" id="pickupHint">Start typing airport name or IATA code (e.g., "DEN", "JFK", "Heathrow")</div>
       </div>
 
       <div class="form-group">
-        <label>Dropoff Address *</label>
-        <input type="text" id="dropoff" required placeholder="Hotel name + address" maxlength="200" autocomplete="off" />
-        <div class="hint">Start typing to see suggestions.</div>
+        <label id="dropoffLabel">Dropoff Address *</label>
+        <input type="text" id="dropoff" required placeholder="Select service type first" maxlength="200" autocomplete="off" />
+        <div class="hint" id="dropoffHint">Enter hotel, home address, or destination</div>
       </div>
 
       <div class="grid">
@@ -248,20 +279,22 @@
 
       <div class="grid">
         <div class="form-group">
-          <label>Flight Number (optional)</label>
-          <input type="text" id="flight" placeholder="UA1234" maxlength="10" />
+          <label>Flight Number *</label>
+          <input type="text" id="flight" required placeholder="UA1234" maxlength="10" />
+          <div class="warning">Required for crew verification</div>
         </div>
 
         <div class="form-group">
-          <label>Airport Code (optional)</label>
-          <input type="text" id="airport" placeholder="DEN" maxlength="4" />
-          <div class="hint">3–4 letters (IATA/ICAO). Example: DEN / KDEN</div>
+          <label>Airport Code *</label>
+          <input type="text" id="airport" required placeholder="DEN, JFK, LAX" maxlength="4" />
+          <div class="hint">3–4 letters (IATA/ICAO)</div>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Airline (optional)</label>
-        <input type="text" id="airline" placeholder="United Airlines" maxlength="60" />
+        <label>Airline *</label>
+        <input type="text" id="airline" required placeholder="United Airlines" maxlength="60" />
+        <div class="warning">Required for crew verification</div>
       </div>
 
       <div class="form-group">
@@ -269,7 +302,6 @@
         <textarea id="notes" placeholder="Crew count, bags, special pickup notes..."></textarea>
       </div>
 
-      <!-- Calculate Fare Button -->
       <div class="form-group">
         <button type="button" class="btn secondary" id="quoteBtn">
           <span id="quoteText">Calculate Fare</span>
@@ -293,11 +325,10 @@
     <div id="message" class="message"></div>
 
     <div class="footer-note">
-      By submitting, you confirm you are airline crew and agree to crew-only verification if requested.
+      By submitting, you confirm you are airline crew and this is airport transportation. Non-airport trips will be charged general rates.
     </div>
   </div>
 
-  <!-- Google Maps API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initAutocomplete" async defer></script>
 
   <script>
@@ -312,10 +343,17 @@
     const phoneEl = document.getElementById('phone');
     const airportEl = document.getElementById('airport');
     const flightEl = document.getElementById('flight');
+    const airlineEl = document.getElementById('airline');
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
     const pickupEl = document.getElementById('pickup');
     const dropoffEl = document.getElementById('dropoff');
+    const serviceTypeEl = document.getElementById('serviceType');
+
+    const pickupLabelEl = document.getElementById('pickupLabel');
+    const dropoffLabelEl = document.getElementById('dropoffLabel');
+    const pickupHintEl = document.getElementById('pickupHint');
+    const dropoffHintEl = document.getElementById('dropoffHint');
 
     const quoteBtn = document.getElementById('quoteBtn');
     const quoteText = document.getElementById('quoteText');
@@ -328,28 +366,24 @@
     let latestEstimatedFare = 0;
     let pickupAutocomplete, dropoffAutocomplete;
 
-    // Initialize Google Maps Autocomplete
     function initAutocomplete() {
       try {
-        // Create autocomplete for pickup
+        // Worldwide airports - no geographic restrictions
         pickupAutocomplete = new google.maps.places.Autocomplete(pickupEl, {
-          types: ['address'],
-          componentRestrictions: { country: 'us' }
+          types: ['establishment'],
+          fields: ['formatted_address', 'name', 'types']
         });
 
-        // Create autocomplete for dropoff
         dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffEl, {
-          types: ['address'],
-          componentRestrictions: { country: 'us' }
+          types: ['establishment', 'geocode'],
+          fields: ['formatted_address', 'name', 'types']
         });
 
-        // Listen for place selection
         pickupAutocomplete.addListener('place_changed', function() {
           const place = pickupAutocomplete.getPlace();
           if (place.formatted_address) {
             pickupEl.value = place.formatted_address;
           }
-          // Auto-clear quote when address changes
           quoteBox.style.display = 'none';
           latestEstimatedFare = 0;
         });
@@ -359,18 +393,52 @@
           if (place.formatted_address) {
             dropoffEl.value = place.formatted_address;
           }
-          // Auto-clear quote when address changes
           quoteBox.style.display = 'none';
           latestEstimatedFare = 0;
         });
 
-        console.log('✅ Google Maps Autocomplete initialized');
+        console.log('✅ Google Maps Autocomplete initialized (worldwide airports)');
       } catch (e) {
         console.error('❌ Google Maps Autocomplete failed:', e);
       }
     }
 
-    // Make initAutocomplete available globally for Google Maps callback
+    // Update autocomplete and labels based on service type
+    serviceTypeEl.addEventListener('change', function() {
+      const serviceType = this.value;
+
+      if (serviceType === 'pickup') {
+        // Airport Pickup: Pickup = AIRPORT, Dropoff = Hotel/Home
+        pickupLabelEl.innerHTML = 'Pickup Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
+        dropoffLabelEl.textContent = 'Dropoff Address (Hotel/Home) *';
+        
+        pickupEl.placeholder = 'Denver International, JFK Airport, Heathrow...';
+        dropoffEl.placeholder = 'Hotel name, home address...';
+        
+        pickupHintEl.textContent = '🛬 Enter airport name or code (e.g., "DEN", "JFK", "Heathrow")';
+        dropoffHintEl.textContent = 'Enter hotel, home, or destination address';
+        
+        pickupAutocomplete.setTypes(['airport', 'establishment']);
+        pickupAutocomplete.setComponentRestrictions({});
+        dropoffAutocomplete.setTypes(['establishment', 'geocode']);
+        
+      } else if (serviceType === 'dropoff') {
+        // Airport Drop-off: Pickup = Hotel/Home, Dropoff = AIRPORT
+        pickupLabelEl.textContent = 'Pickup Address (Hotel/Home) *';
+        dropoffLabelEl.innerHTML = 'Dropoff Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
+        
+        pickupEl.placeholder = 'Hotel name, home address...';
+        dropoffEl.placeholder = 'Denver International, JFK Airport, Heathrow...';
+        
+        pickupHintEl.textContent = 'Enter hotel, home, or pickup address';
+        dropoffHintEl.textContent = '🛫 Enter airport name or code (e.g., "DEN", "JFK", "Heathrow")';
+        
+        pickupAutocomplete.setTypes(['establishment', 'geocode']);
+        dropoffAutocomplete.setTypes(['airport', 'establishment']);
+        dropoffAutocomplete.setComponentRestrictions({});
+      }
+    });
+
     window.initAutocomplete = initAutocomplete;
 
     function showMessage(type, text) {
@@ -387,7 +455,7 @@
     }
 
     function isValidAirportCodeOrBlank(code) {
-      if (!code) return true;
+      if (!code) return false; // Airport code now REQUIRED
       return /^[A-Z]{3,4}$/.test(code);
     }
 
@@ -422,13 +490,17 @@
       this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     });
 
-    // Calculate Fare
     quoteBtn.addEventListener('click', async () => {
       const pickup = pickupEl.value.trim();
       const dropoff = dropoffEl.value.trim();
 
       if (!pickup || !dropoff) {
         showMessage('error', '❌ Please enter both pickup and dropoff addresses to calculate fare.');
+        return;
+      }
+
+      if (!serviceTypeEl.value) {
+        showMessage('error', '❌ Please select service type first.');
         return;
       }
 
@@ -476,7 +548,6 @@
       }
     });
 
-    // Form submission
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -486,9 +557,26 @@
         return;
       }
 
+      // Validate service type selected
+      if (!serviceTypeEl.value) {
+        showMessage('error', '❌ Please select service type (Airport Pickup or Drop-off).');
+        return;
+      }
+
+      // Validate required crew fields
+      if (!flightEl.value.trim()) {
+        showMessage('error', '❌ Flight number is required for crew bookings.');
+        return;
+      }
+
+      if (!airlineEl.value.trim()) {
+        showMessage('error', '❌ Airline is required for crew bookings.');
+        return;
+      }
+
       const airportCode = airportEl.value.trim().toUpperCase();
       if (!isValidAirportCodeOrBlank(airportCode)) {
-        showMessage('error', '❌ Airport code must be blank or 3–4 letters (DEN or KDEN).');
+        showMessage('error', '❌ Airport code is required (3–4 letters like DEN, JFK, KDEN).');
         return;
       }
 
@@ -500,7 +588,7 @@
       }
 
       if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
-        showMessage('error', '❌ Pickup and dropoff addresses are required.');
+        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
         return;
       }
 
@@ -520,8 +608,8 @@
         dropoff_text: dropoffEl.value.trim(),
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
-        flight_number: (flightEl.value || "").trim(),
-        airline: (document.getElementById('airline').value || "").trim(),
+        flight_number: flightEl.value.trim(),
+        airline: airlineEl.value.trim(),
         airport_code: airportCode,
         notes: document.getElementById('notes').value.trim(),
         estimated_fare: latestEstimatedFare
