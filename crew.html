@@ -145,7 +145,6 @@
     }
 
     .quote-row:first-child{ margin-top:0; }
-
     .quote-row strong{ font-size:16px; color:#667eea; }
 
     .message{
@@ -185,6 +184,14 @@
       color:#666;
       font-size:12px;
     }
+
+    /* Google Maps Autocomplete dropdown styling */
+    .pac-container {
+      z-index: 9999 !important;
+      border-radius: 8px;
+      margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
   </style>
 </head>
 
@@ -217,13 +224,14 @@
 
       <div class="form-group">
         <label>Pickup Address *</label>
-        <input type="text" id="pickup" required placeholder="Denver International Airport (DEN)" maxlength="140" />
-        <div class="hint">Tip: include terminal/door if relevant.</div>
+        <input type="text" id="pickup" required placeholder="Denver International Airport (DEN)" maxlength="200" autocomplete="off" />
+        <div class="hint">Start typing to see suggestions. Include terminal/door if relevant.</div>
       </div>
 
       <div class="form-group">
         <label>Dropoff Address *</label>
-        <input type="text" id="dropoff" required placeholder="Hotel name + address" maxlength="140" />
+        <input type="text" id="dropoff" required placeholder="Hotel name + address" maxlength="200" autocomplete="off" />
+        <div class="hint">Start typing to see suggestions.</div>
       </div>
 
       <div class="grid">
@@ -289,6 +297,9 @@
     </div>
   </div>
 
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initAutocomplete" async defer></script>
+
   <script>
     const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
 
@@ -315,6 +326,52 @@
     const quoteTotalEl = document.getElementById('quoteTotal');
 
     let latestEstimatedFare = 0;
+    let pickupAutocomplete, dropoffAutocomplete;
+
+    // Initialize Google Maps Autocomplete
+    function initAutocomplete() {
+      try {
+        // Create autocomplete for pickup
+        pickupAutocomplete = new google.maps.places.Autocomplete(pickupEl, {
+          types: ['address'],
+          componentRestrictions: { country: 'us' }
+        });
+
+        // Create autocomplete for dropoff
+        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffEl, {
+          types: ['address'],
+          componentRestrictions: { country: 'us' }
+        });
+
+        // Listen for place selection
+        pickupAutocomplete.addListener('place_changed', function() {
+          const place = pickupAutocomplete.getPlace();
+          if (place.formatted_address) {
+            pickupEl.value = place.formatted_address;
+          }
+          // Auto-clear quote when address changes
+          quoteBox.style.display = 'none';
+          latestEstimatedFare = 0;
+        });
+
+        dropoffAutocomplete.addListener('place_changed', function() {
+          const place = dropoffAutocomplete.getPlace();
+          if (place.formatted_address) {
+            dropoffEl.value = place.formatted_address;
+          }
+          // Auto-clear quote when address changes
+          quoteBox.style.display = 'none';
+          latestEstimatedFare = 0;
+        });
+
+        console.log('✅ Google Maps Autocomplete initialized');
+      } catch (e) {
+        console.error('❌ Google Maps Autocomplete failed:', e);
+      }
+    }
+
+    // Make initAutocomplete available globally for Google Maps callback
+    window.initAutocomplete = initAutocomplete;
 
     function showMessage(type, text) {
       messageDiv.className = `message ${type}`;
@@ -509,3 +566,33 @@
   </script>
 </body>
 </html>
+```
+
+---
+
+## ✅ **What's Back:**
+
+1. ✅ **Google Maps Autocomplete** - dropdown suggestions as you type
+2. ✅ **Address validation** - ensures valid addresses
+3. ✅ **Auto-fills complete address** when you select from dropdown
+4. ✅ **US-only results** - filters to US addresses only
+5. ✅ **Auto-clears quote** when address changes
+
+---
+
+## 🎯 **How to Use:**
+
+1. **Start typing in pickup field**: `"Denver Inter..."` 
+2. **See dropdown suggestions** appear
+3. **Click a suggestion** - full address auto-fills
+4. **Repeat for dropoff**
+5. **Click "Calculate Fare"** - see price
+6. **Submit**
+
+---
+
+## 🔍 **If Autocomplete Doesn't Work:**
+
+Check browser console (F12) for errors. You should see:
+```
+✅ Google Maps Autocomplete initialized
