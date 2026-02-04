@@ -1,192 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book a Ride - TravylWay</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        h1 { text-align: center; color: #333; margin-bottom: 30px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; color: #333; }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        textarea { min-height: 80px; resize: vertical; }
-        .btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .btn:disabled { background: #ccc; cursor: not-allowed; }
-        .message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            text-align: center;
-            display: none;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Ride - TravylWay</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+
+    body{
+      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      min-height:100vh;
+      padding:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:640px;
+      background:#fff;
+      border-radius:16px;
+      padding:28px;
+      box-shadow:0 10px 40px rgba(0,0,0,.22);
+    }
+
+    .badge{
+      background: linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);
+      color:#fff;
+      padding:10px 18px;
+      border-radius:999px;
+      text-align:center;
+      font-weight:800;
+      margin-bottom:14px;
+      letter-spacing:.2px;
+    }
+
+    h1{
+      text-align:center;
+      color:#222;
+      margin-bottom:8px;
+      font-size:28px;
+    }
+
+    .subhead{
+      text-align:center;
+      color:#555;
+      margin-bottom:22px;
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    .form-group{ margin-bottom:16px; position:relative; }
+
+    label{
+      display:block;
+      font-weight:650;
+      margin-bottom:6px;
+      color:#222;
+      font-size:14px;
+    }
+
+    input, textarea, select{
+      width:100%;
+      padding:12px 12px;
+      border:2px solid #ddd;
+      border-radius:10px;
+      font-size:16px;
+      transition: border-color .15s ease;
+    }
+
+    input:focus, textarea:focus, select:focus{
+      outline:none;
+      border-color:#667eea;
+    }
+
+    textarea{ min-height:84px; resize:vertical; }
+
+    .hint{
+      margin-top:6px;
+      font-size:12px;
+      color:#666;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .btn{
+      width:100%;
+      padding:15px;
+      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:#fff;
+      border:none;
+      border-radius:10px;
+      font-size:18px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:10px;
+      transition: transform .2s ease, box-shadow .2s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+
+    .btn:hover:not(:disabled){
+      transform: translateY(-2px);
+      box-shadow:0 8px 18px rgba(0,0,0,.18);
+    }
+
+    .btn:disabled{ background:#cfcfcf; cursor:not-allowed; }
+
+    .btn.secondary{
+      background:#111827;
+      font-size:16px;
+      padding:12px;
+      margin-top:0;
+    }
+
+    .quote-box{
+      margin-top:10px;
+      padding:14px;
+      border:2px solid #e5e7eb;
+      border-radius:12px;
+      background:#f9fafb;
+      display:none;
+    }
+
+    .quote-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size:14px;
+      color:#222;
+      margin-top:6px;
+    }
+
+    .quote-row:first-child{ margin-top:0; }
+    .quote-row strong{ font-size:16px; color:#667eea; }
+
+    .message{
+      padding:14px;
+      border-radius:10px;
+      margin-top:14px;
+      text-align:center;
+      display:none;
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    .success{ background:#d4edda; color:#155724; border:1px solid #c3e6cb; display:block; }
+    .error{ background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; display:block; }
+
+    .loading{
+      display:inline-block;
+      width:18px;
+      height:18px;
+      border:3px solid rgba(255,255,255,.35);
+      border-radius:50%;
+      border-top-color:#fff;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .hp{
+      position:absolute !important;
+      left:-9999px !important;
+      width:1px; height:1px;
+      overflow:hidden;
+    }
+
+    .footer-note{
+      margin-top:16px;
+      text-align:center;
+      color:#666;
+      font-size:12px;
+    }
+
+    .pac-container {
+      z-index: 9999 !important;
+      border-radius: 8px;
+      margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>🚗 Book Your Ride</h1>
-        
-        <form id="bookingForm">
-            <div class="form-group">
-                <label>Your Name *</label>
-                <input type="text" id="name" required placeholder="John Doe">
-            </div>
+  <div class="container">
+    <div class="badge">🚗 TRAVYLWAY RIDESHARE</div>
 
-            <div class="form-group">
-                <label>Phone Number *</label>
-                <input type="tel" id="phone" required placeholder="+1 (720) 555-1234">
-            </div>
-
-            <div class="form-group">
-                <label>Pickup Address *</label>
-                <input type="text" id="pickup" required placeholder="Denver International Airport">
-            </div>
-
-            <div class="form-group">
-                <label>Dropoff Address *</label>
-                <input type="text" id="dropoff" required placeholder="1600 Broadway, Denver, CO">
-            </div>
-
-            <div class="form-group">
-                <label>Pickup Date *</label>
-                <input type="date" id="date" required>
-            </div>
-
-            <div class="form-group">
-                <label>Pickup Time *</label>
-                <input type="time" id="time" required>
-            </div>
-
-            <div class="form-group">
-                <label>Flight Number (optional)</label>
-                <input type="text" id="flight" placeholder="UA1234">
-            </div>
-
-            <div class="form-group">
-                <label>Airline (optional)</label>
-                <input type="text" id="airline" placeholder="United Airlines">
-            </div>
-
-            <div class="form-group">
-                <label>Notes (optional)</label>
-                <textarea id="notes" placeholder="Any special requests..."></textarea>
-            </div>
-
-            <button type="submit" class="btn" id="submitBtn">Submit Booking</button>
-        </form>
-
-        <div id="message" class="message"></div>
+    <h1>🚗 Book Your Ride</h1>
+    <div class="subhead">
+      Professional transportation service for all your travel needs.
     </div>
 
-    <script>
-        const form = document.getElementById('bookingForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const messageDiv = document.getElementById('message');
+    <form id="generalForm" autocomplete="on">
+      <!-- Honeypot field -->
+      <div class="hp">
+        <label>Website</label>
+        <input type="text" id="website" tabindex="-1" autocomplete="off" />
+      </div>
 
-        // Set minimum date to today
-        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="name" required placeholder="John Doe" maxlength="80" />
+      </div>
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-            messageDiv.style.display = 'none';
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="phone" required placeholder="+1 (720) 555-1234" maxlength="24" />
+        <div class="hint">Used for confirmation + driver coordination.</div>
+      </div>
 
-            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const dateVal = document.getElementById('date').value;
-            const timeVal = document.getElementById('time').value;
-            const pickupTimeUTC = new Date(`${dateVal}T${timeVal}`).toISOString();
+      <div class="form-group">
+        <label>Pickup Address *</label>
+        <input type="text" id="pickup" required placeholder="1234 Main St, Denver, CO" maxlength="200" autocomplete="off" />
+        <div class="hint">Start typing to see suggestions</div>
+      </div>
 
-            const payload = {
-                created_by: document.getElementById('name').value.trim(),
-                rider_phone: document.getElementById('phone').value.trim(),
-                rider_type: 'GENERAL',
-                pickup_text: document.getElementById('pickup').value.trim(),
-                dropoff_text: document.getElementById('dropoff').value.trim(),
-                pickup_time_utc: pickupTimeUTC,
-                pickup_timezone: timezone,
-                flight_number: document.getElementById('flight').value.trim(),
-                airline: document.getElementById('airline').value.trim(),
-                notes: document.getElementById('notes').value.trim(),
-                estimated_fare: 0
-            };
+      <div class="form-group">
+        <label>Dropoff Address *</label>
+        <input type="text" id="dropoff" required placeholder="Denver International Airport" maxlength="200" autocomplete="off" />
+        <div class="hint">Start typing to see suggestions</div>
+      </div>
 
-            console.log('Sending:', JSON.stringify(payload, null, 2));
+      <div class="grid">
+        <div class="form-group">
+          <label>Pickup Date *</label>
+          <input type="date" id="date" required />
+        </div>
 
-            try {
-                const response = await fetch('https://api.travylway.com/api/trips', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+        <div class="form-group">
+          <label>Pickup Time (local) *</label>
+          <input type="time" id="time" required />
+        </div>
+      </div>
 
-                const data = await response.json();
-                console.log('Response:', data);
+      <div class="grid">
+        <div class="form-group">
+          <label>Flight Number (optional)</label>
+          <input type="text" id="flight" placeholder="UA1234" maxlength="10" />
+        </div>
 
-                if (data.ok) {
-                    messageDiv.className = 'message success';
-                    messageDiv.textContent = '✅ Booking submitted! You will receive confirmation via WhatsApp.';
-                    messageDiv.style.display = 'block';
-                    form.reset();
-                } else {
-                    throw new Error(data.error || 'Submission failed');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                messageDiv.className = 'message error';
-                messageDiv.textContent = '❌ Error: ' + error.message;
-                messageDiv.style.display = 'block';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Booking';
-            }
+        <div class="form-group">
+          <label>Airline (optional)</label>
+          <input type="text" id="airline" placeholder="United Airlines" maxlength="60" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Notes (optional)</label>
+        <textarea id="notes" placeholder="Special requests, luggage count, etc..."></textarea>
+      </div>
+
+      <!-- Calculate Fare Button -->
+      <div class="form-group">
+        <button type="button" class="btn secondary" id="quoteBtn">
+          <span id="quoteText">Calculate Fare</span>
+          <span class="loading" id="quoteSpinner" style="display:none;"></span>
+        </button>
+
+        <div id="quoteBox" class="quote-box">
+          <div class="quote-row"><span>Distance</span><span id="quoteMiles">—</span></div>
+          <div class="quote-row"><span>Duration</span><span id="quoteMinutes">—</span></div>
+          <div class="quote-row"><strong>Estimated Total</strong><strong id="quoteTotal">—</strong></div>
+          <div class="hint" style="margin-top:8px;">Standard rates. Estimate only - final fare confirmed after route/traffic.</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">
+        <span id="submitText">Submit Booking</span>
+        <span class="loading" id="loadingSpinner" style="display:none;"></span>
+      </button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <div class="footer-note">
+      Professional rideshare service. Standard rates apply.
+    </div>
+  </div>
+
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initAutocomplete" async defer></script>
+
+  <script>
+    const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
+
+    const form = document.getElementById('generalForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const messageDiv = document.getElementById('message');
+
+    const phoneEl = document.getElementById('phone');
+    const flightEl = document.getElementById('flight');
+    const dateEl = document.getElementById('date');
+    const timeEl = document.getElementById('time');
+    const pickupEl = document.getElementById('pickup');
+    const dropoffEl = document.getElementById('dropoff');
+
+    const quoteBtn = document.getElementById('quoteBtn');
+    const quoteText = document.getElementById('quoteText');
+    const quoteSpinner = document.getElementById('quoteSpinner');
+    const quoteBox = document.getElementById('quoteBox');
+    const quoteMilesEl = document.getElementById('quoteMiles');
+    const quoteMinutesEl = document.getElementById('quoteMinutes');
+    const quoteTotalEl = document.getElementById('quoteTotal');
+
+    let latestEstimatedFare = 0;
+    let pickupAutocomplete, dropoffAutocomplete;
+
+    // Initialize Google Maps Autocomplete
+    function initAutocomplete() {
+      try {
+        // Worldwide locations
+        pickupAutocomplete = new google.maps.places.Autocomplete(pickupEl, {
+          types: ['establishment', 'geocode'],
+          fields: ['formatted_address', 'name']
         });
-    </script>
+
+        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffEl, {
+          types: ['establishment', 'geocode'],
+          fields: ['formatted_address', 'name']
+        });
+
+        pickupAutocomplete.addListener('place_changed', function() {
+          const place = pickupAutocomplete.getPlace();
+          if (place.formatted_address) {
+            pickupEl.value = place.formatted_address;
+          }
+          quoteBox.style.display = 'none';
+          latestEstimatedFare = 0;
+        });
+
+        dropoffAutocomplete.addListener('place_changed', function() {
+          const place = dropoffAutocomplete.getPlace();
+          if (place.formatted_address) {
+            dropoffEl.value = place.formatted_address;
+          }
+          quoteBox.style.display = 'none';
+          latestEstimatedFare = 0;
+        });
+
+        console.log('✅ Google Maps Autocomplete initialized');
+      } catch (e) {
+        console.error('❌ Google Maps Autocomplete failed:', e);
+      }
+    }
+
+    window.initAutocomplete = initAutocomplete;
+
+    function showMessage(type, text) {
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = text;
+      messageDiv.style.display = 'block';
+    }
+
+    function toUtcIsoFromLocalDateAndTime(dateStr, timeStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const [hh, min] = timeStr.split(':').map(Number);
+      const localDate = new Date(y, (m - 1), d, hh, min, 0);
+      return localDate.toISOString();
+    }
+
+    function getLocalYMD() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function setMinDateToToday() {
+      const today = getLocalYMD();
+      dateEl.min = today;
+      if (!dateEl.value || dateEl.value < today) {
+        dateEl.value = today;
+      }
+    }
+
+    setMinDateToToday();
+    dateEl.addEventListener("change", setMinDateToToday);
+
+    phoneEl.addEventListener('input', function() {
+      this.value = this.value.replace(/[^\d+()\s-]/g, '');
+    });
+    
+    if (flightEl) {
+      flightEl.addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      });
+    }
+
+    // Calculate Fare (GENERAL pricing)
+    quoteBtn.addEventListener('click', async () => {
+      const pickup = pickupEl.value.trim();
+      const dropoff = dropoffEl.value.trim();
+
+      if (!pickup || !dropoff) {
+        showMessage('error', '❌ Please enter both pickup and dropoff addresses to calculate fare.');
+        return;
+      }
+
+      quoteBtn.disabled = true;
+      quoteText.style.display = 'none';
+      quoteSpinner.style.display = 'inline-block';
+      messageDiv.style.display = 'none';
+
+      try {
+        const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pickup_text: pickup,
+            dropoff_text: dropoff,
+            rider_type: 'GENERAL'  // ← GENERAL pricing (higher rates)
+          })
+        });
+
+        const data = await res.json();
+        console.log('Quote response:', data);
+
+        if (res.ok && data.ok) {
+          const miles = data.miles || 0;
+          const minutes = data.minutes || 0;
+          const total = data.estimate?.total || 0;
+
+          latestEstimatedFare = total;
+
+          quoteMilesEl.textContent = `${miles.toFixed(1)} mi`;
+          quoteMinutesEl.textContent = `${Math.round(minutes)} min`;
+          quoteTotalEl.textContent = `$${total.toFixed(2)}`;
+
+          quoteBox.style.display = 'block';
+        } else {
+          throw new Error(data.error || 'Failed to calculate fare');
+        }
+      } catch (err) {
+        showMessage('error', `❌ Fare calculation error: ${err.message}`);
+        quoteBox.style.display = 'none';
+      } finally {
+        quoteBtn.disabled = false;
+        quoteText.style.display = 'inline';
+        quoteSpinner.style.display = 'none';
+      }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const hp = document.getElementById('website').value.trim();
+      if (hp) {
+        showMessage('error', '❌ Submission blocked.');
+        return;
+      }
+
+      const dateVal = dateEl.value;
+      const timeVal = timeEl.value;
+      if (!dateVal || !timeVal) {
+        showMessage('error', '❌ Pickup date and time are required.');
+        return;
+      }
+
+      if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
+        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitText.style.display = 'none';
+      loadingSpinner.style.display = 'inline-block';
+      messageDiv.style.display = 'none';
+
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
+
+      const payload = {
+        created_by: document.getElementById('name').value.trim(),
+        rider_phone: phoneEl.value.trim(),
+        rider_type: 'GENERAL',  // ← GENERAL rider (standard rates)
+        pickup_text: pickupEl.value.trim(),
+        dropoff_text: dropoffEl.value.trim(),
+        pickup_time_utc: pickupTimeUTC,
+        pickup_timezone: timezone,
+        flight_number: document.getElementById('flight').value.trim() || '',
+        airline: document.getElementById('airline').value.trim() || '',
+        airport_code: '',
+        notes: document.getElementById('notes').value.trim(),
+        estimated_fare: latestEstimatedFare
+      };
+
+      console.log('Submitting:', JSON.stringify(payload, null, 2));
+
+      try {
+        const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json().catch(() => ({}));
+        console.log('Response:', data);
+
+        if (res.ok && data?.ok) {
+          const confirmationId = data?.trip_id || 'N/A';
+          showMessage('success', `✅ Booking submitted! Confirmation ID: ${confirmationId}. You'll receive confirmation via Telegram.`);
+          
+          form.reset();
+          const today = getLocalYMD();
+          dateEl.min = today;
+          dateEl.value = today;
+
+          latestEstimatedFare = 0;
+          quoteBox.style.display = 'none';
+          
+        } else {
+          const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
+          throw new Error(msg);
+        }
+      } catch (err) {
+        showMessage('error', `❌ Error: ${err.message}`);
+      } finally {
+        submitBtn.disabled = false;
+        submitText.style.display = 'inline';
+        loadingSpinner.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
