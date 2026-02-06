@@ -356,6 +356,7 @@ body{
         <select id="filterStatus">
           <option value="APPROVED" selected>Available (Approved)</option>
           <option value="PENDING">Pending Approval</option>
+          <option value="NEW">New</option>
           <option value="CLAIMED">Claimed</option>
           <option value="COMPLETED">Completed</option>
           <option value="">All Statuses</option>
@@ -413,18 +414,14 @@ body{
 </div>
 
 <script>
-// ✅ Same-origin by default (travylway.com), avoids DNS/www issues.
-const API_BASE = "";
-
-// If you ever want to override to a worker.dev URL, set it here, e.g.:
-// const API_BASE = "https://your-worker.youracct.workers.dev";
+// ✅ FIXED: Use api.travylway.com
+const API_BASE = "https://api.travylway.com";
 
 let allTrips = [];
 let filteredTrips = [];
 
 function normStatus(s) {
   const v = String(s || "").toUpperCase();
-  // Legacy mapping (if your DB ever stores OPEN)
   if (v === "OPEN") return "APPROVED";
   return v || "APPROVED";
 }
@@ -432,7 +429,6 @@ function normStatus(s) {
 function pickupLocalString(isoUtc) {
   const d = new Date(isoUtc);
   if (isNaN(d.getTime())) return "Invalid time";
-  // Driver device local time:
   return d.toLocaleString(undefined, {
     weekday: "short",
     month: "short",
@@ -442,13 +438,11 @@ function pickupLocalString(isoUtc) {
   });
 }
 
-// 🔥 FIX: fetch based on the dropdown-selected status (defaults to APPROVED)
 async function loadTrips() {
   try {
     const selectedStatus = (document.getElementById("filterStatus")?.value || "APPROVED").toUpperCase();
 
     const qs = new URLSearchParams();
-    // If blank (All Statuses), don't send status param -> fetch all (if your API supports it)
     if (selectedStatus) qs.set("status", selectedStatus);
 
     const url = `${API_BASE}/api/trips?${qs.toString()}`;
@@ -462,7 +456,7 @@ async function loadTrips() {
         rider_type: String(t.rider_type || "").toUpperCase(),
         airport_code: String(t.airport_code || "").toUpperCase()
       }));
-      applyFilters(false); // don't refetch, just filter locally
+      applyFilters(false);
     } else {
       showError(data.error || "Failed to load trips");
     }
@@ -474,7 +468,6 @@ async function loadTrips() {
 
 function applyFilters(refetch = false) {
   if (refetch) {
-    // If status changed, we re-fetch so we don't miss server-side filtered results
     loadTrips();
     return;
   }
@@ -552,7 +545,6 @@ function clearFilters() {
   document.getElementById("filterAirport").value = "";
   document.getElementById("filterStatus").value = "APPROVED";
   document.getElementById("filterRiderType").value = "";
-  // refetch approved from server and then render
   loadTrips();
 }
 
@@ -710,9 +702,13 @@ function renderTrips() {
                 🔒 Cannot Unclaim
               </button>
             `}
-          ` : `
+          ` : trip.status === "NEW" ? `
             <button class="btn" style="background:#fbbf24;color:#78350f;cursor:not-allowed;flex:1;" disabled>
               ⏳ Pending Approval
+            </button>
+          ` : `
+            <button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;flex:1;" disabled>
+              ${trip.status}
             </button>
           `}
           <button class="btn btn-details" onclick="viewDetails('${trip.id}')">
@@ -750,7 +746,6 @@ async function claimTrip(tripId) {
       if (data.whatsapp_link && confirm("Open WhatsApp to message customer?")) {
         window.open(data.whatsapp_link, "_blank");
       }
-      // after claiming, re-fetch based on current status filter
       loadTrips();
     } else {
       alert(`❌ Failed to claim trip:\n${data.error}`);
@@ -816,28 +811,19 @@ function showError(message) {
   `;
 }
 
-// --- UI event wiring ---
 document.getElementById("filterAirport").addEventListener("input", (e) => {
   e.target.value = e.target.value.toUpperCase();
 });
 
-// Apply Filters button (no refetch)
 document.getElementById("applyBtn").addEventListener("click", () => applyFilters(false));
-
-// Clear Filters button (refetch)
 document.getElementById("clearBtn").addEventListener("click", clearFilters);
-
-// When status changes, refetch from server for that status
 document.getElementById("filterStatus").addEventListener("change", () => applyFilters(true));
-
-// Other filters can stay client-side
 document.getElementById("filterCountry").addEventListener("change", () => applyFilters(false));
 document.getElementById("filterRiderType").addEventListener("change", () => applyFilters(false));
 document.getElementById("filterState").addEventListener("input", () => applyFilters(false));
 document.getElementById("filterCity").addEventListener("input", () => applyFilters(false));
 document.getElementById("filterAirport").addEventListener("input", () => applyFilters(false));
 
-// Initial load + auto refresh
 loadTrips();
 setInterval(loadTrips, 30000);
 </script>
