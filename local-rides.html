@@ -458,7 +458,7 @@
           body: JSON.stringify({
             pickup_text: pickup,
             dropoff_text: dropoff,
-            rider_type: 'GENERAL'  // ← GENERAL pricing
+            rider_type: 'LOCAL'  // ← LOCAL pricing (higher than GENERAL)
           })
         });
 
@@ -529,7 +529,7 @@
       const payload = {
         created_by: document.getElementById('name').value.trim(),
         rider_phone: phoneEl.value.trim(),
-        rider_type: 'GENERAL',  // ← GENERAL rider (standard rates)
+        rider_type: 'LOCAL',  // ← LOCAL rider (higher pricing than GENERAL)
         service_type: 'LOCAL',  // ← Mark as local ride
         pickup_text: pickupEl.value.trim(),
         dropoff_text: dropoffEl.value.trim(),
