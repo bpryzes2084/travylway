@@ -328,7 +328,7 @@
       <!-- Turnstile Widget -->
       <div class="turnstile-wrapper">
         <div class="cf-turnstile" 
-             data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
+             data-sitekey="0x4AAAAAAAzNR59L60u1fxdz"
              data-callback="onTurnstileSuccess"
              data-expired-callback="onTurnstileExpired"
              data-error-callback="onTurnstileError">
@@ -541,12 +541,6 @@
         return;
       }
 
-      // Turnstile check for quote
-      if (!turnstileToken) {
-        showMessage('error', '❌ Please complete the security verification below.');
-        return;
-      }
-
       quoteBtn.disabled = true;
       quoteText.style.display = 'none';
       quoteSpinner.style.display = 'inline-block';
@@ -559,8 +553,7 @@
           body: JSON.stringify({
             pickup_text: pickup,
             dropoff_text: dropoff,
-            rider_type: 'CREW',
-            'cf-turnstile-response': turnstileToken
+            rider_type: 'CREW'
           })
         });
 
