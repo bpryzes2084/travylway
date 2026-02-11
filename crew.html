@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crew Booking - TravylWay</title>
 
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
@@ -209,6 +212,12 @@
       font-size:14px;
       line-height:1.5;
     }
+
+    .turnstile-wrapper{
+      margin: 16px 0;
+      display: flex;
+      justify-content: center;
+    }
   </style>
 </head>
 
@@ -279,22 +288,22 @@
 
       <div class="grid">
         <div class="form-group">
-          <label>Flight Number *</label>
-          <input type="text" id="flight" required placeholder="UA1234" maxlength="10" />
-          <div class="warning">Required for crew verification</div>
+          <label>Flight Number</label>
+          <input type="text" id="flight" placeholder="UA1234" maxlength="10" />
+          <div class="hint">Optional - helps with tracking</div>
         </div>
 
         <div class="form-group">
-          <label>Airport Code *</label>
-          <input type="text" id="airport" required placeholder="DEN, JFK, LAX" maxlength="4" />
-          <div class="hint">3–4 letters (IATA/ICAO)</div>
+          <label>Airport Code</label>
+          <input type="text" id="airport" placeholder="DEN, JFK, LAX" maxlength="4" />
+          <div class="hint">Optional - 3–4 letters (IATA/ICAO)</div>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Airline *</label>
-        <input type="text" id="airline" required placeholder="United Airlines" maxlength="60" />
-        <div class="warning">Required for crew verification</div>
+        <label>Airline</label>
+        <input type="text" id="airline" placeholder="United Airlines" maxlength="60" />
+        <div class="hint">Optional - helps with tracking</div>
       </div>
 
       <div class="form-group">
@@ -313,6 +322,16 @@
           <div class="quote-row"><span>Duration</span><span id="quoteMinutes">—</span></div>
           <div class="quote-row"><span>Crew Discount</span><span id="quoteDiscount">CREW RATE</span></div>
           <div class="quote-row"><strong>Estimated Total</strong><strong id="quoteTotal">—</strong></div>
+        </div>
+      </div>
+
+      <!-- Turnstile Widget -->
+      <div class="turnstile-wrapper">
+        <div class="cf-turnstile" 
+             data-sitekey="0x4AAAAAAAzNR59L60u1fxdz"
+             data-callback="onTurnstileSuccess"
+             data-expired-callback="onTurnstileExpired"
+             data-error-callback="onTurnstileError">
         </div>
       </div>
 
@@ -365,6 +384,24 @@
 
     let latestEstimatedFare = 0;
     let pickupAutocomplete, dropoffAutocomplete;
+    let turnstileToken = null;
+
+    // Turnstile callbacks
+    window.onTurnstileSuccess = function(token) {
+      turnstileToken = token;
+      console.log('✅ Turnstile verification successful');
+    };
+
+    window.onTurnstileExpired = function() {
+      turnstileToken = null;
+      console.warn('⚠️ Turnstile token expired');
+    };
+
+    window.onTurnstileError = function() {
+      turnstileToken = null;
+      console.error('❌ Turnstile verification error');
+      showMessage('error', '❌ Security verification failed. Please refresh the page.');
+    };
 
     function initAutocomplete() {
       try {
@@ -504,6 +541,12 @@
         return;
       }
 
+      // Turnstile check for quote
+      if (!turnstileToken) {
+        showMessage('error', '❌ Please complete the security verification below.');
+        return;
+      }
+
       quoteBtn.disabled = true;
       quoteText.style.display = 'none';
       quoteSpinner.style.display = 'inline-block';
@@ -516,7 +559,8 @@
           body: JSON.stringify({
             pickup_text: pickup,
             dropoff_text: dropoff,
-            rider_type: 'CREW'
+            rider_type: 'CREW',
+            'cf-turnstile-response': turnstileToken
           })
         });
 
@@ -557,26 +601,15 @@
         return;
       }
 
+      // Turnstile validation
+      if (!turnstileToken) {
+        showMessage('error', '❌ Please complete the security verification (checkbox above).');
+        return;
+      }
+
       // Validate service type selected
       if (!serviceTypeEl.value) {
         showMessage('error', '❌ Please select service type (Airport Pickup or Drop-off).');
-        return;
-      }
-
-      // Validate required crew fields
-      if (!flightEl.value.trim()) {
-        showMessage('error', '❌ Flight number is required for crew bookings.');
-        return;
-      }
-
-      if (!airlineEl.value.trim()) {
-        showMessage('error', '❌ Airline is required for crew bookings.');
-        return;
-      }
-
-      const airportCode = airportEl.value.trim().toUpperCase();
-      if (!isValidAirportCodeOrBlank(airportCode)) {
-        showMessage('error', '❌ Airport code is required (3–4 letters like DEN, JFK, KDEN).');
         return;
       }
 
@@ -600,6 +633,8 @@
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
 
+      const airportCode = airportEl.value.trim().toUpperCase() || '';
+
       const payload = {
         created_by: document.getElementById('name').value.trim(),
         rider_phone: phoneEl.value.trim(),
@@ -608,11 +643,12 @@
         dropoff_text: dropoffEl.value.trim(),
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
-        flight_number: flightEl.value.trim(),
-        airline: airlineEl.value.trim(),
+        flight_number: flightEl.value.trim() || '',
+        airline: airlineEl.value.trim() || '',
         airport_code: airportCode,
         notes: document.getElementById('notes').value.trim(),
-        estimated_fare: latestEstimatedFare
+        estimated_fare: latestEstimatedFare,
+        'cf-turnstile-response': turnstileToken
       };
 
       console.log('Submitting:', JSON.stringify(payload, null, 2));
@@ -638,6 +674,12 @@
 
           latestEstimatedFare = 0;
           quoteBox.style.display = 'none';
+          turnstileToken = null;
+          
+          // Reset Turnstile widget
+          if (window.turnstile) {
+            window.turnstile.reset();
+          }
           
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
