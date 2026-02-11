@@ -205,11 +205,11 @@
 
 <body>
   <div class="container">
-    <div class="badge">🚗 TRAVYLWAY</div>
+    <div class="badge">🚗 TRAVYLWAY RIDESHARE</div>
 
     <h1>🚗 Book Your Ride</h1>
     <div class="subhead">
-      Keep On Moving.
+      Professional transportation service for all your travel needs.
     </div>
 
     <form id="generalForm" autocomplete="on">
@@ -449,12 +449,6 @@
         return;
       }
 
-      // Turnstile check for quote
-      if (!turnstileToken) {
-        showMessage('error', '❌ Please complete the security verification below.');
-        return;
-      }
-
       quoteBtn.disabled = true;
       quoteText.style.display = 'none';
       quoteSpinner.style.display = 'inline-block';
@@ -467,8 +461,7 @@
           body: JSON.stringify({
             pickup_text: pickup,
             dropoff_text: dropoff,
-            rider_type: 'GENERAL',  // ← GENERAL pricing (higher rates)
-            'cf-turnstile-response': turnstileToken
+            rider_type: 'GENERAL'  // ← GENERAL pricing (higher rates)
           })
         });
 
