@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Book a Ride - TravylWay</title>
 
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
@@ -191,16 +194,22 @@
       margin-top: 4px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+
+    .turnstile-wrapper{
+      margin: 16px 0;
+      display: flex;
+      justify-content: center;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="badge">🚗 TRAVYLWAY RIDESHARE</div>
+    <div class="badge">🚗 TRAVYLWAY</div>
 
     <h1>🚗 Book Your Ride</h1>
     <div class="subhead">
-      Professional transportation service for all your travel needs.
+      Keep On Moving.
     </div>
 
     <form id="generalForm" autocomplete="on">
@@ -277,6 +286,16 @@
         </div>
       </div>
 
+      <!-- Turnstile Widget -->
+      <div class="turnstile-wrapper">
+        <div class="cf-turnstile" 
+             data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
+             data-callback="onTurnstileSuccess"
+             data-expired-callback="onTurnstileExpired"
+             data-error-callback="onTurnstileError">
+        </div>
+      </div>
+
       <button type="submit" class="btn" id="submitBtn">
         <span id="submitText">Submit Booking</span>
         <span class="loading" id="loadingSpinner" style="display:none;"></span>
@@ -319,6 +338,24 @@
 
     let latestEstimatedFare = 0;
     let pickupAutocomplete, dropoffAutocomplete;
+    let turnstileToken = null;
+
+    // Turnstile callbacks
+    window.onTurnstileSuccess = function(token) {
+      turnstileToken = token;
+      console.log('✅ Turnstile verification successful');
+    };
+
+    window.onTurnstileExpired = function() {
+      turnstileToken = null;
+      console.warn('⚠️ Turnstile token expired');
+    };
+
+    window.onTurnstileError = function() {
+      turnstileToken = null;
+      console.error('❌ Turnstile verification error');
+      showMessage('error', '❌ Security verification failed. Please refresh the page.');
+    };
 
     // Initialize Google Maps Autocomplete
     function initAutocomplete() {
@@ -412,6 +449,12 @@
         return;
       }
 
+      // Turnstile check for quote
+      if (!turnstileToken) {
+        showMessage('error', '❌ Please complete the security verification below.');
+        return;
+      }
+
       quoteBtn.disabled = true;
       quoteText.style.display = 'none';
       quoteSpinner.style.display = 'inline-block';
@@ -424,7 +467,8 @@
           body: JSON.stringify({
             pickup_text: pickup,
             dropoff_text: dropoff,
-            rider_type: 'GENERAL'  // ← GENERAL pricing (higher rates)
+            rider_type: 'GENERAL',  // ← GENERAL pricing (higher rates)
+            'cf-turnstile-response': turnstileToken
           })
         });
 
@@ -466,6 +510,12 @@
         return;
       }
 
+      // Turnstile validation
+      if (!turnstileToken) {
+        showMessage('error', '❌ Please complete the security verification (checkbox above).');
+        return;
+      }
+
       const dateVal = dateEl.value;
       const timeVal = timeEl.value;
       if (!dateVal || !timeVal) {
@@ -498,7 +548,8 @@
         airline: document.getElementById('airline').value.trim() || '',
         airport_code: '',
         notes: document.getElementById('notes').value.trim(),
-        estimated_fare: latestEstimatedFare
+        estimated_fare: latestEstimatedFare,
+        'cf-turnstile-response': turnstileToken
       };
 
       console.log('Submitting:', JSON.stringify(payload, null, 2));
@@ -524,6 +575,12 @@
 
           latestEstimatedFare = 0;
           quoteBox.style.display = 'none';
+          turnstileToken = null;
+          
+          // Reset Turnstile widget
+          if (window.turnstile) {
+            window.turnstile.reset();
+          }
           
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
