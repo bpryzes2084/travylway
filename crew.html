@@ -195,13 +195,6 @@
       font-size:12px;
     }
 
-    .pac-container {
-      z-index: 9999 !important;
-      border-radius: 8px;
-      margin-top: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
     .alert-box{
       background:#fef2f2;
       border-left:4px solid #dc2626;
@@ -225,7 +218,7 @@
   <div class="container">
     <div class="badge">✈️ AIRLINE CREW ONLY - AIRPORT TRANSPORTATION</div>
 
-    <h1>🚗 Crew Airport Transportation</h1>
+    <h1>🚗 Crew Airport Transport</h1>
     <div class="subhead">
       Airport ↔ Hotel/Home. Crew discount applies ONLY to airport trips.
     </div>
@@ -264,14 +257,14 @@
 
       <div class="form-group">
         <label id="pickupLabel">Pickup Address *</label>
-        <input type="text" id="pickup" required placeholder="Select service type first" maxlength="200" autocomplete="off" />
-        <div class="hint" id="pickupHint">Start typing airport name or IATA code (e.g., "DEN", "JFK", "Heathrow")</div>
+        <input type="text" id="pickup" required placeholder="Select service type first" maxlength="200" />
+        <div class="hint" id="pickupHint">Type full address</div>
       </div>
 
       <div class="form-group">
         <label id="dropoffLabel">Dropoff Address *</label>
-        <input type="text" id="dropoff" required placeholder="Select service type first" maxlength="200" autocomplete="off" />
-        <div class="hint" id="dropoffHint">Enter hotel, home address, or destination</div>
+        <input type="text" id="dropoff" required placeholder="Select service type first" maxlength="200" />
+        <div class="hint" id="dropoffHint">Type full address</div>
       </div>
 
       <div class="grid">
@@ -328,7 +321,7 @@
       <!-- Turnstile Widget -->
       <div class="turnstile-wrapper">
         <div class="cf-turnstile" 
-             data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
+             data-sitekey="0x4AAAAAAAzNR59L60u1fxdz"
              data-callback="onTurnstileSuccess"
              data-expired-callback="onTurnstileExpired"
              data-error-callback="onTurnstileError">
@@ -348,6 +341,7 @@
     </div>
   </div>
 
+  <!-- Google Maps API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initAutocomplete" async defer></script>
 
   <script>
@@ -403,17 +397,17 @@
       showMessage('error', '❌ Security verification failed. Please refresh the page.');
     };
 
+    // Initialize Google Maps Autocomplete
     function initAutocomplete() {
       try {
-        // Worldwide airports - no geographic restrictions
         pickupAutocomplete = new google.maps.places.Autocomplete(pickupEl, {
-          types: ['establishment'],
-          fields: ['formatted_address', 'name', 'types']
+          types: ['establishment', 'geocode'],
+          fields: ['formatted_address', 'name']
         });
 
         dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffEl, {
           types: ['establishment', 'geocode'],
-          fields: ['formatted_address', 'name', 'types']
+          fields: ['formatted_address', 'name']
         });
 
         pickupAutocomplete.addListener('place_changed', function() {
@@ -434,13 +428,15 @@
           latestEstimatedFare = 0;
         });
 
-        console.log('✅ Google Maps Autocomplete initialized (worldwide airports)');
+        console.log('✅ Google Maps Autocomplete initialized');
       } catch (e) {
         console.error('❌ Google Maps Autocomplete failed:', e);
       }
     }
 
-    // Update autocomplete and labels based on service type
+    window.initAutocomplete = initAutocomplete;
+
+    // Update labels and placeholders based on service type
     serviceTypeEl.addEventListener('change', function() {
       const serviceType = this.value;
 
@@ -449,15 +445,11 @@
         pickupLabelEl.innerHTML = 'Pickup Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
         dropoffLabelEl.textContent = 'Dropoff Address (Hotel/Home) *';
         
-        pickupEl.placeholder = 'Denver International, JFK Airport, Heathrow...';
+        pickupEl.placeholder = 'Denver International Airport, JFK Airport, London Heathrow...';
         dropoffEl.placeholder = 'Hotel name, home address...';
         
-        pickupHintEl.textContent = '🛬 Enter airport name or code (e.g., "DEN", "JFK", "Heathrow")';
-        dropoffHintEl.textContent = 'Enter hotel, home, or destination address';
-        
-        pickupAutocomplete.setTypes(['airport', 'establishment']);
-        pickupAutocomplete.setComponentRestrictions({});
-        dropoffAutocomplete.setTypes(['establishment', 'geocode']);
+        pickupHintEl.textContent = '🛬 Start typing to see airport suggestions';
+        dropoffHintEl.textContent = 'Start typing to see suggestions';
         
       } else if (serviceType === 'dropoff') {
         // Airport Drop-off: Pickup = Hotel/Home, Dropoff = AIRPORT
@@ -465,18 +457,16 @@
         dropoffLabelEl.innerHTML = 'Dropoff Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
         
         pickupEl.placeholder = 'Hotel name, home address...';
-        dropoffEl.placeholder = 'Denver International, JFK Airport, Heathrow...';
+        dropoffEl.placeholder = 'Denver International Airport, JFK Airport, London Heathrow...';
         
-        pickupHintEl.textContent = 'Enter hotel, home, or pickup address';
-        dropoffHintEl.textContent = '🛫 Enter airport name or code (e.g., "DEN", "JFK", "Heathrow")';
-        
-        pickupAutocomplete.setTypes(['establishment', 'geocode']);
-        dropoffAutocomplete.setTypes(['airport', 'establishment']);
-        dropoffAutocomplete.setComponentRestrictions({});
+        pickupHintEl.textContent = 'Start typing to see suggestions';
+        dropoffHintEl.textContent = '🛫 Start typing to see airport suggestions';
       }
+      
+      // Clear quote when service type changes
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
     });
-
-    window.initAutocomplete = initAutocomplete;
 
     function showMessage(type, text) {
       messageDiv.className = `message ${type}`;
@@ -489,11 +479,6 @@
       const [hh, min] = timeStr.split(':').map(Number);
       const localDate = new Date(y, (m - 1), d, hh, min, 0);
       return localDate.toISOString();
-    }
-
-    function isValidAirportCodeOrBlank(code) {
-      if (!code) return false; // Airport code now REQUIRED
-      return /^[A-Z]{3,4}$/.test(code);
     }
 
     function getLocalYMD() {
@@ -527,6 +512,7 @@
       this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     });
 
+    // Calculate Fare (no Turnstile required)
     quoteBtn.addEventListener('click', async () => {
       const pickup = pickupEl.value.trim();
       const dropoff = dropoffEl.value.trim();
@@ -585,6 +571,7 @@
       }
     });
 
+    // Form submission (Turnstile required)
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
