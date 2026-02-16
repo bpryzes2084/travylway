@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Book a Ride - TravylWay</title>
 
+  <!-- Mapbox GL JS -->
+  <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+  
+  <!-- Mapbox Geocoding -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
   <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
@@ -22,7 +30,7 @@
 
     .container{
       width:100%;
-      max-width:640px;
+      max-width:900px;
       background:#fff;
       border-radius:16px;
       padding:28px;
@@ -188,17 +196,50 @@
       font-size:12px;
     }
 
-    .pac-container {
-      z-index: 9999 !important;
-      border-radius: 8px;
-      margin-top: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
     .turnstile-wrapper{
       margin: 16px 0;
       display: flex;
       justify-content: center;
+    }
+
+    /* Map Container */
+    #map{
+      width:100%;
+      height:350px;
+      border-radius:12px;
+      margin:16px 0;
+      border:2px solid #e5e7eb;
+    }
+
+    .map-info{
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      border-radius:8px;
+      padding:12px;
+      margin-bottom:16px;
+      font-size:13px;
+      text-align:center;
+      color:#666;
+    }
+
+    /* Mapbox Geocoder styling */
+    .mapboxgl-ctrl-geocoder{
+      width:100%;
+      max-width:100%;
+      box-shadow:none;
+      border:2px solid #ddd;
+      border-radius:10px;
+      font-size:16px;
+    }
+
+    .mapboxgl-ctrl-geocoder input{
+      padding:12px;
+      font-size:16px;
+    }
+
+    .mapboxgl-ctrl-geocoder--input:focus{
+      outline:none;
+      border-color:#667eea;
     }
   </style>
 </head>
@@ -213,7 +254,6 @@
     </div>
 
     <form id="generalForm" autocomplete="on">
-      <!-- Honeypot field -->
       <div class="hp">
         <label>Website</label>
         <input type="text" id="website" tabindex="-1" autocomplete="off" />
@@ -232,15 +272,21 @@
 
       <div class="form-group">
         <label>Pickup Address *</label>
-        <input type="text" id="pickup" required placeholder="1234 Main St, Denver, CO" maxlength="200" autocomplete="off" />
+        <div id="pickupGeocoder"></div>
         <div class="hint">Start typing to see suggestions</div>
       </div>
 
       <div class="form-group">
         <label>Dropoff Address *</label>
-        <input type="text" id="dropoff" required placeholder="Denver International Airport" maxlength="200" autocomplete="off" />
+        <div id="dropoffGeocoder"></div>
         <div class="hint">Start typing to see suggestions</div>
       </div>
+
+      <!-- Map -->
+      <div class="map-info" id="mapInfo">
+        📍 Select pickup and dropoff addresses above to see route on map
+      </div>
+      <div id="map"></div>
 
       <div class="grid">
         <div class="form-group">
@@ -256,13 +302,15 @@
 
       <div class="grid">
         <div class="form-group">
-          <label>Flight Number (optional)</label>
+          <label>Flight Number</label>
           <input type="text" id="flight" placeholder="UA1234" maxlength="10" />
+          <div class="hint">Optional - helps with tracking</div>
         </div>
 
         <div class="form-group">
-          <label>Airline (optional)</label>
+          <label>Airline</label>
           <input type="text" id="airline" placeholder="United Airlines" maxlength="60" />
+          <div class="hint">Optional - helps with tracking</div>
         </div>
       </div>
 
@@ -271,7 +319,6 @@
         <textarea id="notes" placeholder="Special requests, luggage count, etc..."></textarea>
       </div>
 
-      <!-- Calculate Fare Button -->
       <div class="form-group">
         <button type="button" class="btn secondary" id="quoteBtn">
           <span id="quoteText">Calculate Fare</span>
@@ -309,11 +356,11 @@
     </div>
   </div>
 
-  <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initAutocomplete" async defer></script>
-
   <script>
     const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
+    const MAPBOX_TOKEN = 'pk.eyJ1IjoiYnByeXplczIwODQiLCJhIjoiY21sbmtkOXRwMGZwdTNlcTNlbDZjcXNsOCJ9.MA-V_fUeihAhAm28Brnojg';
+
+    mapboxgl.accessToken = MAPBOX_TOKEN;
 
     const form = document.getElementById('generalForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -325,8 +372,6 @@
     const flightEl = document.getElementById('flight');
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
-    const pickupEl = document.getElementById('pickup');
-    const dropoffEl = document.getElementById('dropoff');
 
     const quoteBtn = document.getElementById('quoteBtn');
     const quoteText = document.getElementById('quoteText');
@@ -337,8 +382,22 @@
     const quoteTotalEl = document.getElementById('quoteTotal');
 
     let latestEstimatedFare = 0;
-    let pickupAutocomplete, dropoffAutocomplete;
     let turnstileToken = null;
+    let pickupAddress = '';
+    let dropoffAddress = '';
+    let pickupCoords = null;
+    let dropoffCoords = null;
+
+    // Initialize Map
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [-98.5795, 39.8283],
+      zoom: 3
+    });
+
+    let pickupMarker = null;
+    let dropoffMarker = null;
 
     // Turnstile callbacks
     window.onTurnstileSuccess = function(token) {
@@ -357,45 +416,112 @@
       showMessage('error', '❌ Security verification failed. Please refresh the page.');
     };
 
-    // Initialize Google Maps Autocomplete
-    function initAutocomplete() {
+    // Initialize Mapbox Geocoders
+    const pickupGeocoder = new MapboxGeocoder({
+      accessToken: MAPBOX_TOKEN,
+      placeholder: 'Start typing address...',
+      mapboxgl: mapboxgl
+    });
+
+    const dropoffGeocoder = new MapboxGeocoder({
+      accessToken: MAPBOX_TOKEN,
+      placeholder: 'Start typing address...',
+      mapboxgl: mapboxgl
+    });
+
+    pickupGeocoder.addTo('#pickupGeocoder');
+    dropoffGeocoder.addTo('#dropoffGeocoder');
+
+    // Pickup address selected
+    pickupGeocoder.on('result', function(e) {
+      pickupAddress = e.result.place_name;
+      pickupCoords = e.result.geometry.coordinates;
+      
+      if (pickupMarker) pickupMarker.remove();
+      pickupMarker = new mapboxgl.Marker({color: '#10b981'})
+        .setLngLat(pickupCoords)
+        .addTo(map);
+      
+      updateMap();
+      updateMapInfo();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+    });
+
+    // Dropoff address selected
+    dropoffGeocoder.on('result', function(e) {
+      dropoffAddress = e.result.place_name;
+      dropoffCoords = e.result.geometry.coordinates;
+      
+      if (dropoffMarker) dropoffMarker.remove();
+      dropoffMarker = new mapboxgl.Marker({color: '#ef4444'})
+        .setLngLat(dropoffCoords)
+        .addTo(map);
+      
+      updateMap();
+      updateMapInfo();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+    });
+
+    async function updateMap() {
+      if (!pickupCoords || !dropoffCoords) return;
+
+      const bounds = new mapboxgl.LngLatBounds();
+      bounds.extend(pickupCoords);
+      bounds.extend(dropoffCoords);
+      map.fitBounds(bounds, {padding: 50});
+
       try {
-        // Worldwide locations
-        pickupAutocomplete = new google.maps.places.Autocomplete(pickupEl, {
-          types: ['establishment', 'geocode'],
-          fields: ['formatted_address', 'name']
-        });
-
-        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffEl, {
-          types: ['establishment', 'geocode'],
-          fields: ['formatted_address', 'name']
-        });
-
-        pickupAutocomplete.addListener('place_changed', function() {
-          const place = pickupAutocomplete.getPlace();
-          if (place.formatted_address) {
-            pickupEl.value = place.formatted_address;
+        const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
+        
+        const response = await fetch(directionsUrl);
+        const data = await response.json();
+        
+        if (data.routes && data.routes.length > 0) {
+          const route = data.routes[0].geometry;
+          
+          if (map.getSource('route')) {
+            map.removeLayer('route');
+            map.removeSource('route');
           }
-          quoteBox.style.display = 'none';
-          latestEstimatedFare = 0;
-        });
-
-        dropoffAutocomplete.addListener('place_changed', function() {
-          const place = dropoffAutocomplete.getPlace();
-          if (place.formatted_address) {
-            dropoffEl.value = place.formatted_address;
-          }
-          quoteBox.style.display = 'none';
-          latestEstimatedFare = 0;
-        });
-
-        console.log('✅ Google Maps Autocomplete initialized');
+          
+          map.addSource('route', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              geometry: route
+            }
+          });
+          
+          map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#667eea',
+              'line-width': 4
+            }
+          });
+        }
       } catch (e) {
-        console.error('❌ Google Maps Autocomplete failed:', e);
+        console.error('Failed to load route:', e);
       }
     }
 
-    window.initAutocomplete = initAutocomplete;
+    function updateMapInfo() {
+      if (pickupCoords && dropoffCoords) {
+        document.getElementById('mapInfo').innerHTML = '🗺️ Route displayed: <span style="color:#10b981;">●</span> Pickup → <span style="color:#ef4444;">●</span> Dropoff';
+      } else if (pickupCoords) {
+        document.getElementById('mapInfo').textContent = '📍 Pickup location set. Add dropoff to see route.';
+      } else if (dropoffCoords) {
+        document.getElementById('mapInfo').textContent = '📍 Dropoff location set. Add pickup to see route.';
+      }
+    }
 
     function showMessage(type, text) {
       messageDiv.className = `message ${type}`;
@@ -439,13 +565,10 @@
       });
     }
 
-    // Calculate Fare (GENERAL pricing)
+    // Calculate Fare
     quoteBtn.addEventListener('click', async () => {
-      const pickup = pickupEl.value.trim();
-      const dropoff = dropoffEl.value.trim();
-
-      if (!pickup || !dropoff) {
-        showMessage('error', '❌ Please enter both pickup and dropoff addresses to calculate fare.');
+      if (!pickupAddress || !dropoffAddress) {
+        showMessage('error', '❌ Please select both pickup and dropoff addresses to calculate fare.');
         return;
       }
 
@@ -459,9 +582,11 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            pickup_text: pickup,
-            dropoff_text: dropoff,
-            rider_type: 'GENERAL'  // ← GENERAL pricing (higher rates)
+            pickup_text: pickupAddress,
+            dropoff_text: dropoffAddress,
+            pickup_coords: pickupCoords,
+            dropoff_coords: dropoffCoords,
+            rider_type: 'GENERAL'
           })
         });
 
@@ -503,9 +628,13 @@
         return;
       }
 
-      // Turnstile validation
       if (!turnstileToken) {
         showMessage('error', '❌ Please complete the security verification (checkbox above).');
+        return;
+      }
+
+      if (!pickupAddress || !dropoffAddress) {
+        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
         return;
       }
 
@@ -513,11 +642,6 @@
       const timeVal = timeEl.value;
       if (!dateVal || !timeVal) {
         showMessage('error', '❌ Pickup date and time are required.');
-        return;
-      }
-
-      if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
-        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
         return;
       }
 
@@ -532,9 +656,9 @@
       const payload = {
         created_by: document.getElementById('name').value.trim(),
         rider_phone: phoneEl.value.trim(),
-        rider_type: 'GENERAL',  // ← GENERAL rider (standard rates)
-        pickup_text: pickupEl.value.trim(),
-        dropoff_text: dropoffEl.value.trim(),
+        rider_type: 'GENERAL',
+        pickup_text: pickupAddress,
+        dropoff_text: dropoffAddress,
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
         flight_number: document.getElementById('flight').value.trim() || '',
@@ -566,14 +690,29 @@
           dateEl.min = today;
           dateEl.value = today;
 
+          // Clear map
+          if (pickupMarker) pickupMarker.remove();
+          if (dropoffMarker) dropoffMarker.remove();
+          if (map.getSource('route')) {
+            map.removeLayer('route');
+            map.removeSource('route');
+          }
+          pickupAddress = '';
+          dropoffAddress = '';
+          pickupCoords = null;
+          dropoffCoords = null;
+          document.getElementById('mapInfo').textContent = '📍 Select pickup and dropoff addresses above to see route on map';
+
           latestEstimatedFare = 0;
           quoteBox.style.display = 'none';
           turnstileToken = null;
           
-          // Reset Turnstile widget
           if (window.turnstile) {
             window.turnstile.reset();
           }
+          
+          pickupGeocoder.clear();
+          dropoffGeocoder.clear();
           
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
