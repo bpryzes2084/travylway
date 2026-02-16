@@ -674,6 +674,14 @@
       quoteSpinner.style.display = 'inline-block';
       messageDiv.style.display = 'none';
 
+      console.log('Sending quote request:', {
+        pickup_text: pickupAddress,
+        dropoff_text: dropoffAddress,
+        pickup_coords: pickupCoords,
+        dropoff_coords: dropoffCoords,
+        rider_type: 'CREW'
+      });
+
       try {
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
           method: 'POST',
@@ -681,6 +689,8 @@
           body: JSON.stringify({
             pickup_text: pickupAddress,
             dropoff_text: dropoffAddress,
+            pickup_coords: pickupCoords,
+            dropoff_coords: dropoffCoords,
             rider_type: 'CREW'
           })
         });
