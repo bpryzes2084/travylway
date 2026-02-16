@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crew Booking - TravylWay</title>
 
+  <!-- Mapbox GL JS -->
+  <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+  
+  <!-- Mapbox Geocoding -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
   <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
@@ -22,7 +30,7 @@
 
     .container{
       width:100%;
-      max-width:640px;
+      max-width:900px;
       background:#fff;
       border-radius:16px;
       padding:28px;
@@ -211,6 +219,46 @@
       display: flex;
       justify-content: center;
     }
+
+    /* Map Container */
+    #map{
+      width:100%;
+      height:350px;
+      border-radius:12px;
+      margin:16px 0;
+      border:2px solid #e5e7eb;
+    }
+
+    .map-info{
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      border-radius:8px;
+      padding:12px;
+      margin-bottom:16px;
+      font-size:13px;
+      text-align:center;
+      color:#666;
+    }
+
+    /* Mapbox Geocoder styling */
+    .mapboxgl-ctrl-geocoder{
+      width:100%;
+      max-width:100%;
+      box-shadow:none;
+      border:2px solid #ddd;
+      border-radius:10px;
+      font-size:16px;
+    }
+
+    .mapboxgl-ctrl-geocoder input{
+      padding:12px;
+      font-size:16px;
+    }
+
+    .mapboxgl-ctrl-geocoder--input:focus{
+      outline:none;
+      border-color:#667eea;
+    }
   </style>
 </head>
 
@@ -257,15 +305,23 @@
 
       <div class="form-group">
         <label id="pickupLabel">Pickup Address *</label>
-        <input type="text" id="pickup" required placeholder="Select service type first" maxlength="200" />
-        <div class="hint" id="pickupHint">Type full address</div>
+        <div id="pickupGeocoder"></div>
+        <input type="hidden" id="pickupCoords" />
+        <div class="hint" id="pickupHint">Start typing to see suggestions</div>
       </div>
 
       <div class="form-group">
         <label id="dropoffLabel">Dropoff Address *</label>
-        <input type="text" id="dropoff" required placeholder="Select service type first" maxlength="200" />
-        <div class="hint" id="dropoffHint">Type full address</div>
+        <div id="dropoffGeocoder"></div>
+        <input type="hidden" id="dropoffCoords" />
+        <div class="hint" id="dropoffHint">Start typing to see suggestions</div>
       </div>
+
+      <!-- Map -->
+      <div class="map-info" id="mapInfo">
+        📍 Select pickup and dropoff addresses above to see route on map
+      </div>
+      <div id="map"></div>
 
       <div class="grid">
         <div class="form-group">
@@ -341,11 +397,11 @@
     </div>
   </div>
 
-  <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQPVMR-qUW_uDz8TGazVXFP5J8ZEEkEyo&libraries=places&callback=initAutocomplete" async defer></script>
-
   <script>
     const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
+    const MAPBOX_TOKEN = 'pk.eyJ1IjoiYnByeXplczIwODQiLCJhIjoiY21sbmtkOXRwMGZwdTNlcTNlbDZjcXNsOCJ9.MA-V_fUeihAhAm28Brnojg';
+
+    mapboxgl.accessToken = MAPBOX_TOKEN;
 
     const form = document.getElementById('crewForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -359,8 +415,6 @@
     const airlineEl = document.getElementById('airline');
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
-    const pickupEl = document.getElementById('pickup');
-    const dropoffEl = document.getElementById('dropoff');
     const serviceTypeEl = document.getElementById('serviceType');
 
     const pickupLabelEl = document.getElementById('pickupLabel');
@@ -377,8 +431,23 @@
     const quoteTotalEl = document.getElementById('quoteTotal');
 
     let latestEstimatedFare = 0;
-    let pickupAutocomplete, dropoffAutocomplete;
     let turnstileToken = null;
+    let pickupAddress = '';
+    let dropoffAddress = '';
+    let pickupCoords = null;
+    let dropoffCoords = null;
+
+    // Initialize Map
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [-98.5795, 39.8283], // Center of USA
+      zoom: 3
+    });
+
+    let pickupMarker = null;
+    let dropoffMarker = null;
+    let routeLayer = null;
 
     // Turnstile callbacks
     window.onTurnstileSuccess = function(token) {
@@ -397,44 +466,120 @@
       showMessage('error', '❌ Security verification failed. Please refresh the page.');
     };
 
-    // Initialize Google Maps Autocomplete
-    function initAutocomplete() {
+    // Initialize Mapbox Geocoders
+    const pickupGeocoder = new MapboxGeocoder({
+      accessToken: MAPBOX_TOKEN,
+      placeholder: 'Select service type first',
+      mapboxgl: mapboxgl
+    });
+
+    const dropoffGeocoder = new MapboxGeocoder({
+      accessToken: MAPBOX_TOKEN,
+      placeholder: 'Select service type first',
+      mapboxgl: mapboxgl
+    });
+
+    pickupGeocoder.addTo('#pickupGeocoder');
+    dropoffGeocoder.addTo('#dropoffGeocoder');
+
+    // Pickup address selected
+    pickupGeocoder.on('result', function(e) {
+      pickupAddress = e.result.place_name;
+      pickupCoords = e.result.geometry.coordinates;
+      document.getElementById('pickupCoords').value = JSON.stringify(pickupCoords);
+      
+      // Add/update marker
+      if (pickupMarker) pickupMarker.remove();
+      pickupMarker = new mapboxgl.Marker({color: '#10b981'})
+        .setLngLat(pickupCoords)
+        .addTo(map);
+      
+      updateMap();
+      updateMapInfo();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+    });
+
+    // Dropoff address selected
+    dropoffGeocoder.on('result', function(e) {
+      dropoffAddress = e.result.place_name;
+      dropoffCoords = e.result.geometry.coordinates;
+      document.getElementById('dropoffCoords').value = JSON.stringify(dropoffCoords);
+      
+      // Add/update marker
+      if (dropoffMarker) dropoffMarker.remove();
+      dropoffMarker = new mapboxgl.Marker({color: '#ef4444'})
+        .setLngLat(dropoffCoords)
+        .addTo(map);
+      
+      updateMap();
+      updateMapInfo();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+    });
+
+    async function updateMap() {
+      if (!pickupCoords || !dropoffCoords) return;
+
+      // Fit map to show both markers
+      const bounds = new mapboxgl.LngLatBounds();
+      bounds.extend(pickupCoords);
+      bounds.extend(dropoffCoords);
+      map.fitBounds(bounds, {padding: 50});
+
+      // Get route from Mapbox Directions API
       try {
-        pickupAutocomplete = new google.maps.places.Autocomplete(pickupEl, {
-          types: ['establishment', 'geocode'],
-          fields: ['formatted_address', 'name']
-        });
-
-        dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffEl, {
-          types: ['establishment', 'geocode'],
-          fields: ['formatted_address', 'name']
-        });
-
-        pickupAutocomplete.addListener('place_changed', function() {
-          const place = pickupAutocomplete.getPlace();
-          if (place.formatted_address) {
-            pickupEl.value = place.formatted_address;
+        const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
+        
+        const response = await fetch(directionsUrl);
+        const data = await response.json();
+        
+        if (data.routes && data.routes.length > 0) {
+          const route = data.routes[0].geometry;
+          
+          // Remove old route if exists
+          if (map.getSource('route')) {
+            map.removeLayer('route');
+            map.removeSource('route');
           }
-          quoteBox.style.display = 'none';
-          latestEstimatedFare = 0;
-        });
-
-        dropoffAutocomplete.addListener('place_changed', function() {
-          const place = dropoffAutocomplete.getPlace();
-          if (place.formatted_address) {
-            dropoffEl.value = place.formatted_address;
-          }
-          quoteBox.style.display = 'none';
-          latestEstimatedFare = 0;
-        });
-
-        console.log('✅ Google Maps Autocomplete initialized');
+          
+          // Add new route
+          map.addSource('route', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              geometry: route
+            }
+          });
+          
+          map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#667eea',
+              'line-width': 4
+            }
+          });
+        }
       } catch (e) {
-        console.error('❌ Google Maps Autocomplete failed:', e);
+        console.error('Failed to load route:', e);
       }
     }
 
-    window.initAutocomplete = initAutocomplete;
+    function updateMapInfo() {
+      if (pickupCoords && dropoffCoords) {
+        document.getElementById('mapInfo').innerHTML = '🗺️ Route displayed: <span style="color:#10b981;">●</span> Pickup → <span style="color:#ef4444;">●</span> Dropoff';
+      } else if (pickupCoords) {
+        document.getElementById('mapInfo').textContent = '📍 Pickup location set. Add dropoff to see route.';
+      } else if (dropoffCoords) {
+        document.getElementById('mapInfo').textContent = '📍 Dropoff location set. Add pickup to see route.';
+      }
+    }
 
     // Update labels and placeholders based on service type
     serviceTypeEl.addEventListener('change', function() {
@@ -445,22 +590,22 @@
         pickupLabelEl.innerHTML = 'Pickup Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
         dropoffLabelEl.textContent = 'Dropoff Address (Hotel/Home) *';
         
-        pickupEl.placeholder = 'Denver International Airport, JFK Airport, London Heathrow...';
-        dropoffEl.placeholder = 'Hotel name, home address...';
+        pickupGeocoder.setPlaceholder('Denver International Airport, JFK, Heathrow...');
+        dropoffGeocoder.setPlaceholder('Hotel name, home address...');
         
-        pickupHintEl.textContent = '🛬 Start typing to see airport suggestions';
-        dropoffHintEl.textContent = 'Start typing to see suggestions';
+        pickupHintEl.textContent = '🛬 Type airport name to see suggestions';
+        dropoffHintEl.textContent = 'Type address to see suggestions';
         
       } else if (serviceType === 'dropoff') {
         // Airport Drop-off: Pickup = Hotel/Home, Dropoff = AIRPORT
         pickupLabelEl.textContent = 'Pickup Address (Hotel/Home) *';
         dropoffLabelEl.innerHTML = 'Dropoff Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
         
-        pickupEl.placeholder = 'Hotel name, home address...';
-        dropoffEl.placeholder = 'Denver International Airport, JFK Airport, London Heathrow...';
+        pickupGeocoder.setPlaceholder('Hotel name, home address...');
+        dropoffGeocoder.setPlaceholder('Denver International Airport, JFK, Heathrow...');
         
-        pickupHintEl.textContent = 'Start typing to see suggestions';
-        dropoffHintEl.textContent = '🛫 Start typing to see airport suggestions';
+        pickupHintEl.textContent = 'Type address to see suggestions';
+        dropoffHintEl.textContent = '🛫 Type airport name to see suggestions';
       }
       
       // Clear quote when service type changes
@@ -514,11 +659,8 @@
 
     // Calculate Fare (no Turnstile required)
     quoteBtn.addEventListener('click', async () => {
-      const pickup = pickupEl.value.trim();
-      const dropoff = dropoffEl.value.trim();
-
-      if (!pickup || !dropoff) {
-        showMessage('error', '❌ Please enter both pickup and dropoff addresses to calculate fare.');
+      if (!pickupAddress || !dropoffAddress) {
+        showMessage('error', '❌ Please select both pickup and dropoff addresses to calculate fare.');
         return;
       }
 
@@ -537,8 +679,8 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            pickup_text: pickup,
-            dropoff_text: dropoff,
+            pickup_text: pickupAddress,
+            dropoff_text: dropoffAddress,
             rider_type: 'CREW'
           })
         });
@@ -593,15 +735,15 @@
         return;
       }
 
+      if (!pickupAddress || !dropoffAddress) {
+        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
+        return;
+      }
+
       const dateVal = dateEl.value;
       const timeVal = timeEl.value;
       if (!dateVal || !timeVal) {
         showMessage('error', '❌ Pickup date and time are required.');
-        return;
-      }
-
-      if (!pickupEl.value.trim() || !dropoffEl.value.trim()) {
-        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
         return;
       }
 
@@ -619,8 +761,8 @@
         created_by: document.getElementById('name').value.trim(),
         rider_phone: phoneEl.value.trim(),
         rider_type: 'CREW',
-        pickup_text: pickupEl.value.trim(),
-        dropoff_text: dropoffEl.value.trim(),
+        pickup_text: pickupAddress,
+        dropoff_text: dropoffAddress,
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
         flight_number: flightEl.value.trim() || '',
@@ -652,6 +794,19 @@
           dateEl.min = today;
           dateEl.value = today;
 
+          // Clear map
+          if (pickupMarker) pickupMarker.remove();
+          if (dropoffMarker) dropoffMarker.remove();
+          if (map.getSource('route')) {
+            map.removeLayer('route');
+            map.removeSource('route');
+          }
+          pickupAddress = '';
+          dropoffAddress = '';
+          pickupCoords = null;
+          dropoffCoords = null;
+          document.getElementById('mapInfo').textContent = '📍 Select pickup and dropoff addresses above to see route on map';
+
           latestEstimatedFare = 0;
           quoteBox.style.display = 'none';
           turnstileToken = null;
@@ -660,6 +815,10 @@
           if (window.turnstile) {
             window.turnstile.reset();
           }
+          
+          // Reset geocoders
+          pickupGeocoder.clear();
+          dropoffGeocoder.clear();
           
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
