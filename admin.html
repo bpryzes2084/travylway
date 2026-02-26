@@ -337,6 +337,7 @@
         <table>
           <thead>
             <tr>
+              <th>Name</th>
               <th>Phone</th>
               <th>Email</th>
               <th>Reason</th>
@@ -372,6 +373,11 @@
       </div>
 
       <form id="blockForm">
+        <div class="form-group">
+          <label for="blockName">Rider Name</label>
+          <input type="text" id="blockName" placeholder="John Doe">
+        </div>
+
         <div class="form-group">
           <label for="blockPhone">Phone Number *</label>
           <input type="tel" id="blockPhone" required placeholder="1234567890">
@@ -587,12 +593,13 @@
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--gray);">No results found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--gray);">No results found</td></tr>';
         return;
       }
 
       tbody.innerHTML = filtered.map(rider => `
         <tr>
+          <td>${rider.rider_name || '-'}</td>
           <td>${rider.phone || '-'}</td>
           <td>${rider.email || '-'}</td>
           <td>${rider.reason}</td>
@@ -643,6 +650,7 @@
     document.getElementById('blockForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const name = document.getElementById('blockName').value.trim();
       const phone = document.getElementById('blockPhone').value.trim();
       const email = document.getElementById('blockEmail').value.trim();
       const reason = document.getElementById('blockReason').value;
@@ -653,6 +661,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            rider_name: name || null,
             phone,
             email: email || null,
             reason,
