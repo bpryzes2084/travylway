@@ -251,9 +251,35 @@
 
   <div class="container">
     
+    <!-- Login Form (shows first) -->
+    <div id="loginSection" class="section" style="max-width: 500px; margin: 2rem auto;">
+      <div class="section-header">
+        <h2>🔒 Admin Login</h2>
+      </div>
+
+      <div id="loginMessage" class="message"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" required placeholder="Enter admin password">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Login
+        </button>
+      </form>
+    </div>
+
+    <!-- Main Admin Content (hidden until logged in) -->
+    <div id="adminContent" style="display: none;">
+    
     <div class="header">
       <h1>🛡️ Admin Panel</h1>
       <p>Manage blocked riders and system operations</p>
+      <button id="logoutBtn" class="btn btn-danger btn-small" style="margin-top: 1rem;">
+        Logout
+      </button>
     </div>
 
     <div class="stats-grid">
@@ -332,6 +358,10 @@
     </div>
 
     <a href="/" class="back-link">← Back to Home</a>
+    
+    </div>
+    <!-- End adminContent -->
+
   </div>
 
   <div id="blockModal" class="modal">
@@ -386,8 +416,123 @@
   <script>
     const WORKER_URL = 'https://api.travylway.com';
     let blockedRiders = [];
+    let authToken = null;
 
-    window.addEventListener('load', loadBlockedRiders);
+    // ========== AUTHENTICATION ==========
+    
+    // Check if already logged in on page load
+    window.addEventListener('load', () => {
+      checkAuth();
+    });
+
+    function checkAuth() {
+      const token = localStorage.getItem('admin_token');
+      const expiry = localStorage.getItem('admin_token_expiry');
+
+      if (token && expiry && Date.now() < parseInt(expiry)) {
+        // Valid token exists
+        authToken = token;
+        showAdminContent();
+      } else {
+        // No valid token
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_token_expiry');
+        showLoginForm();
+      }
+    }
+
+    function showLoginForm() {
+      document.getElementById('loginSection').style.display = 'block';
+      document.getElementById('adminContent').style.display = 'none';
+    }
+
+    function showAdminContent() {
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('adminContent').style.display = 'block';
+      loadBlockedRiders();
+    }
+
+    // Login form handler
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const password = document.getElementById('adminPassword').value;
+
+      try {
+        const response = await fetch(`${WORKER_URL}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+
+        const data = await response.json();
+
+        if (data.ok && data.token) {
+          // Store token and expiry (24 hours)
+          authToken = data.token;
+          const expiry = Date.now() + (24 * 60 * 60 * 1000);
+          localStorage.setItem('admin_token', data.token);
+          localStorage.setItem('admin_token_expiry', expiry.toString());
+
+          // Show admin content
+          showAdminContent();
+        } else {
+          showLoginMessage('Invalid password', 'error');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        showLoginMessage('Login failed. Please try again.', 'error');
+      }
+    });
+
+    // Logout handler
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('admin_token');
+      localStorage.removeItem('admin_token_expiry');
+      authToken = null;
+      showLoginForm();
+      document.getElementById('adminPassword').value = '';
+    });
+
+    function showLoginMessage(text, type) {
+      const message = document.getElementById('loginMessage');
+      message.textContent = text;
+      message.className = `message ${type}`;
+      
+      setTimeout(() => {
+        message.className = 'message';
+      }, 5000);
+    }
+
+    // Add auth token to all API requests
+    async function authenticatedFetch(url, options = {}) {
+      if (!authToken) {
+        showLoginForm();
+        throw new Error('Not authenticated');
+      }
+
+      options.headers = {
+        ...options.headers,
+        'Authorization': `Bearer ${authToken}`
+      };
+
+      const response = await fetch(url, options);
+
+      // If 401, token expired
+      if (response.status === 401) {
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_token_expiry');
+        authToken = null;
+        showLoginForm();
+        throw new Error('Session expired');
+      }
+
+      return response;
+    }
+
+    // ========== BLOCKED RIDERS MANAGEMENT ==========
+
+    window.addEventListener('load', checkAuth);
 
     async function loadBlockedRiders() {
       const loading = document.getElementById('loading');
@@ -399,7 +544,7 @@
       emptyState.style.display = 'none';
 
       try {
-        const response = await fetch(`${WORKER_URL}/api/blocked`);
+        const response = await authenticatedFetch(`${WORKER_URL}/api/blocked`);
         const data = await response.json();
 
         if (data.ok && data.blocked) {
@@ -504,7 +649,7 @@
       const notes = document.getElementById('blockNotes').value.trim();
 
       try {
-        const response = await fetch(`${WORKER_URL}/api/blocked`, {
+        const response = await authenticatedFetch(`${WORKER_URL}/api/blocked`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -536,7 +681,7 @@
       if (!confirm('Are you sure you want to unblock this rider?')) return;
 
       try {
-        const response = await fetch(`${WORKER_URL}/api/blocked/${id}`, {
+        const response = await authenticatedFetch(`${WORKER_URL}/api/blocked/${id}`, {
           method: 'DELETE'
         });
 
