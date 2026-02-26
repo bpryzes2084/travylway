@@ -1,1 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tip Your Driver - TravylWay</title>
+  <meta name="description" content="Show your appreciation! Leave a tip for your TravylWay driver.">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    :root {
+      --primary: #667eea;
+      --green: #10b981;
+      --text: #0f172a;
+      --gray: #64748b;
+      --light-gray: #f1f5f9;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+      color: var(--white);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      opacity: 0.95;
+      font-size: 1rem;
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.875rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      margin-top: 1rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .trip-info {
+      background: var(--light-gray);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .trip-detail {
+      margin-bottom: 0.75rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .trip-detail:last-child {
+      margin-bottom: 0;
+    }
+
+    .trip-detail strong {
+      color: var(--text);
+      min-width: 80px;
+    }
+
+    .trip-detail span {
+      color: var(--gray);
+    }
+
+    .driver-name {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .tip-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .tip-btn {
+      padding: 1.25rem;
+      background: var(--light-gray);
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tip-btn:hover {
+      border-color: var(--primary);
+      background: rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .tip-btn.selected {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    .custom-tip {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .custom-tip.active {
+      display: block;
+    }
+
+    .payment-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .payment-btn {
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .venmo-btn {
+      background: #008CFF;
+    }
+
+    .venmo-btn:hover:not(:disabled) {
+      background: #0077d9;
+      transform: translateY(-2px);
+    }
+
+    .cashapp-btn {
+      background: #00D632;
+    }
+
+    .cashapp-btn:hover:not(:disabled) {
+      background: #00c02b;
+      transform: translateY(-2px);
+    }
+
+    .payment-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .message {
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+      display: none;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    .message.success {
+      background: #d1fae5;
+      color: #065f46;
+      display: block;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: var(--white);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .back-link a {
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .back-link a:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>💝 Tip Your Driver</h1>
+      <p>Show your appreciation for great service</p>
+    </div>
+
+    <div class="content">
+      
+      <!-- Trip ID Entry -->
+      <div class="section" id="tripIdSection">
+        <label for="tripId">Enter Your Trip ID</label>
+        <input type="text" id="tripId" placeholder="ABC123" maxlength="20">
+        <button class="btn btn-primary" id="lookupBtn">
+          <span id="lookupText">Find Trip</span>
+          <span class="loading" id="lookupSpinner" style="display:none;"></span>
+        </button>
+      </div>
+
+      <!-- Message -->
+      <div id="message" class="message"></div>
+
+      <!-- Trip Info & Tip Selection -->
+      <div id="tipSection" style="display:none;">
+        
+        <!-- Trip Details -->
+        <div class="trip-info">
+          <div class="driver-name" id="driverName"></div>
+          <div class="trip-detail">
+            <strong>Date:</strong>
+            <span id="tripDate"></span>
+          </div>
+          <div class="trip-detail">
+            <strong>From:</strong>
+            <span id="tripPickup"></span>
+          </div>
+          <div class="trip-detail">
+            <strong>To:</strong>
+            <span id="tripDropoff"></span>
+          </div>
+        </div>
+
+        <!-- Tip Amount Selection -->
+        <div class="section">
+          <label>Select Tip Amount</label>
+          <div class="tip-buttons">
+            <button class="tip-btn" data-amount="5">$5</button>
+            <button class="tip-btn" data-amount="10">$10</button>
+            <button class="tip-btn" data-amount="15">$15</button>
+            <button class="tip-btn" data-amount="20">$20</button>
+            <button class="tip-btn" data-amount="custom">Custom</button>
+          </div>
+          
+          <div class="custom-tip" id="customTipSection">
+            <label for="customAmount">Custom Amount</label>
+            <input type="number" id="customAmount" placeholder="Enter amount" min="1" step="1">
+          </div>
+        </div>
+
+        <!-- Payment Buttons -->
+        <div class="section">
+          <label>Choose Payment Method</label>
+          <div class="payment-buttons">
+            <button class="payment-btn venmo-btn" id="venmoBtn" disabled>
+              💙 Venmo
+            </button>
+            <button class="payment-btn cashapp-btn" id="cashappBtn" disabled>
+              💚 Cash App
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="back-link">
+        <a href="/">← Back to Home</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const WORKER_URL = 'https://api.travylway.com';
+    const VENMO_USERNAME = '@tway2084';
+    const CASHAPP_USERNAME = '$tway66gworld';
+
+    let currentTripId = null;
+    let selectedAmount = null;
+    let tripData = null;
+
+    // Check for Trip ID in URL
+    window.addEventListener('load', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tripId = urlParams.get('trip');
+      if (tripId) {
+        document.getElementById('tripId').value = tripId;
+        lookupTrip();
+      }
+    });
+
+    // Lookup Trip
+    document.getElementById('lookupBtn').addEventListener('click', lookupTrip);
+    
+    document.getElementById('tripId').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') lookupTrip();
+    });
+
+    async function lookupTrip() {
+      const tripId = document.getElementById('tripId').value.trim();
+      
+      if (!tripId) {
+        showMessage('Please enter a Trip ID', 'error');
+        return;
+      }
+
+      const lookupBtn = document.getElementById('lookupBtn');
+      const lookupText = document.getElementById('lookupText');
+      const lookupSpinner = document.getElementById('lookupSpinner');
+
+      lookupBtn.disabled = true;
+      lookupText.style.display = 'none';
+      lookupSpinner.style.display = 'inline-block';
+      hideMessage();
+
+      try {
+        const response = await fetch(`${WORKER_URL}/api/trips/${tripId}`);
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error('Trip not found');
+        }
+
+        tripData = data.trip;
+        currentTripId = tripId;
+        displayTripInfo(tripData);
+        
+        document.getElementById('tripIdSection').style.display = 'none';
+        document.getElementById('tipSection').style.display = 'block';
+
+      } catch (error) {
+        showMessage('❌ Trip not found. Please check your Trip ID.', 'error');
+      } finally {
+        lookupBtn.disabled = false;
+        lookupText.style.display = 'inline';
+        lookupSpinner.style.display = 'none';
+      }
+    }
+
+    function displayTripInfo(trip) {
+      document.getElementById('driverName').textContent = `Tip ${trip.driver_name || 'Your Driver'}`;
+      
+      const pickupDate = new Date(trip.pickup_time_utc);
+      document.getElementById('tripDate').textContent = pickupDate.toLocaleDateString();
+      document.getElementById('tripPickup').textContent = trip.pickup_text;
+      document.getElementById('tripDropoff').textContent = trip.dropoff_text;
+    }
+
+    // Tip Amount Selection
+    document.querySelectorAll('.tip-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        
+        const amount = this.dataset.amount;
+        
+        if (amount === 'custom') {
+          document.getElementById('customTipSection').classList.add('active');
+          selectedAmount = null;
+          updatePaymentButtons();
+        } else {
+          document.getElementById('customTipSection').classList.remove('active');
+          selectedAmount = parseInt(amount);
+          updatePaymentButtons();
+        }
+      });
+    });
+
+    // Custom Amount Input
+    document.getElementById('customAmount').addEventListener('input', function() {
+      const value = parseInt(this.value);
+      selectedAmount = value > 0 ? value : null;
+      updatePaymentButtons();
+    });
+
+    function updatePaymentButtons() {
+      const venmoBtn = document.getElementById('venmoBtn');
+      const cashappBtn = document.getElementById('cashappBtn');
+      
+      if (selectedAmount && selectedAmount > 0) {
+        venmoBtn.disabled = false;
+        cashappBtn.disabled = false;
+      } else {
+        venmoBtn.disabled = true;
+        cashappBtn.disabled = true;
+      }
+    }
+
+    // Payment Buttons
+    document.getElementById('venmoBtn').addEventListener('click', () => {
+      if (selectedAmount > 0) {
+        logTip('venmo');
+        const note = encodeURIComponent(`Tip for Trip ${currentTripId}`);
+        window.open(`https://venmo.com/${VENMO_USERNAME}?txn=pay&amount=${selectedAmount}&note=${note}`, '_blank');
+      }
+    });
+
+    document.getElementById('cashappBtn').addEventListener('click', () => {
+      if (selectedAmount > 0) {
+        logTip('cashapp');
+        const note = encodeURIComponent(`Tip for Trip ${currentTripId}`);
+        window.open(`https://cash.app/${CASHAPP_USERNAME}/${selectedAmount}?note=${note}`, '_blank');
+      }
+    });
+
+    async function logTip(method) {
+      try {
+        await fetch(`${WORKER_URL}/api/tips`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            trip_id: currentTripId,
+            amount: selectedAmount,
+            method: method,
+            timestamp: new Date().toISOString()
+          })
+        });
+      } catch (error) {
+        console.error('Failed to log tip:', error);
+      }
+    }
+
+    function showMessage(text, type) {
+      const message = document.getElementById('message');
+      message.textContent = text;
+      message.className = `message ${type}`;
+    }
+
+    function hideMessage() {
+      document.getElementById('message').className = 'message';
+    }
+  </script>
+
+</body>
+</html>
