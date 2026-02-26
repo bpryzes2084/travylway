@@ -493,20 +493,34 @@
       if (selectedAmount > 0) {
         logTip('venmo');
         
-        // Show alert with payment details
-        alert(`💙 Venmo Payment\n\nSend $${selectedAmount} to: ${VENMO_USERNAME}\n\nNote: Tip for Trip ${currentTripId}\n\nClick OK to open Venmo`);
+        // Detect if mobile
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
-        // Open Venmo (removes @ symbol for URL)
-        const venmoUsername = VENMO_USERNAME.replace('@', '');
-        window.open(`https://venmo.com/u/${venmoUsername}`, '_blank');
+        if (isMobile) {
+          // Mobile: Open Venmo app directly (remove @ from username)
+          const venmoUser = VENMO_USERNAME.replace('@', '');
+          window.location.href = `venmo://paycharge?txn=pay&recipients=${venmoUser}&amount=${selectedAmount}&note=Tip%20for%20Trip%20${currentTripId}`;
+        } else {
+          // Desktop: Show instructions
+          alert(`💙 Venmo Payment\n\nSend $${selectedAmount} to: ${VENMO_USERNAME}\n\nNote: Tip for Trip ${currentTripId}\n\nPlease use Venmo app on your phone`);
+        }
       }
     });
 
     document.getElementById('cashappBtn').addEventListener('click', () => {
       if (selectedAmount > 0) {
         logTip('cashapp');
-        // Cash App supports direct payment links
-        window.open(`https://cash.app/${CASHAPP_USERNAME}/${selectedAmount}`, '_blank');
+        
+        // Detect if mobile
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+          // Mobile: Open Cash App directly
+          window.location.href = `https://cash.app/${CASHAPP_USERNAME}/${selectedAmount}`;
+        } else {
+          // Desktop: Show instructions
+          alert(`💚 Cash App Payment\n\nSend $${selectedAmount} to: ${CASHAPP_USERNAME}\n\nNote: Tip for Trip ${currentTripId}\n\nPlease use Cash App on your phone`);
+        }
       }
     });
 
