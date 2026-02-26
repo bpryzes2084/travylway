@@ -492,16 +492,21 @@
     document.getElementById('venmoBtn').addEventListener('click', () => {
       if (selectedAmount > 0) {
         logTip('venmo');
-        const note = encodeURIComponent(`Tip for Trip ${currentTripId}`);
-        window.open(`https://venmo.com/${VENMO_USERNAME}?txn=pay&amount=${selectedAmount}&note=${note}`, '_blank');
+        
+        // Show alert with payment details
+        alert(`💙 Venmo Payment\n\nSend $${selectedAmount} to: ${VENMO_USERNAME}\n\nNote: Tip for Trip ${currentTripId}\n\nClick OK to open Venmo`);
+        
+        // Open Venmo (removes @ symbol for URL)
+        const venmoUsername = VENMO_USERNAME.replace('@', '');
+        window.open(`https://venmo.com/u/${venmoUsername}`, '_blank');
       }
     });
 
     document.getElementById('cashappBtn').addEventListener('click', () => {
       if (selectedAmount > 0) {
         logTip('cashapp');
-        const note = encodeURIComponent(`Tip for Trip ${currentTripId}`);
-        window.open(`https://cash.app/${CASHAPP_USERNAME}/${selectedAmount}?note=${note}`, '_blank');
+        // Cash App supports direct payment links
+        window.open(`https://cash.app/${CASHAPP_USERNAME}/${selectedAmount}`, '_blank');
       }
     });
 
