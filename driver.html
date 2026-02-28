@@ -360,6 +360,19 @@ body{
     padding-top:1rem;
     margin-top:1rem;
   }
+  
+  /* Reduce fare display font sizes on mobile */
+  .fare-display div[style*="font-size:2rem"]{
+    font-size:1.5rem !important;
+  }
+  
+  .fare-display div[style*="font-size:2.5rem"]{
+    font-size:1.75rem !important;
+  }
+  
+  .fare-display div[style*="font-size:0.8rem"]{
+    font-size:0.75rem !important;
+  }
 }
 
 @media(max-width:480px){
@@ -370,6 +383,21 @@ body{
   .trip-status{font-size:0.7rem;padding:0.3rem 0.75rem}
   .info-value{font-size:0.95rem}
   .route-text{font-size:0.95rem}
+  
+  /* Further reduce on very small screens */
+  .fare-display{
+    padding:1rem;
+  }
+  
+  .fare-display div[style*="font-size:2rem"],
+  .fare-display div[style*="font-size:1.5rem"]{
+    font-size:1.25rem !important;
+  }
+  
+  .fare-display div[style*="font-size:2.5rem"],
+  .fare-display div[style*="font-size:1.75rem"]{
+    font-size:1.5rem !important;
+  }
 }
 </style>
 </head>
