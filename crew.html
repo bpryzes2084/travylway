@@ -364,6 +364,12 @@
       </div>
 
       <div class="form-group">
+        <label>✈️ Crew Verification (Required) *</label>
+        <input type="text" id="crewVerification" required placeholder="Answer required for crew discount" maxlength="100" />
+        <div class="hint" style="color:#dc2626;font-weight:600;">What do you call passengers that use wheelchairs to get seated first but when the plane gets to the destination they do not need a wheelchair?</div>
+      </div>
+
+      <div class="form-group">
         <label>Notes (optional)</label>
         <textarea id="notes" placeholder="Crew count, bags, special pickup notes..."></textarea>
       </div>
@@ -765,6 +771,21 @@
         return;
       }
 
+      // CREW VERIFICATION CHECK
+      const crewAnswer = document.getElementById('crewVerification').value.trim().toLowerCase();
+      const validAnswers = ['miracle', 'miracles', 'miracle passenger', 'miracle passengers', 'miracle flight'];
+      
+      if (!validAnswers.includes(crewAnswer)) {
+        showMessage('error', '❌ Crew verification failed. This service is only available to airline crew members. If you are crew and need assistance, please contact support.');
+        return;
+      }
+
+      // REQUIRE QUOTE BEFORE SUBMISSION
+      if (latestEstimatedFare <= 0) {
+        showMessage('error', '❌ Please click "Get Quote" to calculate your fare before submitting.');
+        return;
+      }
+
       submitBtn.disabled = true;
       submitText.style.display = 'none';
       loadingSpinner.style.display = 'inline-block';
@@ -787,6 +808,7 @@
         airline: airlineEl.value.trim() || '',
         airport_code: airportCode,
         notes: document.getElementById('notes').value.trim(),
+        crew_verification_answer: crewAnswer,
         estimated_fare: latestEstimatedFare,
         'cf-turnstile-response': turnstileToken
       };
