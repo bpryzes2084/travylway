@@ -188,6 +188,7 @@ body{
   font-size:0.85rem;
   color:var(--muted);
   font-family:monospace;
+  word-break:break-all;
 }
 .trip-status{
   padding:0.4rem 1rem;
@@ -196,6 +197,7 @@ body{
   font-weight:900;
   text-transform:uppercase;
   letter-spacing:0.5px;
+  white-space:nowrap;
 }
 .status-pending{background:#fef3c7;color:#92400e}
 .status-approved{background:#d1fae5;color:#065f46}
@@ -243,6 +245,7 @@ body{
   font-size:1rem;
   color:var(--text);
   margin:0;
+  word-break:break-word;
 }
 
 .trip-actions{
@@ -270,6 +273,36 @@ body{
   background:#d1d5db;
 }
 
+.fare-display{
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:white;
+  border-radius:12px;
+  padding:1.5rem;
+  margin-bottom:1.5rem;
+  text-align:center;
+  box-shadow:0 4px 15px rgba(16,185,129,0.3);
+}
+
+.fare-grid{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:1rem;
+  align-items:center;
+  max-width:600px;
+  margin:0 auto;
+}
+
+.fare-divider{
+  font-size:2rem;
+  opacity:0.7;
+}
+
+.fare-payout{
+  text-align:center;
+  border-left:2px solid rgba(255,255,255,0.3);
+  padding-left:1rem;
+}
+
 .empty-state{
   text-align:center;
   padding:3rem 1rem;
@@ -290,11 +323,53 @@ body{
 
 /* RESPONSIVE */
 @media(max-width:768px){
+  .header h1{font-size:1.5rem}
+  .header p{font-size:0.9rem}
+  
   .filter-grid{grid-template-columns:1fr}
   .filter-actions{flex-direction:column}
   .btn{width:100%}
+  
+  .stats-grid{grid-template-columns:repeat(2, 1fr)}
+  .stat-number{font-size:2rem}
+  .stat-label{font-size:0.8rem}
+  
   .trip-header{flex-direction:column;align-items:flex-start}
+  .trip-info{grid-template-columns:1fr}
   .trip-actions{flex-direction:column}
+  .trip-actions .btn{width:100%;min-width:auto}
+  
+  .trip-card{padding:1rem}
+  .filter-section{padding:1rem}
+  .trips-section{padding:1rem}
+  
+  /* Stack fare display on mobile */
+  .fare-grid{
+    grid-template-columns:1fr !important;
+    gap:0;
+  }
+  
+  .fare-divider{
+    display:none;
+  }
+  
+  .fare-payout{
+    border-left:none;
+    border-top:2px solid rgba(255,255,255,0.3);
+    padding-left:0;
+    padding-top:1rem;
+    margin-top:1rem;
+  }
+}
+
+@media(max-width:480px){
+  .container{padding:0 0.5rem;margin:1rem auto}
+  .header{padding:1.5rem 1rem}
+  .stats-grid{grid-template-columns:1fr}
+  .trip-id{font-size:0.75rem}
+  .trip-status{font-size:0.7rem;padding:0.3rem 0.75rem}
+  .info-value{font-size:0.95rem}
+  .route-text{font-size:0.95rem}
 }
 </style>
 </head>
@@ -414,7 +489,6 @@ body{
 </div>
 
 <script>
-// ✅ FIXED: Use api.travylway.com
 const API_BASE = "https://api.travylway.com";
 
 let allTrips = [];
@@ -585,15 +659,15 @@ function renderTrips() {
     return `
       <div class="trip-card">
         ${fare > 0 ? `
-          <div style="background:linear-gradient(135deg,#10b981,#059669);color:white;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:center;box-shadow:0 4px 15px rgba(16,185,129,0.3);">
-            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;max-width:600px;margin:0 auto;">
+          <div class="fare-display">
+            <div class="fare-grid">
               <div style="text-align:center;">
                 <div style="font-size:0.8rem;opacity:0.9;margin-bottom:0.25rem;font-weight:600;">TRIP TOTAL</div>
                 <div style="font-size:2rem;font-weight:900;line-height:1;">$${fare.toFixed(2)}</div>
                 <div style="font-size:0.75rem;opacity:0.8;margin-top:0.25rem;">${trip.distance_miles ? Number(trip.distance_miles).toFixed(1) + " miles" : ""}</div>
               </div>
-              <div style="font-size:2rem;opacity:0.7;">→</div>
-              <div style="text-align:center;border-left:2px solid rgba(255,255,255,0.3);padding-left:1rem;">
+              <div class="fare-divider">→</div>
+              <div class="fare-payout">
                 <div style="font-size:0.8rem;opacity:0.9;margin-bottom:0.25rem;font-weight:600;">YOU EARN</div>
                 <div style="font-size:2.5rem;font-weight:900;line-height:1;">$${driverPayout.toFixed(2)}</div>
                 <div style="font-size:0.75rem;opacity:0.8;margin-top:0.25rem;">75% of fare</div>
@@ -694,11 +768,11 @@ function renderTrips() {
             </div>
 
             ${canUnclaim ? `
-              <button class="btn" style="background:#f59e0b;color:white;min-width:160px;" onclick="unclaimTrip('${trip.id}')">
+              <button class="btn" style="background:#f59e0b;color:white;" onclick="unclaimTrip('${trip.id}')">
                 ↩️ Unclaim Trip
               </button>
             ` : `
-              <button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;min-width:160px;" disabled title="Cannot unclaim within 48 hours of pickup">
+              <button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;" disabled title="Cannot unclaim within 48 hours of pickup">
                 🔒 Cannot Unclaim
               </button>
             `}
