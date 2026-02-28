@@ -653,6 +653,12 @@
         return;
       }
 
+      // REQUIRE QUOTE BEFORE SUBMISSION
+      if (latestEstimatedFare <= 0) {
+        showMessage('error', '❌ Please click "Get Quote" to calculate your fare before submitting.');
+        return;
+      }
+
       submitBtn.disabled = true;
       submitText.style.display = 'none';
       loadingSpinner.style.display = 'inline-block';
