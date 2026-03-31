@@ -425,17 +425,217 @@
       showMessage('error', '❌ Security verification failed. Please refresh the page.');
     };
 
+    // Airport code mappings for geocoder
+    const airportCodes = {
+      'DEN': { name: 'Denver International Airport, Denver, Colorado', coords: [-104.6731, 39.8561] },
+      'DIA': { name: 'Denver International Airport, Denver, Colorado', coords: [-104.6731, 39.8561] },
+      'LAX': { name: 'Los Angeles International Airport, Los Angeles, California', coords: [-118.4085, 33.9416] },
+      'JFK': { name: 'John F Kennedy International Airport, New York, New York', coords: [-73.7781, 40.6413] },
+      'ORD': { name: "O'Hare International Airport, Chicago, Illinois", coords: [-87.9048, 41.9742] },
+      'ATL': { name: 'Hartsfield-Jackson Atlanta International Airport, Atlanta, Georgia', coords: [-84.4277, 33.6407] },
+      'DFW': { name: 'Dallas Fort Worth International Airport, Dallas, Texas', coords: [-97.0403, 32.8998] },
+      'SFO': { name: 'San Francisco International Airport, San Francisco, California', coords: [-122.3789, 37.6213] },
+      'LAS': { name: 'Harry Reid International Airport, Las Vegas, Nevada', coords: [-115.1520, 36.0840] },
+      'PHX': { name: 'Phoenix Sky Harbor International Airport, Phoenix, Arizona', coords: [-112.0116, 33.4352] },
+      'IAH': { name: 'George Bush Intercontinental Airport, Houston, Texas', coords: [-95.3414, 29.9902] },
+      'MIA': { name: 'Miami International Airport, Miami, Florida', coords: [-80.2906, 25.7959] },
+      'SEA': { name: 'Seattle-Tacoma International Airport, Seattle, Washington', coords: [-122.3088, 47.4502] },
+      'BOS': { name: 'Boston Logan International Airport, Boston, Massachusetts', coords: [-71.0096, 42.3656] },
+      'MSP': { name: 'Minneapolis-St Paul International Airport, Minneapolis, Minnesota', coords: [-93.2218, 44.8848] },
+      'DTW': { name: 'Detroit Metropolitan Wayne County Airport, Detroit, Michigan', coords: [-83.3534, 42.2162] },
+      'PHL': { name: 'Philadelphia International Airport, Philadelphia, Pennsylvania', coords: [-75.2411, 39.8744] },
+      'LGA': { name: 'LaGuardia Airport, New York, New York', coords: [-73.8740, 40.7769] },
+      'FLL': { name: 'Fort Lauderdale-Hollywood International Airport, Fort Lauderdale, Florida', coords: [-80.1506, 26.0742] },
+      'BWI': { name: 'Baltimore/Washington International Airport, Baltimore, Maryland', coords: [-76.6683, 39.1774] },
+      'DCA': { name: 'Ronald Reagan Washington National Airport, Arlington, Virginia', coords: [-77.0377, 38.8521] },
+      'IAD': { name: 'Washington Dulles International Airport, Dulles, Virginia', coords: [-77.4565, 38.9531] },
+      'MDW': { name: 'Chicago Midway International Airport, Chicago, Illinois', coords: [-87.7524, 41.7868] },
+      'SAN': { name: 'San Diego International Airport, San Diego, California', coords: [-117.1933, 32.7338] },
+      'TPA': { name: 'Tampa International Airport, Tampa, Florida', coords: [-82.5332, 27.9755] },
+      'PDX': { name: 'Portland International Airport, Portland, Oregon', coords: [-122.5951, 45.5897] },
+      'HNL': { name: 'Daniel K Inouye International Airport, Honolulu, Hawaii', coords: [-157.9219, 21.3187] },
+      'AUS': { name: 'Austin-Bergstrom International Airport, Austin, Texas', coords: [-97.6703, 30.1975] },
+      'SLC': { name: 'Salt Lake City International Airport, Salt Lake City, Utah', coords: [-111.9778, 40.7899] },
+      'CLT': { name: 'Charlotte Douglas International Airport, Charlotte, North Carolina', coords: [-80.9431, 35.2140] }
+    };
+
+    // Helper function to check if result is an airport
+    function isAirportResult(item) {
+      const name = item.place_name.toLowerCase();
+      return name.includes('airport') || 
+             name.includes('terminal') || 
+             name.includes('international') ||
+             (item.place_type && item.place_type.includes('poi'));
+    }
+
+    // Helper function to check if result is a confusing street name
+    function isConfusingStreet(item, searchTerm) {
+      const name = item.place_name.toLowerCase();
+      const search = (searchTerm || '').toLowerCase();
+      
+      // If user searched for "airport" and this is a street with "airport" in name
+      if (search.includes('airport') && 
+          item.place_type && item.place_type.includes('address') &&
+          name.includes('airport') &&
+          !name.includes('international') &&
+          !name.includes('terminal')) {
+        return true; // Hide "Airport Way", "Airport Blvd", etc.
+      }
+      
+      return false;
+    }
+
     // Initialize Mapbox Geocoders
     const pickupGeocoder = new MapboxGeocoder({
       accessToken: MAPBOX_TOKEN,
-      placeholder: 'Start typing address...',
-      mapboxgl: mapboxgl
+      placeholder: 'Select service type first',
+      mapboxgl: mapboxgl,
+      types: 'poi,address,place', // Prioritize POIs (airports) over addresses
+      limit: 6, // Fewer results to reduce confusion
+      
+      // FIX 1: Airport code recognition via localGeocoder
+      localGeocoder: function(query) {
+        const upperQuery = query.toUpperCase().trim();
+        
+        // Check if query matches an airport code
+        if (airportCodes[upperQuery]) {
+          return [{
+            place_name: airportCodes[upperQuery].name,
+            center: airportCodes[upperQuery].coords,
+            place_type: ['airport'],
+            text: airportCodes[upperQuery].name,
+            properties: {}
+          }];
+        }
+        return null; // Let Mapbox handle normal searches
+      },
+      
+      // FIX 3: Smart filtering - hide confusing street names
+      filter: function(item) {
+        // Get current search term from geocoder input
+        const searchTerm = this._inputEl ? this._inputEl.value : '';
+        
+        // Filter out confusing street names
+        if (isConfusingStreet(item, searchTerm)) {
+          return false;
+        }
+        
+        return true; // Show everything else
+      },
+      
+      // FIX 2 & 4: Visual highlighting + clear state labels
+      render: function(item) {
+        const parts = item.place_name.split(',');
+        const location = parts[0].trim();
+        const city = parts[1]?.trim() || '';
+        const state = parts[2]?.trim() || '';
+        const country = parts[3]?.trim() || '';
+        
+        // Check if this is an airport
+        if (isAirportResult(item)) {
+          // Airport with blue highlight and airplane icon
+          return `<div style="
+            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
+            border-left: 4px solid #0284c7;
+            padding: 10px 12px;
+            margin: 2px 0;
+            font-weight: 600;
+            border-radius: 2px;
+          ">
+            <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
+            <span style="color: #0c4a6e;">${location}</span>
+            <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
+              ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
+            </div>
+          </div>`;
+        } else {
+          // Regular address with emphasized state
+          return `<div style="padding: 8px 12px;">
+            <div style="font-weight: 500;">${location}</div>
+            <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
+              ${city}${city && state ? ', ' : ''}
+              <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
+              ${country ? `, ${country}` : ''}
+            </div>
+          </div>`;
+        }
+      }
     });
 
     const dropoffGeocoder = new MapboxGeocoder({
       accessToken: MAPBOX_TOKEN,
-      placeholder: 'Start typing address...',
-      mapboxgl: mapboxgl
+      placeholder: 'Select service type first',
+      mapboxgl: mapboxgl,
+      types: 'poi,address,place', // Prioritize POIs (airports) over addresses
+      limit: 6, // Fewer results to reduce confusion
+      
+      // FIX 1: Airport code recognition via localGeocoder
+      localGeocoder: function(query) {
+        const upperQuery = query.toUpperCase().trim();
+        
+        // Check if query matches an airport code
+        if (airportCodes[upperQuery]) {
+          return [{
+            place_name: airportCodes[upperQuery].name,
+            center: airportCodes[upperQuery].coords,
+            place_type: ['airport'],
+            text: airportCodes[upperQuery].name,
+            properties: {}
+          }];
+        }
+        return null; // Let Mapbox handle normal searches
+      },
+      
+      // FIX 3: Smart filtering - hide confusing street names
+      filter: function(item) {
+        // Get current search term from geocoder input
+        const searchTerm = this._inputEl ? this._inputEl.value : '';
+        
+        // Filter out confusing street names
+        if (isConfusingStreet(item, searchTerm)) {
+          return false;
+        }
+        
+        return true; // Show everything else
+      },
+      
+      // FIX 2 & 4: Visual highlighting + clear state labels
+      render: function(item) {
+        const parts = item.place_name.split(',');
+        const location = parts[0].trim();
+        const city = parts[1]?.trim() || '';
+        const state = parts[2]?.trim() || '';
+        const country = parts[3]?.trim() || '';
+        
+        // Check if this is an airport
+        if (isAirportResult(item)) {
+          // Airport with blue highlight and airplane icon
+          return `<div style="
+            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
+            border-left: 4px solid #0284c7;
+            padding: 10px 12px;
+            margin: 2px 0;
+            font-weight: 600;
+            border-radius: 2px;
+          ">
+            <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
+            <span style="color: #0c4a6e;">${location}</span>
+            <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
+              ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
+            </div>
+          </div>`;
+        } else {
+          // Regular address with emphasized state
+          return `<div style="padding: 8px 12px;">
+            <div style="font-weight: 500;">${location}</div>
+            <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
+              ${city}${city && state ? ', ' : ''}
+              <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
+              ${country ? `, ${country}` : ''}
+            </div>
+          </div>`;
+        }
+      }
     });
 
     pickupGeocoder.addTo('#pickupGeocoder');
