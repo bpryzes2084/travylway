@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TravylWay - Keep On Moving | Airport Transportation</title>
-  <meta name="description" content="Professional airport transportation for airline crew and travelers. Book rides with real drivers who keep 75% of fares. No surge pricing, no games. Launching March 15, 2026.">
+  <meta name="description" content="Professional airport transportation for airline crew and travelers. Book rides with real drivers who keep 80% of fares. No surge pricing, no games.">
   
   <style>
     * {
@@ -241,6 +241,38 @@
       margin-top: 1rem;
       font-weight: 700;
       color: var(--primary);
+    }
+
+    .affiliate-links {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .affiliate-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--gray);
+      text-decoration: none;
+      transition: all 0.2s;
+      padding: 0.5rem;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+
+    .affiliate-link:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+      transform: translateX(4px);
+    }
+
+    .affiliate-icon {
+      font-size: 1.2rem;
     }
 
     /* FEATURES */
@@ -542,10 +574,10 @@
       </a>
       
       <div class="nav-links" id="navLinks">
+        <a href="/driver.html">Driver Board</a>
         <a href="/vision.html">Vision</a>
         <a href="/reviews.html">Reviews</a>
         <a href="/policies.html">Policies</a>
-        <a href="/driver.html">Driver Board</a>
       </div>
 
       <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle menu">
@@ -557,7 +589,6 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
-      <div class="launch-badge">🚀 Launching March 15, 2026</div>
       <h1>Keep On Moving</h1>
       <p>Professional airport transportation that respects drivers and riders. No surge pricing. No games. Just reliable rides.</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
@@ -574,7 +605,7 @@
 
       <div class="booking-grid">
         <!-- Crew -->
-        <a href="/crew.html" class="booking-card">
+        <div class="booking-card">
           <div class="booking-card-header">
             <span class="booking-icon">✈️</span>
             <div>
@@ -583,11 +614,11 @@
             </div>
           </div>
           <p>Exclusive airport transportation for flight attendants and pilots. Special crew pricing and flight tracking included.</p>
-          <span class="booking-cta">Book Crew Ride →</span>
-        </a>
+          <a href="/crew.html" class="booking-cta">Book Crew Ride →</a>
+        </div>
 
         <!-- Airport -->
-        <a href="/general.html" class="booking-card">
+        <div class="booking-card">
           <div class="booking-card-header">
             <span class="booking-icon">🚗</span>
             <div>
@@ -596,11 +627,11 @@
             </div>
           </div>
           <p>Reliable airport transportation for travelers worldwide. On-time pickups and flight monitoring for all airports.</p>
-          <span class="booking-cta">Book Airport Ride →</span>
-        </a>
+          <a href="/general.html" class="booking-cta">Book Airport Ride →</a>
+        </div>
 
         <!-- Local -->
-        <a href="/local-rides.html" class="booking-card">
+        <div class="booking-card">
           <div class="booking-card-header">
             <span class="booking-icon">🏙️</span>
             <div>
@@ -609,8 +640,57 @@
             </div>
           </div>
           <p>Point-to-point transportation for events, concerts, errands, and local travel. No airports—just city rides.</p>
-          <span class="booking-cta">Book Local Ride →</span>
-        </a>
+          <a href="/local-rides.html" class="booking-cta">Book Local Ride →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DENVER METRO AREA -->
+  <section class="booking-section" style="background: #f8fafc; padding-top: 2rem;">
+    <div class="container">
+      <h2 class="section-title">🌆 Denver Metro Area</h2>
+      <p class="section-subtitle">Specialized service zones across the Denver region</p>
+
+      <div class="booking-grid">
+        <!-- Denver Based Flight Attendants -->
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">✈️</span>
+            <div>
+              <h3>Denver Based Flight Attendants</h3>
+              <span class="booking-badge badge-purple">Crew Exclusive</span>
+            </div>
+          </div>
+          <p>Exclusive airport transportation for Denver-based flight attendants and pilots. Special crew pricing and priority service.</p>
+          <a href="/crew.html" class="booking-cta">Book Crew Ride →</a>
+        </div>
+
+        <!-- E-470 Corridor -->
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">🛣️</span>
+            <div>
+              <h3>E-470 Corridor</h3>
+              <span class="booking-badge badge-green">East Metro</span>
+            </div>
+          </div>
+          <p>Transportation along the E-470 corridor including Aurora, Parker, and Commerce City. Fast access to DIA and metro Denver.</p>
+          <a href="/local-rides.html" class="booking-cta">Book E-470 Ride →</a>
+        </div>
+
+        <!-- Greater Denver Area -->
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">🌆</span>
+            <div>
+              <h3>Greater Denver Area</h3>
+              <span class="booking-badge badge-blue">Metro Wide</span>
+            </div>
+          </div>
+          <p>Point-to-point rides throughout the Denver metro area including suburbs and surrounding cities. Reliable local transportation.</p>
+          <a href="/local-rides.html" class="booking-cta">Book Metro Ride →</a>
+        </div>
       </div>
     </div>
   </section>
