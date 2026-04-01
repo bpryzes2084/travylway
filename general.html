@@ -351,6 +351,39 @@
         </div>
       </div>
 
+      <!-- ALWAYS VISIBLE WARNING BEFORE SUBMIT -->
+      <div style="
+        margin: 20px 0;
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 2px solid #f59e0b;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+      ">
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+          <span style="font-size: 1.5em; flex-shrink: 0;">⚠️</span>
+          <div style="flex: 1;">
+            <div style="font-weight: 700; color: #92400e; font-size: 1.05em; margin-bottom: 6px;">
+              VERIFY BEFORE SUBMITTING
+            </div>
+            <div style="color: #78350f; line-height: 1.5; font-size: 0.95em; margin-bottom: 12px;">
+              Ensure correct <strong>pickup time</strong>, <strong>date</strong>, <strong>pickup address</strong>, <strong>dropoff address</strong>, <strong>city</strong>, and <strong>state</strong> are selected. Similar addresses exist in multiple locations. Errors cannot be changed after submission.
+            </div>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+              <input 
+                type="checkbox" 
+                id="verifyCheckbox" 
+                required
+                style="width: 18px; height: 18px; cursor: pointer; accent-color: #f59e0b;"
+              >
+              <span style="color: #78350f; font-weight: 600; font-size: 0.95em;">
+                I have verified all details are correct
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
       <button type="submit" class="btn" id="submitBtn">
         <span id="submitText">Submit Booking</span>
         <span class="loading" id="loadingSpinner" style="display:none;"></span>
