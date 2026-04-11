@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver FAQ — Travylway</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #f7f5f2;
+      --white: #1a1a1a;
+      --gold: #a07828;
+      --gold-light: #c49a3c;
+      --gray: #e8e4de;
+      --gray-mid: #d4cfc8;
+      --gray-light: #666;
+      --text: #333333;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      padding: 60px 40px 80px;
+      border-bottom: 1px solid #ddd;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(160,120,40,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      display: inline-block;
+    }
+
+    .logo span {
+      color: var(--white);
+    }
+
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      line-height: 1.05;
+      color: var(--white);
+      max-width: 700px;
+      letter-spacing: -0.02em;
+    }
+
+    header h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    header p.subtitle {
+      margin-top: 20px;
+      font-size: 1.05rem;
+      color: var(--gray-light);
+      max-width: 480px;
+      font-weight: 300;
+    }
+
+    /* NAV PILLS */
+    .category-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 32px 40px;
+      border-bottom: 1px solid #e0dbd4;
+      position: sticky;
+      top: 0;
+      background: rgba(247,245,242,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .cat-pill {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 100px;
+      border: 1px solid #ccc;
+      color: var(--gray-light);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+      text-decoration: none;
+    }
+
+    .cat-pill:hover, .cat-pill.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(160,120,40,0.08);
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 40px 100px;
+    }
+
+    /* SECTION */
+    .faq-section {
+      margin-bottom: 72px;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .faq-section:nth-child(1) { animation-delay: 0.05s; }
+    .faq-section:nth-child(2) { animation-delay: 0.12s; }
+    .faq-section:nth-child(3) { animation-delay: 0.19s; }
+    .faq-section:nth-child(4) { animation-delay: 0.26s; }
+    .faq-section:nth-child(5) { animation-delay: 0.33s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, #2a2a2a, transparent);
+    }
+
+    /* FAQ ITEMS */
+    .faq-item {
+      border-bottom: 1px solid #e0dbd4;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 22px 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      transition: color 0.2s ease;
+    }
+
+    .faq-question:hover {
+      color: var(--gold-light);
+    }
+
+    .faq-question.open {
+      color: var(--gold);
+    }
+
+    .faq-icon {
+      width: 22px;
+      height: 22px;
+      border: 1px solid #bbb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.3s ease;
+      color: var(--gray-light);
+      font-size: 0.85rem;
+    }
+
+    .faq-question.open .faq-icon {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(160,120,40,0.1);
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+
+    .faq-answer.open {
+      max-height: 600px;
+      padding-bottom: 22px;
+    }
+
+    .faq-answer-inner {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, #d0cbc4, transparent);
+    }
+
+    .faq-answer-inner ul {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .faq-answer-inner ul li {
+      padding: 4px 0 4px 20px;
+      position: relative;
+    }
+
+    .faq-answer-inner ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 0.8rem;
+    }
+
+    .faq-answer-inner a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+      transition: border-color 0.2s;
+    }
+
+    .faq-answer-inner a:hover {
+      border-color: var(--gold);
+    }
+
+    .faq-answer-inner strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* FOOTER BANNER */
+    .support-banner {
+      margin-top: 80px;
+      padding: 48px 40px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #eee9e2 0%, #e8e2d8 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .support-banner::before {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: -60px;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(160,120,40,0.08) 0%, transparent 70%);
+    }
+
+    .support-banner h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .support-banner p {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .support-banner a {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      background: var(--gold);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s ease;
+    }
+
+    .support-banner a:hover {
+      background: var(--gold-light);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid #e0dbd4;
+      font-size: 0.8rem;
+      color: #aaa;
+      letter-spacing: 0.05em;
+    }
+
+    footer span {
+      color: var(--gold);
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 40px 24px 60px; }
+      .category-nav { padding: 20px 24px; }
+      main { padding: 40px 24px 80px; }
+      header h1 { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Travyl<span>way</span></div>
+    <h1>Driver <em>FAQ</em></h1>
+    <p class="subtitle">Everything you need to know about driving on the Travylway platform.</p>
+  </header>
+
+  <nav class="category-nav">
+    <a class="cat-pill active" href="#getting-started">Getting Started</a>
+    <a class="cat-pill" href="#rides">Rides & Policies</a>
+    <a class="cat-pill" href="#earnings">Earnings & Payouts</a>
+    <a class="cat-pill" href="#vehicle">Vehicle</a>
+    <a class="cat-pill" href="#support">Support</a>
+  </nav>
+
+  <main>
+
+    <!-- GETTING STARTED -->
+    <div class="faq-section" id="getting-started">
+      <div class="section-label">Getting Started</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What is Travylway?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Travylway is a web-based ride booking platform that connects riders with independent drivers. There is no app to download — everything runs directly from your phone's browser or any device with internet access.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          How do I sign up to drive with Travylway?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Visit <a href="https://travylway.com">travylway.com</a> and complete the driver sign-up form. Once your information is reviewed and approved, you will receive a welcome guide with everything you need to get started.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Is there a fee to join Travylway as a driver?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            No. There is no sign-up fee or subscription cost to drive on the Travylway platform.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What are the requirements to become a driver?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            You will need the following before your first ride:
+            <ul>
+              <li>A valid, government-issued driver's license in good standing</li>
+              <li>Active car insurance that meets your state's minimum coverage requirements</li>
+              <li>A vehicle that is 2018 or newer, in clean condition, with valid registration</li>
+              <li>Access to a free flight tracking tool such as <a href="https://flightaware.com" target="_blank">FlightAware</a> or <a href="https://flightradar24.com" target="_blank">Flightradar24</a> for airport pickups</li>
+              <li>An active, verified account with at least one of the following for payouts: <strong>Venmo</strong>, <strong>Cash App</strong>, or <strong>PayPal</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIDES & POLICIES -->
+    <div class="faq-section" id="rides">
+      <div class="section-label">Rides &amp; Policies</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What types of rides does Travylway offer?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Travylway offers point-to-point rides only. All rides go from a single pickup location to a single dropoff location. No additional stops are permitted.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What do I do if a rider asks me to make a stop during the ride?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Decline immediately and inform the rider that Travylway rides are point-to-point only. You will not be penalized for declining a stop request. This policy exists to protect both you and the rider.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Are rides shared with other passengers from other bookings?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            No. Every Travylway ride is a private booking for the rider and their party only. You will never be asked to pool or combine bookings.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Can I arrange rides directly with Travylway riders outside the platform?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            No. All rides must be booked and processed through the Travylway platform. Arranging off-platform rides with Travylway riders is a violation of platform policy and may result in immediate deactivation.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What should I do for airport pickups?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            For every airport ride, you are expected to monitor the rider's flight in real time using <a href="https://flightaware.com" target="_blank">FlightAware</a> or <a href="https://flightradar24.com" target="_blank">Flightradar24</a>. This allows you to adjust your arrival time for early landings or delays and ensures a smooth pickup experience for your rider.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EARNINGS -->
+    <div class="faq-section" id="earnings">
+      <div class="section-label">Earnings &amp; Payouts</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          How do I get paid?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Driver payouts are sent through peer-to-peer payment platforms. You must have an active, verified account with at least one of the following: <strong>Venmo</strong>, <strong>Cash App</strong>, or <strong>PayPal</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          How much can I earn driving with Travylway?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Income will vary based on your location, availability, ride volume, and the number of platforms you choose to work with. Travylway makes no guarantee of specific earnings.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Can I drive for other rideshare or gig apps at the same time?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Yes. Travylway fully supports multi-app driving. Because Travylway is 100% web-based, we have no visibility into what other apps you have installed or running on your device — and we will never penalize you for using other platforms. We encourage you to diversify your income across multiple services.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Should I be aware of anything when using other apps alongside Travylway?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Yes. Some larger rideshare platforms have been known to monitor driver device activity and flag or deactivate drivers they detect using competing apps simultaneously. We recommend reviewing the terms of service for any other platforms you drive for to protect your standing on those apps. Travylway will never engage in this practice.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VEHICLE -->
+    <div class="faq-section" id="vehicle">
+      <div class="section-label">Vehicle</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What vehicles are accepted on the Travylway platform?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sedans, SUVs, minivans, and trucks with rear seating that are <strong>2018 or newer</strong>. No salvage title vehicles are permitted.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          My car is well maintained but older than 2018. Can I still drive?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Unfortunately no. Travylway requires all vehicles to be 2018 or newer to ensure a consistent, reliable experience for riders.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What condition does my vehicle need to be in?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Your vehicle must be clean inside and out at all times, free of major damage, dents, torn seating, or persistent odors. All seatbelts, air conditioning, and heat must be fully functional in every passenger seat.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Can I drive a salvage title vehicle?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            No. Salvage title vehicles are not permitted on the Travylway platform under any circumstances.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="faq-section" id="support">
+      <div class="section-label">Support</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          How do I contact Travylway if I have a question or issue?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Visit <a href="https://travylway.com">travylway.com</a> and reach out to us directly. We are here to support you every step of the way.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          What happens if a rider is a no-show?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            No-show and cancellation policies are outlined in the Travylway Driver Terms of Service. If you encounter an issue with a rider, contact us through <a href="https://travylway.com">travylway.com</a> and we will assist you promptly.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUPPORT BANNER -->
+    <div class="support-banner">
+      <h3>Still have questions?</h3>
+      <p>Our team is ready to help. Reach out to us directly through the Travylway platform.</p>
+      <a href="https://travylway.com">Contact Us at travylway.com</a>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; 2026 <span>Travylway</span> &mdash; All rights reserved &mdash; travylway.com
+  </footer>
+
+  <script>
+    function toggle(btn) {
+      const answer = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-question').forEach(q => {
+        q.classList.remove('open');
+        q.nextElementSibling.classList.remove('open');
+      });
+
+      // Open clicked if it was closed
+      if (!isOpen) {
+        btn.classList.add('open');
+        answer.classList.add('open');
+      }
+    }
+
+    // Smooth scroll for nav pills
+    document.querySelectorAll('.cat-pill').forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Highlight active nav pill on scroll
+    const sections = document.querySelectorAll('.faq-section');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        if (window.scrollY >= section.offsetTop - 120) current = section.id;
+      });
+      document.querySelectorAll('.cat-pill').forEach(pill => {
+        pill.classList.remove('active');
+        if (pill.getAttribute('href') === '#' + current) pill.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
