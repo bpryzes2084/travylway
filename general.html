@@ -222,6 +222,19 @@
       color:#666;
     }
 
+    /* Airport locked indicator */
+    .airport-locked {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #0284c7;
+      font-weight: 600;
+      display: none;
+    }
+
+    .airport-locked.visible {
+      display: block;
+    }
+
     /* Mapbox Geocoder styling */
     .mapboxgl-ctrl-geocoder{
       width:100%;
@@ -309,12 +322,14 @@
       <div class="form-group">
         <label>Pickup Address *</label>
         <div id="pickupGeocoder"></div>
+        <div class="airport-locked" id="pickupAirportLocked">✈️ Airport coordinates locked in</div>
         <div class="hint">Start typing to see suggestions</div>
       </div>
 
       <div class="form-group">
         <label>Dropoff Address *</label>
         <div id="dropoffGeocoder"></div>
+        <div class="airport-locked" id="dropoffAirportLocked">✈️ Airport coordinates locked in</div>
         <div class="hint">Start typing to see suggestions</div>
       </div>
 
@@ -457,6 +472,99 @@
     let pickupCoords = null;
     let dropoffCoords = null;
 
+    // FIX: Track detected airport codes for pickup and dropoff
+    let detectedPickupAirportCode = '';
+    let detectedDropoffAirportCode = '';
+
+    // Airport code mappings — canonical coords used to lock fare calculations
+    const airportCodes = {
+      'DEN': { name: 'Denver International Airport', coords: [-104.6731, 39.8561] },
+      'DIA': { name: 'Denver International Airport', coords: [-104.6731, 39.8561] },
+      'LAX': { name: 'Los Angeles International Airport', coords: [-118.4085, 33.9416] },
+      'JFK': { name: 'John F Kennedy International Airport', coords: [-73.7781, 40.6413] },
+      'ORD': { name: "O'Hare International Airport", coords: [-87.9048, 41.9742] },
+      'ATL': { name: 'Hartsfield-Jackson Atlanta International Airport', coords: [-84.4277, 33.6407] },
+      'DFW': { name: 'Dallas Fort Worth International Airport', coords: [-97.0403, 32.8998] },
+      'SFO': { name: 'San Francisco International Airport', coords: [-122.3789, 37.6213] },
+      'LAS': { name: 'Harry Reid International Airport', coords: [-115.1520, 36.0840] },
+      'PHX': { name: 'Phoenix Sky Harbor International Airport', coords: [-112.0116, 33.4352] },
+      'IAH': { name: 'George Bush Intercontinental Airport', coords: [-95.3414, 29.9902] },
+      'MIA': { name: 'Miami International Airport', coords: [-80.2906, 25.7959] },
+      'SEA': { name: 'Seattle-Tacoma International Airport', coords: [-122.3088, 47.4502] },
+      'BOS': { name: 'Boston Logan International Airport', coords: [-71.0096, 42.3656] },
+      'MSP': { name: 'Minneapolis-St Paul International Airport', coords: [-93.2218, 44.8848] },
+      'DTW': { name: 'Detroit Metropolitan Wayne County Airport', coords: [-83.3534, 42.2162] },
+      'PHL': { name: 'Philadelphia International Airport', coords: [-75.2411, 39.8744] },
+      'LGA': { name: 'LaGuardia Airport', coords: [-73.8740, 40.7769] },
+      'FLL': { name: 'Fort Lauderdale-Hollywood International Airport', coords: [-80.1506, 26.0742] },
+      'BWI': { name: 'Baltimore/Washington International Airport', coords: [-76.6683, 39.1774] },
+      'DCA': { name: 'Ronald Reagan Washington National Airport', coords: [-77.0377, 38.8521] },
+      'IAD': { name: 'Washington Dulles International Airport', coords: [-77.4565, 38.9531] },
+      'MDW': { name: 'Chicago Midway International Airport', coords: [-87.7524, 41.7868] },
+      'SAN': { name: 'San Diego International Airport', coords: [-117.1933, 32.7338] },
+      'TPA': { name: 'Tampa International Airport', coords: [-82.5332, 27.9755] },
+      'PDX': { name: 'Portland International Airport', coords: [-122.5951, 45.5897] },
+      'HNL': { name: 'Daniel K Inouye International Airport', coords: [-157.9219, 21.3187] },
+      'AUS': { name: 'Austin-Bergstrom International Airport', coords: [-97.6703, 30.1975] },
+      'SLC': { name: 'Salt Lake City International Airport', coords: [-111.9778, 40.7899] },
+      'CLT': { name: 'Charlotte Douglas International Airport', coords: [-80.9431, 35.2140] }
+    };
+
+    /**
+     * FIX: detectAirport()
+     * Checks a place name string against the airportCodes lookup table.
+     * If matched, returns { code, coords } — otherwise returns null.
+     * This is called at geocoder result time to lock coordinates immediately,
+     * preventing the geocoder from returning inconsistent results on repeat calls.
+     */
+    function detectAirport(placeName) {
+      const nameLower = placeName.toLowerCase();
+
+      // First check by airport name keywords
+      for (const code in airportCodes) {
+        const airportNameLower = airportCodes[code].name.toLowerCase();
+        if (nameLower.includes(airportNameLower)) {
+          return { code, coords: airportCodes[code].coords };
+        }
+      }
+
+      // Fallback: check if place name contains any airport name fragment
+      for (const code in airportCodes) {
+        const words = airportCodes[code].name.toLowerCase().split(' ');
+        const keyWord = words.find(w => w.length > 5 && w !== 'international' && w !== 'airport');
+        if (keyWord && nameLower.includes(keyWord) && nameLower.includes('airport')) {
+          return { code, coords: airportCodes[code].coords };
+        }
+      }
+
+      return null;
+    }
+
+    // Helper function to check if result is an airport
+    function isAirportResult(item) {
+      const name = item.place_name.toLowerCase();
+      return name.includes('airport') || 
+             name.includes('terminal') || 
+             name.includes('international') ||
+             (item.place_type && item.place_type.includes('poi'));
+    }
+
+    // Helper function to check if result is a confusing street name
+    function isConfusingStreet(item, searchTerm) {
+      const name = item.place_name.toLowerCase();
+      const search = (searchTerm || '').toLowerCase();
+      
+      if (search.includes('airport') && 
+          item.place_type && item.place_type.includes('address') &&
+          name.includes('airport') &&
+          !name.includes('international') &&
+          !name.includes('terminal')) {
+        return true;
+      }
+      
+      return false;
+    }
+
     // Initialize Map
     const map = new mapboxgl.Map({
       container: 'map',
@@ -485,217 +593,85 @@
       showMessage('error', '❌ Security verification failed. Please refresh the page.');
     };
 
-    // Airport code mappings for geocoder
-    const airportCodes = {
-      'DEN': { name: 'Denver International Airport, Denver, Colorado', coords: [-104.6731, 39.8561] },
-      'DIA': { name: 'Denver International Airport, Denver, Colorado', coords: [-104.6731, 39.8561] },
-      'LAX': { name: 'Los Angeles International Airport, Los Angeles, California', coords: [-118.4085, 33.9416] },
-      'JFK': { name: 'John F Kennedy International Airport, New York, New York', coords: [-73.7781, 40.6413] },
-      'ORD': { name: "O'Hare International Airport, Chicago, Illinois", coords: [-87.9048, 41.9742] },
-      'ATL': { name: 'Hartsfield-Jackson Atlanta International Airport, Atlanta, Georgia', coords: [-84.4277, 33.6407] },
-      'DFW': { name: 'Dallas Fort Worth International Airport, Dallas, Texas', coords: [-97.0403, 32.8998] },
-      'SFO': { name: 'San Francisco International Airport, San Francisco, California', coords: [-122.3789, 37.6213] },
-      'LAS': { name: 'Harry Reid International Airport, Las Vegas, Nevada', coords: [-115.1520, 36.0840] },
-      'PHX': { name: 'Phoenix Sky Harbor International Airport, Phoenix, Arizona', coords: [-112.0116, 33.4352] },
-      'IAH': { name: 'George Bush Intercontinental Airport, Houston, Texas', coords: [-95.3414, 29.9902] },
-      'MIA': { name: 'Miami International Airport, Miami, Florida', coords: [-80.2906, 25.7959] },
-      'SEA': { name: 'Seattle-Tacoma International Airport, Seattle, Washington', coords: [-122.3088, 47.4502] },
-      'BOS': { name: 'Boston Logan International Airport, Boston, Massachusetts', coords: [-71.0096, 42.3656] },
-      'MSP': { name: 'Minneapolis-St Paul International Airport, Minneapolis, Minnesota', coords: [-93.2218, 44.8848] },
-      'DTW': { name: 'Detroit Metropolitan Wayne County Airport, Detroit, Michigan', coords: [-83.3534, 42.2162] },
-      'PHL': { name: 'Philadelphia International Airport, Philadelphia, Pennsylvania', coords: [-75.2411, 39.8744] },
-      'LGA': { name: 'LaGuardia Airport, New York, New York', coords: [-73.8740, 40.7769] },
-      'FLL': { name: 'Fort Lauderdale-Hollywood International Airport, Fort Lauderdale, Florida', coords: [-80.1506, 26.0742] },
-      'BWI': { name: 'Baltimore/Washington International Airport, Baltimore, Maryland', coords: [-76.6683, 39.1774] },
-      'DCA': { name: 'Ronald Reagan Washington National Airport, Arlington, Virginia', coords: [-77.0377, 38.8521] },
-      'IAD': { name: 'Washington Dulles International Airport, Dulles, Virginia', coords: [-77.4565, 38.9531] },
-      'MDW': { name: 'Chicago Midway International Airport, Chicago, Illinois', coords: [-87.7524, 41.7868] },
-      'SAN': { name: 'San Diego International Airport, San Diego, California', coords: [-117.1933, 32.7338] },
-      'TPA': { name: 'Tampa International Airport, Tampa, Florida', coords: [-82.5332, 27.9755] },
-      'PDX': { name: 'Portland International Airport, Portland, Oregon', coords: [-122.5951, 45.5897] },
-      'HNL': { name: 'Daniel K Inouye International Airport, Honolulu, Hawaii', coords: [-157.9219, 21.3187] },
-      'AUS': { name: 'Austin-Bergstrom International Airport, Austin, Texas', coords: [-97.6703, 30.1975] },
-      'SLC': { name: 'Salt Lake City International Airport, Salt Lake City, Utah', coords: [-111.9778, 40.7899] },
-      'CLT': { name: 'Charlotte Douglas International Airport, Charlotte, North Carolina', coords: [-80.9431, 35.2140] }
-    };
-
-    // Helper function to check if result is an airport
-    function isAirportResult(item) {
-      const name = item.place_name.toLowerCase();
-      return name.includes('airport') || 
-             name.includes('terminal') || 
-             name.includes('international') ||
-             (item.place_type && item.place_type.includes('poi'));
-    }
-
-    // Helper function to check if result is a confusing street name
-    function isConfusingStreet(item, searchTerm) {
-      const name = item.place_name.toLowerCase();
-      const search = (searchTerm || '').toLowerCase();
+    // Shared geocoder render function
+    function renderGeocoderResult(item) {
+      const parts = item.place_name.split(',');
+      const location = parts[0].trim();
+      const city = parts[1]?.trim() || '';
+      const state = parts[2]?.trim() || '';
+      const country = parts[3]?.trim() || '';
       
-      // If user searched for "airport" and this is a street with "airport" in name
-      if (search.includes('airport') && 
-          item.place_type && item.place_type.includes('address') &&
-          name.includes('airport') &&
-          !name.includes('international') &&
-          !name.includes('terminal')) {
-        return true; // Hide "Airport Way", "Airport Blvd", etc.
+      if (isAirportResult(item)) {
+        return `<div style="
+          background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
+          border-left: 4px solid #0284c7;
+          padding: 10px 12px;
+          margin: 2px 0;
+          font-weight: 600;
+          border-radius: 2px;
+        ">
+          <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
+          <span style="color: #0c4a6e;">${location}</span>
+          <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
+            ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
+          </div>
+        </div>`;
+      } else {
+        return `<div style="padding: 8px 12px;">
+          <div style="font-weight: 500;">${location}</div>
+          <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
+            ${city}${city && state ? ', ' : ''}
+            <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
+            ${country ? `, ${country}` : ''}
+          </div>
+        </div>`;
       }
-      
-      return false;
     }
 
-    // Initialize Mapbox Geocoders
+    // Shared localGeocoder for airport code recognition
+    function localGeocoderFn(query) {
+      const upperQuery = query.toUpperCase().trim();
+      if (airportCodes[upperQuery]) {
+        return [{
+          place_name: airportCodes[upperQuery].name + ', United States',
+          center: airportCodes[upperQuery].coords,
+          place_type: ['airport'],
+          text: airportCodes[upperQuery].name,
+          properties: {}
+        }];
+      }
+      return null;
+    }
+
+    // Shared filter function
+    function filterFn(item) {
+      const searchTerm = this._inputEl ? this._inputEl.value : '';
+      if (isConfusingStreet(item, searchTerm)) return false;
+      return true;
+    }
+
+    // Initialize Pickup Geocoder
     const pickupGeocoder = new MapboxGeocoder({
       accessToken: MAPBOX_TOKEN,
-      placeholder: 'Select service type first',
+      placeholder: 'Enter pickup address',
       mapboxgl: mapboxgl,
-      types: 'poi,address,place', // Prioritize POIs (airports) over addresses
-      limit: 6, // Fewer results to reduce confusion
-      
-      // FIX 1: Airport code recognition via localGeocoder
-      localGeocoder: function(query) {
-        const upperQuery = query.toUpperCase().trim();
-        
-        // Check if query matches an airport code
-        if (airportCodes[upperQuery]) {
-          return [{
-            place_name: airportCodes[upperQuery].name,
-            center: airportCodes[upperQuery].coords,
-            place_type: ['airport'],
-            text: airportCodes[upperQuery].name,
-            properties: {}
-          }];
-        }
-        return null; // Let Mapbox handle normal searches
-      },
-      
-      // FIX 3: Smart filtering - hide confusing street names
-      filter: function(item) {
-        // Get current search term from geocoder input
-        const searchTerm = this._inputEl ? this._inputEl.value : '';
-        
-        // Filter out confusing street names
-        if (isConfusingStreet(item, searchTerm)) {
-          return false;
-        }
-        
-        return true; // Show everything else
-      },
-      
-      // FIX 2 & 4: Visual highlighting + clear state labels
-      render: function(item) {
-        const parts = item.place_name.split(',');
-        const location = parts[0].trim();
-        const city = parts[1]?.trim() || '';
-        const state = parts[2]?.trim() || '';
-        const country = parts[3]?.trim() || '';
-        
-        // Check if this is an airport
-        if (isAirportResult(item)) {
-          // Airport with blue highlight and airplane icon
-          return `<div style="
-            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
-            border-left: 4px solid #0284c7;
-            padding: 10px 12px;
-            margin: 2px 0;
-            font-weight: 600;
-            border-radius: 2px;
-          ">
-            <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
-            <span style="color: #0c4a6e;">${location}</span>
-            <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
-            </div>
-          </div>`;
-        } else {
-          // Regular address with emphasized state
-          return `<div style="padding: 8px 12px;">
-            <div style="font-weight: 500;">${location}</div>
-            <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}
-              <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
-              ${country ? `, ${country}` : ''}
-            </div>
-          </div>`;
-        }
-      }
+      types: 'poi,address,place',
+      limit: 6,
+      localGeocoder: localGeocoderFn,
+      filter: filterFn,
+      render: renderGeocoderResult
     });
 
+    // Initialize Dropoff Geocoder
     const dropoffGeocoder = new MapboxGeocoder({
       accessToken: MAPBOX_TOKEN,
-      placeholder: 'Select service type first',
+      placeholder: 'Enter dropoff address',
       mapboxgl: mapboxgl,
-      types: 'poi,address,place', // Prioritize POIs (airports) over addresses
-      limit: 6, // Fewer results to reduce confusion
-      
-      // FIX 1: Airport code recognition via localGeocoder
-      localGeocoder: function(query) {
-        const upperQuery = query.toUpperCase().trim();
-        
-        // Check if query matches an airport code
-        if (airportCodes[upperQuery]) {
-          return [{
-            place_name: airportCodes[upperQuery].name,
-            center: airportCodes[upperQuery].coords,
-            place_type: ['airport'],
-            text: airportCodes[upperQuery].name,
-            properties: {}
-          }];
-        }
-        return null; // Let Mapbox handle normal searches
-      },
-      
-      // FIX 3: Smart filtering - hide confusing street names
-      filter: function(item) {
-        // Get current search term from geocoder input
-        const searchTerm = this._inputEl ? this._inputEl.value : '';
-        
-        // Filter out confusing street names
-        if (isConfusingStreet(item, searchTerm)) {
-          return false;
-        }
-        
-        return true; // Show everything else
-      },
-      
-      // FIX 2 & 4: Visual highlighting + clear state labels
-      render: function(item) {
-        const parts = item.place_name.split(',');
-        const location = parts[0].trim();
-        const city = parts[1]?.trim() || '';
-        const state = parts[2]?.trim() || '';
-        const country = parts[3]?.trim() || '';
-        
-        // Check if this is an airport
-        if (isAirportResult(item)) {
-          // Airport with blue highlight and airplane icon
-          return `<div style="
-            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
-            border-left: 4px solid #0284c7;
-            padding: 10px 12px;
-            margin: 2px 0;
-            font-weight: 600;
-            border-radius: 2px;
-          ">
-            <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
-            <span style="color: #0c4a6e;">${location}</span>
-            <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
-            </div>
-          </div>`;
-        } else {
-          // Regular address with emphasized state
-          return `<div style="padding: 8px 12px;">
-            <div style="font-weight: 500;">${location}</div>
-            <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}
-              <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
-              ${country ? `, ${country}` : ''}
-            </div>
-          </div>`;
-        }
-      }
+      types: 'poi,address,place',
+      limit: 6,
+      localGeocoder: localGeocoderFn,
+      filter: filterFn,
+      render: renderGeocoderResult
     });
 
     pickupGeocoder.addTo('#pickupGeocoder');
@@ -705,7 +681,19 @@
     pickupGeocoder.on('result', function(e) {
       pickupAddress = e.result.place_name;
       pickupCoords = e.result.geometry.coordinates;
-      
+
+      // FIX: Detect airport and lock coordinates immediately at selection time
+      detectedPickupAirportCode = '';
+      const airportMatch = detectAirport(pickupAddress);
+      if (airportMatch) {
+        detectedPickupAirportCode = airportMatch.code;
+        pickupCoords = airportMatch.coords; // override with canonical airport coords
+        console.log(`✈️ Pickup airport detected: ${airportMatch.code} — coords locked to`, pickupCoords);
+        document.getElementById('pickupAirportLocked').classList.add('visible');
+      } else {
+        document.getElementById('pickupAirportLocked').classList.remove('visible');
+      }
+
       if (pickupMarker) pickupMarker.remove();
       pickupMarker = new mapboxgl.Marker({color: '#10b981'})
         .setLngLat(pickupCoords)
@@ -721,7 +709,19 @@
     dropoffGeocoder.on('result', function(e) {
       dropoffAddress = e.result.place_name;
       dropoffCoords = e.result.geometry.coordinates;
-      
+
+      // FIX: Detect airport and lock coordinates immediately at selection time
+      detectedDropoffAirportCode = '';
+      const airportMatch = detectAirport(dropoffAddress);
+      if (airportMatch) {
+        detectedDropoffAirportCode = airportMatch.code;
+        dropoffCoords = airportMatch.coords; // override with canonical airport coords
+        console.log(`✈️ Dropoff airport detected: ${airportMatch.code} — coords locked to`, dropoffCoords);
+        document.getElementById('dropoffAirportLocked').classList.add('visible');
+      } else {
+        document.getElementById('dropoffAirportLocked').classList.remove('visible');
+      }
+
       if (dropoffMarker) dropoffMarker.remove();
       dropoffMarker = new mapboxgl.Marker({color: '#ef4444'})
         .setLngLat(dropoffCoords)
@@ -847,14 +847,15 @@
       messageDiv.style.display = 'none';
 
       try {
+        // FIX: Always send locked coords — airports use canonical coords, others use geocoder result
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             pickup_text: pickupAddress,
             dropoff_text: dropoffAddress,
-            pickup_coords: pickupCoords,
-            dropoff_coords: dropoffCoords,
+            pickup_coords: pickupCoords,   // locked at selection time
+            dropoff_coords: dropoffCoords, // locked at selection time
             rider_type: 'GENERAL'
           })
         });
@@ -914,9 +915,8 @@
         return;
       }
 
-      // REQUIRE QUOTE BEFORE SUBMISSION
       if (latestEstimatedFare <= 0) {
-        showMessage('error', '❌ Please click "Get Quote" to calculate your fare before submitting.');
+        showMessage('error', '❌ Please click "Calculate Fare" to get a quote before submitting.');
         return;
       }
 
@@ -928,17 +928,23 @@
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
 
+      // FIX: airport_code now populated from detected airport at dropoff (or pickup if applicable)
+      // Priority: dropoff airport code first, then pickup airport code, then empty
+      const resolvedAirportCode = detectedDropoffAirportCode || detectedPickupAirportCode || '';
+
       const payload = {
         created_by: document.getElementById('name').value.trim(),
         rider_phone: phoneEl.value.trim(),
         rider_type: 'GENERAL',
         pickup_text: pickupAddress,
         dropoff_text: dropoffAddress,
+        pickup_coords: pickupCoords,   // FIX: locked coords stored on record
+        dropoff_coords: dropoffCoords, // FIX: locked coords stored on record
         pickup_time_utc: pickupTimeUTC,
         pickup_timezone: timezone,
         flight_number: document.getElementById('flight').value.trim() || '',
         airline: document.getElementById('airline').value.trim() || '',
-        airport_code: '',
+        airport_code: resolvedAirportCode, // FIX: now populated from airport detection
         notes: document.getElementById('notes').value.trim(),
         estimated_fare: latestEstimatedFare,
         'cf-turnstile-response': turnstileToken
@@ -972,10 +978,16 @@
             map.removeLayer('route');
             map.removeSource('route');
           }
+
+          // FIX: Reset all state including airport detection
           pickupAddress = '';
           dropoffAddress = '';
           pickupCoords = null;
           dropoffCoords = null;
+          detectedPickupAirportCode = '';
+          detectedDropoffAirportCode = '';
+          document.getElementById('pickupAirportLocked').classList.remove('visible');
+          document.getElementById('dropoffAirportLocked').classList.remove('visible');
           document.getElementById('mapInfo').textContent = '📍 Select pickup and dropoff addresses above to see route on map';
 
           latestEstimatedFare = 0;
