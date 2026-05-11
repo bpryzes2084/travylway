@@ -805,11 +805,29 @@
     // ── OPEN PICKUP REQUESTS ──
     const API_URL = 'https://api.travylway.com/api/trips?status=NEW';
 
-    function formatLocalDate(utcString, timezone) {
+    function formatLocalDate(utcString, timezone, mode) {
       if (!utcString) return '—';
       try {
-        return new Date(utcString).toLocaleString('en-US', {
-          timeZone: timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+        const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const date = new Date(utcString);
+        if (mode === 'date') {
+          return date.toLocaleDateString('en-US', {
+            timeZone: tz,
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          });
+        } else if (mode === 'time') {
+          return date.toLocaleTimeString('en-US', {
+            timeZone: tz,
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          });
+        }
+        return date.toLocaleString('en-US', {
+          timeZone: tz,
           weekday: 'short',
           month: 'short',
           day: 'numeric',
@@ -823,40 +841,65 @@
       }
     }
 
+    // Extract city/state only from full address for privacy
+    function extractCityArea(address) {
+      if (!address) return '—';
+      try {
+        const parts = address.split(',').map(p => p.trim());
+        const city = parts[1] || '';
+        const stateRaw = (parts[2] || '').replace(/\d+/g, '').trim();
+        const STATE_ABBR = {
+          'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+          'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+          'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA',
+          'Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD',
+          'Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS',
+          'Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH',
+          'New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC',
+          'North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA',
+          'Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN',
+          'Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA',
+          'West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
+        };
+        const abbr = STATE_ABBR[stateRaw] || stateRaw.substring(0, 2).toUpperCase();
+        if (city) return city + ', ' + abbr;
+        return parts[0] || '—';
+      } catch (e) { return '—'; }
+    }
+
     function renderRequests(trips) {
       const container = document.getElementById('requestsContainer');
 
       if (!trips || trips.length === 0) {
-        container.innerHTML = `<div class="requests-empty">✅ No open pickup requests at this time.</div>`;
+        container.innerHTML = '<div class="requests-empty">✅ No open pickup requests at this time.</div>';
         return;
       }
 
-      const rows = trips.map(t => `
-        <tr>
-          <td class="td-id">${t.id}</td>
-          <td class="td-pickup">${t.pickup_text || '—'}</td>
-          <td class="td-date">${formatLocalDate(t.pickup_time_utc, t.pickup_timezone)}</td>
-          <td class="td-status">
-            <span class="status-badge">
-              <span class="status-dot"></span>${t.status}
-            </span>
-          </td>
-        </tr>`).join('');
+      let rows = '';
+      var displayTrips = trips.slice(0, 20);
+      displayTrips.forEach(function(t) {
+        rows += '<tr>' +
+          '<td class="td-id">' + t.id + '</td>' +
+          '<td class="td-pickup">' + extractCityArea(t.pickup_text) + '</td>' +
+          '<td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'date') + '</td>' +
+          '<td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'time') + '</td>' +
+          '<td class="td-status"><span class="status-badge"><span class="status-dot"></span>' + t.status + '</span></td>' +
+          '</tr>';
+      });
 
-      container.innerHTML = `
-        <div class="requests-table-wrap">
-          <table class="requests-table">
-            <thead>
-              <tr>
-                <th>Request ID</th>
-                <th>Pickup Address</th>
-                <th>Pickup Date &amp; Time</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>`;
+      container.innerHTML =
+        '<div class="requests-table-wrap">' +
+          '<table class="requests-table">' +
+            '<thead><tr>' +
+              '<th>Request ID</th>' +
+              '<th>Pickup Area</th>' +
+              '<th>Pickup Date</th>' +
+              '<th>Pickup Time</th>' +
+              '<th>Status</th>' +
+            '</tr></thead>' +
+            '<tbody>' + rows + '</tbody>' +
+          '</table>' +
+        '</div>';
     }
 
     async function fetchRequests() {
