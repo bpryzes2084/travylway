@@ -883,6 +883,7 @@
           '<td class="td-pickup">' + extractCityArea(t.pickup_text) + '</td>' +
           '<td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'date') + '</td>' +
           '<td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'time') + '</td>' +
+          '<td class="td-pickup">' + (t.flight_number || '—') + '</td>' +
           '<td class="td-status"><span class="status-badge"><span class="status-dot"></span>' + t.status + '</span></td>' +
           '</tr>';
       });
@@ -895,6 +896,7 @@
               '<th>Pickup Area</th>' +
               '<th>Pickup Date</th>' +
               '<th>Pickup Time</th>' +
+              '<th>Flight</th>' +
               '<th>Status</th>' +
             '</tr></thead>' +
             '<tbody>' + rows + '</tbody>' +
