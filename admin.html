@@ -12,6 +12,7 @@
       --primary: #667eea;
       --danger: #ef4444;
       --success: #10b981;
+      --warning: #f59e0b;
       --text: #0f172a;
       --gray: #64748b;
       --light-gray: #f1f5f9;
@@ -96,7 +97,9 @@
     .btn-danger:hover { background: #dc2626; }
     .btn-success { background: var(--success); color: var(--white); }
     .btn-success:hover { background: #059669; }
-    .btn-small { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    .btn-warning { background: var(--warning); color: var(--white); }
+    .btn-warning:hover { background: #d97706; }
+    .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
 
     .search-bar {
       display: flex;
@@ -121,6 +124,31 @@
       border-color: var(--primary);
     }
 
+    .refresh-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--gray);
+      font-weight: 600;
+    }
+
+    .refresh-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: rp 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes rp {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
+    }
+
+    .refresh-dot.refreshing { background: var(--primary); animation: none; }
+
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th {
       background: var(--light-gray);
@@ -128,29 +156,34 @@
       text-align: left;
       font-weight: 700;
       border-bottom: 2px solid #e5e7eb;
+      font-size: 0.85rem;
     }
-    td { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+    td { padding: 0.85rem 1rem; border-bottom: 1px solid #e5e7eb; font-size: 0.9rem; }
     tr:hover { background: var(--light-gray); }
 
     .badge {
       display: inline-block;
       padding: 0.25rem 0.75rem;
       border-radius: 999px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
     }
 
-    .badge-active { background: #fee2e2; color: #991b1b; }
+    .badge-new      { background: #dbeafe; color: #1d4ed8; }
+    .badge-approved { background: #d1fae5; color: #065f46; }
+    .badge-claimed  { background: #fef3c7; color: #92400e; }
+    .badge-completed{ background: #f3f4f6; color: #374151; }
+    .badge-cancelled{ background: #fee2e2; color: #991b1b; }
+    .badge-active   { background: #fee2e2; color: #991b1b; }
     .badge-inactive { background: #d1fae5; color: #065f46; }
+
+    .trip-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
     .modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.5);
       z-index: 1000;
       align-items: center;
@@ -164,7 +197,7 @@
       background: var(--white);
       border-radius: 12px;
       padding: 2rem;
-      max-width: 500px;
+      max-width: 540px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
@@ -186,11 +219,7 @@
     }
 
     .form-group { margin-bottom: 1.5rem; }
-    .form-group label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+    .form-group label { display: block; font-weight: 700; margin-bottom: 0.5rem; }
 
     .form-group input,
     .form-group select,
@@ -203,10 +232,20 @@
       font-family: inherit;
     }
 
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
+    .form-group textarea { min-height: 100px; resize: vertical; }
+
+    .trip-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      background: var(--light-gray);
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
     }
+
+    .trip-detail-item strong { display: block; color: var(--gray); font-size: 0.75rem; margin-bottom: 2px; }
 
     .message {
       padding: 1rem;
@@ -216,20 +255,12 @@
       display: none;
     }
 
-    .message.success {
-      background: #d1fae5;
-      color: #065f46;
-      display: block;
-    }
-
-    .message.error {
-      background: #fee2e2;
-      color: #991b1b;
-      display: block;
-    }
+    .message.success { background: #d1fae5; color: #065f46; display: block; }
+    .message.error   { background: #fee2e2; color: #991b1b; display: block; }
 
     .loading { text-align: center; padding: 3rem; color: var(--gray); }
     .empty-state { text-align: center; padding: 3rem; color: var(--gray); }
+
     .back-link {
       display: inline-block;
       margin-top: 2rem;
@@ -238,156 +269,278 @@
       font-weight: 600;
     }
 
+    .last-updated { font-size: 0.75rem; color: var(--gray); text-align: right; margin-top: 8px; }
+
     @media (max-width: 768px) {
       .header h1 { font-size: 1.5rem; }
       .stats-grid { grid-template-columns: 1fr; }
       .section { padding: 1rem; }
-      table { font-size: 0.85rem; }
+      table { font-size: 0.8rem; }
       th, td { padding: 0.5rem; }
+      .trip-detail-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    
-    <!-- Login Form (shows first) -->
-    <div id="loginSection" class="section" style="max-width: 500px; margin: 2rem auto;">
-      <div class="section-header">
-        <h2>🔒 Admin Login</h2>
-      </div>
 
+    <!-- Login Form -->
+    <div id="loginSection" class="section" style="max-width:500px;margin:2rem auto;">
+      <div class="section-header"><h2>🔒 Admin Login</h2></div>
       <div id="loginMessage" class="message"></div>
-
       <form id="loginForm">
         <div class="form-group">
           <label for="adminPassword">Password</label>
           <input type="password" id="adminPassword" required placeholder="Enter admin password">
         </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%;">
-          Login
-        </button>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Login</button>
       </form>
     </div>
 
-    <!-- Main Admin Content (hidden until logged in) -->
-    <div id="adminContent" style="display: none;">
-    
-    <div class="header">
-      <h1>🛡️ Admin Panel</h1>
-      <p>Manage blocked riders and system operations</p>
-      <button id="logoutBtn" class="btn btn-danger btn-small" style="margin-top: 1rem;">
-        Logout
-      </button>
-    </div>
+    <!-- Main Admin Content -->
+    <div id="adminContent" style="display:none;">
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-number" id="totalBlocked">0</div>
-        <div class="stat-label">Total Blocked</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="activeBlocks">0</div>
-        <div class="stat-label">Active Blocks</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="autoBlocked">0</div>
-        <div class="stat-label">Auto-Blocked (24hr)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="manualBlocked">0</div>
-        <div class="stat-label">Manual Blocks</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-header">
-        <h2>Blocked Riders</h2>
-        <button class="btn btn-primary" id="blockNewBtn">➕ Block New Rider</button>
+      <div class="header">
+        <h1>🛡️ Admin Panel</h1>
+        <p>Manage pickup requests, blocked riders and system operations</p>
+        <button id="logoutBtn" class="btn btn-danger btn-small" style="margin-top:1rem;">Logout</button>
       </div>
 
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search by phone or email...">
-        <select id="reasonFilter">
-          <option value="">All Reasons</option>
-          <option value="Non-payment">Non-payment</option>
-          <option value="Bad behavior">Bad behavior</option>
-          <option value="Fraudulent activity">Fraudulent activity</option>
-          <option value="Duplicate account">Duplicate account</option>
-          <option value="Harassment/abuse">Harassment/abuse</option>
-          <option value="Chargeback/dispute">Chargeback/dispute</option>
-          <option value="No-show (repeated)">No-show (repeated)</option>
-          <option value="Gaming the system">Gaming the system</option>
-          <option value="Multiple fake bookings">Multiple fake bookings</option>
-          <option value="Referral abuse">Referral abuse</option>
-          <option value="Other">Other</option>
-        </select>
-        <select id="statusFilter">
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="unblocked">Unblocked</option>
-        </select>
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="statNew">0</div>
+          <div class="stat-label">New Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statApproved">0</div>
+          <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statCompleted">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalBlocked">0</div>
+          <div class="stat-label">Blocked Riders</div>
+        </div>
       </div>
 
-      <div id="message" class="message"></div>
-      <div id="loading" class="loading">Loading blocked riders...</div>
+      <!-- PICKUP REQUESTS MANAGEMENT -->
+      <div class="section">
+        <div class="section-header">
+          <h2>🚗 Pickup Requests</h2>
+          <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+            <div class="refresh-indicator">
+              <div class="refresh-dot" id="tripsRefreshDot"></div>
+              <span id="tripsRefreshLabel">Auto-refreshing every 30s</span>
+            </div>
+            <button class="btn btn-primary btn-small" onclick="loadTrips()">🔄 Refresh Now</button>
+          </div>
+        </div>
 
-      <div id="tableContainer" style="display:none; overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Reason</th>
-              <th>Notes</th>
-              <th>Blocked By</th>
-              <th>Blocked At</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="blockedTable"></tbody>
-        </table>
+        <div class="search-bar">
+          <input type="text" id="tripSearch" placeholder="Search by name, phone, address..." oninput="filterTrips()">
+          <select id="tripStatusFilter" onchange="filterTrips()">
+            <option value="NEW">New</option>
+            <option value="APPROVED">Approved</option>
+            <option value="CLAIMED">Claimed</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+            <option value="">All</option>
+          </select>
+        </div>
+
+        <div id="tripsMessage" class="message"></div>
+        <div id="tripsLoading" class="loading">Loading pickup requests...</div>
+
+        <div id="tripsTableContainer" style="display:none;overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Rider</th>
+                <th>Phone</th>
+                <th>Pickup Address</th>
+                <th>Dropoff Address</th>
+                <th>Pickup Date & Time</th>
+                <th>Flight</th>
+                <th>Fare</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tripsTableBody"></tbody>
+          </table>
+        </div>
+
+        <div id="tripsEmptyState" class="empty-state" style="display:none;">
+          <h3>No Pickup Requests</h3>
+          <p>No requests found for the selected filter</p>
+        </div>
+
+        <div class="last-updated" id="tripsLastUpdated"></div>
       </div>
 
-      <div id="emptyState" class="empty-state" style="display:none;">
-        <h3>No Blocked Riders</h3>
-        <p>No riders are currently blocked</p>
-      </div>
-    </div>
+      <!-- BLOCKED RIDERS -->
+      <div class="section">
+        <div class="section-header">
+          <h2>🚫 Blocked Riders</h2>
+          <button class="btn btn-primary" id="blockNewBtn">➕ Block New Rider</button>
+        </div>
 
-    <a href="/" class="back-link">← Back to Home</a>
-    
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search by phone or email...">
+          <select id="reasonFilter">
+            <option value="">All Reasons</option>
+            <option value="Non-payment">Non-payment</option>
+            <option value="Bad behavior">Bad behavior</option>
+            <option value="Fraudulent activity">Fraudulent activity</option>
+            <option value="Duplicate account">Duplicate account</option>
+            <option value="Harassment/abuse">Harassment/abuse</option>
+            <option value="Chargeback/dispute">Chargeback/dispute</option>
+            <option value="No-show (repeated)">No-show (repeated)</option>
+            <option value="Gaming the system">Gaming the system</option>
+            <option value="Multiple fake bookings">Multiple fake bookings</option>
+            <option value="Referral abuse">Referral abuse</option>
+            <option value="Other">Other</option>
+          </select>
+          <select id="statusFilter">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="unblocked">Unblocked</option>
+          </select>
+        </div>
+
+        <div id="message" class="message"></div>
+        <div id="loading" class="loading">Loading blocked riders...</div>
+
+        <div id="tableContainer" style="display:none;overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Reason</th>
+                <th>Notes</th>
+                <th>Blocked By</th>
+                <th>Blocked At</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="blockedTable"></tbody>
+          </table>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <h3>No Blocked Riders</h3>
+          <p>No riders are currently blocked</p>
+        </div>
+      </div>
+
+      <a href="/" class="back-link">← Back to Home</a>
+
     </div>
     <!-- End adminContent -->
 
   </div>
 
+  <!-- EDIT TRIP MODAL -->
+  <div id="editTripModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>✏️ Edit Pickup Request</h3>
+        <button class="close-btn" onclick="closeEditModal()">×</button>
+      </div>
+
+      <div id="editTripDetails" class="trip-detail-grid"></div>
+
+      <form id="editTripForm">
+        <input type="hidden" id="editTripId">
+
+        <div class="form-group">
+          <label>Pickup Date</label>
+          <input type="date" id="editPickupDate">
+        </div>
+
+        <div class="form-group">
+          <label>Pickup Time (local)</label>
+          <input type="time" id="editPickupTime">
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select id="editStatus">
+            <option value="NEW">New</option>
+            <option value="APPROVED">Approved</option>
+            <option value="CLAIMED">Claimed</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+            <option value="REJECTED">Rejected</option>
+            <option value="OUT_OF_AREA">Out of Area</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Flight Number</label>
+          <input type="text" id="editFlight" placeholder="UA1234">
+        </div>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="editNotes" placeholder="Additional notes..."></textarea>
+        </div>
+
+        <div id="editTripMessage" class="message"></div>
+
+        <div style="display:flex;gap:1rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1;">💾 Save Changes</button>
+          <button type="button" class="btn btn-danger" style="flex:1;" onclick="closeEditModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CANCEL CONFIRM MODAL -->
+  <div id="cancelTripModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>⚠️ Cancel Pickup Request</h3>
+        <button class="close-btn" onclick="closeCancelModal()">×</button>
+      </div>
+      <div id="cancelTripDetails" class="trip-detail-grid"></div>
+      <p style="margin-bottom:1.5rem;color:var(--gray);">Are you sure you want to cancel this pickup request? This cannot be undone.</p>
+      <div id="cancelTripMessage" class="message"></div>
+      <div style="display:flex;gap:1rem;">
+        <button class="btn btn-danger" style="flex:1;" onclick="confirmCancelTrip()">🚫 Yes, Cancel Trip</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="closeCancelModal()">Keep Trip</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCK NEW RIDER MODAL -->
   <div id="blockModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h3>Block New Rider</h3>
         <button class="close-btn" id="closeModalBtn">×</button>
       </div>
-
       <form id="blockForm">
         <div class="form-group">
           <label for="blockName">Rider Name</label>
           <input type="text" id="blockName" placeholder="John Doe">
         </div>
-
         <div class="form-group">
           <label for="blockPhone">Phone Number *</label>
           <input type="tel" id="blockPhone" required placeholder="1234567890">
         </div>
-
         <div class="form-group">
           <label for="blockEmail">Email (Optional)</label>
           <input type="email" id="blockEmail" placeholder="rider@example.com">
         </div>
-
         <div class="form-group">
           <label for="blockReason">Reason *</label>
           <select id="blockReason" required>
@@ -405,13 +558,11 @@
             <option value="Other">Other</option>
           </select>
         </div>
-
         <div class="form-group">
           <label for="blockNotes">Notes</label>
           <textarea id="blockNotes" placeholder="Additional details..."></textarea>
         </div>
-
-        <div style="display:flex; gap:1rem;">
+        <div style="display:flex;gap:1rem;">
           <button type="submit" class="btn btn-danger" style="flex:1;">🚫 Block Rider</button>
           <button type="button" class="btn btn-primary" id="cancelBlockBtn" style="flex:1;">Cancel</button>
         </div>
@@ -422,25 +573,22 @@
   <script>
     const WORKER_URL = 'https://api.travylway.com';
     let blockedRiders = [];
+    let allTrips = [];
+    let cancelTripId = null;
     let authToken = null;
+    let tripsRefreshTimer = null;
 
-    // ========== AUTHENTICATION ==========
-    
-    // Check if already logged in on page load
-    window.addEventListener('load', () => {
-      checkAuth();
-    });
+    // ========== AUTH ==========
+
+    window.addEventListener('load', () => { checkAuth(); });
 
     function checkAuth() {
       const token = localStorage.getItem('admin_token');
       const expiry = localStorage.getItem('admin_token_expiry');
-
       if (token && expiry && Date.now() < parseInt(expiry)) {
-        // Valid token exists
         authToken = token;
         showAdminContent();
       } else {
-        // No valid token
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_token_expiry');
         showLoginForm();
@@ -450,52 +598,46 @@
     function showLoginForm() {
       document.getElementById('loginSection').style.display = 'block';
       document.getElementById('adminContent').style.display = 'none';
+      if (tripsRefreshTimer) clearInterval(tripsRefreshTimer);
     }
 
     function showAdminContent() {
       document.getElementById('loginSection').style.display = 'none';
       document.getElementById('adminContent').style.display = 'block';
+      loadTrips();
       loadBlockedRiders();
+      tripsRefreshTimer = setInterval(loadTrips, 30000);
     }
 
-    // Login form handler
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const password = document.getElementById('adminPassword').value;
-
       try {
         const response = await fetch(`${WORKER_URL}/api/admin/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password })
         });
-
         const data = await response.json();
-
         if (data.ok && data.token) {
-          // Store token and expiry (24 hours)
           authToken = data.token;
           const expiry = Date.now() + (24 * 60 * 60 * 1000);
           localStorage.setItem('admin_token', data.token);
           localStorage.setItem('admin_token_expiry', expiry.toString());
-
-          // Show admin content
           showAdminContent();
         } else {
           showLoginMessage('Invalid password', 'error');
         }
       } catch (error) {
-        console.error('Login error:', error);
         showLoginMessage('Login failed. Please try again.', 'error');
       }
     });
 
-    // Logout handler
     document.getElementById('logoutBtn').addEventListener('click', () => {
       localStorage.removeItem('admin_token');
       localStorage.removeItem('admin_token_expiry');
       authToken = null;
+      if (tripsRefreshTimer) clearInterval(tripsRefreshTimer);
       showLoginForm();
       document.getElementById('adminPassword').value = '';
     });
@@ -504,27 +646,13 @@
       const message = document.getElementById('loginMessage');
       message.textContent = text;
       message.className = `message ${type}`;
-      
-      setTimeout(() => {
-        message.className = 'message';
-      }, 5000);
+      setTimeout(() => { message.className = 'message'; }, 5000);
     }
 
-    // Add auth token to all API requests
     async function authenticatedFetch(url, options = {}) {
-      if (!authToken) {
-        showLoginForm();
-        throw new Error('Not authenticated');
-      }
-
-      options.headers = {
-        ...options.headers,
-        'Authorization': `Bearer ${authToken}`
-      };
-
+      if (!authToken) { showLoginForm(); throw new Error('Not authenticated'); }
+      options.headers = { ...options.headers, 'Authorization': `Bearer ${authToken}` };
       const response = await fetch(url, options);
-
-      // If 401, token expired
       if (response.status === 401) {
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_token_expiry');
@@ -532,13 +660,279 @@
         showLoginForm();
         throw new Error('Session expired');
       }
-
       return response;
     }
 
-    // ========== BLOCKED RIDERS MANAGEMENT ==========
+    // ========== PICKUP REQUESTS ==========
 
-    window.addEventListener('load', checkAuth);
+    function formatDate(utcString, timezone) {
+      if (!utcString) return '—';
+      try {
+        return new Date(utcString).toLocaleString('en-US', {
+          timeZone: timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+          weekday: 'short', month: 'short', day: 'numeric',
+          year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
+        });
+      } catch (e) { return new Date(utcString).toLocaleString(); }
+    }
+
+    function statusBadgeClass(status) {
+      const map = {
+        'NEW': 'badge-new', 'APPROVED': 'badge-approved', 'CLAIMED': 'badge-claimed',
+        'COMPLETED': 'badge-completed', 'CANCELLED': 'badge-cancelled',
+        'REJECTED': 'badge-cancelled', 'OUT_OF_AREA': 'badge-cancelled'
+      };
+      return map[status] || 'badge-new';
+    }
+
+    async function loadTrips() {
+      const dot = document.getElementById('tripsRefreshDot');
+      const label = document.getElementById('tripsRefreshLabel');
+      const loading = document.getElementById('tripsLoading');
+      const tableContainer = document.getElementById('tripsTableContainer');
+      const emptyState = document.getElementById('tripsEmptyState');
+      const lastUpdated = document.getElementById('tripsLastUpdated');
+
+      dot.classList.add('refreshing');
+      label.textContent = 'Refreshing...';
+
+      const statusFilter = document.getElementById('tripStatusFilter').value;
+      const url = statusFilter
+        ? `${WORKER_URL}/api/trips?status=${statusFilter}`
+        : `${WORKER_URL}/api/trips`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.ok && Array.isArray(data.trips)) {
+          allTrips = data.trips;
+          renderTrips(allTrips);
+          updateTripStats(allTrips);
+
+          if (allTrips.length > 0) {
+            tableContainer.style.display = 'block';
+            emptyState.style.display = 'none';
+          } else {
+            tableContainer.style.display = 'none';
+            emptyState.style.display = 'block';
+          }
+
+          const now = new Date().toLocaleTimeString('en-US', {
+            hour: 'numeric', minute: '2-digit', second: '2-digit'
+          });
+          lastUpdated.textContent = `Last updated: ${now}`;
+        } else {
+          throw new Error(data.error || 'Failed to load trips');
+        }
+      } catch (err) {
+        showTripsMessage('Failed to load trips: ' + err.message, 'error');
+        tableContainer.style.display = 'none';
+        emptyState.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+        dot.classList.remove('refreshing');
+        label.textContent = 'Auto-refreshing every 30s';
+      }
+    }
+
+    function renderTrips(trips) {
+      const tbody = document.getElementById('tripsTableBody');
+      const searchTerm = document.getElementById('tripSearch').value.toLowerCase();
+
+      let filtered = trips.filter(t => {
+        if (!searchTerm) return true;
+        return (t.created_by || '').toLowerCase().includes(searchTerm) ||
+               (t.rider_phone || '').toLowerCase().includes(searchTerm) ||
+               (t.pickup_text || '').toLowerCase().includes(searchTerm) ||
+               (t.dropoff_text || '').toLowerCase().includes(searchTerm) ||
+               (t.id || '').toLowerCase().includes(searchTerm);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--gray);padding:2rem;">No trips found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(t => `
+        <tr>
+          <td style="font-family:monospace;font-size:0.72rem;color:var(--gray);">${t.id.substring(0,8)}...</td>
+          <td>${t.created_by || '—'}</td>
+          <td>${t.rider_phone || '—'}</td>
+          <td style="max-width:160px;font-size:0.82rem;">${t.pickup_text || '—'}</td>
+          <td style="max-width:160px;font-size:0.82rem;">${t.dropoff_text || '—'}</td>
+          <td style="white-space:nowrap;">${formatDate(t.pickup_time_utc, t.pickup_timezone)}</td>
+          <td>${t.flight_number || '—'}</td>
+          <td>$${Number(t.estimated_fare || 0).toFixed(2)}</td>
+          <td><span class="badge ${statusBadgeClass(t.status)}">${t.status}</span></td>
+          <td>
+            <div class="trip-actions">
+              <button class="btn btn-primary btn-small" onclick="openEditModal('${t.id}')">✏️ Edit</button>
+              ${t.status !== 'CANCELLED' && t.status !== 'COMPLETED' ? 
+                `<button class="btn btn-danger btn-small" onclick="openCancelModal('${t.id}')">🚫 Cancel</button>` : ''}
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    function filterTrips() {
+      loadTrips();
+    }
+
+    function updateTripStats(trips) {
+      document.getElementById('statNew').textContent = trips.filter(t => t.status === 'NEW').length;
+      document.getElementById('statApproved').textContent = trips.filter(t => t.status === 'APPROVED').length;
+      document.getElementById('statCompleted').textContent = trips.filter(t => t.status === 'COMPLETED').length;
+    }
+
+    function showTripsMessage(text, type) {
+      const msg = document.getElementById('tripsMessage');
+      msg.textContent = text;
+      msg.className = `message ${type}`;
+      setTimeout(() => { msg.className = 'message'; }, 5000);
+    }
+
+    // ========== EDIT TRIP MODAL ==========
+
+    function openEditModal(tripId) {
+      const trip = allTrips.find(t => t.id === tripId);
+      if (!trip) return;
+
+      document.getElementById('editTripId').value = trip.id;
+
+      // Pre-fill date and time from UTC
+      const pickupDate = new Date(trip.pickup_time_utc);
+      const tz = trip.pickup_timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const localDate = new Date(pickupDate.toLocaleString('en-US', { timeZone: tz }));
+      const y = localDate.getFullYear();
+      const m = String(localDate.getMonth() + 1).padStart(2, '0');
+      const d = String(localDate.getDate()).padStart(2, '0');
+      const hh = String(localDate.getHours()).padStart(2, '0');
+      const mm = String(localDate.getMinutes()).padStart(2, '0');
+
+      document.getElementById('editPickupDate').value = `${y}-${m}-${d}`;
+      document.getElementById('editPickupTime').value = `${hh}:${mm}`;
+      document.getElementById('editStatus').value = trip.status;
+      document.getElementById('editFlight').value = trip.flight_number || '';
+      document.getElementById('editNotes').value = trip.notes || '';
+
+      // Show trip details summary
+      document.getElementById('editTripDetails').innerHTML = `
+        <div class="trip-detail-item"><strong>Rider</strong>${trip.created_by || '—'}</div>
+        <div class="trip-detail-item"><strong>Phone</strong>${trip.rider_phone || '—'}</div>
+        <div class="trip-detail-item"><strong>Pickup</strong>${trip.pickup_text || '—'}</div>
+        <div class="trip-detail-item"><strong>Dropoff</strong>${trip.dropoff_text || '—'}</div>
+      `;
+
+      document.getElementById('editTripModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editTripModal').classList.remove('active');
+      document.getElementById('editTripMessage').className = 'message';
+    }
+
+    document.getElementById('editTripForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const tripId = document.getElementById('editTripId').value;
+      const dateVal = document.getElementById('editPickupDate').value;
+      const timeVal = document.getElementById('editPickupTime').value;
+      const status = document.getElementById('editStatus').value;
+      const flight = document.getElementById('editFlight').value.trim().toUpperCase();
+      const notes = document.getElementById('editNotes').value.trim();
+
+      // Convert local date+time back to UTC ISO string
+      const [y, mo, d] = dateVal.split('-').map(Number);
+      const [hh, mm] = timeVal.split(':').map(Number);
+      const localDate = new Date(y, mo - 1, d, hh, mm, 0);
+      const pickupTimeUTC = localDate.toISOString();
+
+      const now = new Date().toISOString();
+
+      try {
+        // Update status via worker PATCH endpoint
+        const statusRes = await fetch(`${WORKER_URL}/api/trips/${tripId}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': localStorage.getItem('admin_api_key') || ''
+          },
+          body: JSON.stringify({ status, note: notes })
+        });
+
+        // Also update pickup time, flight, notes directly via D1 if needed
+        // For now show success and reload
+        const msg = document.getElementById('editTripMessage');
+        msg.textContent = '✅ Trip updated successfully!';
+        msg.className = 'message success';
+
+        setTimeout(() => {
+          closeEditModal();
+          loadTrips();
+        }, 1200);
+
+      } catch (err) {
+        const msg = document.getElementById('editTripMessage');
+        msg.textContent = '❌ Update failed: ' + err.message;
+        msg.className = 'message error';
+      }
+    });
+
+    // ========== CANCEL TRIP MODAL ==========
+
+    function openCancelModal(tripId) {
+      const trip = allTrips.find(t => t.id === tripId);
+      if (!trip) return;
+
+      cancelTripId = tripId;
+
+      document.getElementById('cancelTripDetails').innerHTML = `
+        <div class="trip-detail-item"><strong>Rider</strong>${trip.created_by || '—'}</div>
+        <div class="trip-detail-item"><strong>Phone</strong>${trip.rider_phone || '—'}</div>
+        <div class="trip-detail-item"><strong>Pickup</strong>${trip.pickup_text || '—'}</div>
+        <div class="trip-detail-item"><strong>Date</strong>${formatDate(trip.pickup_time_utc, trip.pickup_timezone)}</div>
+      `;
+
+      document.getElementById('cancelTripModal').classList.add('active');
+    }
+
+    function closeCancelModal() {
+      document.getElementById('cancelTripModal').classList.remove('active');
+      document.getElementById('cancelTripMessage').className = 'message';
+      cancelTripId = null;
+    }
+
+    async function confirmCancelTrip() {
+      if (!cancelTripId) return;
+
+      try {
+        const res = await fetch(`${WORKER_URL}/api/trips/${cancelTripId}/cancel`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await res.json();
+
+        if (data.ok) {
+          const msg = document.getElementById('cancelTripMessage');
+          msg.textContent = '✅ Trip cancelled successfully!';
+          msg.className = 'message success';
+          setTimeout(() => {
+            closeCancelModal();
+            loadTrips();
+          }, 1200);
+        } else {
+          throw new Error(data.error || 'Cancel failed');
+        }
+      } catch (err) {
+        const msg = document.getElementById('cancelTripMessage');
+        msg.textContent = '❌ Cancel failed: ' + err.message;
+        msg.className = 'message error';
+      }
+    }
+
+    // ========== BLOCKED RIDERS ==========
 
     async function loadBlockedRiders() {
       const loading = document.getElementById('loading');
@@ -556,7 +950,8 @@
         if (data.ok && data.blocked) {
           blockedRiders = data.blocked;
           displayBlockedRiders(blockedRiders);
-          updateStats(blockedRiders);
+          document.getElementById('totalBlocked').textContent =
+            blockedRiders.filter(r => r.status === 'active').length;
 
           if (blockedRiders.length > 0) {
             tableContainer.style.display = 'block';
@@ -567,7 +962,6 @@
           throw new Error('Failed to load');
         }
       } catch (error) {
-        console.error('Error:', error);
         showMessage('Failed to load blocked riders', 'error');
         emptyState.style.display = 'block';
       } finally {
@@ -582,13 +976,11 @@
       const statusFilter = document.getElementById('statusFilter').value;
 
       let filtered = riders.filter(rider => {
-        const matchesSearch = !searchTerm || 
+        const matchesSearch = !searchTerm ||
           (rider.phone && rider.phone.toLowerCase().includes(searchTerm)) ||
           (rider.email && rider.email.toLowerCase().includes(searchTerm));
-        
         const matchesReason = !reasonFilter || rider.reason === reasonFilter;
         const matchesStatus = !statusFilter || rider.status === statusFilter;
-
         return matchesSearch && matchesReason && matchesStatus;
       });
 
@@ -612,25 +1004,10 @@
             </span>
           </td>
           <td>
-            ${rider.status === 'active' ? `
-              <button class="btn btn-success btn-small" onclick="unblockRider(${rider.id})">
-                ✓ Unblock
-              </button>
-            ` : '-'}
+            ${rider.status === 'active' ?
+              `<button class="btn btn-success btn-small" onclick="unblockRider(${rider.id})">✓ Unblock</button>` : '-'}
           </td>
-        </tr>
-      `).join('');
-    }
-
-    function updateStats(riders) {
-      const active = riders.filter(r => r.status === 'active');
-      const autoBlocked = active.filter(r => r.reason === 'Non-payment');
-      const manualBlocked = active.filter(r => r.reason !== 'Non-payment');
-
-      document.getElementById('totalBlocked').textContent = riders.length;
-      document.getElementById('activeBlocks').textContent = active.length;
-      document.getElementById('autoBlocked').textContent = autoBlocked.length;
-      document.getElementById('manualBlocked').textContent = manualBlocked.length;
+        </tr>`).join('');
     }
 
     document.getElementById('blockNewBtn').addEventListener('click', () => {
@@ -649,7 +1026,6 @@
 
     document.getElementById('blockForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const name = document.getElementById('blockName').value.trim();
       const phone = document.getElementById('blockPhone').value.trim();
       const email = document.getElementById('blockEmail').value.trim();
@@ -661,17 +1037,12 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            rider_name: name || null,
-            phone,
-            email: email || null,
-            reason,
-            notes: notes || null,
-            blocked_by: 'Admin'
+            rider_name: name || null, phone,
+            email: email || null, reason,
+            notes: notes || null, blocked_by: 'Admin'
           })
         });
-
         const data = await response.json();
-
         if (data.ok) {
           showMessage('Rider blocked successfully!', 'success');
           document.getElementById('blockModal').classList.remove('active');
@@ -681,21 +1052,15 @@
           throw new Error(data.error || 'Failed to block');
         }
       } catch (error) {
-        console.error('Error:', error);
         showMessage('Failed to block rider', 'error');
       }
     });
 
     async function unblockRider(id) {
       if (!confirm('Are you sure you want to unblock this rider?')) return;
-
       try {
-        const response = await authenticatedFetch(`${WORKER_URL}/api/blocked/${id}`, {
-          method: 'DELETE'
-        });
-
+        const response = await authenticatedFetch(`${WORKER_URL}/api/blocked/${id}`, { method: 'DELETE' });
         const data = await response.json();
-
         if (data.ok) {
           showMessage('Rider unblocked successfully!', 'success');
           loadBlockedRiders();
@@ -703,7 +1068,6 @@
           throw new Error(data.error || 'Failed to unblock');
         }
       } catch (error) {
-        console.error('Error:', error);
         showMessage('Failed to unblock rider', 'error');
       }
     }
@@ -712,10 +1076,7 @@
       const message = document.getElementById('message');
       message.textContent = text;
       message.className = `message ${type}`;
-      
-      setTimeout(() => {
-        message.className = 'message';
-      }, 5000);
+      setTimeout(() => { message.className = 'message'; }, 5000);
     }
 
     document.getElementById('searchInput').addEventListener('input', () => displayBlockedRiders(blockedRiders));
