@@ -389,17 +389,18 @@
     .requests-table-wrap {
       max-width: 900px;
       margin: 0 auto;
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
+    /* Desktop table */
     .requests-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.88rem;
       background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .requests-table thead {
@@ -436,11 +437,10 @@
       font-size: 0.72rem;
       color: var(--gray);
       word-break: break-all;
-      min-width: 280px;
     }
 
-    .td-pickup { min-width: 180px; line-height: 1.4; }
-    .td-date { white-space: nowrap; min-width: 170px; }
+    .td-pickup { line-height: 1.4; }
+    .td-date { white-space: nowrap; }
     .td-status { white-space: nowrap; }
 
     .status-badge {
@@ -464,6 +464,66 @@
       background: var(--primary);
       animation: rp 2s ease-in-out infinite;
       flex-shrink: 0;
+    }
+
+    /* Mobile cards — replaces table on small screens */
+    .request-cards {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .request-card {
+      background: var(--white);
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .request-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .request-card-id {
+      font-family: 'Courier New', monospace;
+      font-size: 0.68rem;
+      color: var(--gray);
+      word-break: break-all;
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    .request-card-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.85rem;
+      gap: 8px;
+    }
+
+    .request-card-row:last-child { border-bottom: none; }
+
+    .request-card-label {
+      color: var(--gray);
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .request-card-value {
+      color: var(--text);
+      text-align: right;
+      line-height: 1.4;
     }
 
     .requests-empty {
@@ -496,6 +556,11 @@
       text-align: right;
       font-size: 0.75rem;
       color: var(--gray);
+    }
+
+    @media (max-width: 640px) {
+      .requests-table { display: none; }
+      .request-cards { display: flex; }
     }
 
     /* TABLET */
@@ -607,6 +672,28 @@
           </div>
           <p>Point-to-point transportation for events, concerts, errands, and local travel. No airports—just city rides.</p>
           <a href="/local-rides.html" class="booking-cta">Book Local Ride →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- BOULDER SERVICE -->
+  <section class="booking-section" style="background:#e0f2fe;padding-top:2rem;padding-bottom:2rem;">
+    <div class="container">
+      <h2 class="section-title">🏔️ Boulder, Colorado</h2>
+      <p class="section-subtitle">Airport transportation between Boulder and Denver International Airport</p>
+      <div style="max-width:400px;margin:0 auto;">
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">🏔️</span>
+            <div>
+              <h3>Boulder ↔ DEN</h3>
+              <span class="booking-badge badge-blue">Airport Rides</span>
+            </div>
+          </div>
+          <p>Professional airport transportation between Boulder, CO and Denver International Airport. Both directions available. Flight tracking included. Approximately 45 miles.</p>
+          <a href="/boulder.html" class="booking-cta" style="color:#0284c7;">Book Boulder Ride →</a>
         </div>
       </div>
     </div>
@@ -875,8 +962,10 @@
         return;
       }
 
-      let rows = '';
       var displayTrips = trips.slice(0, 20);
+
+      // Desktop table rows
+      var rows = '';
       displayTrips.forEach(function(t) {
         rows += '<tr>' +
           '<td class="td-id">' + t.id + '</td>' +
@@ -886,6 +975,33 @@
           '<td class="td-pickup">' + (t.flight_number || '—') + '</td>' +
           '<td class="td-status"><span class="status-badge"><span class="status-dot"></span>' + t.status + '</span></td>' +
           '</tr>';
+      });
+
+      // Mobile cards
+      var cards = '';
+      displayTrips.forEach(function(t) {
+        cards += '<div class="request-card">' +
+          '<div class="request-card-header">' +
+            '<div class="request-card-id">' + t.id + '</div>' +
+            '<span class="status-badge"><span class="status-dot"></span>' + t.status + '</span>' +
+          '</div>' +
+          '<div class="request-card-row">' +
+            '<span class="request-card-label">Area</span>' +
+            '<span class="request-card-value">' + extractCityArea(t.pickup_text) + '</span>' +
+          '</div>' +
+          '<div class="request-card-row">' +
+            '<span class="request-card-label">Date</span>' +
+            '<span class="request-card-value">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'date') + '</span>' +
+          '</div>' +
+          '<div class="request-card-row">' +
+            '<span class="request-card-label">Time</span>' +
+            '<span class="request-card-value">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'time') + '</span>' +
+          '</div>' +
+          '<div class="request-card-row">' +
+            '<span class="request-card-label">Flight</span>' +
+            '<span class="request-card-value">' + (t.flight_number || '—') + '</span>' +
+          '</div>' +
+        '</div>';
       });
 
       container.innerHTML =
@@ -901,7 +1017,8 @@
             '</tr></thead>' +
             '<tbody>' + rows + '</tbody>' +
           '</table>' +
-        '</div>';
+        '</div>' +
+        '<div class="request-cards">' + cards + '</div>';
     }
 
     async function fetchRequests() {
