@@ -577,6 +577,27 @@
       .features-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
+    /* Denver Metro 4-card grid */
+    #denver-metro .booking-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 900px) {
+      #denver-metro .booking-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* Equal height cards */
+    #denver-metro .booking-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #denver-metro .booking-card p {
+      flex: 1;
+    }
+
     /* MOBILE MENU */
     @media (max-width: 768px) {
       .nav-links {
@@ -678,29 +699,8 @@
   </section>
 
 
-  <!-- BOULDER SERVICE -->
-  <section class="booking-section" style="background:#e0f2fe;padding-top:2rem;padding-bottom:2rem;">
-    <div class="container">
-      <h2 class="section-title">🏔️ Boulder, Colorado</h2>
-      <p class="section-subtitle">Airport transportation between Boulder and Denver International Airport</p>
-      <div style="max-width:400px;margin:0 auto;">
-        <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🏔️</span>
-            <div>
-              <h3>Boulder ↔ DEN</h3>
-              <span class="booking-badge badge-blue">Airport Rides</span>
-            </div>
-          </div>
-          <p>Professional airport transportation between Boulder, CO and Denver International Airport. Both directions available. Flight tracking included. Approximately 45 miles.</p>
-          <a href="/boulder.html" class="booking-cta" style="color:#0284c7;">Book Boulder Ride →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- DENVER METRO AREA -->
-  <section class="booking-section" style="background:#f8fafc;padding-top:2rem;">
+  <section class="booking-section" style="background:#f8fafc;padding-top:2rem;" id="denver-metro">
     <div class="container">
       <h2 class="section-title">🌆 Denver Metro Area</h2>
       <p class="section-subtitle">Specialized service zones across the Denver region</p>
@@ -737,6 +737,19 @@
           </div>
           <p>Point-to-point rides throughout the Denver metro area including suburbs and surrounding cities. Reliable local transportation.</p>
           <a href="/denver-metro.html" class="booking-cta">Book Metro Ride →</a>
+        </div>
+
+        <!-- Boulder -->
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">🏔️</span>
+            <div>
+              <h3>Boulder ↔ DEN</h3>
+              <span class="booking-badge badge-blue">Airport Rides</span>
+            </div>
+          </div>
+          <p>Professional airport transportation between Boulder, CO and Denver International Airport. Both directions available. Flight tracking included. Approximately 45 miles.</p>
+          <a href="/boulder.html" class="booking-cta">Book Boulder Ride →</a>
         </div>
       </div>
     </div>
