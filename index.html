@@ -577,14 +577,15 @@
       .features-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
-    /* Denver Metro card grid */
+    /* Denver Metro card grid — 3 cols desktop, 2 cols tablet, 1 col mobile */
     #denver-metro .booking-grid {
       grid-template-columns: repeat(2, 1fr);
+      max-width: 960px;
     }
 
-    @media (min-width: 900px) {
+    @media (min-width: 860px) {
       #denver-metro .booking-grid {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
@@ -592,13 +593,15 @@
     #denver-metro .booking-card {
       display: flex;
       flex-direction: column;
+      padding: 1.5rem;
     }
 
     #denver-metro .booking-card p {
       flex: 1;
+      font-size: 0.88rem;
     }
 
-    /* Smaller title text for 4-card metro grid */
+    /* Smaller title for metro cards */
     #denver-metro .booking-card h3 {
       font-size: 1rem;
       line-height: 1.3;
@@ -606,10 +609,6 @@
 
     #denver-metro .booking-icon {
       font-size: 1.8rem;
-    }
-
-    #denver-metro .booking-card {
-      padding: 1.5rem;
     }
 
     /* MOBILE MENU */
@@ -727,7 +726,7 @@
               <span class="booking-badge badge-purple">Crew Exclusive</span>
             </div>
           </div>
-          <p>Exclusive airport transportation for Denver-based flight attendants and pilots. Special crew pricing and priority service.</p>
+          <p>Airport transportation for Denver-based flight attendants and pilots. Crew pricing and priority service.</p>
           <a href="/denver-crew.html" class="booking-cta">Book Crew Ride →</a>
         </div>
         <div class="booking-card">
@@ -738,7 +737,7 @@
               <span class="booking-badge badge-green">East Metro</span>
             </div>
           </div>
-          <p>Transportation along the E-470 corridor including Aurora, Parker, and Commerce City. Fast access to DIA and metro Denver.</p>
+          <p>Along the E-470 corridor — Aurora, Parker, and Commerce City. Fast access to DEN.</p>
           <a href="/e470.html" class="booking-cta">Book E-470 Ride →</a>
         </div>
         <div class="booking-card">
@@ -749,7 +748,7 @@
               <span class="booking-badge badge-blue">Metro Wide</span>
             </div>
           </div>
-          <p>Point-to-point rides throughout the Denver metro area including suburbs and surrounding cities. Reliable local transportation.</p>
+          <p>Airport rides throughout Greater Denver — suburbs and surrounding cities. To and from DEN.</p>
           <a href="/denver-metro.html" class="booking-cta">Book Metro Ride →</a>
         </div>
 
@@ -762,7 +761,7 @@
               <span class="booking-badge badge-blue">Airport Rides</span>
             </div>
           </div>
-          <p>Professional airport transportation between Boulder, CO and Denver International Airport. Both directions available. Flight tracking included. Approximately 45 miles.</p>
+          <p>Airport transportation between Boulder, CO and DEN. Both directions. Flight tracking included. ~45 miles.</p>
           <a href="/boulder.html" class="booking-cta">Book Boulder Ride →</a>
         </div>
 
@@ -775,8 +774,21 @@
               <span class="booking-badge badge-green">Flat $25 Fare</span>
             </div>
           </div>
-          <p>Quick airport transportation between Gaylord Rockies Resort & Convention Center in Aurora and Denver International Airport. Only 7.4 miles — flat $25 fare both directions.</p>
+          <p>Gaylord Rockies Resort & Convention Center to DEN and back. Only 7.4 miles — flat $25 fare both directions.</p>
           <a href="/general.html" class="booking-cta">Book Now →</a>
+        </div>
+
+        <!-- DEN Employee -->
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">🛂</span>
+            <div>
+              <h3>DEN Employee Rides</h3>
+              <span class="booking-badge badge-purple">Employee Rates</span>
+            </div>
+          </div>
+          <p>Transportation to and from DEN for airport employees and workers within the DEN vicinity. Discounted employee rates.</p>
+          <a href="/den-employee.html" class="booking-cta">Book Employee Ride →</a>
         </div>
       </div>
     </div>
