@@ -190,6 +190,12 @@
         <input type="tel" id="phone" required placeholder="+1 (720) 555-1234" maxlength="24" />
         <div class="hint">Used for confirmation + driver coordination.</div>
       </div>
+      <div class="form-group">
+        <label>Email Address (optional)</label>
+        <input type="email" id="rider_email" placeholder="you@example.com" maxlength="120" />
+        <div class="hint">Receive a booking confirmation email</div>
+      </div>
+
 
       <div class="form-group">
         <label>Pickup Address *</label>
@@ -654,6 +660,7 @@
         notes: document.getElementById('notes').value.trim(),
         estimated_fare: latestEstimatedFare,
         source: 'denver-metro.html',
+        rider_email: document.getElementById('rider_email').value.trim() || '',
         'cf-turnstile-response': turnstileToken
       };
 
