@@ -340,6 +340,12 @@
       </div>
 
       <div class="form-group">
+        <label>Email Address (optional)</label>
+        <input type="email" id="rider_email" placeholder="you@example.com" maxlength="120" />
+        <div class="hint">Receive a booking confirmation email</div>
+      </div>
+
+      <div class="form-group">
         <label id="pickupLabel">Pickup Address *</label>
         <div id="pickupGeocoder"></div>
         <input type="hidden" id="pickupCoords" />
@@ -516,7 +522,7 @@
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-98.5795, 39.8283], // Center of USA
+      center: [-98.5795, 39.8283],
       zoom: 3
     });
 
@@ -575,7 +581,6 @@
       'CLT': { name: 'Charlotte Douglas International Airport, Charlotte, North Carolina', coords: [-80.9431, 35.2140] }
     };
 
-    // Helper function to check if result is an airport
     function isAirportResult(item) {
       const name = item.place_name.toLowerCase();
       return name.includes('airport') || 
@@ -584,36 +589,27 @@
              (item.place_type && item.place_type.includes('poi'));
     }
 
-    // Helper function to check if result is a confusing street name
     function isConfusingStreet(item, searchTerm) {
       const name = item.place_name.toLowerCase();
       const search = (searchTerm || '').toLowerCase();
-      
-      // If user searched for "airport" and this is a street with "airport" in name
       if (search.includes('airport') && 
           item.place_type && item.place_type.includes('address') &&
           name.includes('airport') &&
           !name.includes('international') &&
           !name.includes('terminal')) {
-        return true; // Hide "Airport Way", "Airport Blvd", etc.
+        return true;
       }
-      
       return false;
     }
 
-    // Initialize Mapbox Geocoders
     const pickupGeocoder = new MapboxGeocoder({
       accessToken: MAPBOX_TOKEN,
       placeholder: 'Select service type first',
       mapboxgl: mapboxgl,
-      types: 'poi,address,place', // Prioritize POIs (airports) over addresses
-      limit: 6, // Fewer results to reduce confusion
-      
-      // FIX 1: Airport code recognition via localGeocoder
+      types: 'poi,address,place',
+      limit: 6,
       localGeocoder: function(query) {
         const upperQuery = query.toUpperCase().trim();
-        
-        // Check if query matches an airport code
         if (airportCodes[upperQuery]) {
           return [{
             place_name: airportCodes[upperQuery].name,
@@ -623,56 +619,29 @@
             properties: {}
           }];
         }
-        return null; // Let Mapbox handle normal searches
+        return null;
       },
-      
-      // FIX 3: Smart filtering - hide confusing street names
       filter: function(item) {
-        // Get current search term from geocoder input
         const searchTerm = this._inputEl ? this._inputEl.value : '';
-        
-        // Filter out confusing street names
-        if (isConfusingStreet(item, searchTerm)) {
-          return false;
-        }
-        
-        return true; // Show everything else
+        if (isConfusingStreet(item, searchTerm)) return false;
+        return true;
       },
-      
-      // FIX 2 & 4: Visual highlighting + clear state labels
       render: function(item) {
         const parts = item.place_name.split(',');
         const location = parts[0].trim();
         const city = parts[1]?.trim() || '';
         const state = parts[2]?.trim() || '';
         const country = parts[3]?.trim() || '';
-        
-        // Check if this is an airport
         if (isAirportResult(item)) {
-          // Airport with blue highlight and airplane icon
-          return `<div style="
-            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
-            border-left: 4px solid #0284c7;
-            padding: 10px 12px;
-            margin: 2px 0;
-            font-weight: 600;
-            border-radius: 2px;
-          ">
-            <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
-            <span style="color: #0c4a6e;">${location}</span>
-            <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
-            </div>
+          return `<div style="background:linear-gradient(90deg,#e0f2fe 0%,#f0f9ff 100%);border-left:4px solid #0284c7;padding:10px 12px;margin:2px 0;font-weight:600;border-radius:2px;">
+            <span style="color:#0284c7;font-size:1.2em;margin-right:6px;">✈️</span>
+            <span style="color:#0c4a6e;">${location}</span>
+            <div style="font-size:0.85em;color:#0369a1;font-weight:400;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong>${state}</strong></div>
           </div>`;
         } else {
-          // Regular address with emphasized state
-          return `<div style="padding: 8px 12px;">
-            <div style="font-weight: 500;">${location}</div>
-            <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}
-              <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
-              ${country ? `, ${country}` : ''}
-            </div>
+          return `<div style="padding:8px 12px;">
+            <div style="font-weight:500;">${location}</div>
+            <div style="font-size:0.85em;color:#666;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong style="color:#0284c7;text-transform:uppercase;">${state}</strong>${country ? `, ${country}` : ''}</div>
           </div>`;
         }
       }
@@ -682,14 +651,10 @@
       accessToken: MAPBOX_TOKEN,
       placeholder: 'Select service type first',
       mapboxgl: mapboxgl,
-      types: 'poi,address,place', // Prioritize POIs (airports) over addresses
-      limit: 6, // Fewer results to reduce confusion
-      
-      // FIX 1: Airport code recognition via localGeocoder
+      types: 'poi,address,place',
+      limit: 6,
       localGeocoder: function(query) {
         const upperQuery = query.toUpperCase().trim();
-        
-        // Check if query matches an airport code
         if (airportCodes[upperQuery]) {
           return [{
             place_name: airportCodes[upperQuery].name,
@@ -699,56 +664,29 @@
             properties: {}
           }];
         }
-        return null; // Let Mapbox handle normal searches
+        return null;
       },
-      
-      // FIX 3: Smart filtering - hide confusing street names
       filter: function(item) {
-        // Get current search term from geocoder input
         const searchTerm = this._inputEl ? this._inputEl.value : '';
-        
-        // Filter out confusing street names
-        if (isConfusingStreet(item, searchTerm)) {
-          return false;
-        }
-        
-        return true; // Show everything else
+        if (isConfusingStreet(item, searchTerm)) return false;
+        return true;
       },
-      
-      // FIX 2 & 4: Visual highlighting + clear state labels
       render: function(item) {
         const parts = item.place_name.split(',');
         const location = parts[0].trim();
         const city = parts[1]?.trim() || '';
         const state = parts[2]?.trim() || '';
         const country = parts[3]?.trim() || '';
-        
-        // Check if this is an airport
         if (isAirportResult(item)) {
-          // Airport with blue highlight and airplane icon
-          return `<div style="
-            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
-            border-left: 4px solid #0284c7;
-            padding: 10px 12px;
-            margin: 2px 0;
-            font-weight: 600;
-            border-radius: 2px;
-          ">
-            <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
-            <span style="color: #0c4a6e;">${location}</span>
-            <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
-            </div>
+          return `<div style="background:linear-gradient(90deg,#e0f2fe 0%,#f0f9ff 100%);border-left:4px solid #0284c7;padding:10px 12px;margin:2px 0;font-weight:600;border-radius:2px;">
+            <span style="color:#0284c7;font-size:1.2em;margin-right:6px;">✈️</span>
+            <span style="color:#0c4a6e;">${location}</span>
+            <div style="font-size:0.85em;color:#0369a1;font-weight:400;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong>${state}</strong></div>
           </div>`;
         } else {
-          // Regular address with emphasized state
-          return `<div style="padding: 8px 12px;">
-            <div style="font-weight: 500;">${location}</div>
-            <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
-              ${city}${city && state ? ', ' : ''}
-              <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
-              ${country ? `, ${country}` : ''}
-            </div>
+          return `<div style="padding:8px 12px;">
+            <div style="font-weight:500;">${location}</div>
+            <div style="font-size:0.85em;color:#666;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong style="color:#0284c7;text-transform:uppercase;">${state}</strong>${country ? `, ${country}` : ''}</div>
           </div>`;
         }
       }
@@ -757,36 +695,24 @@
     pickupGeocoder.addTo('#pickupGeocoder');
     dropoffGeocoder.addTo('#dropoffGeocoder');
 
-    // Pickup address selected
     pickupGeocoder.on('result', function(e) {
       pickupAddress = e.result.place_name;
       pickupCoords = e.result.geometry.coordinates;
       document.getElementById('pickupCoords').value = JSON.stringify(pickupCoords);
-      
-      // Add/update marker
       if (pickupMarker) pickupMarker.remove();
-      pickupMarker = new mapboxgl.Marker({color: '#10b981'})
-        .setLngLat(pickupCoords)
-        .addTo(map);
-      
+      pickupMarker = new mapboxgl.Marker({color: '#10b981'}).setLngLat(pickupCoords).addTo(map);
       updateMap();
       updateMapInfo();
       quoteBox.style.display = 'none';
       latestEstimatedFare = 0;
     });
 
-    // Dropoff address selected
     dropoffGeocoder.on('result', function(e) {
       dropoffAddress = e.result.place_name;
       dropoffCoords = e.result.geometry.coordinates;
       document.getElementById('dropoffCoords').value = JSON.stringify(dropoffCoords);
-      
-      // Add/update marker
       if (dropoffMarker) dropoffMarker.remove();
-      dropoffMarker = new mapboxgl.Marker({color: '#ef4444'})
-        .setLngLat(dropoffCoords)
-        .addTo(map);
-      
+      dropoffMarker = new mapboxgl.Marker({color: '#ef4444'}).setLngLat(dropoffCoords).addTo(map);
       updateMap();
       updateMapInfo();
       quoteBox.style.display = 'none';
@@ -795,55 +721,21 @@
 
     async function updateMap() {
       if (!pickupCoords || !dropoffCoords) return;
-
-      // Fit map to show both markers
       const bounds = new mapboxgl.LngLatBounds();
       bounds.extend(pickupCoords);
       bounds.extend(dropoffCoords);
       map.fitBounds(bounds, {padding: 50});
-
-      // Get route from Mapbox Directions API
       try {
         const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
-        
         const response = await fetch(directionsUrl);
         const data = await response.json();
-        
         if (data.routes && data.routes.length > 0) {
           const route = data.routes[0].geometry;
-          
-          // Remove old route if exists
-          if (map.getSource('route')) {
-            map.removeLayer('route');
-            map.removeSource('route');
-          }
-          
-          // Add new route
-          map.addSource('route', {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              geometry: route
-            }
-          });
-          
-          map.addLayer({
-            id: 'route',
-            type: 'line',
-            source: 'route',
-            layout: {
-              'line-join': 'round',
-              'line-cap': 'round'
-            },
-            paint: {
-              'line-color': '#667eea',
-              'line-width': 4
-            }
-          });
+          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
+          map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: route } });
+          map.addLayer({ id: 'route', type: 'line', source: 'route', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#667eea', 'line-width': 4 } });
         }
-      } catch (e) {
-        console.error('Failed to load route:', e);
-      }
+      } catch (e) { console.error('Failed to load route:', e); }
     }
 
     function updateMapInfo() {
@@ -856,34 +748,23 @@
       }
     }
 
-    // Update labels and placeholders based on service type
     serviceTypeEl.addEventListener('change', function() {
       const serviceType = this.value;
-
       if (serviceType === 'pickup') {
-        // Airport Pickup: Pickup = AIRPORT, Dropoff = Hotel/Home
         pickupLabelEl.innerHTML = 'Pickup Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
         dropoffLabelEl.textContent = 'Dropoff Address (Hotel/Home) *';
-        
         pickupGeocoder.setPlaceholder('Denver International Airport, JFK, Heathrow...');
         dropoffGeocoder.setPlaceholder('Hotel name, home address...');
-        
         pickupHintEl.textContent = '🛬 Type airport name to see suggestions';
         dropoffHintEl.textContent = 'Type address to see suggestions';
-        
       } else if (serviceType === 'dropoff') {
-        // Airport Drop-off: Pickup = Hotel/Home, Dropoff = AIRPORT
         pickupLabelEl.textContent = 'Pickup Address (Hotel/Home) *';
         dropoffLabelEl.innerHTML = 'Dropoff Airport * <span style="color:#dc2626;">(MUST BE AIRPORT)</span>';
-        
         pickupGeocoder.setPlaceholder('Hotel name, home address...');
         dropoffGeocoder.setPlaceholder('Denver International Airport, JFK, Heathrow...');
-        
         pickupHintEl.textContent = 'Type address to see suggestions';
         dropoffHintEl.textContent = '🛫 Type airport name to see suggestions';
       }
-      
-      // Clear quote when service type changes
       quoteBox.style.display = 'none';
       latestEstimatedFare = 0;
     });
@@ -912,51 +793,29 @@
     function setMinDateToToday() {
       const today = getLocalYMD();
       dateEl.min = today;
-      if (!dateEl.value || dateEl.value < today) {
-        dateEl.value = today;
-      }
+      if (!dateEl.value || dateEl.value < today) { dateEl.value = today; }
     }
 
     setMinDateToToday();
     dateEl.addEventListener("change", setMinDateToToday);
 
-    phoneEl.addEventListener('input', function() {
-      this.value = this.value.replace(/[^\d+()\s-]/g, '');
-    });
-    
-    airportEl.addEventListener('input', function() {
-      this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
-    });
-    
-    flightEl.addEventListener('input', function() {
-      this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-    });
+    phoneEl.addEventListener('input', function() { this.value = this.value.replace(/[^\d+()\s-]/g, ''); });
+    airportEl.addEventListener('input', function() { this.value = this.value.toUpperCase().replace(/[^A-Z]/g, ''); });
+    flightEl.addEventListener('input', function() { this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
 
-    // Calculate Fare (no Turnstile required)
     quoteBtn.addEventListener('click', async () => {
       if (!pickupAddress || !dropoffAddress) {
         showMessage('error', '❌ Please select both pickup and dropoff addresses to calculate fare.');
         return;
       }
-
       if (!serviceTypeEl.value) {
         showMessage('error', '❌ Please select service type first.');
         return;
       }
-
       quoteBtn.disabled = true;
       quoteText.style.display = 'none';
       quoteSpinner.style.display = 'inline-block';
       messageDiv.style.display = 'none';
-
-      console.log('Sending quote request:', {
-        pickup_text: pickupAddress,
-        dropoff_text: dropoffAddress,
-        pickup_coords: pickupCoords,
-        dropoff_coords: dropoffCoords,
-        rider_type: 'DENVERCREW'
-      });
-
       try {
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
           method: 'POST',
@@ -969,21 +828,15 @@
             rider_type: 'DENVERCREW'
           })
         });
-
         const data = await res.json();
-        console.log('Quote response:', data);
-
         if (res.ok && data.ok) {
           const miles = data.miles || 0;
           const minutes = data.minutes || 0;
           const total = data.estimate?.total || 0;
-
           latestEstimatedFare = total;
-
           quoteMilesEl.textContent = `${miles.toFixed(1)} mi`;
           quoteMinutesEl.textContent = `${Math.round(minutes)} min`;
           quoteTotalEl.textContent = `$${total.toFixed(2)}`;
-
           quoteBox.style.display = 'block';
         } else {
           throw new Error(data.error || 'Failed to calculate fare');
@@ -998,54 +851,25 @@
       }
     });
 
-    // Form submission (Turnstile required)
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const hp = document.getElementById('website').value.trim();
-      if (hp) {
-        showMessage('error', '❌ Submission blocked.');
-        return;
-      }
-
-      // Turnstile validation
-      if (!turnstileToken) {
-        showMessage('error', '❌ Please complete the security verification (checkbox above).');
-        return;
-      }
-
-      // Validate service type selected
-      if (!serviceTypeEl.value) {
-        showMessage('error', '❌ Please select service type (Airport Pickup or Drop-off).');
-        return;
-      }
-
-      if (!pickupAddress || !dropoffAddress) {
-        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
-        return;
-      }
-
+      if (hp) { showMessage('error', '❌ Submission blocked.'); return; }
+      if (!turnstileToken) { showMessage('error', '❌ Please complete the security verification (checkbox above).'); return; }
+      if (!serviceTypeEl.value) { showMessage('error', '❌ Please select service type (Airport Pickup or Drop-off).'); return; }
+      if (!pickupAddress || !dropoffAddress) { showMessage('error', '❌ Both pickup and dropoff addresses are required.'); return; }
       const dateVal = dateEl.value;
       const timeVal = timeEl.value;
-      if (!dateVal || !timeVal) {
-        showMessage('error', '❌ Pickup date and time are required.');
-        return;
-      }
+      if (!dateVal || !timeVal) { showMessage('error', '❌ Pickup date and time are required.'); return; }
 
-      // CREW VERIFICATION CHECK
       const crewAnswer = document.getElementById('crewVerification').value.trim().toLowerCase();
       const validAnswers = ['miracle', 'miracles', 'miracle passenger', 'miracle passengers', 'miracle flight'];
-      
       if (!validAnswers.includes(crewAnswer)) {
         showMessage('error', '❌ Crew verification failed. This service is only available to airline crew members. If you are crew and need assistance, please contact support.');
         return;
       }
 
-      // REQUIRE QUOTE BEFORE SUBMISSION
-      if (latestEstimatedFare <= 0) {
-        showMessage('error', '❌ Please click "Get Quote" to calculate your fare before submitting.');
-        return;
-      }
+      if (latestEstimatedFare <= 0) { showMessage('error', '❌ Please click "Get Quote" to calculate your fare before submitting.'); return; }
 
       submitBtn.disabled = true;
       submitText.style.display = 'none';
@@ -1054,7 +878,6 @@
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
-
       const airportCode = airportEl.value.trim().toUpperCase() || '';
 
       const payload = {
@@ -1071,10 +894,9 @@
         notes: document.getElementById('notes').value.trim(),
         crew_verification_answer: crewAnswer,
         estimated_fare: latestEstimatedFare,
+        rider_email: document.getElementById('rider_email').value.trim() || '',
         'cf-turnstile-response': turnstileToken
       };
-
-      console.log('Submitting:', JSON.stringify(payload, null, 2));
 
       try {
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, {
@@ -1082,45 +904,28 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
         const data = await res.json().catch(() => ({}));
-        console.log('Response:', data);
-
         if (res.ok && data?.ok) {
           const confirmationId = data?.trip_id || 'N/A';
           showMessage('success', `✅ Crew booking submitted! Confirmation ID: ${confirmationId}. You'll receive confirmation via Telegram.`);
-          
           form.reset();
           const today = getLocalYMD();
           dateEl.min = today;
           dateEl.value = today;
-
-          // Clear map
           if (pickupMarker) pickupMarker.remove();
           if (dropoffMarker) dropoffMarker.remove();
-          if (map.getSource('route')) {
-            map.removeLayer('route');
-            map.removeSource('route');
-          }
+          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
           pickupAddress = '';
           dropoffAddress = '';
           pickupCoords = null;
           dropoffCoords = null;
           document.getElementById('mapInfo').textContent = '📍 Select pickup and dropoff addresses above to see route on map';
-
           latestEstimatedFare = 0;
           quoteBox.style.display = 'none';
           turnstileToken = null;
-          
-          // Reset Turnstile widget
-          if (window.turnstile) {
-            window.turnstile.reset();
-          }
-          
-          // Reset geocoders
+          if (window.turnstile) { window.turnstile.reset(); }
           pickupGeocoder.clear();
           dropoffGeocoder.clear();
-          
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
           throw new Error(msg);
