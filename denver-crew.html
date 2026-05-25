@@ -26,6 +26,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      overflow-x: hidden;
     }
 
     .container{
@@ -35,6 +36,8 @@
       border-radius:16px;
       padding:28px;
       box-shadow:0 10px 40px rgba(0,0,0,.22);
+      box-sizing: border-box;
+      min-width: 0;
     }
 
     .badge{
@@ -248,6 +251,15 @@
       border:2px solid #ddd;
       border-radius:10px;
       font-size:16px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      .container { padding: 20px 16px; border-radius: 12px; }
+      .mapboxgl-ctrl-geocoder { width: 100% !important; max-width: 100% !important; }
+      .mapboxgl-ctrl-geocoder input { font-size: 14px; }
+      #map { height: 260px; }
     }
 
     .mapboxgl-ctrl-geocoder input{
