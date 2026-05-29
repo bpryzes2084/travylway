@@ -577,16 +577,38 @@
       .features-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
-    /* Denver Metro card grid — 3 cols desktop, 2 cols tablet, 1 col mobile */
+    /* Denver Metro card grid */
     #denver-metro .booking-grid {
+      display: grid;
       grid-template-columns: repeat(2, 1fr);
       max-width: 960px;
+      gap: 1.5rem;
     }
 
     @media (min-width: 860px) {
       #denver-metro .booking-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
+      /* First two cards (Boulder + Gaylord) span equally in a 2-col row */
+      #denver-metro .booking-grid .booking-card:nth-child(1),
+      #denver-metro .booking-grid .booking-card:nth-child(2) {
+        grid-column: span 1;
+      }
+      /* Last three cards in a 3-col row */
+      #denver-metro .booking-grid .booking-card:nth-child(3),
+      #denver-metro .booking-grid .booking-card:nth-child(4),
+      #denver-metro .booking-grid .booking-card:nth-child(5) {
+        grid-column: span 1;
+      }
+      /* Override grid to allow 3 cols for cards 3-5 */
+      #denver-metro .booking-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      #denver-metro .booking-grid .booking-card:nth-child(1) { grid-column: span 3; }
+      #denver-metro .booking-grid .booking-card:nth-child(2) { grid-column: span 3; }
+      #denver-metro .booking-grid .booking-card:nth-child(3) { grid-column: span 2; }
+      #denver-metro .booking-grid .booking-card:nth-child(4) { grid-column: span 2; }
+      #denver-metro .booking-grid .booking-card:nth-child(5) { grid-column: span 2; }
     }
 
     /* Equal height cards */
@@ -719,39 +741,6 @@
       <h2 class="section-title">🌆 Denver Metro Area</h2>
       <p class="section-subtitle">Specialized service zones across the Denver region</p>
       <div class="booking-grid">
-        <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">✈️</span>
-            <div>
-              <h3>Denver Based Flight Attendants</h3>
-              <span class="booking-badge badge-purple">Crew Exclusive</span>
-            </div>
-          </div>
-          <p>Airport transportation for Denver-based flight attendants and pilots. Crew pricing and priority service.</p>
-          <a href="/denver-crew.html" class="booking-cta">Book Crew Ride →</a>
-        </div>
-        <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🛣️</span>
-            <div>
-              <h3>E-470 Corridor</h3>
-              <span class="booking-badge badge-green">East Metro</span>
-            </div>
-          </div>
-          <p>Along the E-470 corridor — Aurora, Parker, and Commerce City. Fast access to DEN.</p>
-          <a href="/e470.html" class="booking-cta">Book E-470 Ride →</a>
-        </div>
-        <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🌆</span>
-            <div>
-              <h3>Greater Denver Area</h3>
-              <span class="booking-badge badge-blue">Metro Wide</span>
-            </div>
-          </div>
-          <p>Airport rides throughout Greater Denver — suburbs and surrounding cities. To and from DEN.</p>
-          <a href="/denver-metro.html" class="booking-cta">Book Metro Ride →</a>
-        </div>
 
         <!-- Boulder -->
         <div class="booking-card">
@@ -777,6 +766,29 @@
           </div>
           <p>Gaylord Rockies Resort & Convention Center to DEN and back. Only 7.4 miles — flat $25 fare both directions.</p>
           <a href="/general.html" class="booking-cta">Book Now →</a>
+        </div>
+
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">🛣️</span>
+            <div>
+              <h3>E-470 Corridor</h3>
+              <span class="booking-badge badge-green">East Metro</span>
+            </div>
+          </div>
+          <p>Along the E-470 corridor — Aurora, Parker, and Commerce City. Fast access to DEN.</p>
+          <a href="/e470.html" class="booking-cta">Book E-470 Ride →</a>
+        </div>
+        <div class="booking-card">
+          <div class="booking-card-header">
+            <span class="booking-icon">🌆</span>
+            <div>
+              <h3>Greater Denver Area</h3>
+              <span class="booking-badge badge-blue">Metro Wide</span>
+            </div>
+          </div>
+          <p>Airport rides throughout Greater Denver — suburbs and surrounding cities. To and from DEN.</p>
+          <a href="/denver-metro.html" class="booking-cta">Book Metro Ride →</a>
         </div>
 
         <!-- DEN Employee -->
