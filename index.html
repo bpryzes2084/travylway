@@ -813,7 +813,7 @@
       <div class="requests-header">
         <div>
           <h2 class="section-title">🚗 Open Pickup Requests</h2>
-          <p class="section-subtitle">Real-time pickup requests open now</p>
+          <p class="section-subtitle">Live requests available for drivers to claim</p>
         </div>
         <div class="refresh-indicator">
           <div class="refresh-dot" id="refreshDot"></div>
@@ -955,7 +955,7 @@
     });
 
     // ── OPEN PICKUP REQUESTS ──
-    const API_URL = 'https://api.travylway.com/api/trips?status=NEW';
+    const API_URL = 'https://api.travylway.com/api/trips?status=NEW&order=asc';
 
     function formatLocalDate(utcString, timezone, mode) {
       if (!utcString) return '—';
@@ -1123,18 +1123,7 @@
     setInterval(fetchRequests, 30000);
   </script>
 
-  <!-- Tawk.to Chat -->
-  <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/6901a27ca00437194fc22c92/1j8n65dmu';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-    })();
-  </script>
+  
 
 </body>
 </html>
