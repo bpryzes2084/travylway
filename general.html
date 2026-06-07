@@ -19,25 +19,28 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
-    body{
+    body {
       background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
       min-height:100vh;
       padding:20px;
       display:flex;
       align-items:center;
       justify-content:center;
+      overflow-x: hidden;
     }
 
-    .container{
+    .container {
       width:100%;
       max-width:900px;
       background:#fff;
       border-radius:16px;
       padding:28px;
       box-shadow:0 10px 40px rgba(0,0,0,.22);
+      box-sizing: border-box;
+      min-width: 0;
     }
 
-    .badge{
+    .badge {
       background: linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);
       color:#fff;
       padding:10px 18px;
@@ -48,32 +51,12 @@
       letter-spacing:.2px;
     }
 
-    h1{
-      text-align:center;
-      color:#222;
-      margin-bottom:8px;
-      font-size:28px;
-    }
+    h1 { text-align:center; color:#222; margin-bottom:8px; font-size:28px; }
+    .subhead { text-align:center; color:#555; margin-bottom:22px; font-size:14px; line-height:1.35; }
+    .form-group { margin-bottom:16px; position:relative; }
+    label { display:block; font-weight:650; margin-bottom:6px; color:#222; font-size:14px; }
 
-    .subhead{
-      text-align:center;
-      color:#555;
-      margin-bottom:22px;
-      font-size:14px;
-      line-height:1.35;
-    }
-
-    .form-group{ margin-bottom:16px; position:relative; }
-
-    label{
-      display:block;
-      font-weight:650;
-      margin-bottom:6px;
-      color:#222;
-      font-size:14px;
-    }
-
-    input, textarea, select{
+    input, textarea, select {
       width:100%;
       padding:12px 12px;
       border:2px solid #ddd;
@@ -82,30 +65,20 @@
       transition: border-color .15s ease;
     }
 
-    input:focus, textarea:focus, select:focus{
-      outline:none;
-      border-color:#667eea;
-    }
+    input:focus, textarea:focus, select:focus { outline:none; border-color:#667eea; }
+    textarea { min-height:84px; resize:vertical; }
+    .hint { margin-top:6px; font-size:12px; color:#666; }
 
-    textarea{ min-height:84px; resize:vertical; }
-
-    .hint{
-      margin-top:6px;
-      font-size:12px;
-      color:#666;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
     @media (max-width: 600px) {
       .grid { grid-template-columns: 1fr; }
+      body { padding: 12px; }
+      .container { padding: 20px 16px; border-radius: 12px; }
+      .mapboxgl-ctrl-geocoder { width: 100% !important; max-width: 100% !important; }
+      #map { height: 260px; }
     }
 
-    .btn{
+    .btn {
       width:100%;
       padding:15px;
       background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
@@ -123,21 +96,11 @@
       gap:10px;
     }
 
-    .btn:hover:not(:disabled){
-      transform: translateY(-2px);
-      box-shadow:0 8px 18px rgba(0,0,0,.18);
-    }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow:0 8px 18px rgba(0,0,0,.18); }
+    .btn:disabled { background:#cfcfcf; cursor:not-allowed; }
+    .btn.secondary { background:#111827; font-size:16px; padding:12px; margin-top:0; }
 
-    .btn:disabled{ background:#cfcfcf; cursor:not-allowed; }
-
-    .btn.secondary{
-      background:#111827;
-      font-size:16px;
-      padding:12px;
-      margin-top:0;
-    }
-
-    .quote-box{
+    .quote-box {
       margin-top:10px;
       padding:14px;
       border:2px solid #e5e7eb;
@@ -146,148 +109,109 @@
       display:none;
     }
 
-    .quote-row{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      font-size:14px;
-      color:#222;
-      margin-top:6px;
-    }
+    .quote-row { display:flex; justify-content:space-between; gap:10px; font-size:14px; color:#222; margin-top:6px; }
+    .quote-row:first-child { margin-top:0; }
+    .quote-row strong { font-size:16px; color:#667eea; }
 
-    .quote-row:first-child{ margin-top:0; }
-    .quote-row strong{ font-size:16px; color:#667eea; }
+    .message { padding:14px; border-radius:10px; margin-top:14px; text-align:center; display:none; font-size:14px; line-height:1.35; }
+    .success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; display:block; }
+    .error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; display:block; }
 
-    .message{
-      padding:14px;
-      border-radius:10px;
-      margin-top:14px;
-      text-align:center;
-      display:none;
-      font-size:14px;
-      line-height:1.35;
-    }
+    .loading { display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,.35); border-radius:50%; border-top-color:#fff; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .success{ background:#d4edda; color:#155724; border:1px solid #c3e6cb; display:block; }
-    .error{ background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; display:block; }
+    .hp { position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden; }
+    .footer-note { margin-top:16px; text-align:center; color:#666; font-size:12px; }
+    .turnstile-wrapper { margin: 16px 0; display: flex; justify-content: center; }
 
-    .loading{
-      display:inline-block;
-      width:18px;
-      height:18px;
-      border:3px solid rgba(255,255,255,.35);
-      border-radius:50%;
-      border-top-color:#fff;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin{ to{ transform: rotate(360deg); } }
+    .airport-locked { margin-top: 6px; font-size: 12px; color: #0284c7; font-weight: 600; display: none; }
+    .airport-locked.visible { display: block; }
 
-    .hp{
-      position:absolute !important;
-      left:-9999px !important;
-      width:1px; height:1px;
-      overflow:hidden;
-    }
+    #map { width:100%; height:350px; border-radius:12px; margin:16px 0; border:2px solid #e5e7eb; }
+    .map-info { background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:12px; margin-bottom:16px; font-size:13px; text-align:center; color:#666; }
 
-    .footer-note{
-      margin-top:16px;
-      text-align:center;
-      color:#666;
-      font-size:12px;
-    }
+    .mapboxgl-ctrl-geocoder { width:100%; max-width:100%; box-shadow:none; border:2px solid #ddd; border-radius:10px; font-size:16px; overflow:hidden; }
+    .mapboxgl-ctrl-geocoder input { padding:14px 16px 14px 40px; font-size:16px; height:auto; min-height:48px; }
+    .mapboxgl-ctrl-geocoder--icon { width:20px; height:20px; left:10px; }
+    .mapboxgl-ctrl-geocoder--input:focus { outline:none; border-color:#667eea; }
 
-    .turnstile-wrapper{
+    /* Hotel prompt */
+    .hotel-prompt {
       margin: 16px 0;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid #0284c7;
+      border-radius: 10px;
+    }
+
+    .hotel-prompt p {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0c4a6e;
+      margin-bottom: 12px;
+    }
+
+    .hotel-radio-group {
       display: flex;
-      justify-content: center;
+      gap: 16px;
     }
 
-    /* Map Container */
-    #map{
-      width:100%;
-      height:350px;
-      border-radius:12px;
-      margin:16px 0;
-      border:2px solid #e5e7eb;
-    }
-
-    .map-info{
-      background:#f9fafb;
-      border:1px solid #e5e7eb;
-      border-radius:8px;
-      padding:12px;
-      margin-bottom:16px;
-      font-size:13px;
-      text-align:center;
-      color:#666;
-    }
-
-    /* Airport locked indicator */
-    .airport-locked {
-      margin-top: 6px;
-      font-size: 12px;
-      color: #0284c7;
+    .hotel-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 15px;
       font-weight: 600;
+      color: #0c4a6e;
+      padding: 10px 20px;
+      border: 2px solid #0284c7;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      background: #fff;
+    }
+
+    .hotel-radio-label:hover { background: #0284c7; color: #fff; }
+    .hotel-radio-label input[type="radio"] { accent-color: #0284c7; width: 16px; height: 16px; }
+    .hotel-radio-label.selected { background: #0284c7; color: #fff; }
+
+    /* Hotel result box — shown after booking if Yes selected */
+    .hotel-result {
       display: none;
+      margin-top: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
+      border-radius: 12px;
+      color: #fff;
+      text-align: center;
     }
 
-    .airport-locked.visible {
-      display: block;
+    .hotel-result h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .hotel-result p { font-size: 14px; opacity: 0.9; margin-bottom: 16px; line-height: 1.5; }
+
+    .hotel-result a {
+      display: inline-block;
+      padding: 12px 28px;
+      background: #fff;
+      color: #0284c7;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      text-decoration: none;
+      transition: transform 0.2s;
     }
 
-    /* Mapbox Geocoder styling */
-    .mapboxgl-ctrl-geocoder{
-      width:100%;
-      max-width:100%;
-      box-shadow:none;
-      border:2px solid #ddd;
-      border-radius:10px;
-      font-size:16px;
-    }
-
-    .mapboxgl-ctrl-geocoder input{
-      padding:14px 16px 14px 40px;
-      font-size:16px;
-      height:auto;
-      min-height:48px;
-    }
-
-    .mapboxgl-ctrl-geocoder--icon{
-      width:20px;
-      height:20px;
-      left:10px;
-    }
-
-    .mapboxgl-ctrl-geocoder--input:focus{
-      outline:none;
-      border-color:#667eea;
-    }
+    .hotel-result a:hover { transform: translateY(-2px); }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <!-- WhatsApp Contact - Top of Page -->
-    <div style="
-      margin-bottom: 20px;
-      padding: 14px 20px;
-      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
-    ">
-      <a href="https://wa.me/17204748851?text=Hi%2C%20I%20have%20a%20question%20about%20TravylWay%20services" 
-         target="_blank"
-         rel="noopener noreferrer"
-         style="
-           display: inline-flex;
-           align-items: center;
-           gap: 10px;
-           color: white;
-           text-decoration: none;
-           font-weight: 600;
-           font-size: 1.05em;
-         ">
+    <!-- WhatsApp -->
+    <div style="margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);border-radius:8px;text-align:center;box-shadow:0 2px 8px rgba(37,211,102,0.3);">
+      <a href="https://wa.me/17204748851?text=Hi%2C%20I%20have%20a%20question%20about%20TravylWay%20services"
+         target="_blank" rel="noopener noreferrer"
+         style="display:inline-flex;align-items:center;gap:10px;color:white;text-decoration:none;font-weight:600;font-size:1.05em;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
@@ -298,9 +222,7 @@
     <div class="badge">🚗 TRAVYLWAY</div>
 
     <h1>🚗 Book Your Ride</h1>
-    <div class="subhead">
-      Professional transportation service for all your travel needs.
-    </div>
+    <div class="subhead">Professional transportation service for all your travel needs.</div>
 
     <form id="generalForm" autocomplete="on">
       <div class="hp">
@@ -318,12 +240,12 @@
         <input type="tel" id="phone" required placeholder="+1 (720) 555-1234" maxlength="24" />
         <div class="hint">Used for confirmation + driver coordination.</div>
       </div>
+
       <div class="form-group">
         <label>Email Address (optional)</label>
         <input type="email" id="rider_email" placeholder="you@example.com" maxlength="120" />
         <div class="hint">Receive a booking confirmation email</div>
       </div>
-
 
       <div class="form-group">
         <label>Pickup Address *</label>
@@ -340,9 +262,7 @@
       </div>
 
       <!-- Map -->
-      <div class="map-info" id="mapInfo">
-        📍 Select pickup and dropoff addresses above to see route on map
-      </div>
+      <div class="map-info" id="mapInfo">📍 Select pickup and dropoff addresses above to see route on map</div>
       <div id="map"></div>
 
       <div class="grid">
@@ -350,7 +270,6 @@
           <label>Pickup Date *</label>
           <input type="date" id="date" required />
         </div>
-
         <div class="form-group">
           <label>Pickup Time (local) *</label>
           <input type="time" id="time" required />
@@ -363,7 +282,6 @@
           <input type="text" id="flight" placeholder="UA1234" maxlength="10" />
           <div class="hint">Optional - helps with tracking</div>
         </div>
-
         <div class="form-group">
           <label>Airline</label>
           <input type="text" id="airline" placeholder="United Airlines" maxlength="60" />
@@ -376,6 +294,21 @@
         <textarea id="notes" placeholder="Special requests, luggage count, etc..."></textarea>
       </div>
 
+      <!-- Hotel Prompt -->
+      <div class="hotel-prompt">
+        <p>Will you need a hotel for your stay?</p>
+        <div class="hotel-radio-group">
+          <label class="hotel-radio-label" id="hotelYesLabel">
+            <input type="radio" name="hotel_needed" id="hotelYes" value="yes" />
+            Yes
+          </label>
+          <label class="hotel-radio-label" id="hotelNoLabel">
+            <input type="radio" name="hotel_needed" id="hotelNo" value="no" />
+            No
+          </label>
+        </div>
+      </div>
+
       <div class="form-group">
         <button type="button" class="btn secondary" id="quoteBtn">
           <span id="quoteText">Calculate Fare</span>
@@ -386,13 +319,13 @@
           <div class="quote-row"><span>Distance</span><span id="quoteMiles">—</span></div>
           <div class="quote-row"><span>Duration</span><span id="quoteMinutes">—</span></div>
           <div class="quote-row"><strong>Estimated Total</strong><strong id="quoteTotal">—</strong></div>
-          <div class="hint" style="margin-top:8px;">Standard rates. Estimate only - final fare confirmed after route/traffic.</div>
+          <div class="hint" style="margin-top:8px;">Standard rates. Estimate only — final fare confirmed after route/traffic.</div>
         </div>
       </div>
 
       <!-- Turnstile Widget -->
       <div class="turnstile-wrapper">
-        <div class="cf-turnstile" 
+        <div class="cf-turnstile"
              data-sitekey="0x4AAAAAACMebvxe_6kPGUnO"
              data-callback="onTurnstileSuccess"
              data-expired-callback="onTurnstileExpired"
@@ -400,34 +333,18 @@
         </div>
       </div>
 
-      <!-- ALWAYS VISIBLE WARNING BEFORE SUBMIT -->
-      <div style="
-        margin: 20px 0;
-        padding: 16px 20px;
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        border: 2px solid #f59e0b;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
-      ">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <span style="font-size: 1.5em; flex-shrink: 0;">⚠️</span>
-          <div style="flex: 1;">
-            <div style="font-weight: 700; color: #92400e; font-size: 1.05em; margin-bottom: 6px;">
-              VERIFY BEFORE SUBMITTING
-            </div>
-            <div style="color: #78350f; line-height: 1.5; font-size: 0.95em; margin-bottom: 12px;">
+      <!-- Verify warning -->
+      <div style="margin:20px 0;padding:16px 20px;background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border:2px solid #f59e0b;border-radius:8px;box-shadow:0 2px 8px rgba(245,158,11,0.2);">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <span style="font-size:1.5em;flex-shrink:0;">⚠️</span>
+          <div style="flex:1;">
+            <div style="font-weight:700;color:#92400e;font-size:1.05em;margin-bottom:6px;">VERIFY BEFORE SUBMITTING</div>
+            <div style="color:#78350f;line-height:1.5;font-size:0.95em;margin-bottom:12px;">
               Ensure correct <strong>pickup time</strong>, <strong>date</strong>, <strong>pickup address</strong>, <strong>dropoff address</strong>, <strong>city</strong>, and <strong>state</strong> are selected. Similar addresses exist in multiple locations. Errors cannot be changed after submission.
             </div>
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
-              <input 
-                type="checkbox" 
-                id="verifyCheckbox" 
-                required
-                style="width: 18px; height: 18px; cursor: pointer; accent-color: #f59e0b;"
-              >
-              <span style="color: #78350f; font-weight: 600; font-size: 0.95em;">
-                I have verified all details are correct
-              </span>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;">
+              <input type="checkbox" id="verifyCheckbox" required style="width:18px;height:18px;cursor:pointer;accent-color:#f59e0b;">
+              <span style="color:#78350f;font-weight:600;font-size:0.95em;">I have verified all details are correct</span>
             </label>
           </div>
         </div>
@@ -441,9 +358,14 @@
 
     <div id="message" class="message"></div>
 
-    <div class="footer-note">
-      Professional rideshare service. Standard rates apply.
+    <!-- Hotel Result Box — shown after successful booking if Yes selected -->
+    <div class="hotel-result" id="hotelResult">
+      <h3>Find Your Hotel</h3>
+      <p>Book your hotel through our partner Hotels.com and get great rates for your stay.</p>
+      <a href="https://www.dpbolvw.net/click-101321407-10772148" target="_blank" rel="noopener noreferrer" id="hotelLink">Search Hotels →</a>
     </div>
+
+    <div class="footer-note">Professional rideshare service. Standard rates apply.</div>
   </div>
 
   <script>
@@ -477,12 +399,17 @@
     let dropoffAddress = '';
     let pickupCoords = null;
     let dropoffCoords = null;
-
-    // FIX: Track detected airport codes for pickup and dropoff
     let detectedPickupAirportCode = '';
     let detectedDropoffAirportCode = '';
 
-    // Airport code mappings — canonical coords used to lock fare calculations
+    // Hotel radio button styling
+    document.querySelectorAll('input[name="hotel_needed"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        document.getElementById('hotelYesLabel').classList.toggle('selected', this.value === 'yes');
+        document.getElementById('hotelNoLabel').classList.toggle('selected', this.value === 'no');
+      });
+    });
+
     const airportCodes = {
       'DEN': { name: 'Denver International Airport', coords: [-104.6731, 39.8561] },
       'DIA': { name: 'Denver International Airport', coords: [-104.6731, 39.8561] },
@@ -516,25 +443,12 @@
       'CLT': { name: 'Charlotte Douglas International Airport', coords: [-80.9431, 35.2140] }
     };
 
-    /**
-     * FIX: detectAirport()
-     * Checks a place name string against the airportCodes lookup table.
-     * If matched, returns { code, coords } — otherwise returns null.
-     * This is called at geocoder result time to lock coordinates immediately,
-     * preventing the geocoder from returning inconsistent results on repeat calls.
-     */
     function detectAirport(placeName) {
       const nameLower = placeName.toLowerCase();
-
-      // First check by airport name keywords
       for (const code in airportCodes) {
         const airportNameLower = airportCodes[code].name.toLowerCase();
-        if (nameLower.includes(airportNameLower)) {
-          return { code, coords: airportCodes[code].coords };
-        }
+        if (nameLower.includes(airportNameLower)) return { code, coords: airportCodes[code].coords };
       }
-
-      // Fallback: check if place name contains any airport name fragment
       for (const code in airportCodes) {
         const words = airportCodes[code].name.toLowerCase().split(' ');
         const keyWord = words.find(w => w.length > 5 && w !== 'international' && w !== 'airport');
@@ -542,36 +456,25 @@
           return { code, coords: airportCodes[code].coords };
         }
       }
-
       return null;
     }
 
-    // Helper function to check if result is an airport
     function isAirportResult(item) {
       const name = item.place_name.toLowerCase();
-      return name.includes('airport') || 
-             name.includes('terminal') || 
-             name.includes('international') ||
+      return name.includes('airport') || name.includes('terminal') || name.includes('international') ||
              (item.place_type && item.place_type.includes('poi'));
     }
 
-    // Helper function to check if result is a confusing street name
     function isConfusingStreet(item, searchTerm) {
       const name = item.place_name.toLowerCase();
       const search = (searchTerm || '').toLowerCase();
-      
-      if (search.includes('airport') && 
-          item.place_type && item.place_type.includes('address') &&
-          name.includes('airport') &&
-          !name.includes('international') &&
-          !name.includes('terminal')) {
+      if (search.includes('airport') && item.place_type && item.place_type.includes('address') &&
+          name.includes('airport') && !name.includes('international') && !name.includes('terminal')) {
         return true;
       }
-      
       return false;
     }
 
-    // Initialize Map
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v12',
@@ -582,59 +485,32 @@
     let pickupMarker = null;
     let dropoffMarker = null;
 
-    // Turnstile callbacks
-    window.onTurnstileSuccess = function(token) {
-      turnstileToken = token;
-      console.log('✅ Turnstile verification successful');
-    };
-
-    window.onTurnstileExpired = function() {
-      turnstileToken = null;
-      console.warn('⚠️ Turnstile token expired');
-    };
-
+    window.onTurnstileSuccess = function(token) { turnstileToken = token; };
+    window.onTurnstileExpired = function() { turnstileToken = null; };
     window.onTurnstileError = function() {
       turnstileToken = null;
-      console.error('❌ Turnstile verification error');
       showMessage('error', '❌ Security verification failed. Please refresh the page.');
     };
 
-    // Shared geocoder render function
     function renderGeocoderResult(item) {
       const parts = item.place_name.split(',');
       const location = parts[0].trim();
       const city = parts[1]?.trim() || '';
       const state = parts[2]?.trim() || '';
       const country = parts[3]?.trim() || '';
-      
       if (isAirportResult(item)) {
-        return `<div style="
-          background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
-          border-left: 4px solid #0284c7;
-          padding: 10px 12px;
-          margin: 2px 0;
-          font-weight: 600;
-          border-radius: 2px;
-        ">
-          <span style="color: #0284c7; font-size: 1.2em; margin-right: 6px;">✈️</span>
-          <span style="color: #0c4a6e;">${location}</span>
-          <div style="font-size: 0.85em; color: #0369a1; font-weight: 400; margin-top: 2px;">
-            ${city}${city && state ? ', ' : ''}<strong>${state}</strong>
-          </div>
-        </div>`;
-      } else {
-        return `<div style="padding: 8px 12px;">
-          <div style="font-weight: 500;">${location}</div>
-          <div style="font-size: 0.85em; color: #666; margin-top: 2px;">
-            ${city}${city && state ? ', ' : ''}
-            <strong style="color: #0284c7; text-transform: uppercase;">${state}</strong>
-            ${country ? `, ${country}` : ''}
-          </div>
+        return `<div style="background:linear-gradient(90deg,#e0f2fe 0%,#f0f9ff 100%);border-left:4px solid #0284c7;padding:10px 12px;margin:2px 0;font-weight:600;border-radius:2px;">
+          <span style="color:#0284c7;font-size:1.2em;margin-right:6px;">✈️</span>
+          <span style="color:#0c4a6e;">${location}</span>
+          <div style="font-size:0.85em;color:#0369a1;font-weight:400;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong>${state}</strong></div>
         </div>`;
       }
+      return `<div style="padding:8px 12px;">
+        <div style="font-weight:500;">${location}</div>
+        <div style="font-size:0.85em;color:#666;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong style="color:#0284c7;text-transform:uppercase;">${state}</strong>${country ? `, ${country}` : ''}</div>
+      </div>`;
     }
 
-    // Shared localGeocoder for airport code recognition
     function localGeocoderFn(query) {
       const upperQuery = query.toUpperCase().trim();
       if (airportCodes[upperQuery]) {
@@ -649,143 +525,75 @@
       return null;
     }
 
-    // Shared filter function
     function filterFn(item) {
       const searchTerm = this._inputEl ? this._inputEl.value : '';
-      if (isConfusingStreet(item, searchTerm)) return false;
-      return true;
+      return !isConfusingStreet(item, searchTerm);
     }
 
-    // Initialize Pickup Geocoder
     const pickupGeocoder = new MapboxGeocoder({
-      accessToken: MAPBOX_TOKEN,
-      placeholder: 'Enter pickup address',
-      mapboxgl: mapboxgl,
-      types: 'poi,address,place',
-      limit: 6,
-      localGeocoder: localGeocoderFn,
-      filter: filterFn,
-      render: renderGeocoderResult
+      accessToken: MAPBOX_TOKEN, placeholder: 'Enter pickup address', mapboxgl: mapboxgl,
+      types: 'poi,address,place', limit: 6, localGeocoder: localGeocoderFn, filter: filterFn, render: renderGeocoderResult
     });
 
-    // Initialize Dropoff Geocoder
     const dropoffGeocoder = new MapboxGeocoder({
-      accessToken: MAPBOX_TOKEN,
-      placeholder: 'Enter dropoff address',
-      mapboxgl: mapboxgl,
-      types: 'poi,address,place',
-      limit: 6,
-      localGeocoder: localGeocoderFn,
-      filter: filterFn,
-      render: renderGeocoderResult
+      accessToken: MAPBOX_TOKEN, placeholder: 'Enter dropoff address', mapboxgl: mapboxgl,
+      types: 'poi,address,place', limit: 6, localGeocoder: localGeocoderFn, filter: filterFn, render: renderGeocoderResult
     });
 
     pickupGeocoder.addTo('#pickupGeocoder');
     dropoffGeocoder.addTo('#dropoffGeocoder');
 
-    // Pickup address selected
     pickupGeocoder.on('result', function(e) {
       pickupAddress = e.result.place_name;
       pickupCoords = e.result.geometry.coordinates;
-
-      // FIX: Detect airport and lock coordinates immediately at selection time
       detectedPickupAirportCode = '';
       const airportMatch = detectAirport(pickupAddress);
       if (airportMatch) {
         detectedPickupAirportCode = airportMatch.code;
-        pickupCoords = airportMatch.coords; // override with canonical airport coords
-        console.log(`✈️ Pickup airport detected: ${airportMatch.code} — coords locked to`, pickupCoords);
+        pickupCoords = airportMatch.coords;
         document.getElementById('pickupAirportLocked').classList.add('visible');
       } else {
         document.getElementById('pickupAirportLocked').classList.remove('visible');
       }
-
       if (pickupMarker) pickupMarker.remove();
-      pickupMarker = new mapboxgl.Marker({color: '#10b981'})
-        .setLngLat(pickupCoords)
-        .addTo(map);
-      
-      updateMap();
-      updateMapInfo();
-      quoteBox.style.display = 'none';
-      latestEstimatedFare = 0;
+      pickupMarker = new mapboxgl.Marker({color: '#10b981'}).setLngLat(pickupCoords).addTo(map);
+      updateMap(); updateMapInfo();
+      quoteBox.style.display = 'none'; latestEstimatedFare = 0;
     });
 
-    // Dropoff address selected
     dropoffGeocoder.on('result', function(e) {
       dropoffAddress = e.result.place_name;
       dropoffCoords = e.result.geometry.coordinates;
-
-      // FIX: Detect airport and lock coordinates immediately at selection time
       detectedDropoffAirportCode = '';
       const airportMatch = detectAirport(dropoffAddress);
       if (airportMatch) {
         detectedDropoffAirportCode = airportMatch.code;
-        dropoffCoords = airportMatch.coords; // override with canonical airport coords
-        console.log(`✈️ Dropoff airport detected: ${airportMatch.code} — coords locked to`, dropoffCoords);
+        dropoffCoords = airportMatch.coords;
         document.getElementById('dropoffAirportLocked').classList.add('visible');
       } else {
         document.getElementById('dropoffAirportLocked').classList.remove('visible');
       }
-
       if (dropoffMarker) dropoffMarker.remove();
-      dropoffMarker = new mapboxgl.Marker({color: '#ef4444'})
-        .setLngLat(dropoffCoords)
-        .addTo(map);
-      
-      updateMap();
-      updateMapInfo();
-      quoteBox.style.display = 'none';
-      latestEstimatedFare = 0;
+      dropoffMarker = new mapboxgl.Marker({color: '#ef4444'}).setLngLat(dropoffCoords).addTo(map);
+      updateMap(); updateMapInfo();
+      quoteBox.style.display = 'none'; latestEstimatedFare = 0;
     });
 
     async function updateMap() {
       if (!pickupCoords || !dropoffCoords) return;
-
       const bounds = new mapboxgl.LngLatBounds();
-      bounds.extend(pickupCoords);
-      bounds.extend(dropoffCoords);
+      bounds.extend(pickupCoords); bounds.extend(dropoffCoords);
       map.fitBounds(bounds, {padding: 50});
-
       try {
         const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
-        
         const response = await fetch(directionsUrl);
         const data = await response.json();
-        
         if (data.routes && data.routes.length > 0) {
-          const route = data.routes[0].geometry;
-          
-          if (map.getSource('route')) {
-            map.removeLayer('route');
-            map.removeSource('route');
-          }
-          
-          map.addSource('route', {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              geometry: route
-            }
-          });
-          
-          map.addLayer({
-            id: 'route',
-            type: 'line',
-            source: 'route',
-            layout: {
-              'line-join': 'round',
-              'line-cap': 'round'
-            },
-            paint: {
-              'line-color': '#667eea',
-              'line-width': 4
-            }
-          });
+          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
+          map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: data.routes[0].geometry } });
+          map.addLayer({ id: 'route', type: 'line', source: 'route', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#667eea', 'line-width': 4 } });
         }
-      } catch (e) {
-        console.error('Failed to load route:', e);
-      }
+      } catch (e) { console.error('Failed to load route:', e); }
     }
 
     function updateMapInfo() {
@@ -807,93 +615,56 @@
     function toUtcIsoFromLocalDateAndTime(dateStr, timeStr) {
       const [y, m, d] = dateStr.split('-').map(Number);
       const [hh, min] = timeStr.split(':').map(Number);
-      const localDate = new Date(y, (m - 1), d, hh, min, 0);
-      return localDate.toISOString();
+      return new Date(y, (m - 1), d, hh, min, 0).toISOString();
     }
 
     function getLocalYMD() {
       const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      return `${y}-${m}-${day}`;
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
     function setMinDateToToday() {
       const today = getLocalYMD();
       dateEl.min = today;
-      if (!dateEl.value || dateEl.value < today) {
-        dateEl.value = today;
-      }
+      if (!dateEl.value || dateEl.value < today) { dateEl.value = today; }
     }
 
     setMinDateToToday();
     dateEl.addEventListener("change", setMinDateToToday);
 
-    // Pre-fill date from homepage calendar
     const urlParams = new URLSearchParams(window.location.search);
     const prefilledDate = urlParams.get('date');
-    if (prefilledDate) {
-      const todayStr = getLocalYMD();
-      if (prefilledDate >= todayStr) {
-        dateEl.value = prefilledDate;
-      }
-    }
+    if (prefilledDate && prefilledDate >= getLocalYMD()) { dateEl.value = prefilledDate; }
 
-    phoneEl.addEventListener('input', function() {
-      this.value = this.value.replace(/[^\d+()\s-]/g, '');
-    });
-    
-    if (flightEl) {
-      flightEl.addEventListener('input', function() {
-        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      });
-    }
+    phoneEl.addEventListener('input', function() { this.value = this.value.replace(/[^\d+()\s-]/g, ''); });
+    if (flightEl) { flightEl.addEventListener('input', function() { this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); }); }
 
-    // Calculate Fare
     quoteBtn.addEventListener('click', async () => {
       if (!pickupAddress || !dropoffAddress) {
         showMessage('error', '❌ Please select both pickup and dropoff addresses to calculate fare.');
         return;
       }
-
       quoteBtn.disabled = true;
       quoteText.style.display = 'none';
       quoteSpinner.style.display = 'inline-block';
       messageDiv.style.display = 'none';
-
       try {
-        // FIX: Always send locked coords — airports use canonical coords, others use geocoder result
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            pickup_text: pickupAddress,
-            dropoff_text: dropoffAddress,
-            pickup_coords: pickupCoords,   // locked at selection time
-            dropoff_coords: dropoffCoords, // locked at selection time
-            rider_type: 'GENERAL'
+            pickup_text: pickupAddress, dropoff_text: dropoffAddress,
+            pickup_coords: pickupCoords, dropoff_coords: dropoffCoords, rider_type: 'GENERAL'
           })
         });
-
         const data = await res.json();
-        console.log('Quote response:', data);
-
         if (res.ok && data.ok) {
-          const miles = data.miles || 0;
-          const minutes = data.minutes || 0;
-          const total = data.estimate?.total || 0;
-
-          latestEstimatedFare = total;
-
-          quoteMilesEl.textContent = `${miles.toFixed(1)} mi`;
-          quoteMinutesEl.textContent = `${Math.round(minutes)} min`;
-          quoteTotalEl.textContent = `$${total.toFixed(2)}`;
-
+          latestEstimatedFare = data.estimate?.total || 0;
+          quoteMilesEl.textContent = `${(data.miles || 0).toFixed(1)} mi`;
+          quoteMinutesEl.textContent = `${Math.round(data.minutes || 0)} min`;
+          quoteTotalEl.textContent = `$${latestEstimatedFare.toFixed(2)}`;
           quoteBox.style.display = 'block';
-        } else {
-          throw new Error(data.error || 'Failed to calculate fare');
-        }
+        } else { throw new Error(data.error || 'Failed to calculate fare'); }
       } catch (err) {
         showMessage('error', `❌ Fare calculation error: ${err.message}`);
         quoteBox.style.display = 'none';
@@ -904,48 +675,19 @@
       }
     });
 
-    // Form submission
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      const hp = document.getElementById('website').value.trim();
-      if (hp) {
-        showMessage('error', '❌ Submission blocked.');
-        return;
-      }
-
-      if (!turnstileToken) {
-        showMessage('error', '❌ Please complete the security verification (checkbox above).');
-        return;
-      }
-
-      if (!pickupAddress || !dropoffAddress) {
-        showMessage('error', '❌ Both pickup and dropoff addresses are required.');
-        return;
-      }
-
-      const dateVal = dateEl.value;
-      const timeVal = timeEl.value;
-      if (!dateVal || !timeVal) {
-        showMessage('error', '❌ Pickup date and time are required.');
-        return;
-      }
-
-      if (latestEstimatedFare <= 0) {
-        showMessage('error', '❌ Please click "Calculate Fare" to get a quote before submitting.');
-        return;
-      }
+      if (document.getElementById('website').value.trim()) { showMessage('error', '❌ Submission blocked.'); return; }
+      if (!turnstileToken) { showMessage('error', '❌ Please complete the security verification (checkbox above).'); return; }
+      if (!pickupAddress || !dropoffAddress) { showMessage('error', '❌ Both pickup and dropoff addresses are required.'); return; }
+      if (!dateEl.value || !timeEl.value) { showMessage('error', '❌ Pickup date and time are required.'); return; }
+      if (latestEstimatedFare <= 0) { showMessage('error', '❌ Please click "Calculate Fare" to get a quote before submitting.'); return; }
 
       submitBtn.disabled = true;
       submitText.style.display = 'none';
       loadingSpinner.style.display = 'inline-block';
       messageDiv.style.display = 'none';
 
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const pickupTimeUTC = toUtcIsoFromLocalDateAndTime(dateVal, timeVal);
-
-      // FIX: airport_code now populated from detected airport at dropoff (or pickup if applicable)
-      // Priority: dropoff airport code first, then pickup airport code, then empty
       const resolvedAirportCode = detectedDropoffAirportCode || detectedPickupAirportCode || '';
 
       const payload = {
@@ -954,20 +696,19 @@
         rider_type: 'GENERAL',
         pickup_text: pickupAddress,
         dropoff_text: dropoffAddress,
-        pickup_coords: pickupCoords,   // FIX: locked coords stored on record
-        dropoff_coords: dropoffCoords, // FIX: locked coords stored on record
-        pickup_time_utc: pickupTimeUTC,
-        pickup_timezone: timezone,
+        pickup_coords: pickupCoords,
+        dropoff_coords: dropoffCoords,
+        pickup_time_utc: toUtcIsoFromLocalDateAndTime(dateEl.value, timeEl.value),
+        pickup_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         flight_number: document.getElementById('flight').value.trim() || '',
         airline: document.getElementById('airline').value.trim() || '',
-        airport_code: resolvedAirportCode, // FIX: now populated from airport detection
+        airport_code: resolvedAirportCode,
         notes: document.getElementById('notes').value.trim(),
         estimated_fare: latestEstimatedFare,
         rider_email: document.getElementById('rider_email').value.trim() || '',
+        source: 'general.html',
         'cf-turnstile-response': turnstileToken
       };
-
-      console.log('Submitting:', JSON.stringify(payload, null, 2));
 
       try {
         const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, {
@@ -975,52 +716,41 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
         const data = await res.json().catch(() => ({}));
-        console.log('Response:', data);
 
         if (res.ok && data?.ok) {
           const confirmationId = data?.trip_id || 'N/A';
           showMessage('success', `✅ Booking submitted! Confirmation ID: ${confirmationId}. You'll receive confirmation via Telegram.`);
-          
-          form.reset();
-          const today = getLocalYMD();
-          dateEl.min = today;
-          dateEl.value = today;
 
-          // Clear map
-          if (pickupMarker) pickupMarker.remove();
-          if (dropoffMarker) dropoffMarker.remove();
-          if (map.getSource('route')) {
-            map.removeLayer('route');
-            map.removeSource('route');
+          // Show hotel result if Yes was selected
+          const hotelNeeded = document.querySelector('input[name="hotel_needed"]:checked');
+          if (hotelNeeded && hotelNeeded.value === 'yes') {
+            document.getElementById('hotelResult').style.display = 'block';
+          } else {
+            document.getElementById('hotelResult').style.display = 'none';
           }
 
-          // FIX: Reset all state including airport detection
-          pickupAddress = '';
-          dropoffAddress = '';
-          pickupCoords = null;
-          dropoffCoords = null;
-          detectedPickupAirportCode = '';
-          detectedDropoffAirportCode = '';
+          form.reset();
+          setMinDateToToday();
+          if (pickupMarker) pickupMarker.remove();
+          if (dropoffMarker) dropoffMarker.remove();
+          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
+          pickupAddress = ''; dropoffAddress = ''; pickupCoords = null; dropoffCoords = null;
+          detectedPickupAirportCode = ''; detectedDropoffAirportCode = '';
           document.getElementById('pickupAirportLocked').classList.remove('visible');
           document.getElementById('dropoffAirportLocked').classList.remove('visible');
           document.getElementById('mapInfo').textContent = '📍 Select pickup and dropoff addresses above to see route on map';
-
           latestEstimatedFare = 0;
           quoteBox.style.display = 'none';
           turnstileToken = null;
-          
-          if (window.turnstile) {
-            window.turnstile.reset();
-          }
-          
+          if (window.turnstile) { window.turnstile.reset(); }
           pickupGeocoder.clear();
           dropoffGeocoder.clear();
-          
+          document.getElementById('hotelYesLabel').classList.remove('selected');
+          document.getElementById('hotelNoLabel').classList.remove('selected');
+
         } else {
-          const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
-          throw new Error(msg);
+          throw new Error(data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`);
         }
       } catch (err) {
         showMessage('error', `❌ Error: ${err.message}`);
