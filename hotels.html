@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Your Hotel - TravylWay</title>
+  <meta name="description" content="Find and book great hotel rates for your stay. TravylWay partners with Hotels.com to bring you the best deals." />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 28px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.22);
+      box-sizing: border-box;
+    }
+
+    /* Confirmation banner */
+    .confirmation-banner {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border: 2px solid #28a745;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .confirmation-banner h2 {
+      color: #155724;
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .confirmation-banner p {
+      color: #155724;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .confirmation-id {
+      display: inline-block;
+      margin-top: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      background: rgba(0,0,0,0.08);
+      padding: 4px 10px;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    /* Header */
+    .hotel-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .hotel-header .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .hotel-header h1 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #0c4a6e;
+      margin-bottom: 8px;
+    }
+
+    .hotel-header p {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Main CTA */
+    .hotel-cta {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .hotel-cta h3 {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hotel-cta p {
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .hotel-cta a {
+      display: inline-block;
+      padding: 14px 36px;
+      background: #fff;
+      color: #0284c7;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 16px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .hotel-cta a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Features */
+    .hotel-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 500px) {
+      .hotel-features { grid-template-columns: 1fr; }
+    }
+
+    .hotel-feature {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 10px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .hotel-feature .icon { font-size: 24px; margin-bottom: 6px; }
+    .hotel-feature h4 { font-size: 13px; font-weight: 700; color: #0c4a6e; margin-bottom: 4px; }
+    .hotel-feature p { font-size: 12px; color: #555; line-height: 1.4; }
+
+    /* Back link */
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #0284c7;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .back-link a:hover { text-decoration: underline; }
+
+    /* WhatsApp bar */
+    .whatsapp-bar {
+      margin-bottom: 24px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(37,211,102,0.3);
+    }
+
+    .whatsapp-bar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- WhatsApp bar -->
+    <div class="whatsapp-bar">
+      <a href="https://wa.me/17204748851?text=Hi%2C%20I%20have%20a%20question%20about%20my%20TravylWay%20booking"
+         target="_blank" rel="noopener noreferrer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <span>Questions? Contact Us on WhatsApp</span>
+      </a>
+    </div>
+
+    <!-- Confirmation banner (populated by JS if confirmation ID in URL) -->
+    <div class="confirmation-banner" id="confirmationBanner" style="display:none;">
+      <h2>✅ Booking Confirmed!</h2>
+      <p>Your ride request has been submitted. You will receive confirmation via WhatsApp shortly.</p>
+      <div class="confirmation-id" id="confirmationId"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="hotel-header">
+      <div class="badge">TravylWay Partner</div>
+      <h1>Find Your Hotel</h1>
+      <p>Search thousands of hotels worldwide and get great rates for your stay through our partner Hotels.com.</p>
+    </div>
+
+    <!-- Main CTA -->
+    <div class="hotel-cta">
+      <h3>Search Hotels Now</h3>
+      <p>Compare prices across hundreds of booking sites. Free cancellation on most hotels. No hidden fees.</p>
+      <a href="https://www.dpbolvw.net/click-101321407-10772148" target="_blank" rel="noopener noreferrer">
+        Search Hotels on Hotels.com →
+      </a>
+    </div>
+
+    <!-- Features -->
+    <div class="hotel-features">
+      <div class="hotel-feature">
+        <div class="icon">💰</div>
+        <h4>Best Rates</h4>
+        <p>Compare prices across top booking platforms</p>
+      </div>
+      <div class="hotel-feature">
+        <div class="icon">✅</div>
+        <h4>Free Cancellation</h4>
+        <p>Most hotels offer free cancellation options</p>
+      </div>
+      <div class="hotel-feature">
+        <div class="icon">🌍</div>
+        <h4>Worldwide</h4>
+        <p>Thousands of hotels in every destination</p>
+      </div>
+    </div>
+
+    <!-- Back link -->
+    <div class="back-link">
+      <a href="/general.html">← Book another ride</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Show confirmation banner if confirmation ID passed in URL
+    const params = new URLSearchParams(window.location.search);
+    const confirmationId = params.get('confirmation');
+    if (confirmationId) {
+      document.getElementById('confirmationBanner').style.display = 'block';
+      document.getElementById('confirmationId').textContent = 'Confirmation ID: ' + confirmationId;
+    }
+  </script>
+</body>
+</html>
