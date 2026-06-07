@@ -1064,10 +1064,12 @@
           const confirmationId = data?.trip_id || 'N/A';
           showMessage('success', `✅ Booking submitted! Confirmation ID: ${confirmationId}. You'll receive confirmation via Telegram.`);
 
-          // Show hotel result if Yes was selected
+          // Redirect to hotels page if Yes was selected
           const hotelNeeded = document.querySelector('input[name="hotel_needed"]:checked');
           if (hotelNeeded && hotelNeeded.value === 'yes') {
-            document.getElementById('hotelResult').style.display = 'block';
+            setTimeout(() => {
+              window.location.href = '/hotels.html?confirmation=' + encodeURIComponent(confirmationId);
+            }, 1500);
           } else {
             document.getElementById('hotelResult').style.display = 'none';
           }
