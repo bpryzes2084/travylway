@@ -329,6 +329,46 @@
     }
 
     .hotel-result a:hover { transform: translateY(-2px); }
+
+    /* ModyrnPulse prompt */
+    .pulse-prompt {
+      margin: 16px 0;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+      border: 2px solid #a855f7;
+      border-radius: 10px;
+    }
+
+    .pulse-prompt p {
+      font-size: 14px;
+      font-weight: 700;
+      color: #581c87;
+      margin-bottom: 12px;
+    }
+
+    .pulse-radio-group {
+      display: flex;
+      gap: 16px;
+    }
+
+    .pulse-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: #581c87;
+      padding: 10px 20px;
+      border: 2px solid #a855f7;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      background: #fff;
+    }
+
+    .pulse-radio-label:hover { background: #a855f7; color: #fff; }
+    .pulse-radio-label input[type="radio"] { accent-color: #a855f7; width: 16px; height: 16px; }
+    .pulse-radio-label.selected { background: #a855f7; color: #fff; }
   </style>
 </head>
 
@@ -445,7 +485,7 @@
 
       <!-- Hotel Prompt -->
       <div class="hotel-prompt">
-        <p>Will you need a hotel for your stay?</p>
+        <p>Looking for a place to stay?</p>
         <div class="hotel-radio-group">
           <label class="hotel-radio-label" id="hotelYesLabel">
             <input type="radio" name="hotel_needed" id="hotelYes" value="yes" />
@@ -453,6 +493,21 @@
           </label>
           <label class="hotel-radio-label" id="hotelNoLabel">
             <input type="radio" name="hotel_needed" id="hotelNo" value="no" />
+            No
+          </label>
+        </div>
+      </div>
+
+      <!-- ModyrnPulse Prompt -->
+      <div class="pulse-prompt">
+        <p>Discover what's trending on ModyrnPulse?</p>
+        <div class="pulse-radio-group">
+          <label class="pulse-radio-label" id="pulseYesLabel">
+            <input type="radio" name="pulse_needed" id="pulseYes" value="yes" />
+            Yes
+          </label>
+          <label class="pulse-radio-label" id="pulseNoLabel">
+            <input type="radio" name="pulse_needed" id="pulseNo" value="no" />
             No
           </label>
         </div>
@@ -576,6 +631,14 @@
       radio.addEventListener('change', function() {
         document.getElementById('hotelYesLabel').classList.toggle('selected', this.value === 'yes');
         document.getElementById('hotelNoLabel').classList.toggle('selected', this.value === 'no');
+      });
+    });
+
+    // ModyrnPulse radio button styling
+    document.querySelectorAll('input[name="pulse_needed"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        document.getElementById('pulseYesLabel').classList.toggle('selected', this.value === 'yes');
+        document.getElementById('pulseNoLabel').classList.toggle('selected', this.value === 'no');
       });
     });
 
@@ -1064,6 +1127,12 @@
           const confirmationId = data?.trip_id || 'N/A';
           showMessage('success', `✅ Booking submitted! Confirmation ID: ${confirmationId}. You'll receive confirmation via Telegram.`);
 
+          // Open ModyrnPulse in new tab if Yes selected
+          const pulseNeeded = document.querySelector('input[name="pulse_needed"]:checked');
+          if (pulseNeeded && pulseNeeded.value === 'yes') {
+            window.open('https://modyrnpulse.com', '_blank');
+          }
+
           // Redirect to hotels page if Yes was selected
           const hotelNeeded = document.querySelector('input[name="hotel_needed"]:checked');
           if (hotelNeeded && hotelNeeded.value === 'yes') {
@@ -1109,6 +1178,8 @@
           dropoffGeocoder.clear();
           document.getElementById('hotelYesLabel').classList.remove('selected');
           document.getElementById('hotelNoLabel').classList.remove('selected');
+          document.getElementById('pulseYesLabel').classList.remove('selected');
+          document.getElementById('pulseNoLabel').classList.remove('selected');
           
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
