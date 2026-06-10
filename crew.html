@@ -134,6 +134,73 @@
     .mapboxgl-ctrl-geocoder input{ padding:14px 16px 14px 40px; font-size:16px; height:auto; min-height:48px; }
     .mapboxgl-ctrl-geocoder--icon{ width:20px; height:20px; left:10px; }
     .mapboxgl-ctrl-geocoder--input:focus{ outline:none; border-color:#667eea; }
+
+    /* Additional Pickup Prompt */
+    .addl-pickup-prompt {
+      margin: 16px 0;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #16a34a;
+      border-radius: 10px;
+    }
+
+    .addl-pickup-prompt p {
+      font-size: 14px;
+      font-weight: 700;
+      color: #14532d;
+      margin-bottom: 12px;
+    }
+
+    .addl-pickup-radio-group {
+      display: flex;
+      gap: 16px;
+    }
+
+    .addl-pickup-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: #14532d;
+      padding: 10px 20px;
+      border: 2px solid #16a34a;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      background: #fff;
+    }
+
+    .addl-pickup-radio-label:hover { background: #16a34a; color: #fff; }
+    .addl-pickup-radio-label input[type="radio"] { accent-color: #16a34a; width: 16px; height: 16px; }
+    .addl-pickup-radio-label.selected { background: #16a34a; color: #fff; }
+
+    .addl-pickup-result {
+      display: none;
+      margin-top: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+      border-radius: 12px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .addl-pickup-result h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .addl-pickup-result p { font-size: 14px; opacity: 0.9; margin-bottom: 16px; line-height: 1.5; }
+
+    .addl-pickup-result a {
+      display: inline-block;
+      padding: 12px 28px;
+      background: #fff;
+      color: #16a34a;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .addl-pickup-result a:hover { transform: translateY(-2px); }
   </style>
 </head>
 
@@ -257,6 +324,26 @@
         <textarea id="notes" placeholder="Crew count, bags, special pickup notes..."></textarea>
       </div>
 
+      <!-- Additional Pickup Prompt -->
+      <div class="addl-pickup-prompt">
+        <p>Do you need an additional pickup?</p>
+        <div class="addl-pickup-radio-group">
+          <label class="addl-pickup-radio-label" id="addlPickupYesLabel">
+            <input type="radio" name="addl_pickup_needed" id="addlPickupYes" value="yes" />
+            Yes
+          </label>
+          <label class="addl-pickup-radio-label" id="addlPickupNoLabel">
+            <input type="radio" name="addl_pickup_needed" id="addlPickupNo" value="no" />
+            No
+          </label>
+        </div>
+        <div class="addl-pickup-result" id="addlPickupResult">
+          <h3>Book Another Pickup</h3>
+          <p>Submit this booking first, then use the link below to book your additional pickup as a separate trip.</p>
+          <a href="/crew.html" target="_blank" rel="noopener noreferrer">Book Additional Pickup →</a>
+        </div>
+      </div>
+
       <div class="form-group">
         <button type="button" class="btn secondary" id="quoteBtn">
           <span id="quoteText">Calculate Fare</span>
@@ -350,6 +437,15 @@
     let dropoffAddress = '';
     let pickupCoords = null;
     let dropoffCoords = null;
+
+    // Additional pickup radio button styling
+    document.querySelectorAll('input[name="addl_pickup_needed"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        document.getElementById('addlPickupYesLabel').classList.toggle('selected', this.value === 'yes');
+        document.getElementById('addlPickupNoLabel').classList.toggle('selected', this.value === 'no');
+        document.getElementById('addlPickupResult').style.display = this.value === 'yes' ? 'block' : 'none';
+      });
+    });
 
     // Initialize Map
     const map = new mapboxgl.Map({
@@ -683,6 +779,10 @@
           if (window.turnstile) { window.turnstile.reset(); }
           pickupGeocoder.clear();
           dropoffGeocoder.clear();
+          // Reset additional pickup prompt
+          document.getElementById('addlPickupYesLabel').classList.remove('selected');
+          document.getElementById('addlPickupNoLabel').classList.remove('selected');
+          document.getElementById('addlPickupResult').style.display = 'none';
         } else {
           throw new Error(data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`);
         }
