@@ -642,54 +642,93 @@
       });
     });
 
-    // Airport code mappings — canonical coords used to lock fare calculations
+    // Airport code mappings — canonical coords used to lock fare calculations.
+    // Each airport now also carries a list of "aliases": terminal names, common
+    // abbreviations, and the street address, so ANY Mapbox suggestion referring
+    // to the airport resolves to the SAME locked coordinate every time.
     const airportCodes = {
-      'DEN': { name: 'Denver International Airport', coords: [-104.6731, 39.8561] },
-      'DIA': { name: 'Denver International Airport', coords: [-104.6731, 39.8561] },
-      'LAX': { name: 'Los Angeles International Airport', coords: [-118.4085, 33.9416] },
-      'JFK': { name: 'John F Kennedy International Airport', coords: [-73.7781, 40.6413] },
-      'ORD': { name: "O'Hare International Airport", coords: [-87.9048, 41.9742] },
-      'ATL': { name: 'Hartsfield-Jackson Atlanta International Airport', coords: [-84.4277, 33.6407] },
-      'DFW': { name: 'Dallas Fort Worth International Airport', coords: [-97.0403, 32.8998] },
-      'SFO': { name: 'San Francisco International Airport', coords: [-122.3789, 37.6213] },
-      'LAS': { name: 'Harry Reid International Airport', coords: [-115.1520, 36.0840] },
-      'PHX': { name: 'Phoenix Sky Harbor International Airport', coords: [-112.0116, 33.4352] },
-      'IAH': { name: 'George Bush Intercontinental Airport', coords: [-95.3414, 29.9902] },
-      'MIA': { name: 'Miami International Airport', coords: [-80.2906, 25.7959] },
-      'SEA': { name: 'Seattle-Tacoma International Airport', coords: [-122.3088, 47.4502] },
-      'BOS': { name: 'Boston Logan International Airport', coords: [-71.0096, 42.3656] },
-      'MSP': { name: 'Minneapolis-St Paul International Airport', coords: [-93.2218, 44.8848] },
-      'DTW': { name: 'Detroit Metropolitan Wayne County Airport', coords: [-83.3534, 42.2162] },
-      'PHL': { name: 'Philadelphia International Airport', coords: [-75.2411, 39.8744] },
-      'LGA': { name: 'LaGuardia Airport', coords: [-73.8740, 40.7769] },
-      'FLL': { name: 'Fort Lauderdale-Hollywood International Airport', coords: [-80.1506, 26.0742] },
-      'BWI': { name: 'Baltimore/Washington International Airport', coords: [-76.6683, 39.1774] },
-      'DCA': { name: 'Ronald Reagan Washington National Airport', coords: [-77.0377, 38.8521] },
-      'IAD': { name: 'Washington Dulles International Airport', coords: [-77.4565, 38.9531] },
-      'MDW': { name: 'Chicago Midway International Airport', coords: [-87.7524, 41.7868] },
-      'SAN': { name: 'San Diego International Airport', coords: [-117.1933, 32.7338] },
-      'TPA': { name: 'Tampa International Airport', coords: [-82.5332, 27.9755] },
-      'PDX': { name: 'Portland International Airport', coords: [-122.5951, 45.5897] },
-      'HNL': { name: 'Daniel K Inouye International Airport', coords: [-157.9219, 21.3187] },
-      'AUS': { name: 'Austin-Bergstrom International Airport', coords: [-97.6703, 30.1975] },
-      'SLC': { name: 'Salt Lake City International Airport', coords: [-111.9778, 40.7899] },
-      'CLT': { name: 'Charlotte Douglas International Airport', coords: [-80.9431, 35.2140] }
+      'DEN': {
+        name: 'Denver International Airport',
+        coords: [-104.6731, 39.8561],
+        aliases: [
+          'den airport', 'denver intl airport', 'denver international',
+          'terminal west', 'terminal east', 'jeppesen terminal',
+          '8500 pena', '8500 peña', 'pena blvd', 'peña blvd', 'pena boulevard', 'peña boulevard'
+        ]
+      },
+      'DIA': { name: 'Denver International Airport', coords: [-104.6731, 39.8561], aliases: ['dia airport'] },
+      'LAX': { name: 'Los Angeles International Airport', coords: [-118.4085, 33.9416], aliases: ['lax airport', 'tom bradley'] },
+      'JFK': { name: 'John F Kennedy International Airport', coords: [-73.7781, 40.6413], aliases: ['jfk airport', 'kennedy airport'] },
+      'ORD': { name: "O'Hare International Airport", coords: [-87.9048, 41.9742], aliases: ['ord airport', 'ohare'] },
+      'ATL': { name: 'Hartsfield-Jackson Atlanta International Airport', coords: [-84.4277, 33.6407], aliases: ['atl airport', 'hartsfield', 'hartsfield jackson'] },
+      'DFW': { name: 'Dallas Fort Worth International Airport', coords: [-97.0403, 32.8998], aliases: ['dfw airport'] },
+      'SFO': { name: 'San Francisco International Airport', coords: [-122.3789, 37.6213], aliases: ['sfo airport'] },
+      'LAS': { name: 'Harry Reid International Airport', coords: [-115.1520, 36.0840], aliases: ['las airport', 'harry reid', 'mccarran'] },
+      'PHX': { name: 'Phoenix Sky Harbor International Airport', coords: [-112.0116, 33.4352], aliases: ['phx airport', 'sky harbor'] },
+      'IAH': { name: 'George Bush Intercontinental Airport', coords: [-95.3414, 29.9902], aliases: ['iah airport', 'bush intercontinental'] },
+      'MIA': { name: 'Miami International Airport', coords: [-80.2906, 25.7959], aliases: ['mia airport'] },
+      'SEA': { name: 'Seattle-Tacoma International Airport', coords: [-122.3088, 47.4502], aliases: ['sea airport', 'sea-tac', 'seatac'] },
+      'BOS': { name: 'Boston Logan International Airport', coords: [-71.0096, 42.3656], aliases: ['bos airport', 'logan airport'] },
+      'MSP': { name: 'Minneapolis-St Paul International Airport', coords: [-93.2218, 44.8848], aliases: ['msp airport'] },
+      'DTW': { name: 'Detroit Metropolitan Wayne County Airport', coords: [-83.3534, 42.2162], aliases: ['dtw airport', 'detroit metro'] },
+      'PHL': { name: 'Philadelphia International Airport', coords: [-75.2411, 39.8744], aliases: ['phl airport'] },
+      'LGA': { name: 'LaGuardia Airport', coords: [-73.8740, 40.7769], aliases: ['lga airport', 'laguardia'] },
+      'FLL': { name: 'Fort Lauderdale-Hollywood International Airport', coords: [-80.1506, 26.0742], aliases: ['fll airport'] },
+      'BWI': { name: 'Baltimore/Washington International Airport', coords: [-76.6683, 39.1774], aliases: ['bwi airport'] },
+      'DCA': { name: 'Ronald Reagan Washington National Airport', coords: [-77.0377, 38.8521], aliases: ['dca airport', 'reagan national', 'reagan airport'] },
+      'IAD': { name: 'Washington Dulles International Airport', coords: [-77.4565, 38.9531], aliases: ['iad airport', 'dulles airport'] },
+      'MDW': { name: 'Chicago Midway International Airport', coords: [-87.7524, 41.7868], aliases: ['mdw airport', 'midway airport'] },
+      'SAN': { name: 'San Diego International Airport', coords: [-117.1933, 32.7338], aliases: ['san airport', 'lindbergh field'] },
+      'TPA': { name: 'Tampa International Airport', coords: [-82.5332, 27.9755], aliases: ['tpa airport'] },
+      'PDX': { name: 'Portland International Airport', coords: [-122.5951, 45.5897], aliases: ['pdx airport'] },
+      'HNL': { name: 'Daniel K Inouye International Airport', coords: [-157.9219, 21.3187], aliases: ['hnl airport', 'honolulu airport', 'inouye airport'] },
+      'AUS': { name: 'Austin-Bergstrom International Airport', coords: [-97.6703, 30.1975], aliases: ['aus airport', 'bergstrom airport'] },
+      'SLC': { name: 'Salt Lake City International Airport', coords: [-111.9778, 40.7899], aliases: ['slc airport'] },
+      'CLT': { name: 'Charlotte Douglas International Airport', coords: [-80.9431, 35.2140], aliases: ['clt airport', 'douglas airport'] }
     };
 
-    function detectAirport(placeName) {
-      const nameLower = placeName.toLowerCase();
+    // Normalize text for robust matching: lowercase, strip punctuation/diacritics,
+    // collapse whitespace. This ensures "Peña Blvd", "Pena Blvd.", and "pena  blvd"
+    // all match the same alias consistently.
+    function normalizeForMatch(str) {
+      return String(str || '')
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents (peña -> pena)
+        .replace(/[.,#]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
 
+    function detectAirport(placeName) {
+      const nameNorm = normalizeForMatch(placeName);
+
+      // 1) Exact / full airport name match (existing behavior, kept first)
       for (const code in airportCodes) {
-        const airportNameLower = airportCodes[code].name.toLowerCase();
-        if (nameLower.includes(airportNameLower)) {
+        const airportNameNorm = normalizeForMatch(airportCodes[code].name);
+        if (nameNorm.includes(airportNameNorm)) {
           return { code, coords: airportCodes[code].coords };
         }
       }
 
+      // 2) Alias match — terminal names, IATA/common codes, street address fragments.
+      //    This is what catches "Terminal West", "Peña Blvd", "DEN Airport", etc.
+      //    even when the literal full airport name string isn't present.
       for (const code in airportCodes) {
-        const words = airportCodes[code].name.toLowerCase().split(' ');
+        const aliases = airportCodes[code].aliases || [];
+        for (const alias of aliases) {
+          const aliasNorm = normalizeForMatch(alias);
+          if (aliasNorm && nameNorm.includes(aliasNorm)) {
+            return { code, coords: airportCodes[code].coords };
+          }
+        }
+      }
+
+      // 3) Fallback keyword match (existing behavior) — requires the word
+      //    "airport" plus a distinctive keyword from the airport's full name.
+      for (const code in airportCodes) {
+        const words = normalizeForMatch(airportCodes[code].name).split(' ');
         const keyWord = words.find(w => w.length > 5 && w !== 'international' && w !== 'airport');
-        if (keyWord && nameLower.includes(keyWord) && nameLower.includes('airport')) {
+        if (keyWord && nameNorm.includes(keyWord) && nameNorm.includes('airport')) {
           return { code, coords: airportCodes[code].coords };
         }
       }
