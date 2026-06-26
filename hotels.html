@@ -9,6 +9,92 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
+    /* NAV */
+    .site-header {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav-logo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #10b981);
+      box-shadow: 0 0 0 5px rgba(102,126,234,0.2);
+      flex-shrink: 0;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #667eea; }
+    .nav-links a.active { color: #667eea; }
+    .nav-mobile-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        gap: 0;
+      }
+      .nav-links a {
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #f1f5f9;
+        display: block;
+      }
+      .nav-links.tw-open { display: flex; }
+      .nav-mobile-btn { display: block; }
+    }
+
     body {
       background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
       min-height: 100vh;
@@ -29,7 +115,6 @@
       box-sizing: border-box;
     }
 
-    /* Confirmation banner */
     .confirmation-banner {
       background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
       border: 2px solid #28a745;
@@ -38,20 +123,8 @@
       margin-bottom: 28px;
       text-align: center;
     }
-
-    .confirmation-banner h2 {
-      color: #155724;
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .confirmation-banner p {
-      color: #155724;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
+    .confirmation-banner h2 { color: #155724; font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .confirmation-banner p { color: #155724; font-size: 13px; line-height: 1.5; }
     .confirmation-id {
       display: inline-block;
       margin-top: 8px;
@@ -63,12 +136,7 @@
       color: #155724;
     }
 
-    /* Header */
-    .hotel-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
+    .hotel-header { text-align: center; margin-bottom: 28px; }
     .hotel-header .badge {
       display: inline-block;
       background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
@@ -81,21 +149,9 @@
       text-transform: uppercase;
       margin-bottom: 14px;
     }
+    .hotel-header h1 { font-size: 26px; font-weight: 900; color: #0c4a6e; margin-bottom: 8px; }
+    .hotel-header p { color: #555; font-size: 14px; line-height: 1.5; }
 
-    .hotel-header h1 {
-      font-size: 26px;
-      font-weight: 900;
-      color: #0c4a6e;
-      margin-bottom: 8px;
-    }
-
-    .hotel-header p {
-      color: #555;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* Main CTA */
     .hotel-cta {
       background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
       border-radius: 14px;
@@ -103,21 +159,8 @@
       text-align: center;
       margin-bottom: 24px;
     }
-
-    .hotel-cta h3 {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .hotel-cta p {
-      color: rgba(255,255,255,0.85);
-      font-size: 14px;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
+    .hotel-cta h3 { color: #fff; font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .hotel-cta p { color: rgba(255,255,255,0.85); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
     .hotel-cta a {
       display: inline-block;
       padding: 14px 36px;
@@ -130,23 +173,15 @@
       transition: transform 0.2s, box-shadow 0.2s;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+    .hotel-cta a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
 
-    .hotel-cta a:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    }
-
-    /* Features */
     .hotel-features {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-bottom: 24px;
     }
-
-    @media (max-width: 500px) {
-      .hotel-features { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 500px) { .hotel-features { grid-template-columns: 1fr; } }
 
     .hotel-feature {
       background: #f0f9ff;
@@ -155,27 +190,14 @@
       padding: 14px 12px;
       text-align: center;
     }
-
     .hotel-feature .icon { font-size: 24px; margin-bottom: 6px; }
     .hotel-feature h4 { font-size: 13px; font-weight: 700; color: #0c4a6e; margin-bottom: 4px; }
     .hotel-feature p { font-size: 12px; color: #555; line-height: 1.4; }
 
-    /* Back link */
-    .back-link {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .back-link a {
-      color: #0284c7;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
+    .back-link { text-align: center; margin-top: 20px; }
+    .back-link a { color: #0284c7; text-decoration: none; font-size: 13px; font-weight: 600; }
     .back-link a:hover { text-decoration: underline; }
 
-    /* WhatsApp bar */
     .whatsapp-bar {
       margin-bottom: 24px;
       padding: 12px 20px;
@@ -184,7 +206,6 @@
       text-align: center;
       box-shadow: 0 2px 8px rgba(37,211,102,0.3);
     }
-
     .whatsapp-bar a {
       display: inline-flex;
       align-items: center;
@@ -198,6 +219,26 @@
 </head>
 
 <body>
+
+  <!-- NAV -->
+  <header class="site-header">
+    <nav class="nav-container">
+      <a href="/" class="nav-logo">
+        <span class="nav-logo-dot"></span>
+        <span>TravylWay</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Home</a></li>
+        <li><a href="/general.html">Book a Ride</a></li>
+        <li><a href="/crew.html">Crew Booking</a></li>
+        <li><a href="/hotels.html" class="active">Hotels</a></li>
+        <li><a href="/driver.html">Driver Board</a></li>
+        <li><a href="/reviews.html">Reviews</a></li>
+      </ul>
+      <button class="nav-mobile-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+    </nav>
+  </header>
+
   <div class="container">
 
     <!-- WhatsApp bar -->
@@ -211,7 +252,7 @@
       </a>
     </div>
 
-    <!-- Confirmation banner (populated by JS if confirmation ID in URL) -->
+    <!-- Confirmation banner -->
     <div class="confirmation-banner" id="confirmationBanner" style="display:none;">
       <h2>✅ Booking Confirmed!</h2>
       <p>Your ride request has been submitted. You will receive confirmation via WhatsApp shortly.</p>
@@ -268,6 +309,20 @@
       document.getElementById('confirmationBanner').style.display = 'block';
       document.getElementById('confirmationId').textContent = 'Confirmation ID: ' + confirmationId;
     }
+
+    // Nav mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('tw-open');
+      menuBtn.textContent = navLinks.classList.contains('tw-open') ? '✕' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('tw-open');
+        menuBtn.textContent = '☰';
+      });
+    });
   </script>
 </body>
 </html>
