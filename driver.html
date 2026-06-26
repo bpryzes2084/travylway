@@ -23,6 +23,92 @@ body{
   color:var(--text);
 }
 
+/* NAV */
+.site-header {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.nav-logo {
+  font-size: 1.4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #10b981);
+  box-shadow: 0 0 0 5px rgba(102,126,234,0.2);
+  flex-shrink: 0;
+}
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: #667eea; }
+.nav-links a.active { color: #667eea; }
+.nav-mobile-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    gap: 0;
+  }
+  .nav-links a {
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+    display: block;
+  }
+  .nav-links.tw-open { display: flex; }
+  .nav-mobile-btn { display: block; }
+}
+
 .header{
   background:linear-gradient(135deg,#667eea,#764ba2);
   color:white;
@@ -325,54 +411,25 @@ body{
 @media(max-width:768px){
   .header h1{font-size:1.5rem}
   .header p{font-size:0.9rem}
-  
   .filter-grid{grid-template-columns:1fr}
   .filter-actions{flex-direction:column}
   .btn{width:100%}
-  
   .stats-grid{grid-template-columns:repeat(2, 1fr)}
   .stat-number{font-size:2rem}
   .stat-label{font-size:0.8rem}
-  
   .trip-header{flex-direction:column;align-items:flex-start}
   .trip-info{grid-template-columns:1fr}
   .trip-actions{flex-direction:column}
   .trip-actions .btn{width:100%;min-width:auto}
-  
   .trip-card{padding:1rem}
   .filter-section{padding:1rem}
   .trips-section{padding:1rem}
-  
-  /* Stack fare display on mobile */
-  .fare-grid{
-    grid-template-columns:1fr !important;
-    gap:0;
-  }
-  
-  .fare-divider{
-    display:none;
-  }
-  
-  .fare-payout{
-    border-left:none;
-    border-top:2px solid rgba(255,255,255,0.3);
-    padding-left:0;
-    padding-top:1rem;
-    margin-top:1rem;
-  }
-  
-  /* Reduce fare display font sizes on mobile */
-  .fare-display div[style*="font-size:2rem"]{
-    font-size:1.5rem !important;
-  }
-  
-  .fare-display div[style*="font-size:2.5rem"]{
-    font-size:1.75rem !important;
-  }
-  
-  .fare-display div[style*="font-size:0.8rem"]{
-    font-size:0.75rem !important;
-  }
+  .fare-grid{grid-template-columns:1fr !important;gap:0;}
+  .fare-divider{display:none;}
+  .fare-payout{border-left:none;border-top:2px solid rgba(255,255,255,0.3);padding-left:0;padding-top:1rem;margin-top:1rem;}
+  .fare-display div[style*="font-size:2rem"]{font-size:1.5rem !important;}
+  .fare-display div[style*="font-size:2.5rem"]{font-size:1.75rem !important;}
+  .fare-display div[style*="font-size:0.8rem"]{font-size:0.75rem !important;}
 }
 
 @media(max-width:480px){
@@ -383,25 +440,32 @@ body{
   .trip-status{font-size:0.7rem;padding:0.3rem 0.75rem}
   .info-value{font-size:0.95rem}
   .route-text{font-size:0.95rem}
-  
-  /* Further reduce on very small screens */
-  .fare-display{
-    padding:1rem;
-  }
-  
-  .fare-display div[style*="font-size:2rem"],
-  .fare-display div[style*="font-size:1.5rem"]{
-    font-size:1.25rem !important;
-  }
-  
-  .fare-display div[style*="font-size:2.5rem"],
-  .fare-display div[style*="font-size:1.75rem"]{
-    font-size:1.5rem !important;
-  }
+  .fare-display{padding:1rem;}
+  .fare-display div[style*="font-size:2rem"],.fare-display div[style*="font-size:1.5rem"]{font-size:1.25rem !important;}
+  .fare-display div[style*="font-size:2.5rem"],.fare-display div[style*="font-size:1.75rem"]{font-size:1.5rem !important;}
 }
 </style>
 </head>
 <body>
+
+<!-- NAV -->
+<header class="site-header">
+  <nav class="nav-container">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-dot"></span>
+      <span>TravylWay</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/general.html">Book a Ride</a></li>
+      <li><a href="/crew.html">Crew Booking</a></li>
+      <li><a href="/hotels.html">Hotels</a></li>
+      <li><a href="/driver.html" class="active">Driver Board</a></li>
+      <li><a href="/reviews.html">Reviews</a></li>
+    </ul>
+    <button class="nav-mobile-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+  </nav>
+</header>
 
 <div class="header">
   <h1>🚗 Driver Board</h1>
@@ -543,14 +607,11 @@ function pickupLocalString(isoUtc) {
 async function loadTrips() {
   try {
     const selectedStatus = (document.getElementById("filterStatus")?.value || "APPROVED").toUpperCase();
-
     const qs = new URLSearchParams();
     if (selectedStatus) qs.set("status", selectedStatus);
-
     const url = `${API_BASE}/api/trips?${qs.toString()}`;
     const response = await fetch(url, { cache: "no-store" });
     const data = await response.json();
-
     if (data.ok) {
       allTrips = (data.trips || []).map(t => ({
         ...t,
@@ -569,38 +630,26 @@ async function loadTrips() {
 }
 
 function applyFilters(refetch = false) {
-  if (refetch) {
-    loadTrips();
-    return;
-  }
-
+  if (refetch) { loadTrips(); return; }
   const country = document.getElementById("filterCountry").value.toUpperCase();
   const state = document.getElementById("filterState").value.toLowerCase();
   const city = document.getElementById("filterCity").value.toLowerCase();
   const airport = document.getElementById("filterAirport").value.toUpperCase();
   const status = document.getElementById("filterStatus").value.toUpperCase();
   const riderType = document.getElementById("filterRiderType").value.toUpperCase();
-
   filteredTrips = allTrips.filter(trip => {
     if (country && !addressMatchesCountry(trip, country)) return false;
     if (state && !addressContains(trip, state)) return false;
     if (city && !addressContains(trip, city)) return false;
-
     if (airport) {
       const code = (trip.airport_code || "").toUpperCase();
-      if (code) {
-        if (code !== airport) return false;
-      } else {
-        if (!addressContains(trip, airport.toLowerCase())) return false;
-      }
+      if (code) { if (code !== airport) return false; }
+      else { if (!addressContains(trip, airport.toLowerCase())) return false; }
     }
-
     if (status && trip.status !== status) return false;
     if (riderType && trip.rider_type !== riderType) return false;
-
     return true;
   });
-
   updateStats();
   renderTrips();
 }
@@ -615,7 +664,6 @@ function addressContains(trip, term) {
 function addressMatchesCountry(trip, countryCode) {
   const pickup = (trip.pickup_text || "").toUpperCase();
   const dropoff = (trip.dropoff_text || "").toUpperCase();
-
   const countryMap = {
     "USA": ["USA","US","UNITED STATES",", CO",", CA",", NY",", TX",", FL"],
     "CAN": ["CANADA","TORONTO","VANCOUVER","MONTREAL","CALGARY"],
@@ -635,7 +683,6 @@ function addressMatchesCountry(trip, countryCode) {
     "THA": ["THAILAND","BANGKOK"],
     "SGP": ["SINGAPORE"]
   };
-
   const keywords = countryMap[countryCode] || [countryCode];
   return keywords.some(k => pickup.includes(k) || dropoff.includes(k));
 }
@@ -659,31 +706,20 @@ function updateStats() {
 
 function renderTrips() {
   const container = document.getElementById("tripsContainer");
-
   if (filteredTrips.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">📭</div>
-        <h3>No trips match your filters</h3>
-        <p>Try adjusting your filters or check back later</p>
-      </div>
-    `;
+    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><h3>No trips match your filters</h3><p>Try adjusting your filters or check back later</p></div>`;
     return;
   }
-
   container.innerHTML = filteredTrips.map(trip => {
     const pickupTime = pickupLocalString(trip.pickup_time_utc);
     const statusClass = `status-${String(trip.status || "APPROVED").toLowerCase()}`;
-
     const fare = Number(trip.estimated_fare || 0);
     const driverPayout = Number(trip.driver_payout || (fare ? fare * 0.75 : 0));
     const platformFee = fare ? (fare - driverPayout) : 0;
-
     const pickupTimeDate = new Date(trip.pickup_time_utc);
     const now = new Date();
     const hoursUntilPickup = (pickupTimeDate - now) / (1000 * 60 * 60);
     const canUnclaim = hoursUntilPickup > 48;
-
     return `
       <div class="trip-card">
         ${fare > 0 ? `
@@ -701,11 +737,7 @@ function renderTrips() {
                 <div style="font-size:0.75rem;opacity:0.8;margin-top:0.25rem;">75% of fare</div>
               </div>
             </div>
-            ${trip.duration_minutes ? `
-              <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.3);font-size:0.85rem;opacity:0.9;">
-                ⏱️ Estimated Duration: ${Math.round(Number(trip.duration_minutes))} minutes
-              </div>
-            ` : ""}
+            ${trip.duration_minutes ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.3);font-size:0.85rem;opacity:0.9;">⏱️ Estimated Duration: ${Math.round(Number(trip.duration_minutes))} minutes</div>` : ""}
           </div>
         ` : `
           <div style="background:#fef3c7;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:center;border:2px dashed #f59e0b;">
@@ -713,109 +745,42 @@ function renderTrips() {
             <div style="font-size:0.85rem;color:#78350f;margin-top:0.5rem;">Distance and fare will be calculated shortly</div>
           </div>
         `}
-
         <div class="trip-header">
           <span class="trip-id">ID: ${String(trip.id || "").substring(0, 8)}</span>
           <span class="trip-status ${statusClass}">${trip.status || "APPROVED"}</span>
         </div>
-
         <div class="trip-info">
-          <div class="info-item">
-            <div class="info-label">Customer</div>
-            <div class="info-value">${trip.created_by || "N/A"}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Type</div>
-            <div class="info-value">${trip.rider_type === "CREW" ? "✈️ Airline Crew" : "🚗 General Traveler"}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Pickup Time (Your Local)</div>
-            <div class="info-value">${pickupTime}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Phone</div>
-            <div class="info-value">${trip.rider_phone || "N/A"}</div>
-          </div>
+          <div class="info-item"><div class="info-label">Customer</div><div class="info-value">${trip.created_by || "N/A"}</div></div>
+          <div class="info-item"><div class="info-label">Type</div><div class="info-value">${trip.rider_type === "CREW" ? "✈️ Airline Crew" : "🚗 General Traveler"}</div></div>
+          <div class="info-item"><div class="info-label">Pickup Time (Your Local)</div><div class="info-value">${pickupTime}</div></div>
+          <div class="info-item"><div class="info-label">Phone</div><div class="info-value">${trip.rider_phone || "N/A"}</div></div>
         </div>
-
-        <div class="trip-route">
-          <div class="route-label">📍 Pickup</div>
-          <div class="route-text">${trip.pickup_text || "N/A"}</div>
-        </div>
-
-        <div class="trip-route">
-          <div class="route-label">🎯 Dropoff</div>
-          <div class="route-text">${trip.dropoff_text || "N/A"}</div>
-        </div>
-
-        ${trip.notes ? `
-          <div style="background:#fef3c7;padding:1rem;border-radius:8px;margin-bottom:1rem;border-left:4px solid #f59e0b;">
-            <div style="font-size:0.75rem;color:#92400e;font-weight:700;margin-bottom:0.25rem;">📝 CUSTOMER NOTES</div>
-            <div style="color:#78350f;">${trip.notes}</div>
-          </div>
-        ` : ""}
-
+        <div class="trip-route"><div class="route-label">📍 Pickup</div><div class="route-text">${trip.pickup_text || "N/A"}</div></div>
+        <div class="trip-route"><div class="route-label">🎯 Dropoff</div><div class="route-text">${trip.dropoff_text || "N/A"}</div></div>
+        ${trip.notes ? `<div style="background:#fef3c7;padding:1rem;border-radius:8px;margin-bottom:1rem;border-left:4px solid #f59e0b;"><div style="font-size:0.75rem;color:#92400e;font-weight:700;margin-bottom:0.25rem;">📝 CUSTOMER NOTES</div><div style="color:#78350f;">${trip.notes}</div></div>` : ""}
         ${fare > 0 ? `
           <details style="margin-bottom:1rem;">
-            <summary style="cursor:pointer;padding:1rem;background:#f8fafc;border-radius:8px;font-weight:700;color:#475569;">
-              💵 View Earnings Breakdown
-            </summary>
+            <summary style="cursor:pointer;padding:1rem;background:#f8fafc;border-radius:8px;font-weight:700;color:#475569;">💵 View Earnings Breakdown</summary>
             <div style="padding:1rem;background:white;border:1px solid #e5e7eb;border-radius:8px;margin-top:0.5rem;">
-              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb;">
-                <span style="color:#64748b;">Fare</span>
-                <span style="font-weight:700;">$${fare.toFixed(2)}</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb;">
-                <span style="color:#64748b;">Platform Fee (25%)</span>
-                <span style="font-weight:700;color:#dc2626;">-$${platformFee.toFixed(2)}</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;margin-top:0.5rem;padding-top:1rem;border-top:2px solid #10b981;">
-                <span style="font-weight:900;color:#059669;font-size:1.1rem;">Your Payout (75%)</span>
-                <span style="font-weight:900;color:#059669;font-size:1.2rem;">$${driverPayout.toFixed(2)}</span>
-              </div>
+              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb;"><span style="color:#64748b;">Fare</span><span style="font-weight:700;">$${fare.toFixed(2)}</span></div>
+              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb;"><span style="color:#64748b;">Platform Fee (25%)</span><span style="font-weight:700;color:#dc2626;">-$${platformFee.toFixed(2)}</span></div>
+              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;margin-top:0.5rem;padding-top:1rem;border-top:2px solid #10b981;"><span style="font-weight:900;color:#059669;font-size:1.1rem;">Your Payout (75%)</span><span style="font-weight:900;color:#059669;font-size:1.2rem;">$${driverPayout.toFixed(2)}</span></div>
             </div>
           </details>
         ` : ""}
-
         <div class="trip-actions">
-          ${trip.status === "APPROVED" ? `
-            <button class="btn btn-claim" onclick="claimTrip('${trip.id}')">
-              ✓ Claim This Trip${fare ? ` — Earn $${driverPayout.toFixed(2)}` : ""}
-            </button>
-          ` : trip.status === "CLAIMED" ? `
+          ${trip.status === "APPROVED" ? `<button class="btn btn-claim" onclick="claimTrip('${trip.id}')">✓ Claim This Trip${fare ? ` — Earn $${driverPayout.toFixed(2)}` : ""}</button>`
+          : trip.status === "CLAIMED" ? `
             <div style="background:#dbeafe;border-radius:8px;padding:1rem;margin-bottom:1rem;border-left:4px solid #2563eb;flex:1;">
               <div style="font-weight:700;color:#1e40af;margin-bottom:0.5rem;">✓ CLAIMED by ${trip.driver_name || "Driver"}</div>
-              <div style="font-size:0.85rem;color:#475569;">
-                Claimed: ${trip.claimed_at ? new Date(trip.claimed_at).toLocaleString() : "Recently"}
-              </div>
-              ${hoursUntilPickup > 0 ? `
-                <div style="font-size:0.85rem;color:#475569;margin-top:0.25rem;">
-                  Pickup in: ${Math.round(hoursUntilPickup)} hours
-                </div>
-              ` : ""}
+              <div style="font-size:0.85rem;color:#475569;">Claimed: ${trip.claimed_at ? new Date(trip.claimed_at).toLocaleString() : "Recently"}</div>
+              ${hoursUntilPickup > 0 ? `<div style="font-size:0.85rem;color:#475569;margin-top:0.25rem;">Pickup in: ${Math.round(hoursUntilPickup)} hours</div>` : ""}
             </div>
-
-            ${canUnclaim ? `
-              <button class="btn" style="background:#f59e0b;color:white;" onclick="unclaimTrip('${trip.id}')">
-                ↩️ Unclaim Trip
-              </button>
-            ` : `
-              <button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;" disabled title="Cannot unclaim within 48 hours of pickup">
-                🔒 Cannot Unclaim
-              </button>
-            `}
-          ` : trip.status === "NEW" ? `
-            <button class="btn" style="background:#fbbf24;color:#78350f;cursor:not-allowed;flex:1;" disabled>
-              ⏳ Pending Approval
-            </button>
-          ` : `
-            <button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;flex:1;" disabled>
-              ${trip.status}
-            </button>
-          `}
-          <button class="btn btn-details" onclick="viewDetails('${trip.id}')">
-            📄 View Full Details
-          </button>
+            ${canUnclaim ? `<button class="btn" style="background:#f59e0b;color:white;" onclick="unclaimTrip('${trip.id}')">↩️ Unclaim Trip</button>`
+            : `<button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;" disabled title="Cannot unclaim within 48 hours of pickup">🔒 Cannot Unclaim</button>`}
+          ` : trip.status === "NEW" ? `<button class="btn" style="background:#fbbf24;color:#78350f;cursor:not-allowed;flex:1;" disabled>⏳ Pending Approval</button>`
+          : `<button class="btn" style="background:#94a3b8;color:white;cursor:not-allowed;flex:1;" disabled>${trip.status}</button>`}
+          <button class="btn btn-details" onclick="viewDetails('${trip.id}')">📄 View Full Details</button>
         </div>
       </div>
     `;
@@ -824,99 +789,47 @@ function renderTrips() {
 
 async function claimTrip(tripId) {
   const driverName = prompt("Enter your name:");
-  if (!driverName || driverName.trim() === "") {
-    alert("Driver name is required");
-    return;
-  }
-
+  if (!driverName || driverName.trim() === "") { alert("Driver name is required"); return; }
   const driverPhone = prompt("Enter your phone number (optional, for customer contact):");
-
   try {
     const response = await fetch(`${API_BASE}/api/trips/${tripId}/claim`, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        driver_name: driverName.trim(),
-        driver_phone: driverPhone ? driverPhone.trim() : null
-      })
+      body: JSON.stringify({ driver_name: driverName.trim(), driver_phone: driverPhone ? driverPhone.trim() : null })
     });
-
     const data = await response.json();
-
     if (data.ok) {
       alert("✅ Trip claimed successfully!");
-      if (data.whatsapp_link && confirm("Open WhatsApp to message customer?")) {
-        window.open(data.whatsapp_link, "_blank");
-      }
+      if (data.whatsapp_link && confirm("Open WhatsApp to message customer?")) { window.open(data.whatsapp_link, "_blank"); }
       loadTrips();
-    } else {
-      alert(`❌ Failed to claim trip:\n${data.error}`);
-    }
-  } catch (error) {
-    console.error("Error claiming trip:", error);
-    alert("❌ Network error. Please try again.");
-  }
+    } else { alert(`❌ Failed to claim trip:\n${data.error}`); }
+  } catch (error) { console.error("Error claiming trip:", error); alert("❌ Network error. Please try again."); }
 }
 
 async function unclaimTrip(tripId) {
-  if (!confirm("Are you sure you want to unclaim this trip?\n\nNote: You cannot unclaim trips within 48 hours of pickup time.")) {
-    return;
-  }
-
+  if (!confirm("Are you sure you want to unclaim this trip?\n\nNote: You cannot unclaim trips within 48 hours of pickup time.")) return;
   try {
     const response = await fetch(`${API_BASE}/api/trips/${tripId}/unclaim`, {
       method: "POST",
       headers: {"Content-Type":"application/json"}
     });
-
     const data = await response.json();
-
-    if (data.ok) {
-      alert("✅ Trip unclaimed successfully!");
-      loadTrips();
-    } else {
-      alert(`❌ Failed to unclaim trip:\n${data.error}`);
-    }
-  } catch (error) {
-    console.error("Error unclaiming trip:", error);
-    alert("❌ Network error. Please try again.");
-  }
+    if (data.ok) { alert("✅ Trip unclaimed successfully!"); loadTrips(); }
+    else { alert(`❌ Failed to unclaim trip:\n${data.error}`); }
+  } catch (error) { console.error("Error unclaiming trip:", error); alert("❌ Network error. Please try again."); }
 }
 
 function viewDetails(tripId) {
   const trip = allTrips.find(t => t.id === tripId);
   if (!trip) return;
-
-  alert(`
-Trip Details:
-ID: ${trip.id}
-Customer: ${trip.created_by || "N/A"}
-Phone: ${trip.rider_phone || "N/A"}
-Type: ${trip.rider_type || "N/A"}
-Status: ${trip.status || "N/A"}
-Pickup: ${trip.pickup_text || "N/A"}
-Dropoff: ${trip.dropoff_text || "N/A"}
-Time (Local): ${pickupLocalString(trip.pickup_time_utc)}
-Fare: $${Number(trip.estimated_fare || 0).toFixed(2)}
-Notes: ${trip.notes || "None"}
-  `);
+  alert(`Trip Details:\nID: ${trip.id}\nCustomer: ${trip.created_by || "N/A"}\nPhone: ${trip.rider_phone || "N/A"}\nType: ${trip.rider_type || "N/A"}\nStatus: ${trip.status || "N/A"}\nPickup: ${trip.pickup_text || "N/A"}\nDropoff: ${trip.dropoff_text || "N/A"}\nTime (Local): ${pickupLocalString(trip.pickup_time_utc)}\nFare: $${Number(trip.estimated_fare || 0).toFixed(2)}\nNotes: ${trip.notes || "None"}`);
 }
 
 function showError(message) {
-  document.getElementById("tripsContainer").innerHTML = `
-    <div class="empty-state">
-      <div class="empty-state-icon">⚠️</div>
-      <h3>Error Loading Trips</h3>
-      <p>${message}</p>
-      <button class="btn btn-primary" onclick="loadTrips()">Retry</button>
-    </div>
-  `;
+  document.getElementById("tripsContainer").innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Error Loading Trips</h3><p>${message}</p><button class="btn btn-primary" onclick="loadTrips()">Retry</button></div>`;
 }
 
-document.getElementById("filterAirport").addEventListener("input", (e) => {
-  e.target.value = e.target.value.toUpperCase();
-});
-
+document.getElementById("filterAirport").addEventListener("input", (e) => { e.target.value = e.target.value.toUpperCase(); });
 document.getElementById("applyBtn").addEventListener("click", () => applyFilters(false));
 document.getElementById("clearBtn").addEventListener("click", clearFilters);
 document.getElementById("filterStatus").addEventListener("change", () => applyFilters(true));
@@ -925,6 +838,20 @@ document.getElementById("filterRiderType").addEventListener("change", () => appl
 document.getElementById("filterState").addEventListener("input", () => applyFilters(false));
 document.getElementById("filterCity").addEventListener("input", () => applyFilters(false));
 document.getElementById("filterAirport").addEventListener("input", () => applyFilters(false));
+
+// Nav mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+menuBtn.addEventListener('click', () => {
+  navLinks.classList.toggle('tw-open');
+  menuBtn.textContent = navLinks.classList.contains('tw-open') ? '✕' : '☰';
+});
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('tw-open');
+    menuBtn.textContent = '☰';
+  });
+});
 
 loadTrips();
 setInterval(loadTrips, 30000);
