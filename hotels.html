@@ -98,11 +98,16 @@
     body {
       background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%);
       min-height: 100vh;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    .page-body {
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow-x: hidden;
+      padding: 20px;
     }
 
     .container {
@@ -239,6 +244,7 @@
     </nav>
   </header>
 
+  <div class="page-body">
   <div class="container">
 
     <!-- WhatsApp bar -->
@@ -299,6 +305,7 @@
       <a href="/general.html">← Book another ride</a>
     </div>
 
+  </div>
   </div>
 
   <script>
