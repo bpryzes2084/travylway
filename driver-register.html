@@ -4,245 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravylWay - Driver Registration</title>
-    
-    <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <link rel="preconnect" href="https://challenges.cloudflare.com">
-    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 500px;
-            width: 100%;
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo h1 {
-            color: #667eea;
-            font-size: 32px;
-            margin-bottom: 5px;
-        }
-        
-        .logo p {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            color: #666;
-            font-weight: 500;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-        
-        .form-section {
-            display: none;
-        }
-        
-        .form-section.active {
-            display: block;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .turnstile-container {
-            margin: 25px 0;
-            display: flex;
-            justify-content: center;
-        }
-        
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .message {
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 14px;
-        }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
-        }
-        
-        .veteran-badge {
-            background: #f0f4ff;
-            border: 2px solid #667eea;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .veteran-badge h3 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        
-        .veteran-badge p {
-            color: #666;
-            font-size: 13px;
-        }
-        
-        .back-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 25px;
-            }
-            
-            .logo h1 {
-                font-size: 26px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* NAV */
+        .site-header{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08);position:sticky;top:0;z-index:9999;}
+        .nav-container{max-width:1200px;margin:0 auto;padding:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+        .nav-logo{font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
+        .nav-logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#667eea,#10b981);box-shadow:0 0 0 5px rgba(102,126,234,0.2);flex-shrink:0;}
+        .nav-links{display:flex;gap:1.5rem;align-items:center;list-style:none;margin:0;padding:0;}
+        .nav-links a{text-decoration:none;color:#64748b;font-weight:600;font-size:0.9rem;transition:color 0.2s;}
+        .nav-links a:hover{color:#667eea;}
+        .nav-links a.active{color:#667eea;}
+        .nav-mobile-btn{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0.5rem;}
+        @media(max-width:768px){.nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;padding:1rem;box-shadow:0 8px 16px rgba(0,0,0,0.1);gap:0;}.nav-links a{padding:1rem;width:100%;text-align:center;border-bottom:1px solid #f1f5f9;display:block;}.nav-links.tw-open{display:flex;}.nav-mobile-btn{display:block;}}
+
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+        .container{background:white;padding:40px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:500px;width:100%;margin-top:20px;}
+        .logo{text-align:center;margin-bottom:30px;}
+        .logo h1{color:#667eea;font-size:32px;margin-bottom:5px;}
+        .logo p{color:#666;font-size:14px;}
+        .tabs{display:flex;margin-bottom:30px;border-bottom:2px solid #e0e0e0;}
+        .tab{flex:1;padding:12px;text-align:center;cursor:pointer;color:#666;font-weight:500;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.3s;}
+        .tab.active{color:#667eea;border-bottom-color:#667eea;}
+        .form-section{display:none;}
+        .form-section.active{display:block;}
+        .form-group{margin-bottom:20px;}
+        label{display:block;margin-bottom:8px;color:#333;font-weight:500;font-size:14px;}
+        input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:6px;font-size:15px;transition:border-color 0.3s;}
+        input:focus,select:focus{outline:none;border-color:#667eea;}
+        .turnstile-container{margin:25px 0;display:flex;justify-content:center;}
+        button{width:100%;padding:14px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
+        button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 5px 15px rgba(102,126,234,0.4);}
+        button:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+        .message{padding:12px;border-radius:6px;margin-bottom:20px;display:none;font-size:14px;}
+        .message.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb;display:block;}
+        .message.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;display:block;}
+        .veteran-badge{background:#f0f4ff;border:2px solid #667eea;border-radius:6px;padding:15px;margin-bottom:20px;text-align:center;}
+        .veteran-badge h3{color:#667eea;font-size:16px;margin-bottom:5px;}
+        .veteran-badge p{color:#666;font-size:13px;}
+        .back-link{text-align:center;margin-top:20px;}
+        .back-link a{color:#667eea;text-decoration:none;font-weight:500;}
+        .back-link a:hover{text-decoration:underline;}
+        @media(max-width:600px){.container{padding:25px;}.logo h1{font-size:26px;}}
     </style>
 </head>
 <body>
+
+  <!-- NAV -->
+  <header class="site-header" style="width:100%;position:sticky;top:0;">
+    <nav class="nav-container">
+      <a href="/" class="nav-logo"><span class="nav-logo-dot"></span><span>TravylWay</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Home</a></li>
+        <li><a href="/general.html">Book a Ride</a></li>
+        <li><a href="/crew.html">Crew Booking</a></li>
+        <li><a href="/hotels.html">Hotels</a></li>
+        <li><a href="/driver.html">Driver Board</a></li>
+        <li><a href="/reviews.html">Reviews</a></li>
+      </ul>
+      <button class="nav-mobile-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+    </nav>
+  </header>
+
     <div class="container">
         <div class="logo">
             <h1>TravylWay</h1>
             <p>Professional Airport Transportation</p>
         </div>
-        
+
         <div class="veteran-badge">
             <h3>🇺🇸 Veterans Welcome</h3>
             <p>We proudly prioritize veteran drivers</p>
         </div>
-        
+
         <div class="tabs">
             <div class="tab active" onclick="switchTab('register')">Register</div>
             <div class="tab" onclick="switchTab('login')">Login</div>
         </div>
-        
+
         <!-- Registration Form -->
         <div id="registerSection" class="form-section active">
             <div id="registerMessage" class="message"></div>
-            
             <form id="registerForm">
-                <div class="form-group">
-                    <label for="fullName">Full Name *</label>
-                    <input type="text" id="fullName" name="name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" placeholder="(720) 555-0123" required>
-                </div>
-                
+                <div class="form-group"><label for="fullName">Full Name *</label><input type="text" id="fullName" name="name" required></div>
+                <div class="form-group"><label for="email">Email Address *</label><input type="email" id="email" name="email" required></div>
+                <div class="form-group"><label for="phone">Phone Number *</label><input type="tel" id="phone" name="phone" placeholder="(720) 555-0123" required></div>
                 <div class="form-group">
                     <label for="vehicle">Vehicle Type *</label>
                     <select id="vehicle" name="vehicle" required>
@@ -253,7 +102,6 @@
                         <option value="luxury">Luxury Vehicle</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label for="veteran">Veteran Status</label>
                     <select id="veteran" name="veteran">
@@ -261,7 +109,6 @@
                         <option value="yes">U.S. Military Veteran</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label for="rideshare">Current Rideshare Experience</label>
                     <select id="rideshare" name="rideshare">
@@ -272,66 +119,36 @@
                         <option value="other">Other rideshare</option>
                     </select>
                 </div>
-                
-                <!-- Cloudflare Turnstile Widget -->
                 <div class="turnstile-container">
-                    <div class="cf-turnstile" 
-                         id="registerTurnstile"
-                         data-sitekey="0x4AAAAAACMeY92R9MqzCQJc"
-                         data-theme="light"
-                         data-size="normal"
-                         data-callback="onRegisterVerified">
-                    </div>
+                    <div class="cf-turnstile" id="registerTurnstile" data-sitekey="0x4AAAAAACMeY92R9MqzCQJc" data-theme="light" data-size="normal" data-callback="onRegisterVerified"></div>
                 </div>
-                
                 <button type="submit" id="registerBtn" disabled>Complete Registration</button>
             </form>
         </div>
-        
+
         <!-- Login Form -->
         <div id="loginSection" class="form-section">
             <div id="loginMessage" class="message"></div>
-            
             <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email Address *</label>
-                    <input type="email" id="loginEmail" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="loginPhone">Phone Number *</label>
-                    <input type="tel" id="loginPhone" name="phone" placeholder="(720) 555-0123" required>
-                </div>
-                
-                <!-- Cloudflare Turnstile Widget -->
+                <div class="form-group"><label for="loginEmail">Email Address *</label><input type="email" id="loginEmail" name="email" required></div>
+                <div class="form-group"><label for="loginPhone">Phone Number *</label><input type="tel" id="loginPhone" name="phone" placeholder="(720) 555-0123" required></div>
                 <div class="turnstile-container">
-                    <div class="cf-turnstile" 
-                         id="loginTurnstile"
-                         data-sitekey="0x4AAAAAACMeY92R9MqzCQJc"
-                         data-theme="light"
-                         data-size="normal"
-                         data-callback="onLoginVerified">
-                    </div>
+                    <div class="cf-turnstile" id="loginTurnstile" data-sitekey="0x4AAAAAACMeY92R9MqzCQJc" data-theme="light" data-size="normal" data-callback="onLoginVerified"></div>
                 </div>
-                
                 <button type="submit" id="loginBtn" disabled>Driver Login</button>
             </form>
         </div>
-        
-        <div class="back-link">
-            <a href="/">← Back to Home</a>
-        </div>
+
+        <div class="back-link"><a href="/">← Back to Home</a></div>
     </div>
-    
+
     <script>
         let registerToken = null;
         let loginToken = null;
-        
-        // Tab switching
+
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-            
             if (tab === 'register') {
                 document.querySelector('.tab:first-child').classList.add('active');
                 document.getElementById('registerSection').classList.add('active');
@@ -339,147 +156,71 @@
                 document.querySelector('.tab:last-child').classList.add('active');
                 document.getElementById('loginSection').classList.add('active');
             }
-            
-            // Reset messages
             hideMessage('registerMessage');
             hideMessage('loginMessage');
         }
-        
-        // Turnstile callbacks
-        function onRegisterVerified(token) {
-            registerToken = token;
-            document.getElementById('registerBtn').disabled = false;
-            console.log('Registration verified');
-        }
-        
-        function onLoginVerified(token) {
-            loginToken = token;
-            document.getElementById('loginBtn').disabled = false;
-            console.log('Login verified');
-        }
-        
-        // Registration form handler
+
+        function onRegisterVerified(token) { registerToken = token; document.getElementById('registerBtn').disabled = false; }
+        function onLoginVerified(token) { loginToken = token; document.getElementById('loginBtn').disabled = false; }
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            if (!registerToken) {
-                showMessage('registerMessage', 'Please complete the security verification', 'error');
-                return;
-            }
-            
+            if (!registerToken) { showMessage('registerMessage', 'Please complete the security verification', 'error'); return; }
             const btn = document.getElementById('registerBtn');
-            btn.disabled = true;
-            btn.textContent = 'Processing...';
-            
+            btn.disabled = true; btn.textContent = 'Processing...';
             const formData = new FormData(e.target);
-            const data = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                vehicle: formData.get('vehicle'),
-                veteran: formData.get('veteran'),
-                rideshare: formData.get('rideshare'),
-                turnstileToken: registerToken
-            };
-            
+            const data = { name:formData.get('name'), email:formData.get('email'), phone:formData.get('phone'), vehicle:formData.get('vehicle'), veteran:formData.get('veteran'), rideshare:formData.get('rideshare'), turnstileToken:registerToken };
             try {
-                const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/driver-register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
+                const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/driver-register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
                 const result = await response.json();
-                
                 if (response.ok && result.success) {
                     showMessage('registerMessage', 'Registration successful! Check your phone for verification code.', 'success');
-                    setTimeout(() => {
-                        window.location.href = '/driver-verify.html?phone=' + encodeURIComponent(data.phone);
-                    }, 2000);
+                    setTimeout(() => { window.location.href = '/driver-verify.html?phone=' + encodeURIComponent(data.phone); }, 2000);
                 } else {
                     showMessage('registerMessage', result.error || 'Registration failed. Please try again.', 'error');
-                    btn.disabled = false;
-                    btn.textContent = 'Complete Registration';
-                    // Reset Turnstile
-                    if (typeof turnstile !== 'undefined') {
-                        turnstile.reset();
-                    }
+                    btn.disabled = false; btn.textContent = 'Complete Registration';
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                     registerToken = null;
                 }
             } catch (error) {
-                console.error('Registration error:', error);
                 showMessage('registerMessage', 'Network error. Please check your connection and try again.', 'error');
-                btn.disabled = false;
-                btn.textContent = 'Complete Registration';
+                btn.disabled = false; btn.textContent = 'Complete Registration';
             }
         });
-        
-        // Login form handler
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            if (!loginToken) {
-                showMessage('loginMessage', 'Please complete the security verification', 'error');
-                return;
-            }
-            
+            if (!loginToken) { showMessage('loginMessage', 'Please complete the security verification', 'error'); return; }
             const btn = document.getElementById('loginBtn');
-            btn.disabled = true;
-            btn.textContent = 'Logging in...';
-            
+            btn.disabled = true; btn.textContent = 'Logging in...';
             const formData = new FormData(e.target);
-            const data = {
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                turnstileToken: loginToken
-            };
-            
+            const data = { email:formData.get('email'), phone:formData.get('phone'), turnstileToken:loginToken };
             try {
-                const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/driver-login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
+                const response = await fetch('https://travylway-api.benterpryzes2084.workers.dev/driver-login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
                 const result = await response.json();
-                
                 if (response.ok && result.success) {
                     showMessage('loginMessage', 'Login successful! Check your phone for verification code.', 'success');
-                    setTimeout(() => {
-                        window.location.href = '/driver-verify.html?phone=' + encodeURIComponent(data.phone);
-                    }, 1500);
+                    setTimeout(() => { window.location.href = '/driver-verify.html?phone=' + encodeURIComponent(data.phone); }, 1500);
                 } else {
                     showMessage('loginMessage', result.error || 'Login failed. Please check your credentials.', 'error');
-                    btn.disabled = false;
-                    btn.textContent = 'Driver Login';
-                    if (typeof turnstile !== 'undefined') {
-                        turnstile.reset();
-                    }
+                    btn.disabled = false; btn.textContent = 'Driver Login';
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                     loginToken = null;
                 }
             } catch (error) {
-                console.error('Login error:', error);
                 showMessage('loginMessage', 'Network error. Please check your connection and try again.', 'error');
-                btn.disabled = false;
-                btn.textContent = 'Driver Login';
+                btn.disabled = false; btn.textContent = 'Driver Login';
             }
         });
-        
-        // Message helper functions
-        function showMessage(id, text, type) {
-            const msg = document.getElementById(id);
-            msg.textContent = text;
-            msg.className = `message ${type}`;
-        }
-        
-        function hideMessage(id) {
-            const msg = document.getElementById(id);
-            msg.className = 'message';
-        }
+
+        function showMessage(id, text, type) { const msg = document.getElementById(id); msg.textContent = text; msg.className = `message ${type}`; }
+        function hideMessage(id) { const msg = document.getElementById(id); msg.className = 'message'; }
+
+        // Nav mobile menu
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        menuBtn.addEventListener('click', () => { navLinks.classList.toggle('tw-open'); menuBtn.textContent = navLinks.classList.contains('tw-open') ? '✕' : '☰'; });
+        navLinks.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('tw-open'); menuBtn.textContent = '☰'; }); });
     </script>
 </body>
 </html>
