@@ -109,6 +109,8 @@
       .nav-mobile-btn { display: block; }
     }
 
+    .page-body{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;}
+
     body{
       background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
       min-height:100vh;
@@ -583,17 +585,24 @@
       });
     });
 
-    // Initialize Map
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-98.5795, 39.8283],
-      zoom: 3
-    });
-
+    // Initialize Map (WebGL may fail — geocoders work independently)
+    let map = null;
     let pickupMarker = null;
     let dropoffMarker = null;
     let routeLayer = null;
+
+    try {
+      map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-98.5795, 39.8283],
+        zoom: 3
+      });
+    } catch(e) {
+      console.warn('Map failed to initialize (WebGL unavailable):', e.message);
+      document.getElementById('map').style.display = 'none';
+      document.getElementById('mapInfo').style.display = 'none';
+    }
 
     // Turnstile callbacks
     window.onTurnstileSuccess = function(token) { turnstileToken = token; };
@@ -709,7 +718,7 @@
       pickupCoords = e.result.geometry.coordinates;
       document.getElementById('pickupCoords').value = JSON.stringify(pickupCoords);
       if (pickupMarker) pickupMarker.remove();
-      pickupMarker = new mapboxgl.Marker({color: '#10b981'}).setLngLat(pickupCoords).addTo(map);
+      if (map) pickupMarker = new mapboxgl.Marker({color: '#10b981'}).setLngLat(pickupCoords).addTo(map);
       updateMap();
       updateMapInfo();
       quoteBox.style.display = 'none';
@@ -721,7 +730,7 @@
       dropoffCoords = e.result.geometry.coordinates;
       document.getElementById('dropoffCoords').value = JSON.stringify(dropoffCoords);
       if (dropoffMarker) dropoffMarker.remove();
-      dropoffMarker = new mapboxgl.Marker({color: '#ef4444'}).setLngLat(dropoffCoords).addTo(map);
+      if (map) dropoffMarker = new mapboxgl.Marker({color: '#ef4444'}).setLngLat(dropoffCoords).addTo(map);
       updateMap();
       updateMapInfo();
       quoteBox.style.display = 'none';
@@ -729,7 +738,7 @@
     });
 
     async function updateMap() {
-      if (!pickupCoords || !dropoffCoords) return;
+      if (!pickupCoords || !dropoffCoords || !map) return;
       const bounds = new mapboxgl.LngLatBounds();
       bounds.extend(pickupCoords);
       bounds.extend(dropoffCoords);
@@ -739,7 +748,7 @@
         const response = await fetch(directionsUrl);
         const data = await response.json();
         if (data.routes && data.routes.length > 0) {
-          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
+          if (map && map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
           map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: data.routes[0].geometry } });
           map.addLayer({ id: 'route', type: 'line', source: 'route', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#667eea', 'line-width': 4 } });
         }
@@ -906,7 +915,7 @@
           setMinDateToToday();
           if (pickupMarker) pickupMarker.remove();
           if (dropoffMarker) dropoffMarker.remove();
-          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
+          if (map && map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
           pickupAddress = ''; dropoffAddress = ''; pickupCoords = null; dropoffCoords = null;
           document.getElementById('mapInfo').textContent = '📍 Select pickup and dropoff addresses above to see route on map';
           latestEstimatedFare = 0;
