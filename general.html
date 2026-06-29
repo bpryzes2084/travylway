@@ -897,16 +897,23 @@
       return false;
     }
 
-    // Initialize Map
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-98.5795, 39.8283],
-      zoom: 3
-    });
-
+    // Initialize Map (WebGL may fail on some systems — geocoders work independently)
+    let map = null;
     let pickupMarker = null;
     let dropoffMarker = null;
+
+    try {
+      map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-98.5795, 39.8283],
+        zoom: 3
+      });
+    } catch(e) {
+      console.warn('Map failed to initialize (WebGL unavailable):', e.message);
+      document.getElementById('map').style.display = 'none';
+      document.getElementById('mapInfo').style.display = 'none';
+    }
 
     // Turnstile callbacks
     window.onTurnstileSuccess = function(token) {
@@ -1064,7 +1071,7 @@
     });
 
     async function updateMap() {
-      if (!pickupCoords || !dropoffCoords) return;
+      if (!pickupCoords || !dropoffCoords || !map) return;
 
       const bounds = new mapboxgl.LngLatBounds();
       bounds.extend(pickupCoords);
@@ -1080,7 +1087,7 @@
         if (data.routes && data.routes.length > 0) {
           const route = data.routes[0].geometry;
           
-          if (map.getSource('route')) {
+          if (map && map.getSource('route')) {
             map.removeLayer('route');
             map.removeSource('route');
           }
@@ -1326,9 +1333,9 @@
           dateEl.value = today;
 
           // Clear map
-          if (pickupMarker) pickupMarker.remove();
-          if (dropoffMarker) dropoffMarker.remove();
-          if (map.getSource('route')) {
+          if (pickupMarker) { pickupMarker.remove(); pickupMarker = null; }
+          if (dropoffMarker) { dropoffMarker.remove(); dropoffMarker = null; }
+          if (map && map.getSource('route')) {
             map.removeLayer('route');
             map.removeSource('route');
           }
