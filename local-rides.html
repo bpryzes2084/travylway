@@ -13,6 +13,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
     /* NAV */
+    .page-body{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;}
     .site-header{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08);position:sticky;top:0;z-index:9999;}
     .nav-container{max-width:1200px;margin:0 auto;padding:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
     .nav-logo{font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
@@ -85,6 +86,7 @@
     </nav>
   </header>
 
+  <div class="page-body">
   <div class="container">
     <!-- WhatsApp -->
     <div style="margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);border-radius:8px;text-align:center;box-shadow:0 2px 8px rgba(37,211,102,0.3);">
@@ -162,6 +164,8 @@
 
     <div id="message" class="message"></div>
     <div class="footer-note">Local rides only. No airport pickups or dropoffs. Premium rates apply.</div>
+  </div>
+
   </div>
 
   <script>
