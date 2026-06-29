@@ -19,13 +19,103 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
+    /* NAV */
+    .site-header {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-logo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #10b981);
+      box-shadow: 0 0 0 5px rgba(102,126,234,0.2);
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #667eea; }
+    .nav-links a.active { color: #667eea; }
+
+    .nav-mobile-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        gap: 0;
+      }
+      .nav-links a {
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .nav-links.active { display: flex; }
+      .nav-mobile-btn { display: block; }
+    }
+
+    .page-body{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;}
+
     body{
       background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
       min-height:100vh;
-      padding:20px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+            display:flex;
+      flex-direction:column;
     }
 
     .container{
@@ -373,6 +463,25 @@
 </head>
 
 <body>
+
+  <!-- NAV -->
+  <header class="site-header">
+    <nav class="nav-container">
+      <a href="/" class="nav-logo">
+        <span class="nav-logo-dot"></span>
+        <span>TravylWay</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/general.html" class="active">Book a Ride</a>
+        <a href="/crew.html">Crew Booking</a>
+        <a href="/hotels.html">Hotels</a>
+      </div>
+      <button class="nav-mobile-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+    </nav>
+  </header>
+
+  <div class="page-body">
   <div class="container">
     <!-- WhatsApp Contact - Top of Page -->
     <div style="
@@ -399,6 +508,33 @@
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
         <span>Contact Us on WhatsApp</span>
+      </a>
+    </div>
+
+    <!-- Email Contact Banner -->
+    <div style="
+      margin-bottom: 20px;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+    ">
+      <a href="mailto:pickuprequest@travylway.com"
+         style="
+           display: inline-flex;
+           align-items: center;
+           gap: 10px;
+           color: white;
+           text-decoration: none;
+           font-weight: 600;
+           font-size: 1.05em;
+         ">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <polyline points="2,4 12,13 22,4"/>
+        </svg>
+        <span>pickuprequest@travylway.com</span>
       </a>
     </div>
 
@@ -588,6 +724,8 @@
     <div class="footer-note">
       Professional rideshare service. Standard rates apply.
     </div>
+  </div>
+
   </div>
 
   <script>
@@ -1231,6 +1369,19 @@
         submitText.style.display = 'inline';
         loadingSpinner.style.display = 'none';
       }
+    });
+    // Nav mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        menuBtn.textContent = '☰';
+      });
     });
   </script>
 </body>
