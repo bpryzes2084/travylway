@@ -238,7 +238,10 @@
       if(!pickupAddress||!dropoffAddress){showMessage('error','❌ Both pickup and dropoff addresses are required.');return;}
       if(!dateEl.value||!timeEl.value){showMessage('error','❌ Pickup date and time are required.');return;}
       const holidayName = getHolidayName(dateEl.value);
-      if (holidayName) { showMessage('error', `❌ We are not accepting bookings on ${holidayName}. Please select a different date. For assistance, contact us at pickuprequest@travylway.com`); return; }
+      if (holidayName) {
+        showMessage('error', '❌ We are not accepting bookings on ' + holidayName + '. Please select a different date. For assistance, contact us at pickuprequest@travylway.com');
+        return;
+      }
 
       if(latestEstimatedFare<=0){showMessage('error','❌ Please click "Calculate Fare" to get a quote before submitting.');return;}
       submitBtn.disabled=true;submitText.style.display='none';loadingSpinner.style.display='inline-block';messageDiv.style.display='none';
