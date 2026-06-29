@@ -1290,7 +1290,10 @@
         return;
       }
       const holidayName = getHolidayName(dateVal);
-      if (holidayName) { showMessage('error', `❌ We are not accepting bookings on ${holidayName}. Please select a different date. For assistance, contact us at pickuprequest@travylway.com`); return; }
+      if (holidayName) {
+        showMessage('error', '❌ We are not accepting bookings on ' + holidayName + '. Please select a different date. For assistance, contact us at pickuprequest@travylway.com');
+        return;
+      }
 
       if (latestEstimatedFare <= 0) {
         showMessage('error', '❌ Please click "Calculate Fare" to get a quote before submitting.');
