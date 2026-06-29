@@ -9,666 +9,122 @@
   gtag('js', new Date());
   gtag('config', 'G-HF96M7VKYV');
 </script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TravylWay - Keep On Moving | Airport Transportation</title>
   <meta name="description" content="Professional airport transportation for airline crew and travelers. Book rides with real drivers who keep 80% of fares. No surge pricing, no games.">
-
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --primary: #667eea;
-      --primary-dark: #5568d3;
-      --secondary: #764ba2;
-      --green: #10b981;
-      --text: #0f172a;
-      --gray: #64748b;
-      --light-gray: #f1f5f9;
-      --white: #ffffff;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* HEADER */
-    header {
-      background: var(--white);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .logo-icon {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--green));
-      box-shadow: 0 0 0 5px rgba(102,126,234,0.2);
-      flex-shrink: 0;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--gray);
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-
+    :root { --primary: #667eea; --primary-dark: #5568d3; --secondary: #764ba2; --green: #10b981; --text: #0f172a; --gray: #64748b; --light-gray: #f1f5f9; --white: #ffffff; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    header { background: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+    .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .logo { font-size: 1.5rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+    .logo-icon { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--green)); box-shadow: 0 0 0 5px rgba(102,126,234,0.2); flex-shrink: 0; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--gray); font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
     .nav-links a:hover { color: var(--primary); }
-
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.5rem;
-    }
-
-    /* HERO */
-    .hero {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: var(--white);
-      padding: 4rem 1rem;
-      text-align: center;
-    }
-
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.5rem; }
+    .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: var(--white); padding: 4rem 1rem; text-align: center; }
     .hero-content { max-width: 800px; margin: 0 auto; }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 900;
-      margin-bottom: 1rem;
-      line-height: 1.1;
-    }
-
-    .hero p {
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      margin-bottom: 2rem;
-      opacity: 0.95;
-    }
-
-    /* BOOKING CARDS */
-    .booking-section {
-      padding: 3rem 1rem;
-      background: var(--light-gray);
-    }
-
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 1rem; line-height: 1.1; }
+    .hero p { font-size: clamp(1rem, 2vw, 1.25rem); margin-bottom: 2rem; opacity: 0.95; }
+    .booking-section { padding: 3rem 1rem; background: var(--light-gray); }
     .container { max-width: 1200px; margin: 0 auto; }
-
-    .section-title {
-      text-align: center;
-      font-size: clamp(1.75rem, 4vw, 2.5rem);
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-
-    .section-subtitle {
-      text-align: center;
-      color: var(--gray);
-      margin-bottom: 2.5rem;
-      font-size: 1.1rem;
-    }
-
-    .booking-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .booking-card {
-      background: var(--white);
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-decoration: none;
-      color: var(--text);
-      display: block;
-    }
-
-    .booking-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-    }
-
-    .booking-card-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
+    .section-title { text-align: center; font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 0.5rem; color: var(--text); }
+    .section-subtitle { text-align: center; color: var(--gray); margin-bottom: 2.5rem; font-size: 1.1rem; }
+    .booking-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .booking-card { background: var(--white); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: var(--text); display: block; }
+    .booking-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+    .booking-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
     .booking-icon { font-size: 2.5rem; flex-shrink: 0; }
-
-    .booking-card h3 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 0.25rem;
-    }
-
-    .booking-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
+    .booking-card h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .booking-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
     .badge-purple { background: rgba(102,126,234,0.15); color: var(--primary); }
-    .badge-blue   { background: rgba(37,99,235,0.15); color: #2563eb; }
-    .badge-green  { background: rgba(16,185,129,0.15); color: var(--green); }
-
+    .badge-blue { background: rgba(37,99,235,0.15); color: #2563eb; }
+    .badge-green { background: rgba(16,185,129,0.15); color: var(--green); }
     .booking-card p { color: var(--gray); line-height: 1.6; }
-
-    .booking-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    /* FEATURES */
+    .booking-cta { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-weight: 700; color: var(--primary); }
     .features-section { padding: 3rem 1rem; background: var(--white); }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
+    .features-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 900px; margin: 0 auto; }
     .feature { text-align: center; }
     .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
     .feature h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
     .feature p { color: var(--gray); max-width: 400px; margin: 0 auto; }
-
-    /* DRIVER CTA */
-    .driver-cta {
-      background: linear-gradient(135deg, var(--green) 0%, #059669 100%);
-      color: var(--white);
-      padding: 3rem 1rem;
-      text-align: center;
-    }
-
-    .driver-cta h2 {
-      font-size: clamp(1.75rem, 4vw, 2.5rem);
-      font-weight: 900;
-      margin-bottom: 1rem;
-    }
-
-    .driver-cta p {
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      opacity: 0.95;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* BUTTONS */
-    .btn {
-      display: inline-block;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: all 0.2s;
-      cursor: pointer;
-      border: none;
-    }
-
+    .driver-cta { background: linear-gradient(135deg, var(--green) 0%, #059669 100%); color: var(--white); padding: 3rem 1rem; text-align: center; }
+    .driver-cta h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 900; margin-bottom: 1rem; }
+    .driver-cta p { font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.95; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .btn { display: inline-block; padding: 1rem 2rem; border-radius: 12px; font-weight: 800; font-size: 1rem; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
     .btn-primary { background: var(--white); color: var(--primary); }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
     .btn-driver { background: var(--white); color: var(--green); }
     .btn-driver:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-
-    /* REVIEWS */
     .reviews-section { padding: 3rem 1rem; background: var(--light-gray); }
-
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .review-card {
-      background: var(--white);
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-
+    .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .review-card { background: var(--white); border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
     .stars { color: #fbbf24; font-size: 1.2rem; margin-bottom: 0.75rem; }
     .review-text { color: var(--text); margin-bottom: 1rem; line-height: 1.7; font-style: italic; }
     .review-author { color: var(--gray); font-size: 0.9rem; font-weight: 700; }
     .review-cta-link { display: block; text-align: center; margin-top: 2rem; }
-
-    /* CONTACT */
     .contact-section { padding: 3rem 1rem; background: var(--white); }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .contact-card {
-      background: var(--light-gray);
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-align: center;
-      text-decoration: none;
-      color: var(--text);
-      transition: all 0.2s;
-      display: block;
-    }
-
+    .contact-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; max-width: 600px; margin: 0 auto; }
+    .contact-card { background: var(--light-gray); border-radius: 12px; padding: 1.5rem; text-align: center; text-decoration: none; color: var(--text); transition: all 0.2s; display: block; }
     .contact-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .contact-icon { font-size: 2rem; margin-bottom: 0.5rem; }
     .contact-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.25rem; }
     .contact-card p { color: var(--gray); font-size: 0.9rem; }
-
-    /* FOOTER */
     footer { background: var(--text); color: var(--white); padding: 2rem 1rem; text-align: center; }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .footer-links a {
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-
+    .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+    .footer-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
     .footer-links a:hover { color: var(--white); }
     .footer-note { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 1rem; }
-
-    /* ── OPEN PICKUP REQUESTS ── */
-    .requests-section {
-      padding: 3rem 1rem;
-      background: var(--light-gray);
-      border-top: 1px solid #e5e7eb;
-    }
-
-    .requests-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      max-width: 900px;
-      margin: 0 auto 1.5rem;
-    }
-
+    .requests-section { padding: 3rem 1rem; background: var(--light-gray); border-top: 1px solid #e5e7eb; }
+    .requests-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; max-width: 900px; margin: 0 auto 1.5rem; }
     .requests-header .section-title { text-align: left; margin-bottom: 0.25rem; }
     .requests-header .section-subtitle { text-align: left; margin-bottom: 0; font-size: 0.9rem; }
-
-    .refresh-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
-      color: var(--gray);
-      font-weight: 600;
-      padding-top: 6px;
-    }
-
-    .refresh-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--primary);
-      animation: rp 2s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes rp {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.7); }
-    }
-
+    .refresh-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--gray); font-weight: 600; padding-top: 6px; }
+    .refresh-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: rp 2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes rp { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.7); } }
     .refresh-dot.refreshing { background: var(--green); animation: none; }
-
-    .requests-table-wrap {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    /* Desktop table */
-    .requests-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-      background: var(--white);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .requests-table thead {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: var(--white);
-    }
-
-    .requests-table thead th {
-      padding: 12px 16px;
-      text-align: left;
-      font-weight: 700;
-      font-size: 0.75rem;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .requests-table tbody tr {
-      border-bottom: 1px solid #f1f5f9;
-      transition: background 0.15s;
-    }
-
+    .requests-table-wrap { max-width: 900px; margin: 0 auto; }
+    .requests-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .requests-table thead { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: var(--white); }
+    .requests-table thead th { padding: 12px 16px; text-align: left; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; }
+    .requests-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
     .requests-table tbody tr:last-child { border-bottom: none; }
     .requests-table tbody tr:hover { background: #f8fafc; }
-
-    .requests-table tbody td {
-      padding: 14px 16px;
-      color: var(--text);
-      vertical-align: top;
-    }
-
-    .td-id {
-      font-family: 'Courier New', monospace;
-      font-size: 0.72rem;
-      color: var(--gray);
-      word-break: break-all;
-    }
-
+    .requests-table tbody td { padding: 14px 16px; color: var(--text); vertical-align: top; }
+    .td-id { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--gray); word-break: break-all; }
     .td-pickup { line-height: 1.4; }
     .td-date { white-space: nowrap; }
     .td-status { white-space: nowrap; }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      background: rgba(102,126,234,0.12);
-      color: var(--primary);
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--primary);
-      animation: rp 2s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-
-    /* Mobile cards — replaces table on small screens */
-    .request-cards {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .request-card {
-      background: var(--white);
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .request-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .request-card-id {
-      font-family: 'Courier New', monospace;
-      font-size: 0.68rem;
-      color: var(--gray);
-      word-break: break-all;
-      flex: 1;
-      padding-right: 8px;
-    }
-
-    .request-card-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 0.85rem;
-      gap: 8px;
-    }
-
+    .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; background: rgba(102,126,234,0.12); color: var(--primary); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: rp 2s ease-in-out infinite; flex-shrink: 0; }
+    .request-cards { display: none; flex-direction: column; gap: 12px; max-width: 900px; margin: 0 auto; }
+    .request-card { background: var(--white); border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .request-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .request-card-id { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--gray); word-break: break-all; flex: 1; padding-right: 8px; }
+    .request-card-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; gap: 8px; }
     .request-card-row:last-child { border-bottom: none; }
-
-    .request-card-label {
-      color: var(--gray);
-      font-weight: 700;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
-      padding-top: 1px;
-    }
-
-    .request-card-value {
-      color: var(--text);
-      text-align: right;
-      line-height: 1.4;
-    }
-
-    .requests-empty {
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-      padding: 40px 24px;
-      background: var(--white);
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
-      color: var(--gray);
-      font-size: 0.9rem;
-    }
-
-    .requests-error {
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-      padding: 24px;
-      background: #fff5f5;
-      border: 1px solid #fecaca;
-      border-radius: 12px;
-      color: #dc2626;
-      font-size: 0.85rem;
-    }
-
-    .last-updated {
-      max-width: 900px;
-      margin: 10px auto 0;
-      text-align: right;
-      font-size: 0.75rem;
-      color: var(--gray);
-    }
-
-    @media (max-width: 640px) {
-      .requests-table { display: none; }
-      .request-cards { display: flex; }
-    }
-
-    /* TABLET */
-    @media (min-width: 640px) {
-      .booking-grid { grid-template-columns: repeat(2, 1fr); }
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
-      .contact-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    /* DESKTOP */
-    @media (min-width: 1024px) {
-      .booking-grid { grid-template-columns: repeat(3, 1fr); }
-      .features-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    /* Denver Metro card grid */
-    #denver-metro .booking-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 960px;
-      gap: 1.5rem;
-    }
-
-    @media (min-width: 860px) {
-      #denver-metro .booking-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      /* First two cards (Boulder + Gaylord) span equally in a 2-col row */
-      #denver-metro .booking-grid .booking-card:nth-child(1),
-      #denver-metro .booking-grid .booking-card:nth-child(2) {
-        grid-column: span 1;
-      }
-      /* Last three cards in a 3-col row */
-      #denver-metro .booking-grid .booking-card:nth-child(3),
-      #denver-metro .booking-grid .booking-card:nth-child(4),
-      #denver-metro .booking-grid .booking-card:nth-child(5) {
-        grid-column: span 1;
-      }
-      /* Override grid to allow 3 cols for cards 3-5 */
-      #denver-metro .booking-grid {
-        grid-template-columns: repeat(6, 1fr);
-      }
-      #denver-metro .booking-grid .booking-card:nth-child(1) { grid-column: span 3; }
-      #denver-metro .booking-grid .booking-card:nth-child(2) { grid-column: span 3; }
-      #denver-metro .booking-grid .booking-card:nth-child(3) { grid-column: span 2; }
-      #denver-metro .booking-grid .booking-card:nth-child(4) { grid-column: span 2; }
-      #denver-metro .booking-grid .booking-card:nth-child(5) { grid-column: span 2; }
-    }
-
-    /* Equal height cards */
-    #denver-metro .booking-card {
-      display: flex;
-      flex-direction: column;
-      padding: 1.5rem;
-    }
-
-    #denver-metro .booking-card p {
-      flex: 1;
-      font-size: 0.88rem;
-    }
-
-    /* Smaller title for metro cards */
-    #denver-metro .booking-card h3 {
-      font-size: 1rem;
-      line-height: 1.3;
-    }
-
-    #denver-metro .booking-icon {
-      font-size: 1.8rem;
-    }
-
-    /* MOBILE MENU */
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--white);
-        flex-direction: column;
-        padding: 1rem;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        gap: 0;
-      }
-
-      .nav-links a {
-        padding: 1rem;
-        width: 100%;
-        text-align: center;
-        border-bottom: 1px solid var(--light-gray);
-      }
-
-      .nav-links.active { display: flex; }
-      .mobile-menu-btn { display: block; }
-    }
+    .request-card-label { color: var(--gray); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; padding-top: 1px; }
+    .request-card-value { color: var(--text); text-align: right; line-height: 1.4; }
+    .requests-empty { max-width: 900px; margin: 0 auto; text-align: center; padding: 40px 24px; background: var(--white); border-radius: 12px; border: 1px solid #e5e7eb; color: var(--gray); font-size: 0.9rem; }
+    .requests-error { max-width: 900px; margin: 0 auto; text-align: center; padding: 24px; background: #fff5f5; border: 1px solid #fecaca; border-radius: 12px; color: #dc2626; font-size: 0.85rem; }
+    .last-updated { max-width: 900px; margin: 10px auto 0; text-align: right; font-size: 0.75rem; color: var(--gray); }
+    @media (max-width: 640px) { .requests-table { display: none; } .request-cards { display: flex; } }
+    @media (min-width: 640px) { .booking-grid { grid-template-columns: repeat(2, 1fr); } .features-grid { grid-template-columns: repeat(2, 1fr); } .reviews-grid { grid-template-columns: repeat(2, 1fr); } .contact-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .booking-grid { grid-template-columns: repeat(3, 1fr); } .features-grid { grid-template-columns: repeat(3, 1fr); } }
+    #denver-metro .booking-card { display: flex; flex-direction: column; padding: 1.5rem; }
+    #denver-metro .booking-card p { flex: 1; font-size: 0.88rem; }
+    #denver-metro .booking-card h3 { font-size: 1rem; line-height: 1.3; }
+    #denver-metro .booking-icon { font-size: 1.8rem; }
+    @media (max-width: 768px) { .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); flex-direction: column; padding: 1rem; box-shadow: 0 8px 16px rgba(0,0,0,0.1); gap: 0; } .nav-links a { padding: 1rem; width: 100%; text-align: center; border-bottom: 1px solid var(--light-gray); } .nav-links.active { display: flex; } .mobile-menu-btn { display: block; } }
   </style>
 </head>
 <body>
-
-  <!-- HEADER -->
   <header>
     <nav class="nav-container">
-      <a href="/" class="logo">
-        <span class="logo-icon"></span>
-        <span>TravylWay</span>
-      </a>
+      <a href="/" class="logo"><span class="logo-icon"></span><span>TravylWay</span></a>
       <div class="nav-links" id="navLinks">
         <a href="/driver.html">Driver Board</a>
         <a href="/hotels.html">Find Hotels</a>
@@ -680,7 +136,6 @@
     </nav>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
       <h1>Keep On Moving</h1>
@@ -691,7 +146,6 @@
     </div>
   </section>
 
-  <!-- BOOKING OPTIONS -->
   <section class="booking-section">
     <div class="container">
       <p style="text-align:center;font-size:1.2rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--primary);margin-bottom:0.4rem;">Domestic &amp; International</p>
@@ -699,35 +153,17 @@
       <p class="section-subtitle">Three ways to ride with TravylWay</p>
       <div class="booking-grid">
         <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">✈️</span>
-            <div>
-              <h3>Airline Crew</h3>
-              <span class="booking-badge badge-purple">Discount Rates</span>
-            </div>
-          </div>
+          <div class="booking-card-header"><span class="booking-icon">✈️</span><div><h3>Airline Crew</h3><span class="booking-badge badge-purple">Discount Rates</span></div></div>
           <p>Exclusive airport transportation for flight attendants and pilots. Special crew pricing and flight tracking included.</p>
           <a href="/crew.html" class="booking-cta">Book Crew Ride →</a>
         </div>
         <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🚗</span>
-            <div>
-              <h3>Airport Rides</h3>
-              <span class="booking-badge badge-blue">Standard Rates</span>
-            </div>
-          </div>
+          <div class="booking-card-header"><span class="booking-icon">🚗</span><div><h3>Airport Rides</h3><span class="booking-badge badge-blue">Standard Rates</span></div></div>
           <p>Reliable airport transportation for travelers worldwide. On-time pickups and flight monitoring for all airports.</p>
           <a href="/general.html" class="booking-cta">Book Airport Ride →</a>
         </div>
         <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🏙️</span>
-            <div>
-              <h3>Local Rides</h3>
-              <span class="booking-badge badge-green">City Transport</span>
-            </div>
-          </div>
+          <div class="booking-card-header"><span class="booking-icon">🏙️</span><div><h3>Local Rides</h3><span class="booking-badge badge-green">City Transport</span></div></div>
           <p>Point-to-point transportation for events, concerts, errands, and local travel. No airports—just city rides.</p>
           <a href="/local-rides.html" class="booking-cta">Book Local Ride →</a>
         </div>
@@ -735,80 +171,30 @@
     </div>
   </section>
 
-
-  <!-- DENVER METRO AREA -->
   <section class="booking-section" style="background:#f8fafc;padding-top:2rem;" id="denver-metro">
     <div class="container">
       <h2 class="section-title">🌆 Denver Metro Area</h2>
       <p class="section-subtitle">Specialized service zones across the Denver region</p>
       <div class="booking-grid">
-
-        <!-- Boulder -->
         <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🏔️</span>
-            <div>
-              <h3>Boulder ↔ DEN</h3>
-              <span class="booking-badge badge-blue">Airport Rides</span>
-            </div>
-          </div>
+          <div class="booking-card-header"><span class="booking-icon">🏔️</span><div><h3>Boulder ↔ DEN</h3><span class="booking-badge badge-blue">Airport Rides</span></div></div>
           <p>Airport transportation between Boulder, CO and DEN. Both directions. Flight tracking included. ~45 miles.</p>
           <a href="/boulder.html" class="booking-cta">Book Boulder Ride →</a>
         </div>
-
-        <!-- Gaylord Rockies -->
         <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🏨</span>
-            <div>
-              <h3>Gaylord Rockies ↔ DEN</h3>
-              <span class="booking-badge badge-green">Flat $25 Fare</span>
-            </div>
-          </div>
+          <div class="booking-card-header"><span class="booking-icon">🏨</span><div><h3>Gaylord Rockies ↔ DEN</h3><span class="booking-badge badge-green">Flat $25 Fare</span></div></div>
           <p>Gaylord Rockies Resort & Convention Center to DEN and back. Only 7.4 miles — flat $25 fare both directions.</p>
           <a href="/general.html" class="booking-cta">Book Now →</a>
         </div>
-
         <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🛣️</span>
-            <div>
-              <h3>E-470 Corridor</h3>
-              <span class="booking-badge badge-green">East Metro</span>
-            </div>
-          </div>
+          <div class="booking-card-header"><span class="booking-icon">🛣️</span><div><h3>E-470 Corridor</h3><span class="booking-badge badge-green">East Metro</span></div></div>
           <p>Along the E-470 corridor — Aurora, Parker, and Commerce City. Fast access to DEN.</p>
           <a href="/e470.html" class="booking-cta">Book E-470 Ride →</a>
-        </div>
-        <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🌆</span>
-            <div>
-              <h3>Greater Denver Area</h3>
-              <span class="booking-badge badge-blue">Metro Wide</span>
-            </div>
-          </div>
-          <p>Airport rides throughout Greater Denver — suburbs and surrounding cities. To and from DEN.</p>
-          <a href="/denver-metro.html" class="booking-cta">Book Metro Ride →</a>
-        </div>
-
-        <!-- DEN Employee -->
-        <div class="booking-card">
-          <div class="booking-card-header">
-            <span class="booking-icon">🛂</span>
-            <div>
-              <h3>DEN Employee Rides</h3>
-              <span class="booking-badge badge-purple">Employee Rates</span>
-            </div>
-          </div>
-          <p>Transportation to and from DEN for airport employees and workers within the DEN vicinity. Discounted employee rates.</p>
-          <a href="/den-employee.html" class="booking-cta">Book Employee Ride →</a>
         </div>
       </div>
     </div>
   </section>
 
-<!-- OPEN PICKUP REQUESTS -->
   <section class="requests-section">
     <div class="container">
       <div class="requests-header">
@@ -821,41 +207,23 @@
           <span id="refreshLabel">Auto-refreshing every 30s</span>
         </div>
       </div>
-
-      <div id="requestsContainer">
-        <div class="requests-empty">🔄 Loading pickup requests...</div>
-      </div>
-
+      <div id="requestsContainer"><div class="requests-empty">🔄 Loading pickup requests...</div></div>
       <div class="last-updated" id="lastUpdated"></div>
     </div>
   </section>
 
-  <!-- FEATURES -->
   <section class="features-section">
     <div class="container">
       <h2 class="section-title">Why TravylWay?</h2>
       <p class="section-subtitle">Built different from day one</p>
       <div class="features-grid">
-        <div class="feature">
-          <div class="feature-icon">💰</div>
-          <h3>No Surge Pricing</h3>
-          <p>Fair rates all the time. No surprises, no games, no exploitation.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🎯</div>
-          <h3>Flight Tracking</h3>
-          <p>We monitor your flight in real-time and adjust pickup for delays.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">✅</div>
-          <h3>Driver Business Opportunity</h3>
-          <p>Build your own transportation business. Independent operators retain 95% of every fare.</p>
-        </div>
+        <div class="feature"><div class="feature-icon">💰</div><h3>No Surge Pricing</h3><p>Fair rates all the time. No surprises, no games, no exploitation.</p></div>
+        <div class="feature"><div class="feature-icon">🎯</div><h3>Flight Tracking</h3><p>We monitor your flight in real-time and adjust pickup for delays.</p></div>
+        <div class="feature"><div class="feature-icon">✅</div><h3>Driver Business Opportunity</h3><p>Build your own transportation business. Independent operators retain 95% of every fare.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- DRIVER CTA -->
   <section class="driver-cta">
     <div class="container">
       <h2>Drive with TravylWay</h2>
@@ -864,61 +232,31 @@
     </div>
   </section>
 
-  <!-- REVIEWS -->
   <section class="reviews-section">
     <div class="container">
       <h2 class="section-title">What Riders Say</h2>
       <p class="section-subtitle">Real reviews from real travelers</p>
       <div class="reviews-grid">
-        <div class="review-card">
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p class="review-text">"Clay is hands down the best driver I've had! He's incredibly punctual, professional, and genuinely cares about his riders. I always feel safe and taken care of."</p>
-          <p class="review-author">— Israt T., Frequent Traveler</p>
-        </div>
-        <div class="review-card">
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p class="review-text">"Clayton is so consistent and I love that I can always count on him! Even when I sit reserve in Denver, Clay makes it a point to communicate and be available!"</p>
-          <p class="review-author">— Andrea B. & Beth M., Flight Attendants</p>
-        </div>
-        <div class="review-card">
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p class="review-text">"Clay is amazing when it comes to airport runs. He tracks your flight, keeps in touch the whole time, and is super flexible if your flight gets delayed or canceled."</p>
-          <p class="review-author">— Israt T.</p>
-        </div>
-        <div class="review-card">
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p class="review-text">"Love this Service, excellent communication, five star across the board better than Uber. Clay is reliable and always communicates if things change with flights!"</p>
-          <p class="review-author">— Jay L. & Shannon</p>
-        </div>
+        <div class="review-card"><div class="stars">⭐⭐⭐⭐⭐</div><p class="review-text">"Clay is hands down the best driver I've had! He's incredibly punctual, professional, and genuinely cares about his riders. I always feel safe and taken care of."</p><p class="review-author">— Israt T., Frequent Traveler</p></div>
+        <div class="review-card"><div class="stars">⭐⭐⭐⭐⭐</div><p class="review-text">"Clayton is so consistent and I love that I can always count on him! Even when I sit reserve in Denver, Clay makes it a point to communicate and be available!"</p><p class="review-author">— Andrea B. & Beth M., Flight Attendants</p></div>
+        <div class="review-card"><div class="stars">⭐⭐⭐⭐⭐</div><p class="review-text">"Clay is amazing when it comes to airport runs. He tracks your flight, keeps in touch the whole time, and is super flexible if your flight gets delayed or canceled."</p><p class="review-author">— Israt T.</p></div>
+        <div class="review-card"><div class="stars">⭐⭐⭐⭐⭐</div><p class="review-text">"Love this Service, excellent communication, five star across the board better than Uber. Clay is reliable and always communicates if things change with flights!"</p><p class="review-author">— Jay L. & Shannon</p></div>
       </div>
-      <div class="review-cta-link">
-        <a href="/reviews.html" class="btn btn-primary" style="background:var(--primary);color:var(--white);">Read More Reviews</a>
-      </div>
+      <div class="review-cta-link"><a href="/reviews.html" class="btn btn-primary" style="background:var(--primary);color:var(--white);">Read More Reviews</a></div>
     </div>
   </section>
 
-
-  <!-- CONTACT -->
   <section class="contact-section">
     <div class="container">
       <h2 class="section-title">Get in Touch</h2>
       <p class="section-subtitle">Book rides or ask questions</p>
       <div class="contact-grid">
-        <a href="https://wa.me/17204748851?text=Request%20Trips" class="contact-card" target="_blank">
-          <div class="contact-icon">📱</div>
-          <h3>WhatsApp</h3>
-          <p>Instant booking & support</p>
-        </a>
-        <a href="https://t.me/Benterpryzes" class="contact-card" target="_blank">
-          <div class="contact-icon">✈️</div>
-          <h3>Telegram</h3>
-          <p>Real-time trip updates</p>
-        </a>
+        <a href="https://wa.me/17204748851?text=Request%20Trips" class="contact-card" target="_blank"><div class="contact-icon">📱</div><h3>WhatsApp</h3><p>Instant booking & support</p></a>
+        <a href="https://t.me/Benterpryzes" class="contact-card" target="_blank"><div class="contact-icon">✈️</div><h3>Telegram</h3><p>Real-time trip updates</p></a>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="container">
       <div class="footer-links">
@@ -938,24 +276,12 @@
     </div>
   </footer>
 
-  <!-- Mobile Menu Script -->
   <script>
     const menuBtn = document.getElementById('menuBtn');
     const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => { navLinks.classList.toggle('active'); menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰'; });
+    navLinks.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('active'); menuBtn.textContent = '☰'; }); });
 
-    menuBtn.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-      menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-    });
-
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        menuBtn.textContent = '☰';
-      });
-    });
-
-    // ── OPEN PICKUP REQUESTS ──
     const API_URL = 'https://api.travylway.com/api/trips?status=NEW&order=asc';
 
     function formatLocalDate(utcString, timezone, mode) {
@@ -963,57 +289,19 @@
       try {
         const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
         const date = new Date(utcString);
-        if (mode === 'date') {
-          return date.toLocaleDateString('en-US', {
-            timeZone: tz,
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          });
-        } else if (mode === 'time') {
-          return date.toLocaleTimeString('en-US', {
-            timeZone: tz,
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-          });
-        }
-        return date.toLocaleString('en-US', {
-          timeZone: tz,
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-      } catch (e) {
-        return new Date(utcString).toLocaleString();
-      }
+        if (mode === 'date') return date.toLocaleDateString('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+        if (mode === 'time') return date.toLocaleTimeString('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true });
+        return date.toLocaleString('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+      } catch (e) { return new Date(utcString).toLocaleString(); }
     }
 
-    // Extract city/state only from full address for privacy
     function extractCityArea(address) {
       if (!address) return '—';
       try {
         const parts = address.split(',').map(p => p.trim());
         const city = parts[1] || '';
         const stateRaw = (parts[2] || '').replace(/\d+/g, '').trim();
-        const STATE_ABBR = {
-          'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
-          'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
-          'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA',
-          'Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD',
-          'Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS',
-          'Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH',
-          'New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC',
-          'North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA',
-          'Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN',
-          'Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA',
-          'West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
-        };
+        const STATE_ABBR = {'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'};
         const abbr = STATE_ABBR[stateRaw] || stateRaw.substring(0, 2).toUpperCase();
         if (city) return city + ', ' + abbr;
         return parts[0] || '—';
@@ -1022,109 +310,32 @@
 
     function renderRequests(trips) {
       const container = document.getElementById('requestsContainer');
-
-      if (!trips || trips.length === 0) {
-        container.innerHTML = '<div class="requests-empty">✅ No open pickup requests at this time.</div>';
-        return;
-      }
-
+      if (!trips || trips.length === 0) { container.innerHTML = '<div class="requests-empty">✅ No open pickup requests at this time.</div>'; return; }
       var displayTrips = trips.slice(0, 20);
-
-      // Desktop table rows
       var rows = '';
-      displayTrips.forEach(function(t) {
-        rows += '<tr>' +
-          '<td class="td-id">' + t.id + '</td>' +
-          '<td class="td-pickup">' + extractCityArea(t.pickup_text) + '</td>' +
-          '<td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'date') + '</td>' +
-          '<td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'time') + '</td>' +
-          '<td class="td-pickup">' + (t.flight_number || '—') + '</td>' +
-          '<td class="td-status"><span class="status-badge"><span class="status-dot"></span>' + t.status + '</span></td>' +
-          '</tr>';
-      });
-
-      // Mobile cards
+      displayTrips.forEach(function(t) { rows += '<tr><td class="td-id">' + t.id + '</td><td class="td-pickup">' + extractCityArea(t.pickup_text) + '</td><td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'date') + '</td><td class="td-date">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'time') + '</td><td class="td-pickup">' + (t.flight_number || '—') + '</td><td class="td-status"><span class="status-badge"><span class="status-dot"></span>' + t.status + '</span></td></tr>'; });
       var cards = '';
-      displayTrips.forEach(function(t) {
-        cards += '<div class="request-card">' +
-          '<div class="request-card-header">' +
-            '<div class="request-card-id">' + t.id + '</div>' +
-            '<span class="status-badge"><span class="status-dot"></span>' + t.status + '</span>' +
-          '</div>' +
-          '<div class="request-card-row">' +
-            '<span class="request-card-label">Area</span>' +
-            '<span class="request-card-value">' + extractCityArea(t.pickup_text) + '</span>' +
-          '</div>' +
-          '<div class="request-card-row">' +
-            '<span class="request-card-label">Date</span>' +
-            '<span class="request-card-value">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'date') + '</span>' +
-          '</div>' +
-          '<div class="request-card-row">' +
-            '<span class="request-card-label">Time</span>' +
-            '<span class="request-card-value">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'time') + '</span>' +
-          '</div>' +
-          '<div class="request-card-row">' +
-            '<span class="request-card-label">Flight</span>' +
-            '<span class="request-card-value">' + (t.flight_number || '—') + '</span>' +
-          '</div>' +
-        '</div>';
-      });
-
-      container.innerHTML =
-        '<div class="requests-table-wrap">' +
-          '<table class="requests-table">' +
-            '<thead><tr>' +
-              '<th>Request ID</th>' +
-              '<th>Pickup Area</th>' +
-              '<th>Pickup Date</th>' +
-              '<th>Pickup Time</th>' +
-              '<th>Flight</th>' +
-              '<th>Status</th>' +
-            '</tr></thead>' +
-            '<tbody>' + rows + '</tbody>' +
-          '</table>' +
-        '</div>' +
-        '<div class="request-cards">' + cards + '</div>';
+      displayTrips.forEach(function(t) { cards += '<div class="request-card"><div class="request-card-header"><div class="request-card-id">' + t.id + '</div><span class="status-badge"><span class="status-dot"></span>' + t.status + '</span></div><div class="request-card-row"><span class="request-card-label">Area</span><span class="request-card-value">' + extractCityArea(t.pickup_text) + '</span></div><div class="request-card-row"><span class="request-card-label">Date</span><span class="request-card-value">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'date') + '</span></div><div class="request-card-row"><span class="request-card-label">Time</span><span class="request-card-value">' + formatLocalDate(t.pickup_time_utc, t.pickup_timezone, 'time') + '</span></div><div class="request-card-row"><span class="request-card-label">Flight</span><span class="request-card-value">' + (t.flight_number || '—') + '</span></div></div>'; });
+      container.innerHTML = '<div class="requests-table-wrap"><table class="requests-table"><thead><tr><th>Request ID</th><th>Pickup Area</th><th>Pickup Date</th><th>Pickup Time</th><th>Flight</th><th>Status</th></tr></thead><tbody>' + rows + '</tbody></table></div><div class="request-cards">' + cards + '</div>';
     }
 
     async function fetchRequests() {
       const dot = document.getElementById('refreshDot');
       const label = document.getElementById('refreshLabel');
       const lastUpdated = document.getElementById('lastUpdated');
-
       dot.classList.add('refreshing');
       label.textContent = 'Refreshing...';
-
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
-
-        if (data.ok && Array.isArray(data.trips)) {
-          renderRequests(data.trips);
-          const now = new Date().toLocaleTimeString('en-US', {
-            hour: 'numeric', minute: '2-digit', second: '2-digit'
-          });
-          lastUpdated.textContent = `Last updated: ${now}`;
-        } else {
-          throw new Error(data.error || 'Unknown error');
-        }
-      } catch (err) {
-        document.getElementById('requestsContainer').innerHTML = `
-          <div class="requests-error">
-            ⚠️ Could not load pickup requests. Will retry automatically.<br>
-            <small>${err.message}</small>
-          </div>`;
-      } finally {
-        dot.classList.remove('refreshing');
-        label.textContent = 'Auto-refreshing every 30s';
-      }
+        if (data.ok && Array.isArray(data.trips)) { renderRequests(data.trips); const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' }); lastUpdated.textContent = `Last updated: ${now}`; }
+        else { throw new Error(data.error || 'Unknown error'); }
+      } catch (err) { document.getElementById('requestsContainer').innerHTML = `<div class="requests-error">⚠️ Could not load pickup requests. Will retry automatically.<br><small>${err.message}</small></div>`; }
+      finally { dot.classList.remove('refreshing'); label.textContent = 'Auto-refreshing every 30s'; }
     }
 
     fetchRequests();
     setInterval(fetchRequests, 30000);
   </script>
-
-
-
 </body>
 </html>
