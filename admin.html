@@ -220,6 +220,10 @@
         </div>
         <div class="form-group"><label>Pickup Address *</label><input type="text" id="createPickup" required placeholder="Full pickup address"></div>
         <div class="form-group"><label>Dropoff Address *</label><input type="text" id="createDropoff" required placeholder="Full dropoff address"></div>
+        <div class="form-group">
+          <button type="button" class="btn btn-warning" id="calcFareBtn" onclick="calcAdminFare()" style="margin-bottom:0;">🧮 Calculate Fare</button>
+          <div id="calcFareResult" style="display:none;margin-top:8px;padding:10px;background:#f0fdf4;border:1px solid #10b981;border-radius:6px;font-size:0.9rem;color:#065f46;"></div>
+        </div>
         <div class="form-group"><label>Pickup Date *</label><input type="date" id="createDate" required></div>
         <div class="form-group"><label>Pickup Time (local) *</label><input type="time" id="createTime" required></div>
         <div class="form-group"><label>Flight Number</label><input type="text" id="createFlight" placeholder="UA1234"></div>
@@ -451,6 +455,56 @@
     document.getElementById('reasonFilter').addEventListener('change',()=>displayBlockedRiders(blockedRiders));
     document.getElementById('statusFilter').addEventListener('change',()=>displayBlockedRiders(blockedRiders));
 
+
+    async function calcAdminFare() {
+      const pickup = document.getElementById('createPickup').value.trim();
+      const dropoff = document.getElementById('createDropoff').value.trim();
+      const riderType = document.getElementById('createRiderType').value;
+      const resultEl = document.getElementById('calcFareResult');
+      const btn = document.getElementById('calcFareBtn');
+
+      if (!pickup || !dropoff) {
+        resultEl.style.display = 'block';
+        resultEl.style.background = '#fff5f5';
+        resultEl.style.borderColor = '#ef4444';
+        resultEl.style.color = '#991b1b';
+        resultEl.textContent = '❌ Enter pickup and dropoff addresses first.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Calculating...';
+      resultEl.style.display = 'none';
+
+      try {
+        const res = await fetch(WORKER_URL + '/api/quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pickup_text: pickup, dropoff_text: dropoff, rider_type: riderType })
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          const fare = data.estimate.total.toFixed(2);
+          document.getElementById('createFare').value = fare;
+          resultEl.style.display = 'block';
+          resultEl.style.background = '#f0fdf4';
+          resultEl.style.borderColor = '#10b981';
+          resultEl.style.color = '#065f46';
+          resultEl.textContent = '✅ ' + data.miles.toFixed(1) + ' mi · ' + Math.round(data.minutes) + ' min · $' + fare;
+        } else {
+          throw new Error(data.error || data.message || 'Quote failed');
+        }
+      } catch(err) {
+        resultEl.style.display = 'block';
+        resultEl.style.background = '#fff5f5';
+        resultEl.style.borderColor = '#ef4444';
+        resultEl.style.color = '#991b1b';
+        resultEl.textContent = '❌ ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🧮 Calculate Fare';
+      }
+    }
 
     function openCreateTripModal() {
       // Set today's date as default
