@@ -11,8 +11,6 @@
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-
-    /* NAV */
     .page-body{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;}
     .site-header{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08);position:sticky;top:0;z-index:9999;}
     .nav-container{max-width:1200px;margin:0 auto;padding:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
@@ -29,8 +27,7 @@
       .nav-links.tw-open{display:flex;}
       .nav-mobile-btn{display:block;}
     }
-
-    body{background:linear-gradient(135deg,#10b981 0%,#059669 100%);min-height:100vh;padding:20px;display:flex;align-items:center;justify-content:center;}
+    body{background:linear-gradient(135deg,#10b981 0%,#059669 100%);min-height:100vh;display:flex;flex-direction:column;}
     .container{width:100%;max-width:900px;background:#fff;border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(0,0,0,.22);}
     .badge{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;padding:10px 18px;border-radius:999px;text-align:center;font-weight:800;margin-bottom:14px;letter-spacing:.2px;}
     h1{text-align:center;color:#222;margin-bottom:8px;font-size:28px;}
@@ -69,8 +66,6 @@
   </style>
 </head>
 <body>
-
-  <!-- NAV -->
   <header class="site-header">
     <nav class="nav-container">
       <a href="/" class="nav-logo"><span class="nav-logo-dot"></span><span>TravylWay</span></a>
@@ -88,49 +83,37 @@
 
   <div class="page-body">
   <div class="container">
-    <!-- WhatsApp -->
     <div style="margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);border-radius:8px;text-align:center;box-shadow:0 2px 8px rgba(37,211,102,0.3);">
       <a href="https://wa.me/17204748851?text=Hi%2C%20I%20have%20a%20question%20about%20TravylWay%20services" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:10px;color:white;text-decoration:none;font-weight:600;font-size:1.05em;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         <span>Contact Us on WhatsApp</span>
       </a>
     </div>
-
-    <!-- Email banner -->
     <div style="margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);border-radius:8px;text-align:center;box-shadow:0 2px 8px rgba(79,70,229,0.3);">
       <a href="mailto:pickuprequest@travylway.com" style="display:inline-flex;align-items:center;gap:10px;color:white;text-decoration:none;font-weight:600;font-size:1.05em;">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
         <span>pickuprequest@travylway.com</span>
       </a>
     </div>
-
     <div class="badge">🏙️ LOCAL RIDES - CITY TRANSPORTATION</div>
     <h1>🏙️ Local Rides</h1>
     <div class="subhead">City-to-city transportation. Perfect for events, concerts, errands, and local travel.</div>
-
-    <div class="alert-box">
-      <strong>⚠️ NO AIRPORT RIDES</strong><br>
-      This service is for city transportation only. Neither pickup nor dropoff can be an airport. For airport rides, use our Airport Service.
-    </div>
+    <div class="alert-box"><strong>⚠️ NO AIRPORT RIDES</strong><br>This service is for city transportation only. Neither pickup nor dropoff can be an airport. For airport rides, use our Airport Service.</div>
 
     <form id="localForm" autocomplete="on">
       <div class="hp"><label>Website</label><input type="text" id="website" tabindex="-1" autocomplete="off" /></div>
-
       <div class="form-group"><label>Your Name *</label><input type="text" id="name" required placeholder="John Doe" maxlength="80" /></div>
       <div class="form-group"><label>Phone Number *</label><input type="tel" id="phone" required placeholder="+1 (720) 555-1234" maxlength="24" /><div class="hint">Used for confirmation + driver coordination.</div></div>
       <div class="form-group"><label>Email Address (optional)</label><input type="email" id="rider_email" placeholder="you@example.com" maxlength="120" /><div class="hint">Receive a booking confirmation email</div></div>
       <div class="form-group"><label>Pickup Address *</label><div id="pickupGeocoder"></div><div class="hint">Start typing to see suggestions (no airports)</div></div>
       <div class="form-group"><label>Dropoff Address *</label><div id="dropoffGeocoder"></div><div class="hint">Start typing to see suggestions (no airports)</div></div>
-
       <div class="map-info" id="mapInfo">📍 Select pickup and dropoff addresses above to see route on map</div>
       <div id="map"></div>
-
       <div class="grid">
         <div class="form-group"><label>Pickup Date *</label><input type="date" id="date" required /></div>
         <div class="form-group"><label>Pickup Time (local) *</label><input type="time" id="time" required /></div>
       </div>
       <div class="form-group"><label>Notes (optional)</label><textarea id="notes" placeholder="Special requests, event details, luggage count, etc..."></textarea></div>
-
       <div class="form-group">
         <button type="button" class="btn secondary" id="quoteBtn"><span id="quoteText">Calculate Fare</span><span class="loading" id="quoteSpinner" style="display:none;"></span></button>
         <div id="quoteBox" class="quote-box">
@@ -140,11 +123,9 @@
           <div class="hint" style="margin-top:8px;">Premium local rates. Estimate only — final fare confirmed after route/traffic.</div>
         </div>
       </div>
-
       <div class="turnstile-wrapper">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAACMebvxe_6kPGUnO" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError"></div>
       </div>
-
       <div style="margin:20px 0;padding:16px 20px;background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border:2px solid #f59e0b;border-radius:8px;box-shadow:0 2px 8px rgba(245,158,11,0.2);">
         <div style="display:flex;align-items:flex-start;gap:12px;">
           <span style="font-size:1.5em;flex-shrink:0;">⚠️</span>
@@ -158,14 +139,11 @@
           </div>
         </div>
       </div>
-
       <button type="submit" class="btn" id="submitBtn"><span id="submitText">Submit Local Ride Booking</span><span class="loading" id="loadingSpinner" style="display:none;"></span></button>
     </form>
-
     <div id="message" class="message"></div>
     <div class="footer-note">Local rides only. No airport pickups or dropoffs. Premium rates apply.</div>
   </div>
-
   </div>
 
   <script>
@@ -189,16 +167,16 @@
     const quoteMinutesEl = document.getElementById('quoteMinutes');
     const quoteTotalEl = document.getElementById('quoteTotal');
 
-    let latestEstimatedFare = 0;
-    let turnstileToken = null;
-    let pickupAddress = '';
-    let dropoffAddress = '';
-    let pickupCoords = null;
-    let dropoffCoords = null;
+    let latestEstimatedFare = 0, turnstileToken = null, pickupAddress = '', dropoffAddress = '', pickupCoords = null, dropoffCoords = null;
 
-    const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/streets-v12', center: [-98.5795, 39.8283], zoom: 3 });
-    let pickupMarker = null;
-    let dropoffMarker = null;
+    let map = null, pickupMarker = null, dropoffMarker = null;
+    try {
+      map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/streets-v12', center: [-98.5795, 39.8283], zoom: 3 });
+    } catch(e) {
+      console.warn('Map WebGL failed:', e.message);
+      document.getElementById('map').style.display = 'none';
+      document.getElementById('mapInfo').style.display = 'none';
+    }
 
     window.onTurnstileSuccess = function(token) { turnstileToken = token; };
     window.onTurnstileExpired = function() { turnstileToken = null; };
@@ -220,39 +198,18 @@
       'BOS':{ name:'Boston Logan International Airport, Boston, Massachusetts', coords:[-71.0096,42.3656] }
     };
 
-    function isAirportResult(item) {
-      const name = item.place_name.toLowerCase();
-      return name.includes('airport') || name.includes('terminal') || name.includes('international') || (item.place_type && item.place_type.includes('poi'));
-    }
-    function isConfusingStreet(item, searchTerm) {
-      const name = item.place_name.toLowerCase();
-      const search = (searchTerm || '').toLowerCase();
-      if (search.includes('airport') && item.place_type && item.place_type.includes('address') && name.includes('airport') && !name.includes('international') && !name.includes('terminal')) return true;
-      return false;
-    }
+    function isAirportResult(item) { const n = item.place_name.toLowerCase(); return n.includes('airport')||n.includes('terminal')||n.includes('international')||(item.place_type&&item.place_type.includes('poi')); }
+    function isConfusingStreet(item, s) { const n=item.place_name.toLowerCase(); const se=(s||'').toLowerCase(); if(se.includes('airport')&&item.place_type&&item.place_type.includes('address')&&n.includes('airport')&&!n.includes('international')&&!n.includes('terminal'))return true; return false; }
     function renderResult(item) {
-      const parts = item.place_name.split(',');
-      const location = parts[0].trim();
-      const city = parts[1]?.trim() || '';
-      const state = parts[2]?.trim() || '';
-      const country = parts[3]?.trim() || '';
-      if (isAirportResult(item)) {
-        return `<div style="background:linear-gradient(90deg,#e0f2fe 0%,#f0f9ff 100%);border-left:4px solid #0284c7;padding:10px 12px;margin:2px 0;font-weight:600;border-radius:2px;"><span style="color:#0284c7;font-size:1.2em;margin-right:6px;">✈️</span><span style="color:#0c4a6e;">${location}</span><div style="font-size:0.85em;color:#0369a1;font-weight:400;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong>${state}</strong></div></div>`;
-      }
-      return `<div style="padding:8px 12px;"><div style="font-weight:500;">${location}</div><div style="font-size:0.85em;color:#666;margin-top:2px;">${city}${city && state ? ', ' : ''}<strong style="color:#0284c7;text-transform:uppercase;">${state}</strong>${country ? `, ${country}` : ''}</div></div>`;
+      const parts=item.place_name.split(','); const location=parts[0].trim(); const city=parts[1]?.trim()||''; const state=parts[2]?.trim()||''; const country=parts[3]?.trim()||'';
+      if(isAirportResult(item)) return `<div style="background:linear-gradient(90deg,#e0f2fe 0%,#f0f9ff 100%);border-left:4px solid #0284c7;padding:10px 12px;margin:2px 0;font-weight:600;border-radius:2px;"><span style="color:#0284c7;font-size:1.2em;margin-right:6px;">✈️</span><span style="color:#0c4a6e;">${location}</span><div style="font-size:0.85em;color:#0369a1;font-weight:400;margin-top:2px;">${city}${city&&state?', ':''}<strong>${state}</strong></div></div>`;
+      return `<div style="padding:8px 12px;"><div style="font-weight:500;">${location}</div><div style="font-size:0.85em;color:#666;margin-top:2px;">${city}${city&&state?', ':''}<strong style="color:#0284c7;text-transform:uppercase;">${state}</strong>${country?`, ${country}`:''}</div></div>`;
     }
-
     function geocoderConfig(placeholder) {
-      return {
-        accessToken: MAPBOX_TOKEN, placeholder, mapboxgl, types: 'poi,address,place', limit: 6,
-        localGeocoder: function(query) {
-          const upperQuery = query.toUpperCase().trim();
-          if (airportCodes[upperQuery]) return [{ place_name: airportCodes[upperQuery].name, center: airportCodes[upperQuery].coords, place_type: ['airport'], text: airportCodes[upperQuery].name, properties: {} }];
-          return null;
-        },
-        filter: function(item) { return !isConfusingStreet(item, this._inputEl ? this._inputEl.value : ''); },
-        render: renderResult
-      };
+      return { accessToken:MAPBOX_TOKEN, placeholder, mapboxgl, types:'poi,address,place', limit:6,
+        localGeocoder: function(q) { const u=q.toUpperCase().trim(); if(airportCodes[u])return[{place_name:airportCodes[u].name,center:airportCodes[u].coords,place_type:['airport'],text:airportCodes[u].name,properties:{}}]; return null; },
+        filter: function(item) { return !isConfusingStreet(item, this._inputEl?this._inputEl.value:''); },
+        render: renderResult };
     }
 
     const pickupGeocoder = new MapboxGeocoder(geocoderConfig('Enter pickup address'));
@@ -260,86 +217,53 @@
     pickupGeocoder.addTo('#pickupGeocoder');
     dropoffGeocoder.addTo('#dropoffGeocoder');
 
-    pickupGeocoder.on('result', function(e) { pickupAddress = e.result.place_name; pickupCoords = e.result.geometry.coordinates; if (pickupMarker) pickupMarker.remove(); pickupMarker = new mapboxgl.Marker({color:'#10b981'}).setLngLat(pickupCoords).addTo(map); updateMap(); updateMapInfo(); quoteBox.style.display='none'; latestEstimatedFare=0; });
-    dropoffGeocoder.on('result', function(e) { dropoffAddress = e.result.place_name; dropoffCoords = e.result.geometry.coordinates; if (dropoffMarker) dropoffMarker.remove(); dropoffMarker = new mapboxgl.Marker({color:'#ef4444'}).setLngLat(dropoffCoords).addTo(map); updateMap(); updateMapInfo(); quoteBox.style.display='none'; latestEstimatedFare=0; });
+    pickupGeocoder.on('result', function(e) { pickupAddress=e.result.place_name; pickupCoords=e.result.geometry.coordinates; if(pickupMarker)pickupMarker.remove(); if(map)pickupMarker=new mapboxgl.Marker({color:'#10b981'}).setLngLat(pickupCoords).addTo(map); updateMap(); updateMapInfo(); quoteBox.style.display='none'; latestEstimatedFare=0; });
+    dropoffGeocoder.on('result', function(e) { dropoffAddress=e.result.place_name; dropoffCoords=e.result.geometry.coordinates; if(dropoffMarker)dropoffMarker.remove(); if(map)dropoffMarker=new mapboxgl.Marker({color:'#ef4444'}).setLngLat(dropoffCoords).addTo(map); updateMap(); updateMapInfo(); quoteBox.style.display='none'; latestEstimatedFare=0; });
 
     async function updateMap() {
-      if (!pickupCoords || !dropoffCoords) return;
-      const bounds = new mapboxgl.LngLatBounds();
-      bounds.extend(pickupCoords); bounds.extend(dropoffCoords);
-      map.fitBounds(bounds, {padding: 50});
-      try {
-        const res = await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`);
-        const data = await res.json();
-        if (data.routes && data.routes.length > 0) {
-          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
-          map.addSource('route', { type:'geojson', data:{ type:'Feature', geometry:data.routes[0].geometry } });
-          map.addLayer({ id:'route', type:'line', source:'route', layout:{'line-join':'round','line-cap':'round'}, paint:{'line-color':'#10b981','line-width':4} });
-        }
-      } catch(e) { console.error('Failed to load route:', e); }
+      if(!pickupCoords||!dropoffCoords||!map)return;
+      const bounds=new mapboxgl.LngLatBounds(); bounds.extend(pickupCoords); bounds.extend(dropoffCoords); map.fitBounds(bounds,{padding:50});
+      try { const res=await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`); const data=await res.json(); if(data.routes&&data.routes.length>0){if(map&&map.getSource('route')){map.removeLayer('route');map.removeSource('route');}map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#10b981','line-width':4}});} } catch(e){console.error('Failed to load route:',e);}
     }
-
-    function updateMapInfo() {
-      if (pickupCoords && dropoffCoords) { document.getElementById('mapInfo').innerHTML = '🗺️ Route displayed: <span style="color:#10b981;">●</span> Pickup → <span style="color:#ef4444;">●</span> Dropoff'; }
-      else if (pickupCoords) { document.getElementById('mapInfo').textContent = '📍 Pickup location set. Add dropoff to see route.'; }
-      else if (dropoffCoords) { document.getElementById('mapInfo').textContent = '📍 Dropoff location set. Add pickup to see route.'; }
-    }
-    function showMessage(type, text) { messageDiv.className = `message ${type}`; messageDiv.textContent = text; messageDiv.style.display = 'block'; }
-    function toUtcIsoFromLocalDateAndTime(dateStr, timeStr) { const [y,m,d] = dateStr.split('-').map(Number); const [hh,min] = timeStr.split(':').map(Number); return new Date(y,(m-1),d,hh,min,0).toISOString(); }
-    function getLocalYMD() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-    function setMinDateToToday() { const today = getLocalYMD(); dateEl.min = today; if (!dateEl.value || dateEl.value < today) { dateEl.value = today; } }
+    function updateMapInfo() { if(pickupCoords&&dropoffCoords){document.getElementById('mapInfo').innerHTML='🗺️ Route displayed: <span style="color:#10b981;">●</span> Pickup → <span style="color:#ef4444;">●</span> Dropoff';}else if(pickupCoords){document.getElementById('mapInfo').textContent='📍 Pickup location set. Add dropoff to see route.';}else if(dropoffCoords){document.getElementById('mapInfo').textContent='📍 Dropoff location set. Add pickup to see route.';} }
+    function showMessage(type,text){messageDiv.className=`message ${type}`;messageDiv.textContent=text;messageDiv.style.display='block';}
+    function toUtcIso(dateStr,timeStr){const[y,m,d]=dateStr.split('-').map(Number);const[hh,min]=timeStr.split(':').map(Number);return new Date(y,(m-1),d,hh,min,0).toISOString();}
+    function getLocalYMD(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+    function setMinDateToToday(){const today=getLocalYMD();dateEl.min=today;if(!dateEl.value||dateEl.value<today){dateEl.value=today;}}
     setMinDateToToday();
-    dateEl.addEventListener("change", setMinDateToToday);
-    phoneEl.addEventListener('input', function() { this.value = this.value.replace(/[^\d+()\s-]/g, ''); });
+    dateEl.addEventListener("change",setMinDateToToday);
+    phoneEl.addEventListener('input',function(){this.value=this.value.replace(/[^\d+()\s-]/g,'');});
 
-    quoteBtn.addEventListener('click', async () => {
-      if (!pickupAddress || !dropoffAddress) { showMessage('error', '❌ Please select both pickup and dropoff addresses to calculate fare.'); return; }
-      quoteBtn.disabled = true; quoteText.style.display = 'none'; quoteSpinner.style.display = 'inline-block'; messageDiv.style.display = 'none';
-      try {
-        const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ pickup_text:pickupAddress, dropoff_text:dropoffAddress, pickup_coords:pickupCoords, dropoff_coords:dropoffCoords, rider_type:'LOCAL' }) });
-        const data = await res.json();
-        if (res.ok && data.ok) { latestEstimatedFare = data.estimate?.total || 0; quoteMilesEl.textContent = `${(data.miles||0).toFixed(1)} mi`; quoteMinutesEl.textContent = `${Math.round(data.minutes||0)} min`; quoteTotalEl.textContent = `$${latestEstimatedFare.toFixed(2)}`; quoteBox.style.display = 'block'; }
-        else { throw new Error(data.error || 'Failed to calculate fare'); }
-      } catch(err) { showMessage('error', `❌ Fare calculation error: ${err.message}`); quoteBox.style.display = 'none'; }
-      finally { quoteBtn.disabled = false; quoteText.style.display = 'inline'; quoteSpinner.style.display = 'none'; }
+    quoteBtn.addEventListener('click',async()=>{
+      if(!pickupAddress||!dropoffAddress){showMessage('error','❌ Please select both pickup and dropoff addresses to calculate fare.');return;}
+      quoteBtn.disabled=true;quoteText.style.display='none';quoteSpinner.style.display='inline-block';messageDiv.style.display='none';
+      try{const res=await fetch(`${CLOUDFLARE_WORKER_URL}/api/quote`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pickup_text:pickupAddress,dropoff_text:dropoffAddress,pickup_coords:pickupCoords,dropoff_coords:dropoffCoords,rider_type:'LOCAL'})});const data=await res.json();if(res.ok&&data.ok){latestEstimatedFare=data.estimate?.total||0;quoteMilesEl.textContent=`${(data.miles||0).toFixed(1)} mi`;quoteMinutesEl.textContent=`${Math.round(data.minutes||0)} min`;quoteTotalEl.textContent=`$${latestEstimatedFare.toFixed(2)}`;quoteBox.style.display='block';}else{throw new Error(data.error||'Failed to calculate fare');}}
+      catch(err){showMessage('error',`❌ Fare calculation error: ${err.message}`);quoteBox.style.display='none';}
+      finally{quoteBtn.disabled=false;quoteText.style.display='inline';quoteSpinner.style.display='none';}
     });
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit',async(e)=>{
       e.preventDefault();
-      if (document.getElementById('website').value.trim()) { showMessage('error', '❌ Submission blocked.'); return; }
-      if (!turnstileToken) { showMessage('error', '❌ Please complete the security verification.'); return; }
-      if (!pickupAddress || !dropoffAddress) { showMessage('error', '❌ Both pickup and dropoff addresses are required.'); return; }
-      if (!dateEl.value || !timeEl.value) { showMessage('error', '❌ Pickup date and time are required.'); return; }
-      if (latestEstimatedFare <= 0) { showMessage('error', '❌ Please click "Calculate Fare" to get a quote before submitting.'); return; }
-      submitBtn.disabled = true; submitText.style.display = 'none'; loadingSpinner.style.display = 'inline-block'; messageDiv.style.display = 'none';
-      const payload = { created_by:document.getElementById('name').value.trim(), rider_phone:phoneEl.value.trim(), rider_type:'LOCAL', service_type:'LOCAL', pickup_text:pickupAddress, dropoff_text:dropoffAddress, pickup_time_utc:toUtcIsoFromLocalDateAndTime(dateEl.value,timeEl.value), pickup_timezone:Intl.DateTimeFormat().resolvedOptions().timeZone, flight_number:'', airline:'', airport_code:'', notes:document.getElementById('notes').value.trim(), estimated_fare:latestEstimatedFare, rider_email:document.getElementById('rider_email').value.trim()||'', source:'local-rides.html', 'cf-turnstile-response':turnstileToken };
-      try {
-        const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-        const data = await res.json().catch(()=>({}));
-        if (res.ok && data?.ok) {
-          showMessage('success', `✅ Local ride booking submitted! Confirmation ID: ${data?.trip_id||'N/A'}. You'll receive confirmation via Telegram.`);
-          form.reset(); setMinDateToToday();
-          if (pickupMarker) pickupMarker.remove(); if (dropoffMarker) dropoffMarker.remove();
-          if (map.getSource('route')) { map.removeLayer('route'); map.removeSource('route'); }
-          pickupAddress=''; dropoffAddress=''; pickupCoords=null; dropoffCoords=null;
-          document.getElementById('mapInfo').textContent = '📍 Select pickup and dropoff addresses above to see route on map';
-          latestEstimatedFare=0; quoteBox.style.display='none'; turnstileToken=null;
-          if (window.turnstile) { window.turnstile.reset(); }
-          pickupGeocoder.clear(); dropoffGeocoder.clear();
-        } else {
-          let msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
-          if (msg.includes('airport')||msg.includes('AIRPORT')) msg = 'Airport addresses are not allowed for local rides. Please use our Airport Service instead.';
-          throw new Error(msg);
-        }
-      } catch(err) { showMessage('error', `❌ Error: ${err.message}`); }
-      finally { submitBtn.disabled=false; submitText.style.display='inline'; loadingSpinner.style.display='none'; }
+      if(document.getElementById('website').value.trim()){showMessage('error','❌ Submission blocked.');return;}
+      if(!turnstileToken){showMessage('error','❌ Please complete the security verification.');return;}
+      if(!pickupAddress||!dropoffAddress){showMessage('error','❌ Both pickup and dropoff addresses are required.');return;}
+      if(!dateEl.value||!timeEl.value){showMessage('error','❌ Pickup date and time are required.');return;}
+      if(latestEstimatedFare<=0){showMessage('error','❌ Please click "Calculate Fare" to get a quote before submitting.');return;}
+      submitBtn.disabled=true;submitText.style.display='none';loadingSpinner.style.display='inline-block';messageDiv.style.display='none';
+      const payload={created_by:document.getElementById('name').value.trim(),rider_phone:phoneEl.value.trim(),rider_type:'LOCAL',service_type:'LOCAL',pickup_text:pickupAddress,dropoff_text:dropoffAddress,pickup_time_utc:toUtcIso(dateEl.value,timeEl.value),pickup_timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,flight_number:'',airline:'',airport_code:'',notes:document.getElementById('notes').value.trim(),estimated_fare:latestEstimatedFare,rider_email:document.getElementById('rider_email').value.trim()||'',source:'local-rides.html','cf-turnstile-response':turnstileToken};
+      try{
+        const res=await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const data=await res.json().catch(()=>({}));
+        if(res.ok&&data?.ok){showMessage('success',`✅ Local ride booking submitted! Confirmation ID: ${data?.trip_id||'N/A'}. You'll receive confirmation via Telegram.`);form.reset();setMinDateToToday();if(pickupMarker)pickupMarker.remove();if(dropoffMarker)dropoffMarker.remove();if(map&&map.getSource('route')){map.removeLayer('route');map.removeSource('route');}pickupAddress='';dropoffAddress='';pickupCoords=null;dropoffCoords=null;document.getElementById('mapInfo').textContent='📍 Select pickup and dropoff addresses above to see route on map';latestEstimatedFare=0;quoteBox.style.display='none';turnstileToken=null;if(window.turnstile){window.turnstile.reset();}pickupGeocoder.clear();dropoffGeocoder.clear();}
+        else{let msg=data?.error||data?.message||`HTTP ${res.status}: ${res.statusText}`;if(msg.includes('airport')||msg.includes('AIRPORT'))msg='Airport addresses are not allowed for local rides. Please use our Airport Service instead.';throw new Error(msg);}
+      }catch(err){showMessage('error',`❌ Error: ${err.message}`);}
+      finally{submitBtn.disabled=false;submitText.style.display='inline';loadingSpinner.style.display='none';}
     });
 
-    // Nav mobile menu
-    const menuBtn = document.getElementById('menuBtn');
-    const navLinks = document.getElementById('navLinks');
-    menuBtn.addEventListener('click', () => { navLinks.classList.toggle('tw-open'); menuBtn.textContent = navLinks.classList.contains('tw-open') ? '✕' : '☰'; });
-    navLinks.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('tw-open'); menuBtn.textContent = '☰'; }); });
+    const menuBtn=document.getElementById('menuBtn');
+    const navLinks=document.getElementById('navLinks');
+    menuBtn.addEventListener('click',()=>{navLinks.classList.toggle('tw-open');menuBtn.textContent=navLinks.classList.contains('tw-open')?'✕':'☰';});
+    navLinks.querySelectorAll('a').forEach(link=>{link.addEventListener('click',()=>{navLinks.classList.remove('tw-open');menuBtn.textContent='☰';});});
   </script>
 </body>
 </html>
