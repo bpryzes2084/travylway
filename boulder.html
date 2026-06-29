@@ -13,6 +13,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
     /* NAV */
+    .page-body{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;}
     .site-header{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08);position:sticky;top:0;z-index:9999;}
     .nav-container{max-width:1200px;margin:0 auto;padding:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
     .nav-logo{font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
@@ -24,7 +25,8 @@
     .nav-mobile-btn{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0.5rem;}
     @media(max-width:768px){.nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;padding:1rem;box-shadow:0 8px 16px rgba(0,0,0,0.1);gap:0;}.nav-links a{padding:1rem;width:100%;text-align:center;border-bottom:1px solid #f1f5f9;display:block;}.nav-links.tw-open{display:flex;}.nav-mobile-btn{display:block;}}
 
-    body{background:linear-gradient(135deg,#0ea5e9 0%,#0369a1 100%);min-height:100vh;padding:20px;display:flex;align-items:center;justify-content:center;}
+    .page-body{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;}
+    body{background:linear-gradient(135deg,#0ea5e9 0%,#0369a1 100%);min-height:100vh;display:flex;flex-direction:column;}
     .container{width:100%;max-width:900px;background:#fff;border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(0,0,0,.22);}
     .badge{background:linear-gradient(135deg,#0ea5e9 0%,#0369a1 100%);color:#fff;padding:10px 18px;border-radius:999px;text-align:center;font-weight:800;margin-bottom:14px;letter-spacing:.2px;}
     h1{text-align:center;color:#222;margin-bottom:8px;font-size:28px;}
@@ -82,6 +84,8 @@
     </nav>
   </header>
 
+  <div class="page-body">
+  <div class="page-body">
   <div class="container">
 
     <!-- WhatsApp -->
@@ -166,6 +170,9 @@
     <div class="footer-note">Boulder ↔ Denver International Airport service. Standard rates apply.</div>
   </div>
 
+  </div>
+  </div>
+
   <script>
     const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
     const MAPBOX_TOKEN = 'pk.eyJ1IjoiYnByeXplczIwODQiLCJhIjoiY21sbmtkOXRwMGZwdTNlcTNlbDZjcXNsOCJ9.MA-V_fUeihAhAm28Brnojg';
@@ -216,8 +223,8 @@
       return `<div style="padding:8px 12px;"><div style="font-weight:500;">${location}</div><div style="font-size:0.85em;color:#666;margin-top:2px;">${city}${city&&state?', ':''}<strong style="color:#0284c7;text-transform:uppercase;">${state}</strong>${country?`, ${country}`:''}</div></div>`;
     }
 
-    const map = new mapboxgl.Map({ container:'map', style:'mapbox://styles/mapbox/streets-v12', center:[-105.2705,40.0150], zoom:9 });
-    let pickupMarker = null, dropoffMarker = null;
+    let map=null, pickupMarker=null, dropoffMarker=null;
+    try { map = new mapboxgl.Map({ container:'map', style:'mapbox://styles/mapbox/streets-v12', center:[-105.2705,40.0150], zoom:9 }); } catch(e) { console.warn('Map WebGL failed:',e.message); document.getElementById('map').style.display='none'; document.getElementById('mapInfo').style.display='none'; }
 
     window.onTurnstileSuccess = function(token) { turnstileToken = token; };
     window.onTurnstileExpired = function() { turnstileToken = null; };
@@ -229,13 +236,13 @@
     pickupGeocoder.addTo('#pickupGeocoder');
     dropoffGeocoder.addTo('#dropoffGeocoder');
 
-    pickupGeocoder.on('result', function(e) { pickupAddress=e.result.place_name; pickupCoords=e.result.geometry.coordinates; detectedPickupAirportCode=''; const m=detectAirport(pickupAddress); if(m){detectedPickupAirportCode=m.code;pickupCoords=m.coords;document.getElementById('pickupAirportLocked').classList.add('visible');}else{document.getElementById('pickupAirportLocked').classList.remove('visible');} if(pickupMarker)pickupMarker.remove(); pickupMarker=new mapboxgl.Marker({color:'#0ea5e9'}).setLngLat(pickupCoords).addTo(map); updateMap();updateMapInfo();quoteBox.style.display='none';latestEstimatedFare=0; });
-    dropoffGeocoder.on('result', function(e) { dropoffAddress=e.result.place_name; dropoffCoords=e.result.geometry.coordinates; detectedDropoffAirportCode=''; const m=detectAirport(dropoffAddress); if(m){detectedDropoffAirportCode=m.code;dropoffCoords=m.coords;document.getElementById('dropoffAirportLocked').classList.add('visible');}else{document.getElementById('dropoffAirportLocked').classList.remove('visible');} if(dropoffMarker)dropoffMarker.remove(); dropoffMarker=new mapboxgl.Marker({color:'#ef4444'}).setLngLat(dropoffCoords).addTo(map); updateMap();updateMapInfo();quoteBox.style.display='none';latestEstimatedFare=0; });
+    pickupGeocoder.on('result', function(e) { pickupAddress=e.result.place_name; pickupCoords=e.result.geometry.coordinates; detectedPickupAirportCode=''; const m=detectAirport(pickupAddress); if(m){detectedPickupAirportCode=m.code;pickupCoords=m.coords;document.getElementById('pickupAirportLocked').classList.add('visible');}else{document.getElementById('pickupAirportLocked').classList.remove('visible');} if(pickupMarker)pickupMarker.remove(); if(map)pickupMarker=new mapboxgl.Marker({color:'#0ea5e9'}).setLngLat(pickupCoords).addTo(map); updateMap();updateMapInfo();quoteBox.style.display='none';latestEstimatedFare=0; });
+    dropoffGeocoder.on('result', function(e) { dropoffAddress=e.result.place_name; dropoffCoords=e.result.geometry.coordinates; detectedDropoffAirportCode=''; const m=detectAirport(dropoffAddress); if(m){detectedDropoffAirportCode=m.code;dropoffCoords=m.coords;document.getElementById('dropoffAirportLocked').classList.add('visible');}else{document.getElementById('dropoffAirportLocked').classList.remove('visible');} if(dropoffMarker)dropoffMarker.remove(); if(map)dropoffMarker=new mapboxgl.Marker({color:'#ef4444'}).setLngLat(dropoffCoords).addTo(map); updateMap();updateMapInfo();quoteBox.style.display='none';latestEstimatedFare=0; });
 
     async function updateMap() {
-      if(!pickupCoords||!dropoffCoords)return;
+      if(!pickupCoords||!dropoffCoords||!map)return;
       const bounds=new mapboxgl.LngLatBounds(); bounds.extend(pickupCoords); bounds.extend(dropoffCoords); map.fitBounds(bounds,{padding:50});
-      try { const res=await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`); const data=await res.json(); if(data.routes&&data.routes.length>0){if(map.getSource('route')){map.removeLayer('route');map.removeSource('route');}map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0ea5e9','line-width':4}});} } catch(e){console.error('Failed to load route:',e);}
+      try { const res=await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords[0]},${pickupCoords[1]};${dropoffCoords[0]},${dropoffCoords[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`); const data=await res.json(); if(data.routes&&data.routes.length>0){if(map&&map.getSource('route')){map.removeLayer('route');map.removeSource('route');}map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0ea5e9','line-width':4}});} } catch(e){console.error('Failed to load route:',e);}
     }
     function updateMapInfo() { if(pickupCoords&&dropoffCoords){document.getElementById('mapInfo').innerHTML='🗺️ Route displayed: <span style="color:#0ea5e9;">●</span> Pickup → <span style="color:#ef4444;">●</span> Dropoff';}else if(pickupCoords){document.getElementById('mapInfo').textContent='📍 Pickup location set. Add dropoff to see route.';}else if(dropoffCoords){document.getElementById('mapInfo').textContent='📍 Dropoff location set. Add pickup to see route.';} }
     function showMessage(type,text){messageDiv.className=`message ${type}`;messageDiv.textContent=text;messageDiv.style.display='block';}
@@ -268,7 +275,7 @@
       try{
         const res=await fetch(`${CLOUDFLARE_WORKER_URL}/api/trips`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
         const data=await res.json().catch(()=>({}));
-        if(res.ok&&data?.ok){showMessage('success',`✅ Booking submitted! Confirmation ID: ${data?.trip_id||'N/A'}. You'll receive confirmation via Telegram.`);form.reset();setMinDateToToday();if(pickupMarker)pickupMarker.remove();if(dropoffMarker)dropoffMarker.remove();if(map.getSource('route')){map.removeLayer('route');map.removeSource('route');}pickupAddress='';dropoffAddress='';pickupCoords=null;dropoffCoords=null;detectedPickupAirportCode='';detectedDropoffAirportCode='';document.getElementById('pickupAirportLocked').classList.remove('visible');document.getElementById('dropoffAirportLocked').classList.remove('visible');document.getElementById('mapInfo').textContent='📍 Select pickup and dropoff addresses above to see route on map';latestEstimatedFare=0;quoteBox.style.display='none';turnstileToken=null;if(window.turnstile)window.turnstile.reset();pickupGeocoder.clear();dropoffGeocoder.clear();}
+        if(res.ok&&data?.ok){showMessage('success',`✅ Booking submitted! Confirmation ID: ${data?.trip_id||'N/A'}. You'll receive confirmation via Telegram.`);form.reset();setMinDateToToday();if(pickupMarker)pickupMarker.remove();if(dropoffMarker)dropoffMarker.remove();if(map&&map.getSource('route')){map.removeLayer('route');map.removeSource('route');}pickupAddress='';dropoffAddress='';pickupCoords=null;dropoffCoords=null;detectedPickupAirportCode='';detectedDropoffAirportCode='';document.getElementById('pickupAirportLocked').classList.remove('visible');document.getElementById('dropoffAirportLocked').classList.remove('visible');document.getElementById('mapInfo').textContent='📍 Select pickup and dropoff addresses above to see route on map';latestEstimatedFare=0;quoteBox.style.display='none';turnstileToken=null;if(window.turnstile)window.turnstile.reset();pickupGeocoder.clear();dropoffGeocoder.clear();}
         else throw new Error(data?.error||data?.message||`HTTP ${res.status}: ${res.statusText}`);
       }catch(err){showMessage('error',`❌ Error: ${err.message}`);}
       finally{submitBtn.disabled=false;submitText.style.display='inline';loadingSpinner.style.display='none';}
