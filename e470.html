@@ -141,6 +141,35 @@
 
   <script>
     const CLOUDFLARE_WORKER_URL = 'https://api.travylway.com';
+
+    // HOLIDAY BLOCKING
+    function getHolidays(year) {
+      const h = [];
+      h.push({ name: "New Year's Day",            month: 1,  day: 1  });
+      h.push({ name: "Juneteenth",                month: 6,  day: 19 });
+      h.push({ name: "Independence Day",          month: 7,  day: 4  });
+      h.push({ name: "Veterans Day",              month: 11, day: 11 });
+      h.push({ name: "Christmas Eve",             month: 12, day: 24 });
+      h.push({ name: "Christmas Day",             month: 12, day: 25 });
+      h.push({ name: "New Year's Eve",            month: 12, day: 31 });
+      function nthDay(yr, mo, wd, n) {
+        if (n > 0) { const d = new Date(yr, mo-1, 1); let c=0; while(d.getMonth()===mo-1){if(d.getDay()===wd){c++;if(c===n)return d.getDate();}d.setDate(d.getDate()+1);} }
+        else { const d = new Date(yr, mo, 0); while(d.getMonth()===mo-1){if(d.getDay()===wd)return d.getDate();d.setDate(d.getDate()-1);} }
+      }
+      h.push({ name: "Martin Luther King Jr. Day", month: 1,  day: nthDay(year,1,1,3)  });
+      h.push({ name: "Presidents' Day",            month: 2,  day: nthDay(year,2,1,3)  });
+      h.push({ name: "Memorial Day",               month: 5,  day: nthDay(year,5,1,-1) });
+      h.push({ name: "Labor Day",                  month: 9,  day: nthDay(year,9,1,1)  });
+      h.push({ name: "Columbus Day",               month: 10, day: nthDay(year,10,1,2) });
+      h.push({ name: "Thanksgiving Day",           month: 11, day: nthDay(year,11,4,4) });
+      return h;
+    }
+    function getHolidayName(dateStr) {
+      const [y,m,d] = dateStr.split('-').map(Number);
+      const match = getHolidays(y).find(h => h.month===m && h.day===d);
+      return match ? match.name : null;
+    }
+
     const MAPBOX_TOKEN = 'pk.eyJ1IjoiYnByeXplczIwODQiLCJhIjoiY21sbmtkOXRwMGZwdTNlcTNlbDZjcXNsOCJ9.MA-V_fUeihAhAm28Brnojg';
     mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -208,6 +237,9 @@
       if(!turnstileToken){showMessage('error','❌ Please complete the security verification (checkbox above).');return;}
       if(!pickupAddress||!dropoffAddress){showMessage('error','❌ Both pickup and dropoff addresses are required.');return;}
       if(!dateEl.value||!timeEl.value){showMessage('error','❌ Pickup date and time are required.');return;}
+      const holidayName = getHolidayName(dateEl.value);
+      if (holidayName) { showMessage('error', `❌ We are not accepting bookings on ${holidayName}. Please select a different date. For assistance, contact us at pickuprequest@travylway.com`); return; }
+
       if(latestEstimatedFare<=0){showMessage('error','❌ Please click "Calculate Fare" to get a quote before submitting.');return;}
       submitBtn.disabled=true;submitText.style.display='none';loadingSpinner.style.display='inline-block';messageDiv.style.display='none';
       const payload={created_by:document.getElementById('name').value.trim(),rider_phone:phoneEl.value.trim(),rider_type:'E470',service_type:'E470',pickup_text:pickupAddress,dropoff_text:dropoffAddress,pickup_time_utc:toUtcIso(dateEl.value,timeEl.value),pickup_timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,flight_number:'',airline:'',airport_code:'',notes:document.getElementById('notes').value.trim(),estimated_fare:latestEstimatedFare,rider_email:document.getElementById('rider_email').value.trim()||'',source:'e470.html','cf-turnstile-response':turnstileToken};
