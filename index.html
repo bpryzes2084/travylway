@@ -287,7 +287,7 @@
     function formatLocalDate(utcString, timezone, mode) {
       if (!utcString) return '—';
       try {
-        const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const tz = 'America/Denver';
         const date = new Date(utcString);
         if (mode === 'date') return date.toLocaleDateString('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
         if (mode === 'time') return date.toLocaleTimeString('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true });
