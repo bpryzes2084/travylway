@@ -348,8 +348,14 @@
       finally { dot.classList.remove('refreshing'); label.textContent = 'Auto-refreshing every 30s'; }
     }
 
-    fetchRequests();
-    setInterval(fetchRequests, 30000);
+    let isFetching = false;
+    async function safeFetchRequests() {
+      if (isFetching) return;
+      isFetching = true;
+      try { await fetchRequests(); } finally { isFetching = false; }
+    }
+    safeFetchRequests();
+    setInterval(safeFetchRequests, 30000);
   </script>
 </body>
 </html>
