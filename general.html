@@ -758,14 +758,7 @@
     let detectedPickupAirportCode = '';
     let detectedDropoffAirportCode = '';
 
-    // Hotel radio button styling
-    document.querySelectorAll('input[name="hotel_needed"]').forEach(radio => {
-      radio.addEventListener('change', function() {
-        document.getElementById('hotelYesLabel').classList.toggle('selected', this.value === 'yes');
-        document.getElementById('hotelNoLabel').classList.toggle('selected', this.value === 'no');
-      });
-    });
-    });
+
 
     // Airport code mappings — canonical coords used to lock fare calculations.
     // Each airport now also carries a list of "aliases": terminal names, common
@@ -1345,10 +1338,6 @@
           
           pickupGeocoder.clear();
           dropoffGeocoder.clear();
-          document.getElementById('hotelYesLabel').classList.remove('selected');
-          document.getElementById('hotelNoLabel').classList.remove('selected');
-
-          
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
           throw new Error(msg);
