@@ -34,6 +34,8 @@
     .section-title { text-align: center; font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 0.5rem; color: var(--text); }
     .section-subtitle { text-align: center; color: var(--gray); margin-bottom: 2.5rem; font-size: 1.1rem; }
     .booking-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .booking-grid .booking-card { display: flex; flex-direction: column; }
+    .booking-grid .booking-card p { flex: 1; }
     .booking-card { background: var(--white); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: var(--text); display: block; }
     .booking-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
     .booking-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
@@ -180,12 +182,12 @@
       <div class="booking-grid">
         <div class="booking-card">
           <div class="booking-card-header"><span class="booking-icon">✈️</span><div><h3>Airline Crew</h3><span class="booking-badge badge-purple">Discount Rates</span></div></div>
-          <p>Exclusive airport transportation for flight attendants and pilots. Special crew pricing and flight tracking included.</p>
+          <p>Airport transportation for flight attendants and pilots. Crew pricing and flight tracking included.</p>
           <a href="/crew.html" class="booking-cta">Book Crew Ride →</a>
         </div>
         <div class="booking-card">
           <div class="booking-card-header"><span class="booking-icon">🚗</span><div><h3>Airport Rides</h3><span class="booking-badge badge-blue">Standard Rates</span></div></div>
-          <p>Reliable airport transportation for travelers worldwide. On-time pickups and flight monitoring for all airports.</p>
+          <p>Airport transportation for travelers worldwide. On-time pickups and flight monitoring for all airports.</p>
           <a href="/general.html" class="booking-cta">Book Airport Ride →</a>
         </div>
         <div class="booking-card">
