@@ -352,6 +352,11 @@
       outline:none;
       border-color:#667eea;
     }
+    /* DEN Terminal Quick-Select */
+    .den-terminal-select { margin-bottom: 8px; padding: 10px 14px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); border: 2px solid #0284c7; border-radius: 10px; }
+    .den-terminal-select p { font-size: 12px; font-weight: 700; color: #0c4a6e; margin-bottom: 6px; }
+    .den-terminal-select select { width: 100%; padding: 8px 10px; border: 2px solid #0284c7; border-radius: 8px; font-size: 14px; color: #0c4a6e; background: #fff; cursor: pointer; }
+
 
     /* Hotel prompt */
     .hotel-prompt {
@@ -420,45 +425,6 @@
 
     .hotel-result a:hover { transform: translateY(-2px); }
 
-    /* ModyrnPulse prompt */
-    .pulse-prompt {
-      margin: 16px 0;
-      padding: 16px 20px;
-      background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
-      border: 2px solid #a855f7;
-      border-radius: 10px;
-    }
-
-    .pulse-prompt p {
-      font-size: 14px;
-      font-weight: 700;
-      color: #581c87;
-      margin-bottom: 12px;
-    }
-
-    .pulse-radio-group {
-      display: flex;
-      gap: 16px;
-    }
-
-    .pulse-radio-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
-      color: #581c87;
-      padding: 10px 20px;
-      border: 2px solid #a855f7;
-      border-radius: 8px;
-      transition: all 0.15s ease;
-      background: #fff;
-    }
-
-    .pulse-radio-label:hover { background: #a855f7; color: #fff; }
-    .pulse-radio-label input[type="radio"] { accent-color: #a855f7; width: 16px; height: 16px; }
-    .pulse-radio-label.selected { background: #a855f7; color: #fff; }
   </style>
 </head>
 
@@ -570,6 +536,20 @@
 
       <div class="form-group">
         <label>Pickup Address *</label>
+        <div class="den-terminal-select">
+          <p>✈️ Picking up or dropping off at DEN?</p>
+          <select onchange="applyDENTerminalPickup(this.value)">
+            <option value="">— Select DEN Terminal —</option>
+            <optgroup label="Departing Flights">
+              <option value="Terminal West Departures, Denver, Colorado 80249, United States">Terminal West Departures</option>
+              <option value="Terminal East Departures, Denver, Colorado 80249, United States">Terminal East Departures</option>
+            </optgroup>
+            <optgroup label="Arriving Flights">
+              <option value="Terminal West Arrivals, Denver, Colorado 80249, United States">Terminal West Arrivals</option>
+              <option value="Terminal East Arrivals, Denver, Colorado 80249, United States">Terminal East Arrivals</option>
+            </optgroup>
+          </select>
+        </div>
         <div id="pickupGeocoder"></div>
         <div class="airport-locked" id="pickupAirportLocked">✈️ Airport coordinates locked in</div>
         <div class="hint">Start typing to see suggestions</div>
@@ -577,6 +557,20 @@
 
       <div class="form-group">
         <label>Dropoff Address *</label>
+        <div class="den-terminal-select">
+          <p>✈️ Picking up or dropping off at DEN?</p>
+          <select onchange="applyDENTerminalDropoff(this.value)">
+            <option value="">— Select DEN Terminal —</option>
+            <optgroup label="Departing Flights">
+              <option value="Terminal West Departures, Denver, Colorado 80249, United States">Terminal West Departures</option>
+              <option value="Terminal East Departures, Denver, Colorado 80249, United States">Terminal East Departures</option>
+            </optgroup>
+            <optgroup label="Arriving Flights">
+              <option value="Terminal West Arrivals, Denver, Colorado 80249, United States">Terminal West Arrivals</option>
+              <option value="Terminal East Arrivals, Denver, Colorado 80249, United States">Terminal East Arrivals</option>
+            </optgroup>
+          </select>
+        </div>
         <div id="dropoffGeocoder"></div>
         <div class="airport-locked" id="dropoffAirportLocked">✈️ Airport coordinates locked in</div>
         <div class="hint">Start typing to see suggestions</div>
@@ -618,38 +612,7 @@
         <label>Notes (optional)</label>
         <textarea id="notes" placeholder="Special requests, luggage count, etc..."></textarea>
       </div>
-
-      <!-- Hotel Prompt -->
-      <div class="hotel-prompt">
-        <p>Need a hotel for your trip?</p>
-        <div class="hotel-radio-group">
-          <label class="hotel-radio-label" id="hotelYesLabel">
-            <input type="radio" name="hotel_needed" id="hotelYes" value="yes" />
-            Yes
-          </label>
-          <label class="hotel-radio-label" id="hotelNoLabel">
-            <input type="radio" name="hotel_needed" id="hotelNo" value="no" />
-            No
-          </label>
-        </div>
-      </div>
-
-      <!-- ModyrnPulse Prompt -->
-      <div class="pulse-prompt">
-        <p> Interested on what's trending on ModyrnPulse.com?</p>
-        <div class="pulse-radio-group">
-          <label class="pulse-radio-label" id="pulseYesLabel">
-            <input type="radio" name="pulse_needed" id="pulseYes" value="yes" />
-            Yes
-          </label>
-          <label class="pulse-radio-label" id="pulseNoLabel">
-            <input type="radio" name="pulse_needed" id="pulseNo" value="no" />
-            No
-          </label>
-        </div>
-      </div>
-
-      <div class="form-group">
+<div class="form-group">
         <button type="button" class="btn secondary" id="quoteBtn">
           <span id="quoteText">Calculate Fare</span>
           <span class="loading" id="quoteSpinner" style="display:none;"></span>
@@ -800,13 +763,6 @@
         document.getElementById('hotelNoLabel').classList.toggle('selected', this.value === 'no');
       });
     });
-
-    // ModyrnPulse radio button styling
-    document.querySelectorAll('input[name="pulse_needed"]').forEach(radio => {
-      radio.addEventListener('change', function() {
-        document.getElementById('pulseYesLabel').classList.toggle('selected', this.value === 'yes');
-        document.getElementById('pulseNoLabel').classList.toggle('selected', this.value === 'no');
-      });
     });
 
     // Airport code mappings — canonical coords used to lock fare calculations.
@@ -1344,13 +1300,6 @@
         if (res.ok && data?.ok) {
           const confirmationId = data?.trip_id || 'N/A';
           showMessage('success', `✅ Booking submitted! Confirmation ID: ${confirmationId}. You'll receive confirmation via Telegram.`);
-
-          // Open ModyrnPulse in new tab if Yes selected
-          const pulseNeeded = document.querySelector('input[name="pulse_needed"]:checked');
-          if (pulseNeeded && pulseNeeded.value === 'yes') {
-            window.open('https://modyrnpulse.com', '_blank');
-          }
-
           // Redirect to hotels page if Yes was selected
           const hotelNeeded = document.querySelector('input[name="hotel_needed"]:checked');
           if (hotelNeeded && hotelNeeded.value === 'yes') {
@@ -1396,8 +1345,7 @@
           dropoffGeocoder.clear();
           document.getElementById('hotelYesLabel').classList.remove('selected');
           document.getElementById('hotelNoLabel').classList.remove('selected');
-          document.getElementById('pulseYesLabel').classList.remove('selected');
-          document.getElementById('pulseNoLabel').classList.remove('selected');
+
           
         } else {
           const msg = data?.error || data?.message || `HTTP ${res.status}: ${res.statusText}`;
@@ -1411,6 +1359,41 @@
         loadingSpinner.style.display = 'none';
       }
     });
+
+    const DEN_COORDS = [-104.6731, 39.8561];
+
+    function applyDENTerminalPickup(val) {
+      if (!val) return;
+      pickupAddress = val;
+      pickupCoords = DEN_COORDS.slice();
+      if (pickupMarker) pickupMarker.remove();
+      if (map) pickupMarker = new mapboxgl.Marker({color: '#10b981'}).setLngLat(DEN_COORDS).addTo(map);
+      pickupGeocoder.setInput(val.split(',')[0]);
+      if (typeof detectedPickupAirportCode !== 'undefined') detectedPickupAirportCode = 'DEN';
+      updateMapInfo();
+      if (pickupCoords && dropoffCoords && map) updateMap();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+      const locked = document.getElementById('pickupAirportLocked');
+      if (locked) locked.classList.add('visible');
+    }
+
+    function applyDENTerminalDropoff(val) {
+      if (!val) return;
+      dropoffAddress = val;
+      dropoffCoords = DEN_COORDS.slice();
+      if (dropoffMarker) dropoffMarker.remove();
+      if (map) dropoffMarker = new mapboxgl.Marker({color: '#ef4444'}).setLngLat(DEN_COORDS).addTo(map);
+      dropoffGeocoder.setInput(val.split(',')[0]);
+      if (typeof detectedDropoffAirportCode !== 'undefined') detectedDropoffAirportCode = 'DEN';
+      updateMapInfo();
+      if (pickupCoords && dropoffCoords && map) updateMap();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+      const locked = document.getElementById('dropoffAirportLocked');
+      if (locked) locked.classList.add('visible');
+    }
+
     // Nav mobile menu
     const menuBtn = document.getElementById('menuBtn');
     const navLinks = document.getElementById('navLinks');
