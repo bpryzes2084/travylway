@@ -1000,8 +1000,8 @@
       render: renderGeocoderResult
     });
 
-    pickupGeocoder.addTo('#pickupGeocoder');
-    dropoffGeocoder.addTo('#dropoffGeocoder');
+    pickupGeocoder.addTo(document.getElementById('pickupGeocoder'));
+    dropoffGeocoder.addTo(document.getElementById('dropoffGeocoder'));
 
     // Pickup address selected
     pickupGeocoder.on('result', function(e) {
