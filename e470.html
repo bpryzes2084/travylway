@@ -56,6 +56,11 @@
     .mapboxgl-ctrl-geocoder input{padding:14px 16px 14px 40px;font-size:16px;height:auto;min-height:48px;}
     .mapboxgl-ctrl-geocoder--icon{width:20px;height:20px;left:10px;}
     .mapboxgl-ctrl-geocoder--input:focus{outline:none;border-color:#f59e0b;}
+    /* DEN Terminal Quick-Select */
+    .den-terminal-select { margin-bottom: 8px; padding: 10px 14px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); border: 2px solid #0284c7; border-radius: 10px; }
+    .den-terminal-select p { font-size: 12px; font-weight: 700; color: #0c4a6e; margin-bottom: 6px; }
+    .den-terminal-select select { width: 100%; padding: 8px 10px; border: 2px solid #0284c7; border-radius: 8px; font-size: 14px; color: #0c4a6e; background: #fff; cursor: pointer; }
+
   </style>
 </head>
 <body>
@@ -98,8 +103,38 @@
       <div class="form-group"><label>Your Name *</label><input type="text" id="name" required placeholder="John Doe" maxlength="80" /></div>
       <div class="form-group"><label>Phone Number *</label><input type="tel" id="phone" required placeholder="+1 (720) 555-1234" maxlength="24" /><div class="hint">Used for confirmation + driver coordination.</div></div>
       <div class="form-group"><label>Email Address (optional)</label><input type="email" id="rider_email" placeholder="you@example.com" maxlength="120" /><div class="hint">Receive a booking confirmation email</div></div>
-      <div class="form-group"><label>Pickup Address *</label><div id="pickupGeocoder"></div><div class="hint">Start typing to see suggestions</div></div>
-      <div class="form-group"><label>Dropoff Address *</label><div id="dropoffGeocoder"></div><div class="hint">Start typing to see suggestions</div></div>
+      <div class="form-group"><label>Pickup Address *</label>
+        <div class="den-terminal-select">
+          <p>✈️ Picking up or dropping off at DEN?</p>
+          <select onchange="applyDENTerminalPickup(this.value)">
+            <option value="">— Select DEN Terminal —</option>
+            <optgroup label="Departing Flights">
+              <option value="Terminal West Departures, Denver, Colorado 80249, United States">Terminal West Departures</option>
+              <option value="Terminal East Departures, Denver, Colorado 80249, United States">Terminal East Departures</option>
+            </optgroup>
+            <optgroup label="Arriving Flights">
+              <option value="Terminal West Arrivals, Denver, Colorado 80249, United States">Terminal West Arrivals</option>
+              <option value="Terminal East Arrivals, Denver, Colorado 80249, United States">Terminal East Arrivals</option>
+            </optgroup>
+          </select>
+        </div>
+      <div id="pickupGeocoder"></div><div class="hint">Start typing to see suggestions</div></div>
+      <div class="form-group"><label>Dropoff Address *</label>
+        <div class="den-terminal-select">
+          <p>✈️ Picking up or dropping off at DEN?</p>
+          <select onchange="applyDENTerminalDropoff(this.value)">
+            <option value="">— Select DEN Terminal —</option>
+            <optgroup label="Departing Flights">
+              <option value="Terminal West Departures, Denver, Colorado 80249, United States">Terminal West Departures</option>
+              <option value="Terminal East Departures, Denver, Colorado 80249, United States">Terminal East Departures</option>
+            </optgroup>
+            <optgroup label="Arriving Flights">
+              <option value="Terminal West Arrivals, Denver, Colorado 80249, United States">Terminal West Arrivals</option>
+              <option value="Terminal East Arrivals, Denver, Colorado 80249, United States">Terminal East Arrivals</option>
+            </optgroup>
+          </select>
+        </div>
+      <div id="dropoffGeocoder"></div><div class="hint">Start typing to see suggestions</div></div>
       <div class="map-info" id="mapInfo">📍 Select pickup and dropoff addresses above to see route on map</div>
       <div id="map"></div>
       <div class="grid">
@@ -254,6 +289,41 @@
       }catch(err){showMessage('error',`❌ Error: ${err.message}`);}
       finally{submitBtn.disabled=false;submitText.style.display='inline';loadingSpinner.style.display='none';}
     });
+
+
+    const DEN_COORDS = [-104.6731, 39.8561];
+
+    function applyDENTerminalPickup(val) {
+      if (!val) return;
+      pickupAddress = val;
+      pickupCoords = DEN_COORDS.slice();
+      if (pickupMarker) pickupMarker.remove();
+      if (map) pickupMarker = new mapboxgl.Marker({color: '#10b981'}).setLngLat(DEN_COORDS).addTo(map);
+      pickupGeocoder.setInput(val.split(',')[0]);
+      if (typeof detectedPickupAirportCode !== 'undefined') detectedPickupAirportCode = 'DEN';
+      updateMapInfo();
+      if (pickupCoords && dropoffCoords && map) updateMap();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+      const locked = document.getElementById('pickupAirportLocked');
+      if (locked) locked.classList.add('visible');
+    }
+
+    function applyDENTerminalDropoff(val) {
+      if (!val) return;
+      dropoffAddress = val;
+      dropoffCoords = DEN_COORDS.slice();
+      if (dropoffMarker) dropoffMarker.remove();
+      if (map) dropoffMarker = new mapboxgl.Marker({color: '#ef4444'}).setLngLat(DEN_COORDS).addTo(map);
+      dropoffGeocoder.setInput(val.split(',')[0]);
+      if (typeof detectedDropoffAirportCode !== 'undefined') detectedDropoffAirportCode = 'DEN';
+      updateMapInfo();
+      if (pickupCoords && dropoffCoords && map) updateMap();
+      quoteBox.style.display = 'none';
+      latestEstimatedFare = 0;
+      const locked = document.getElementById('dropoffAirportLocked');
+      if (locked) locked.classList.add('visible');
+    }
 
     const menuBtn=document.getElementById('menuBtn'),navLinks=document.getElementById('navLinks');
     menuBtn.addEventListener('click',()=>{navLinks.classList.toggle('tw-open');menuBtn.textContent=navLinks.classList.contains('tw-open')?'✕':'☰';});
