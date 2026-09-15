@@ -667,8 +667,20 @@
     }
 
     // Turnstile callbacks
-    window.onTurnstileSuccess = function(token) { turnstileToken = token; };
-    window.onTurnstileExpired = function() { turnstileToken = null; };
+    window.onTurnstileSuccess = function(token) {
+      turnstileToken = token;
+      // Auto-refresh Turnstile token every 4 minutes to prevent expiry
+      clearInterval(window.turnstileRefreshInterval);
+      window.turnstileRefreshInterval = setInterval(function() {
+        if (window.turnstile) {
+          window.turnstile.reset();
+        }
+      }, 240000);
+    };
+    window.onTurnstileExpired = function() {
+      turnstileToken = null;
+      if (window.turnstile) { window.turnstile.reset(); }
+    };
     window.onTurnstileError = function() {
       turnstileToken = null;
       showMessage('error', '❌ Security verification failed. Please refresh the page.');
