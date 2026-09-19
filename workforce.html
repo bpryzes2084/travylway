@@ -107,18 +107,19 @@
         <div style="margin-bottom:8px;padding:10px 14px;background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border:2px solid #1e3a5f;border-radius:10px;">
           <p style="font-size:12px;font-weight:700;color:#1e3a5f;margin-bottom:6px;">🏭 Picking up from a warehouse?</p>
           <select class="warehouse-select" onchange="setWarehousePickup(this.value)">
-            <option value="">— Select a Warehouse —</option>
-            <option value="Costco, 26200 E 64th Ave, Aurora, Colorado 80019, United States">Costco — 26200 E 64th Ave</option>
-            <option value="Ceva Logistics, 26100 E 68th Ave, Aurora, Colorado 80019, United States">Ceva Logistics — 26100 E 68th Ave</option>
-            <option value="Air General, 26100 E 68th Ave #180, Aurora, Colorado 80019, United States">Air General — 26100 E 68th Ave #180</option>
-            <option value="Dollar General, 6600 Gun Club Rd, Aurora, Colorado 80019, United States">Dollar General — 6600 Gun Club Rd</option>
-            <option value="PrimeSource Building Products, 6225 N Denali St, Aurora, Colorado 80019, United States">PrimeSource Building Products — 6225 N Denali St</option>
-            <option value="Whole Foods Distribution, 6000 N Catawba St, Aurora, Colorado 80019, United States">Whole Foods Distribution — 6000 N Catawba St</option>
-            <option value="Kroger Fulfillment Center, 6125 Jackson Gap St, Aurora, Colorado 80019, United States">Kroger Fulfillment Center — 6125 Jackson Gap St</option>
-            <option value="Intermountain Electric Inc, 24251 E 64th Ave, Aurora, Colorado 80019, United States">Intermountain Electric — 24251 E 64th Ave</option>
-            <option value="Shamrock Foods, 22000 E 38th Ave, Aurora, Colorado 80019, United States">Shamrock Foods — 22000 E 38th Ave</option>
-            <option value="Medline Industries Distribution Center, 21111 E 36th Dr, Aurora, Colorado 80011, United States">Medline Industries — 21111 E 36th Dr</option>
-            <option value="Sherwin Williams Aurora Distribution Service Center, 21301 E 33rd Dr, Aurora, Colorado 80011, United States">Sherwin Williams Distribution — 21301 E 33rd Dr</option>
+            <option value="">— Select a Warehouse —</option> 
+<option value="Air General, 26100 E 68th Ave #180, Aurora, Colorado 80019, United States">Air General — 26100 E 68th Ave #180</option>
+<option value="Ceva Logistics, 26100 E 68th Ave, Aurora, Colorado 80019, United States">Ceva Logistics — 26100 E 68th Ave</option>
+<option value="Costco, 26200 E 64th Ave, Aurora, Colorado 80019, United States">Costco — 26200 E 64th Ave</option>
+<option value="Dollar General, 6600 Gun Club Rd, Aurora, Colorado 80019, United States">Dollar General — 6600 Gun Club Rd</option>
+<option value="Intermountain Electric Inc, 24251 E 64th Ave, Aurora, Colorado 80019, United States">Intermountain Electric — 24251 E 64th Ave</option>
+<option value="Kroger Fulfillment Center, 6125 Jackson Gap St, Aurora, Colorado 80019, United States">Kroger Fulfillment Center — 6125 Jackson Gap St</option>
+<option value="Medline Industries Distribution Center, 21111 E 36th Dr, Aurora, Colorado 80011, United States">Medline Industries — 21111 E 36th Dr</option>
+<option value="Pretred, 6550 N Denali St, Aurora, Colorado 80019, United States">Pretred — 6550 N Denali St</option>
+<option value="PrimeSource Building Products, 6225 N Denali St, Aurora, Colorado 80019, United States">PrimeSource Building Products — 6225 N Denali St</option>
+<option value="Shamrock Foods, 22000 E 38th Ave, Aurora, Colorado 80019, United States">Shamrock Foods — 22000 E 38th Ave</option>
+<option value="Sherwin Williams Aurora Distribution Service Center, 21301 E 33rd Dr, Aurora, Colorado 80011, United States">Sherwin Williams Distribution — 21301 E 33rd Dr</option>
+<option value="Whole Foods Distribution, 6000 N Catawba St, Aurora, Colorado 80019, United States">Whole Foods Distribution — 6000 N Catawba St</option>  
           </select>
         </div>
         <div id="pickupGeocoder"></div>
@@ -130,17 +131,18 @@
           <p style="font-size:12px;font-weight:700;color:#1e3a5f;margin-bottom:6px;">🏭 Dropping off at a warehouse?</p>
           <select id="warehouseDropoff" class="warehouse-select" onchange="setWarehouseDropoff(this.value)">
             <option value="">— Select a Warehouse —</option>
-            <option value="Costco, 26200 E 64th Ave, Aurora, Colorado 80019, United States">Costco — 26200 E 64th Ave</option>
-            <option value="Ceva Logistics, 26100 E 68th Ave, Aurora, Colorado 80019, United States">Ceva Logistics — 26100 E 68th Ave</option>
-            <option value="Air General, 26100 E 68th Ave #180, Aurora, Colorado 80019, United States">Air General — 26100 E 68th Ave #180</option>
-            <option value="Dollar General, 6600 Gun Club Rd, Aurora, Colorado 80019, United States">Dollar General — 6600 Gun Club Rd</option>
-            <option value="PrimeSource Building Products, 6225 N Denali St, Aurora, Colorado 80019, United States">PrimeSource Building Products — 6225 N Denali St</option>
-            <option value="Whole Foods Distribution, 6000 N Catawba St, Aurora, Colorado 80019, United States">Whole Foods Distribution — 6000 N Catawba St</option>
-            <option value="Kroger Fulfillment Center, 6125 Jackson Gap St, Aurora, Colorado 80019, United States">Kroger Fulfillment Center — 6125 Jackson Gap St</option>
-            <option value="Intermountain Electric Inc, 24251 E 64th Ave, Aurora, Colorado 80019, United States">Intermountain Electric — 24251 E 64th Ave</option>
-            <option value="Shamrock Foods, 22000 E 38th Ave, Aurora, Colorado 80019, United States">Shamrock Foods — 22000 E 38th Ave</option>
-            <option value="Medline Industries Distribution Center, 21111 E 36th Dr, Aurora, Colorado 80011, United States">Medline Industries — 21111 E 36th Dr</option>
-            <option value="Sherwin Williams Aurora Distribution Service Center, 21301 E 33rd Dr, Aurora, Colorado 80011, United States">Sherwin Williams Distribution — 21301 E 33rd Dr</option>
+<option value="Air General, 26100 E 68th Ave #180, Aurora, Colorado 80019, United States">Air General — 26100 E 68th Ave #180</option>
+<option value="Ceva Logistics, 26100 E 68th Ave, Aurora, Colorado 80019, United States">Ceva Logistics — 26100 E 68th Ave</option>
+<option value="Costco, 26200 E 64th Ave, Aurora, Colorado 80019, United States">Costco — 26200 E 64th Ave</option>
+<option value="Dollar General, 6600 Gun Club Rd, Aurora, Colorado 80019, United States">Dollar General — 6600 Gun Club Rd</option>
+<option value="Intermountain Electric Inc, 24251 E 64th Ave, Aurora, Colorado 80019, United States">Intermountain Electric — 24251 E 64th Ave</option>
+<option value="Kroger Fulfillment Center, 6125 Jackson Gap St, Aurora, Colorado 80019, United States">Kroger Fulfillment Center — 6125 Jackson Gap St</option>
+<option value="Medline Industries Distribution Center, 21111 E 36th Dr, Aurora, Colorado 80011, United States">Medline Industries — 21111 E 36th Dr</option>
+<option value="Pretred, 6550 N Denali St, Aurora, Colorado 80019, United States">Pretred — 6550 N Denali St</option>
+<option value="PrimeSource Building Products, 6225 N Denali St, Aurora, Colorado 80019, United States">PrimeSource Building Products — 6225 N Denali St</option>
+<option value="Shamrock Foods, 22000 E 38th Ave, Aurora, Colorado 80019, United States">Shamrock Foods — 22000 E 38th Ave</option>
+<option value="Sherwin Williams Aurora Distribution Service Center, 21301 E 33rd Dr, Aurora, Colorado 80011, United States">Sherwin Williams Distribution — 21301 E 33rd Dr</option>
+<option value="Whole Foods Distribution, 6000 N Catawba St, Aurora, Colorado 80019, United States">Whole Foods Distribution — 6000 N Catawba St</option>
           </select>
         </div>
         <div id="dropoffGeocoder"></div>
