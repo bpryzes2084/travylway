@@ -197,13 +197,13 @@
       h.push({ name: "Memorial Day",               month: 5,  day: nthDay(year,5,1,-1) });
       h.push({ name: "Labor Day",                  month: 9,  day: nthDay(year,9,1,1)  });
       h.push({ name: "Columbus Day",               month: 10, day: nthDay(year,10,1,2) });
-      h.push({ name: "Thanksgiving Day",           month: 11, day: nthDay(year,11,4,4) });
+      h.push({ name: "Thanksgiving Day",           month: 11, day: nthDay(year,11,4,4), untilTime: (year === 2026 ? "06:00" : null) });
       return h;
     }
-    function getHolidayName(dateStr) {
+    function getHolidayName(dateStr, timeStr) {
       const [y,m,d] = dateStr.split('-').map(Number);
       const match = getHolidays(y).find(h => h.month===m && h.day===d);
-      return match ? match.name : null;
+      if (match && match.untilTime) { if (timeStr && timeStr >= match.untilTime) return null; return match.name + " before 6:00 AM"; } return match ? match.name : null;
     }
 
     const MAPBOX_TOKEN = 'pk.eyJ1IjoiYnByeXplczIwODQiLCJhIjoiY21sbmtkOXRwMGZwdTNlcTNlbDZjcXNsOCJ9.MA-V_fUeihAhAm28Brnojg';
@@ -273,7 +273,7 @@
       if(!turnstileToken){showMessage('error','❌ Please complete the security verification (checkbox above).');return;}
       if(!pickupAddress||!dropoffAddress){showMessage('error','❌ Both pickup and dropoff addresses are required.');return;}
       if(!dateEl.value||!timeEl.value){showMessage('error','❌ Pickup date and time are required.');return;}
-      const holidayName = getHolidayName(dateEl.value);
+      const holidayName = getHolidayName(dateEl.value, timeEl.value);
       if (holidayName) {
         showMessage('error', '❌ We are not accepting bookings on ' + holidayName + '. Please select a different date. For assistance, contact us at pickuprequest@travylway.com');
         return;
