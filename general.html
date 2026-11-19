@@ -716,7 +716,7 @@
       h.push({ name: "Memorial Day",               month: 5,  day: nthDay(year,5,1,-1) });
       h.push({ name: "Labor Day",                  month: 9,  day: nthDay(year,9,1,1)  });
       h.push({ name: "Columbus Day",               month: 10, day: nthDay(year,10,1,2) });
-      h.push({ name: "Thanksgiving Day",           month: 11, day: nthDay(year,11,4,4), untilTime: (year <= 2027 ? null : "06:00"), afterTime: null });
+      h.push({ name: "Thanksgiving Day",           month: 11, day: nthDay(year,11,4,4), untilTime: null, afterTime: null });
       return h;
     }
     function getHolidayName(dateStr, timeStr) {
